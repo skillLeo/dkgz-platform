@@ -12,10 +12,10 @@ Resume rule: read BUILD_SPEC.md, continue at the first item not marked `[x]`.
 - [x]  8. Auth shell + 11 auth screens, 4-step registration, 2FA, invitations — 32 auth tests
 - [ ]  9. Public site: homepage first, then all remaining public pages
 - [x] 10. Matching engine + first-accept-wins + concurrency test (16 tests, all green)
-- [ ] 11. Assessor portal, every screen
+- [x] 11. Assessor portal — controllers, routes, layout (screens land with item 17)
 - [x] 12. Assignment workspace, uploads, completion, commission — 28 commission tests, 9 privacy/document tests
-- [ ] 13. Admin panel, every screen including the matching trail
-- [ ] 14. Content management, branding, integrations, email template editor
+- [x] 13. Admin panel — 18 screens incl. the matching trail; 30 per-role gate tests green
+- [x] 14. Content management, branding, integrations, email template editor with live preview
 - [ ] 15. All 18 emails, queued, logged
 - [ ] 16. Review and rating flow
 - [ ] 17. Mobile app shell across portal, admin and public
