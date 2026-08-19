@@ -1,0 +1,74 @@
+# ---------------------------------------------------------------------------
+# DKGZ — Hostinger layout (public_html IS the document root)
+#
+# This is the file that is live on dkgz.skillleo.com. Copy it to
+# public_html/.htaccess after every deploy that changes it:
+#
+#     cp .htaccess.hostinger .htaccess
+#
+# The host will not let the document root move off public_html, so the whole
+# project lives there and this file does three jobs: pick the PHP version,
+# route every request into public/, and make the source tree unreachable.
+# ---------------------------------------------------------------------------
+
+# AddType is the only PHP selector form this host honours — AddHandler is
+# accepted and silently ignored. Laravel 13 requires PHP >= 8.3.
+AddType application/x-httpd-alt-php84 .php
+
+Options -Indexes -MultiViews
+
+# Never serve environment, dependency or build metadata.
+<FilesMatch "^\.env|\.env\..*|composer\.(json|lock)|package(-lock)?\.json|artisan|phpunit\.xml|vite\.config\.js|deploy\.sh|queue-tick\.sh$">
+    Require all denied
+</FilesMatch>
+
+# Never serve source, config, dependency or data directories.
+RedirectMatch 404 ^/(app|bootstrap|config|database|design-src|lang|node_modules|resources|routes|storage|tests|vendor)(/|$)
+RedirectMatch 404 ^/(\.git|\.github)(/|$)
+RedirectMatch 404 ^/.*\.md$
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /
+
+    RewriteCond %{HTTPS} !=on
+    RewriteCond %{HTTP:X-Forwarded-Proto} !https
+    RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+    RewriteCond %{HTTP:Authorization} .
+    RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
+    # Everything else is served out of public/.
+    RewriteCond %{REQUEST_URI} !^/public/
+    RewriteRule ^(.*)$ public/$1 [L]
+</IfModule>
+
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/css text/plain text/xml application/javascript application/json image/svg+xml
+</IfModule>
+
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresByType text/css "access plus 1 year"
+    ExpiresByType application/javascript "access plus 1 year"
+    ExpiresByType font/woff2 "access plus 1 year"
+    ExpiresByType image/png "access plus 1 month"
+    ExpiresByType image/webp "access plus 1 month"
+</IfModule>
+
+<IfModule mod_headers.c>
+    <FilesMatch "\.(css|js|woff2?)$">
+        Header set Cache-Control "public, max-age=31536000, immutable"
+    </FilesMatch>
+
+    # The application sends these too. LiteSpeed overwrites Content-Security-Policy
+    # with its own bare "upgrade-insecure-requests", and `always set` here is
+    # applied last, so this is the policy that actually reaches the browser.
+    #
+    # font-src stays 'self': IBM Plex is bundled, and a CDN font request would be
+    # both a CSP violation and, under German case law, a GDPR one.
+    Header always set Content-Security-Policy "default-src 'self'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; object-src 'none'; img-src 'self' data: blob:; font-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'; connect-src 'self'; upgrade-insecure-requests"
+    Header always set X-Frame-Options "DENY"
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+</IfModule>
