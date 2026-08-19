@@ -14,7 +14,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Symfony\Component\HttpFoundation\Response;
-use Throwable;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
