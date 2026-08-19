@@ -1,0 +1,1013 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{--dkgz-accent:#B08A2E}
+*{box-sizing:border-box}
+body{margin:0;background:#F1F3F7;color:#2E3A4C;font-family:'IBM Plex Sans','Helvetica Neue',Helvetica,Arial,sans-serif;font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+h1,h2,h3,h4,p{margin:0}
+a{color:#14294A;text-decoration:none}
+a:hover{color:#27508B}
+input,button,textarea,select{font-family:inherit}
+::selection{background:#E8EDF5}
+@keyframes dkgz-rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@keyframes dkgz-spin{to{transform:rotate(360deg)}}
+@keyframes dkgz-pulse{0%,100%{opacity:1}50%{opacity:0.55}}
+</style>
+</helmet>
+
+<div style="background:#F1F3F7;padding:0 0 80px">
+
+<div style="background:#F8F9FB;border-bottom:1px solid #E3E7EE;padding:10px 24px;position:sticky;top:0;z-index:60">
+  <div style="display:flex;align-items:center;gap:16px;overflow-x:auto;min-width:0">
+    <span style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#9AA5B4;white-space:nowrap">Teil D · Auth</span>
+    <div style="display:flex;gap:6px">
+      <button type="button" onClick="{{ g1 }}" style="height:26px;padding:0 10px;border:1px solid #CBD2DD;border-radius:3px;font-family:'IBM Plex Mono',monospace;font-size:11.5px;cursor:pointer;white-space:nowrap;background:{{ k1 }};color:{{ f1 }}">01 Anmeldung</button>
+      <button type="button" onClick="{{ g2 }}" style="height:26px;padding:0 10px;border:1px solid #CBD2DD;border-radius:3px;font-family:'IBM Plex Mono',monospace;font-size:11.5px;cursor:pointer;white-space:nowrap;background:{{ k2 }};color:{{ f2 }}">02 Passwort vergessen</button>
+      <button type="button" onClick="{{ g3 }}" style="height:26px;padding:0 10px;border:1px solid #CBD2DD;border-radius:3px;font-family:'IBM Plex Mono',monospace;font-size:11.5px;cursor:pointer;white-space:nowrap;background:{{ k3 }};color:{{ f3 }}">03 Neues Passwort</button>
+      <button type="button" onClick="{{ g4 }}" style="height:26px;padding:0 10px;border:1px solid #CBD2DD;border-radius:3px;font-family:'IBM Plex Mono',monospace;font-size:11.5px;cursor:pointer;white-space:nowrap;background:{{ k4 }};color:{{ f4 }}">04 Registrierung</button>
+      <button type="button" onClick="{{ g5 }}" style="height:26px;padding:0 10px;border:1px solid #CBD2DD;border-radius:3px;font-family:'IBM Plex Mono',monospace;font-size:11.5px;cursor:pointer;white-space:nowrap;background:{{ k5 }};color:{{ f5 }}">05 E-Mail bestätigen</button>
+      <button type="button" onClick="{{ g6 }}" style="height:26px;padding:0 10px;border:1px solid #CBD2DD;border-radius:3px;font-family:'IBM Plex Mono',monospace;font-size:11.5px;cursor:pointer;white-space:nowrap;background:{{ k6 }};color:{{ f6 }}">06 Einladung</button>
+      <button type="button" onClick="{{ g7 }}" style="height:26px;padding:0 10px;border:1px solid #CBD2DD;border-radius:3px;font-family:'IBM Plex Mono',monospace;font-size:11.5px;cursor:pointer;white-space:nowrap;background:{{ k7 }};color:{{ f7 }}">07 Prüfung läuft</button>
+      <button type="button" onClick="{{ g8 }}" style="height:26px;padding:0 10px;border:1px solid #CBD2DD;border-radius:3px;font-family:'IBM Plex Mono',monospace;font-size:11.5px;cursor:pointer;white-space:nowrap;background:{{ k8 }};color:{{ f8 }}">08 Abgelehnt</button>
+      <button type="button" onClick="{{ g9 }}" style="height:26px;padding:0 10px;border:1px solid #CBD2DD;border-radius:3px;font-family:'IBM Plex Mono',monospace;font-size:11.5px;cursor:pointer;white-space:nowrap;background:{{ k9 }};color:{{ f9 }}">09 Gesperrt</button>
+      <button type="button" onClick="{{ g10 }}" style="height:26px;padding:0 10px;border:1px solid #CBD2DD;border-radius:3px;font-family:'IBM Plex Mono',monospace;font-size:11.5px;cursor:pointer;white-space:nowrap;background:{{ k10 }};color:{{ f10 }}">10 Admin-Anmeldung</button>
+      <button type="button" onClick="{{ g11 }}" style="height:26px;padding:0 10px;border:1px solid #CBD2DD;border-radius:3px;font-family:'IBM Plex Mono',monospace;font-size:11.5px;cursor:pointer;white-space:nowrap;background:{{ k11 }};color:{{ f11 }}">11 Sitzung abgelaufen</button>
+    </div>
+    <span style="width:1px;height:20px;background:#CBD2DD;flex:none"></span>
+    <button type="button" onClick="{{ toggleMobile }}" style="height:26px;padding:0 10px;border:1px solid #CBD2DD;border-radius:3px;font-family:'IBM Plex Mono',monospace;font-size:11.5px;cursor:pointer;white-space:nowrap;background:{{ mBg }};color:{{ mFg }}">390 px</button>
+  </div>
+</div>
+
+<div style="padding:32px 24px">
+  <div style="max-width:1440px;margin:0 auto">
+    <div style="display:flex;align-items:baseline;gap:16px;padding-bottom:12px">
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#5B687C">{{ num }}</span>
+      <span style="font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C">{{ label }}</span>
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#9AA5B4">{{ route }}</span>
+    </div>
+
+    <div style="display:flex;gap:32px;align-items:flex-start;flex-wrap:wrap">
+
+      <div style="flex:1;min-width:0;background:#FFFFFF;border:1px solid #E3E7EE;display:grid;grid-template-columns:minmax(320px,46fr) minmax(360px,54fr);min-height:740px">
+
+        <div style="background:#0A1628;padding:56px 48px;display:flex;flex-direction:column;position:relative;overflow:hidden;min-width:0">
+          <div style="position:absolute;left:-40px;bottom:40px;width:120px;height:120px;border-radius:50%;border:1px solid rgba(255,255,255,0.07);display:grid;place-items:center;pointer-events:none">
+            <div style="width:92px;height:92px;border-radius:50%;border:1px solid rgba(255,255,255,0.07);display:grid;place-items:center"><span style="font-size:17px;font-weight:700;letter-spacing:0.06em;color:rgba(255,255,255,0.07)">DKGZ</span></div>
+          </div>
+
+          <div style="display:flex;align-items:center;gap:12px;position:relative">
+            <div style="width:44px;height:44px;border-radius:50%;border:1px solid rgba(255,255,255,0.55);display:grid;place-items:center;flex:none">
+              <div style="width:34px;height:34px;border-radius:50%;border:1px solid var(--dkgz-accent,#B08A2E);display:grid;place-items:center"><span style="font-size:8px;font-weight:700;letter-spacing:0.04em;color:#FFFFFF">DKGZ</span></div>
+            </div>
+            <span style="font-size:24px;font-weight:700;letter-spacing:-0.022em;color:#FFFFFF;line-height:1">DKGZ</span>
+            <span style="width:1px;height:26px;background:var(--dkgz-accent,#B08A2E)"></span>
+            <span style="font-size:9px;font-weight:600;letter-spacing:0.13em;text-transform:uppercase;color:rgba(255,255,255,0.72);line-height:1.5">Deutsche<br>KFZ-Gutachterzentrale</span>
+          </div>
+
+          <sc-if value="{{ leftPlain }}" hint-placeholder-val="{{ false }}">
+            <div style="margin-top:auto;padding-top:64px;position:relative">
+              <div style="font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:rgba(255,255,255,0.45)">Interner Zugang</div>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ leftFull }}" hint-placeholder-val="{{ true }}">
+            <div>
+              <div style="padding-top:80px;position:relative">
+                <h2 style="font-size:30px;line-height:1.2;font-weight:600;letter-spacing:-0.018em;color:#FFFFFF;max-width:18ch">{{ leftHeadline }}</h2>
+                <p style="font-size:17px;line-height:1.65;color:rgba(255,255,255,0.62);max-width:54ch;padding-top:20px">{{ leftSub }}</p>
+              </div>
+
+              <sc-if value="{{ showFacts }}" hint-placeholder-val="{{ true }}">
+                <div style="padding-top:64px;position:relative">
+                  <div style="display:flex;gap:16px;padding:20px 0;border-top:1px solid rgba(255,255,255,0.10)">
+                    <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="color:#FFFFFF;flex:none;display:block;margin-top:2px"><line x1="6" y1="3" x2="6" y2="15"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 0 1-9 9"/></svg>
+                    <div style="min-width:0"><div style="font-size:15px;font-weight:500;color:#FFFFFF">Automatische Vermittlung</div><div style="font-size:13.5px;line-height:1.5;color:rgba(255,255,255,0.55)">Anfragen nach PLZ, ohne Angebotsvergleich</div></div>
+                  </div>
+                  <div style="display:flex;gap:16px;padding:20px 0;border-top:1px solid rgba(255,255,255,0.10)">
+                    <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="color:#FFFFFF;flex:none;display:block;margin-top:2px"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg>
+                    <div style="min-width:0"><div style="font-size:15px;font-weight:500;color:#FFFFFF">Kein Vergleichsportal</div><div style="font-size:13.5px;line-height:1.5;color:rgba(255,255,255,0.55)">Der erste verfügbare Partner übernimmt</div></div>
+                  </div>
+                  <div style="display:flex;gap:16px;padding:20px 0;border-top:1px solid rgba(255,255,255,0.10);border-bottom:1px solid rgba(255,255,255,0.10)">
+                    <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="color:#FFFFFF;flex:none;display:block;margin-top:2px"><path d="M4 10h12"/><path d="M4 14h9"/><path d="M19 6a7.7 7.7 0 0 0-5.2-2A7.9 7.9 0 0 0 6 12c0 4.4 3.5 8 7.8 8 2 0 3.8-.7 5.2-2"/></svg>
+                    <div style="min-width:0"><div style="font-size:15px;font-weight:500;color:#FFFFFF">Transparente Provision</div><div style="font-size:13.5px;line-height:1.5;color:rgba(255,255,255,0.55)">15 % ausschließlich auf abgeschlossene Aufträge</div></div>
+                  </div>
+                </div>
+              </sc-if>
+
+              <sc-if value="{{ showReassurance }}" hint-placeholder-val="{{ false }}">
+                <div style="padding-top:48px;position:relative">
+                  <div style="border-top:1px solid rgba(255,255,255,0.10);padding-top:24px;display:flex;gap:16px">
+                    <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="color:#FFFFFF;flex:none;display:block;margin-top:2px"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                    <p style="font-size:15px;line-height:1.65;color:rgba(255,255,255,0.55);max-width:44ch">{{ reassurance }}</p>
+                  </div>
+                </div>
+              </sc-if>
+            </div>
+          </sc-if>
+
+          <div style="margin-top:auto;padding-top:56px;display:flex;align-items:flex-end;justify-content:flex-end;position:relative">
+            <div style="text-align:right">
+              <span style="display:flex;width:40px;height:3px;margin-left:auto"><span style="flex:1;background:#000000"></span><span style="flex:1;background:#DD0000"></span><span style="flex:1;background:#FFCE00"></span></span>
+              <div style="font-size:12px;color:rgba(255,255,255,0.40);padding-top:8px">Deutsche KFZ-Gutachterzentrale</div>
+            </div>
+          </div>
+        </div>
+
+        <div style="background:#FFFFFF;position:relative;display:flex;align-items:center;padding:56px 48px;min-width:0;animation:dkgz-rise 360ms cubic-bezier(0.4,0,0.2,1) both">
+          <a href="#" style="position:absolute;top:32px;right:32px;display:inline-flex;align-items:center;gap:8px;font-size:13.5px;font-weight:500;color:#14294A">Zur Website<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg></a>
+
+          <div style="width:100%;max-width:{{ formWidth }}">
+            <div style="font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:{{ eyebrowColor }}">{{ eyebrow }}</div>
+            <div style="width:24px;height:2px;background:{{ ruleColor }};margin-top:10px"></div>
+            <sc-if value="{{ hasTitle }}" hint-placeholder-val="{{ true }}">
+              <h2 style="font-size:30px;line-height:1.2;font-weight:600;letter-spacing:-0.018em;color:#14294A;padding-top:24px;text-wrap:pretty">{{ title }}</h2>
+            </sc-if>
+            <sc-if value="{{ hasSub }}" hint-placeholder-val="{{ true }}">
+              <p style="font-size:15px;line-height:1.6;color:#5B687C;padding-top:8px;max-width:56ch">{{ sub }}</p>
+            </sc-if>
+
+            <sc-if value="{{ isLogin }}" hint-placeholder-val="{{ true }}">
+              <div>
+                <sc-if value="{{ showErrorSummary }}" hint-placeholder-val="{{ false }}">
+                  <div style="border:1px solid #A32318;border-radius:3px;background:rgba(163,35,24,0.04);padding:16px;margin-top:24px">
+                    <div style="display:flex;align-items:center;gap:8px">
+                      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="color:#A32318;flex:none;display:block"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                      <span style="font-size:15px;font-weight:600;color:#A32318">Anmeldung nicht möglich</span>
+                    </div>
+                    <p style="font-size:13.5px;line-height:1.55;color:#5B687C;padding:10px 0 0 24px">E-Mail-Adresse oder Passwort ist nicht korrekt.</p>
+                  </div>
+                </sc-if>
+                <sc-if value="{{ showRateLimit }}" hint-placeholder-val="{{ false }}">
+                  <div style="border:1px solid #9C6F15;border-radius:3px;background:rgba(156,111,21,0.04);padding:16px;margin-top:24px">
+                    <div style="display:flex;align-items:center;gap:8px">
+                      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="color:#9C6F15;flex:none;display:block"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                      <span style="font-size:15px;font-weight:600;color:#9C6F15">Zu viele Versuche</span>
+                    </div>
+                    <p style="font-size:13.5px;line-height:1.55;color:#5B687C;padding:10px 0 0 24px">Bitte warten Sie, bevor Sie es erneut versuchen. Erneute Anmeldung möglich in <span style="font-family:'IBM Plex Mono',monospace;color:#2E3A4C;font-variant-numeric:tabular-nums">04:37</span>.</p>
+                  </div>
+                </sc-if>
+
+                <div style="padding-top:32px;display:flex;flex-direction:column;gap:20px">
+                  <div>
+                    <label style="display:block;font-size:13.5px;font-weight:500;color:#2E3A4C;padding-bottom:8px">E-Mail-Adresse</label>
+                    <input type="text" value="{{ emailValue }}" placeholder="name@buero.de" style="width:100%;height:46px;padding:0 14px;border:1px solid {{ emailBorder }};border-radius:3px;font-size:15px;color:#2E3A4C;background:{{ emailFill }};outline:none;transition:border-color 120ms cubic-bezier(0.4,0,0.2,1)" style-hover="border-color:#9AA5B4">
+                  </div>
+                  <div>
+                    <label style="display:block;font-size:13.5px;font-weight:500;color:#2E3A4C;padding-bottom:8px">Passwort</label>
+                    <div style="position:relative">
+                      <input type="password" value="{{ pwValue }}" style="width:100%;height:46px;padding:0 96px 0 14px;border:1px solid {{ emailBorder }};border-radius:3px;font-size:15px;color:#2E3A4C;background:{{ emailFill }};outline:none;transition:border-color 120ms cubic-bezier(0.4,0,0.2,1)" style-hover="border-color:#9AA5B4">
+                      <span style="position:absolute;right:14px;top:50%;transform:translateY(-50%);font-size:12.5px;font-weight:500;color:#14294A;cursor:pointer">Anzeigen</span>
+                    </div>
+                  </div>
+                  <div style="display:flex;align-items:center;justify-content:space-between;gap:16px">
+                    <span style="display:flex;align-items:center;gap:10px"><span style="width:18px;height:18px;border:1px solid #CBD2DD;border-radius:3px;flex:none"></span><span style="font-size:13.5px;color:#5B687C">Angemeldet bleiben</span></span>
+                    <a href="#" onClick="{{ g2 }}" style="font-size:13.5px;font-weight:500;color:#14294A">Passwort vergessen?</a>
+                  </div>
+                </div>
+
+                <sc-if value="{{ loginEnabled }}" hint-placeholder-val="{{ true }}">
+                  <button type="button" style="width:100%;height:46px;margin-top:24px;background:#14294A;color:#FFFFFF;border:1px solid #14294A;border-radius:3px;font-size:15px;font-weight:500;cursor:pointer;transition:background 140ms cubic-bezier(0.4,0,0.2,1)" style-hover="background:#27508B;border-color:#27508B" style-active="background:#0E1E36;transform:translateY(1px)">Anmelden</button>
+                </sc-if>
+                <sc-if value="{{ showRateLimit }}" hint-placeholder-val="{{ false }}">
+                  <button type="button" disabled="disabled" style="width:100%;height:46px;margin-top:24px;background:#E3E7EE;color:#9AA5B4;border:1px solid #E3E7EE;border-radius:3px;font-size:15px;font-weight:500;cursor:not-allowed">Anmelden</button>
+                </sc-if>
+
+                <div style="height:1px;background:#E3E7EE;margin-top:32px"></div>
+                <div style="text-align:center;font-size:13.5px;color:#5B687C;padding-top:20px">Noch kein Partner? <a href="#" onClick="{{ g4 }}" style="font-weight:500;color:#14294A">Jetzt registrieren</a></div>
+
+                <div style="display:flex;gap:8px;padding-top:24px;flex-wrap:wrap">
+                  <button type="button" onClick="{{ v0 }}" style="height:26px;padding:0 10px;border:1px solid #CBD2DD;border-radius:3px;font-family:'IBM Plex Mono',monospace;font-size:11.5px;cursor:pointer;background:{{ vb0 }};color:{{ vf0 }}">Default</button>
+                  <button type="button" onClick="{{ v1 }}" style="height:26px;padding:0 10px;border:1px solid #CBD2DD;border-radius:3px;font-family:'IBM Plex Mono',monospace;font-size:11.5px;cursor:pointer;background:{{ vb1 }};color:{{ vf1 }}">Gefüllt</button>
+                  <button type="button" onClick="{{ v2 }}" style="height:26px;padding:0 10px;border:1px solid #CBD2DD;border-radius:3px;font-family:'IBM Plex Mono',monospace;font-size:11.5px;cursor:pointer;background:{{ vb2 }};color:{{ vf2 }}">Falsche Daten</button>
+                  <button type="button" onClick="{{ v3 }}" style="height:26px;padding:0 10px;border:1px solid #CBD2DD;border-radius:3px;font-family:'IBM Plex Mono',monospace;font-size:11.5px;cursor:pointer;background:{{ vb3 }};color:{{ vf3 }}">Gesperrt 5 Min.</button>
+                </div>
+              </div>
+            </sc-if>
+
+            <sc-if value="{{ isForgot }}" hint-placeholder-val="{{ false }}">
+              <div>
+                <sc-if value="{{ forgotForm }}" hint-placeholder-val="{{ true }}">
+                  <div>
+                    <div style="padding-top:32px">
+                      <label style="display:block;font-size:13.5px;font-weight:500;color:#2E3A4C;padding-bottom:8px">E-Mail-Adresse</label>
+                      <input type="text" placeholder="name@buero.de" style="width:100%;height:46px;padding:0 14px;border:1px solid #CBD2DD;border-radius:3px;font-size:15px;color:#2E3A4C;outline:none">
+                      <div style="font-size:12.5px;color:#9AA5B4;padding-top:6px">Die im Portal hinterlegte Adresse.</div>
+                    </div>
+                    <button type="button" onClick="{{ v1 }}" style="width:100%;height:46px;margin-top:24px;background:#14294A;color:#FFFFFF;border:1px solid #14294A;border-radius:3px;font-size:15px;font-weight:500;cursor:pointer;transition:background 140ms cubic-bezier(0.4,0,0.2,1)" style-hover="background:#27508B;border-color:#27508B">Link anfordern</button>
+                    <div style="height:1px;background:#E3E7EE;margin-top:32px"></div>
+                    <a href="#" onClick="{{ g1 }}" style="display:inline-flex;align-items:center;gap:8px;font-size:13.5px;font-weight:500;color:#14294A;margin-top:20px"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>Zurück zur Anmeldung</a>
+                  </div>
+                </sc-if>
+                <sc-if value="{{ forgotSent }}" hint-placeholder-val="{{ false }}">
+                  <div style="padding-top:32px">
+                    <div style="width:48px;height:48px;border-radius:50%;border:2px solid #14294A;display:grid;place-items:center;color:#14294A"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block"><path d="M20 6 9 17l-5-5"/></svg></div>
+                    <h3 style="font-size:22px;line-height:1.3;font-weight:600;letter-spacing:-0.012em;color:#14294A;padding-top:24px">E-Mail versendet</h3>
+                    <p style="font-size:15px;line-height:1.65;color:#5B687C;padding-top:10px">Wir haben einen Link zum Zurücksetzen an <span style="font-weight:500;color:#2E3A4C">m.reinhardt@kfz-gutachten-d.de</span> gesendet. Der Link ist 24 Stunden gültig.</p>
+                    <div style="height:1px;background:#E3E7EE;margin-top:32px"></div>
+                    <div style="font-size:13.5px;color:#5B687C;padding-top:20px">Keine E-Mail erhalten? <span style="color:#9AA5B4">Erneut senden möglich in </span><span style="font-family:'IBM Plex Mono',monospace;color:#2E3A4C;font-variant-numeric:tabular-nums">00:47</span></div>
+                    <a href="#" onClick="{{ g1 }}" style="display:inline-flex;align-items:center;gap:8px;font-size:13.5px;font-weight:500;color:#14294A;margin-top:16px"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>Zurück zur Anmeldung</a>
+                  </div>
+                </sc-if>
+                <div style="display:flex;gap:8px;padding-top:24px">
+                  <button type="button" onClick="{{ v0 }}" style="height:26px;padding:0 10px;border:1px solid #CBD2DD;border-radius:3px;font-family:'IBM Plex Mono',monospace;font-size:11.5px;cursor:pointer;background:{{ vb0 }};color:{{ vf0 }}">Formular</button>
+                  <button type="button" onClick="{{ v1 }}" style="height:26px;padding:0 10px;border:1px solid #CBD2DD;border-radius:3px;font-family:'IBM Plex Mono',monospace;font-size:11.5px;cursor:pointer;background:{{ vb1 }};color:{{ vf1 }}">Versendet</button>
+                </div>
+              </div>
+            </sc-if>
+
+            <sc-if value="{{ isReset }}" hint-placeholder-val="{{ false }}">
+              <div>
+                <sc-if value="{{ resetForm }}" hint-placeholder-val="{{ true }}">
+                  <div>
+                    <div style="padding-top:32px">
+                      <label style="display:block;font-size:13.5px;font-weight:500;color:#2E3A4C;padding-bottom:8px">Neues Passwort</label>
+                      <div style="position:relative">
+                        <input type="text" value="Gutachten2026!" style="width:100%;height:46px;padding:0 100px 0 14px;border:1px solid #14294A;border-radius:3px;font-size:15px;color:#2E3A4C;outline:2px solid #27508B;outline-offset:2px">
+                        <span style="position:absolute;right:14px;top:50%;transform:translateY(-50%);font-size:12.5px;font-weight:500;color:#14294A;cursor:pointer">Verbergen</span>
+                      </div>
+                      <div style="display:flex;align-items:center;gap:12px;padding-top:10px">
+                        <span style="display:flex;gap:4px;flex:1"><span style="height:3px;flex:1;background:#1B6E48;transition:background 160ms cubic-bezier(0.4,0,0.2,1)"></span><span style="height:3px;flex:1;background:#1B6E48"></span><span style="height:3px;flex:1;background:#1B6E48"></span><span style="height:3px;flex:1;background:#1B6E48"></span></span>
+                        <span style="font-size:12.5px;color:#1B6E48;white-space:nowrap">Sehr gut</span>
+                      </div>
+                      <div style="display:flex;flex-direction:column;gap:6px;padding-top:14px">
+                        <span style="display:flex;align-items:center;gap:8px"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="color:#5B687C;flex:none;display:block"><path d="M20 6 9 17l-5-5"/></svg><span style="font-size:12.5px;color:#5B687C">Mindestens 10 Zeichen</span></span>
+                        <span style="display:flex;align-items:center;gap:8px"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="color:#5B687C;flex:none;display:block"><path d="M20 6 9 17l-5-5"/></svg><span style="font-size:12.5px;color:#5B687C">Groß- und Kleinbuchstaben</span></span>
+                        <span style="display:flex;align-items:center;gap:8px"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="color:#5B687C;flex:none;display:block"><path d="M20 6 9 17l-5-5"/></svg><span style="font-size:12.5px;color:#5B687C">Mindestens eine Zahl</span></span>
+                        <span style="display:flex;align-items:center;gap:8px"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="color:#5B687C;flex:none;display:block"><path d="M20 6 9 17l-5-5"/></svg><span style="font-size:12.5px;color:#5B687C">Mindestens ein Sonderzeichen</span></span>
+                      </div>
+                    </div>
+                    <div style="padding-top:20px">
+                      <label style="display:block;font-size:13.5px;font-weight:500;color:#2E3A4C;padding-bottom:8px">Passwort wiederholen</label>
+                      <input type="password" value="Gutachten2025!" style="width:100%;height:46px;padding:0 14px;border:1px solid #A32318;border-radius:3px;font-size:15px;color:#2E3A4C;background:rgba(163,35,24,0.03);outline:none">
+                      <div style="display:flex;align-items:flex-start;gap:6px;padding-top:6px">
+                        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="color:#A32318;flex:none;display:block;margin-top:3px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                        <span style="font-size:12.5px;line-height:1.5;color:#A32318">Die Passwörter stimmen nicht überein.</span>
+                      </div>
+                    </div>
+                    <button type="button" style="width:100%;height:46px;margin-top:24px;background:#14294A;color:#FFFFFF;border:1px solid #14294A;border-radius:3px;font-size:15px;font-weight:500;cursor:pointer;transition:background 140ms cubic-bezier(0.4,0,0.2,1)" style-hover="background:#27508B;border-color:#27508B">Passwort speichern</button>
+                    <div style="font-size:12.5px;color:#9AA5B4;padding-top:12px">Dieser Link ist 24 Stunden gültig.</div>
+                  </div>
+                </sc-if>
+                <sc-if value="{{ resetExpired }}" hint-placeholder-val="{{ false }}">
+                  <div style="padding-top:32px">
+                    <div style="border:1px solid #9C6F15;border-radius:3px;background:rgba(156,111,21,0.04);padding:16px">
+                      <div style="display:flex;align-items:center;gap:8px">
+                        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="color:#9C6F15;flex:none;display:block"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                        <span style="font-size:15px;font-weight:600;color:#9C6F15">Link abgelaufen</span>
+                      </div>
+                      <p style="font-size:13.5px;line-height:1.55;color:#5B687C;padding:10px 0 0 24px">Der Link zum Zurücksetzen war 24 Stunden gültig und ist nicht mehr verwendbar.</p>
+                    </div>
+                    <h3 style="font-size:22px;line-height:1.3;font-weight:600;letter-spacing:-0.012em;color:#14294A;padding-top:32px">Neuen Link anfordern</h3>
+                    <p style="font-size:15px;line-height:1.65;color:#5B687C;padding-top:8px">Wir senden Ihnen einen neuen Link an die hinterlegte Adresse.</p>
+                    <button type="button" onClick="{{ g2 }}" style="width:100%;height:46px;margin-top:24px;background:#14294A;color:#FFFFFF;border:1px solid #14294A;border-radius:3px;font-size:15px;font-weight:500;cursor:pointer">Neuen Link anfordern</button>
+                  </div>
+                </sc-if>
+                <div style="display:flex;gap:8px;padding-top:24px">
+                  <button type="button" onClick="{{ v0 }}" style="height:26px;padding:0 10px;border:1px solid #CBD2DD;border-radius:3px;font-family:'IBM Plex Mono',monospace;font-size:11.5px;cursor:pointer;background:{{ vb0 }};color:{{ vf0 }}">Formular</button>
+                  <button type="button" onClick="{{ v1 }}" style="height:26px;padding:0 10px;border:1px solid #CBD2DD;border-radius:3px;font-family:'IBM Plex Mono',monospace;font-size:11.5px;cursor:pointer;background:{{ vb1 }};color:{{ vf1 }}">Link abgelaufen</button>
+                </div>
+              </div>
+            </sc-if>
+
+            <sc-if value="{{ isRegister }}" hint-placeholder-val="{{ false }}">
+              <div>
+                <div style="padding-top:32px;position:relative">
+                  <div style="position:absolute;left:0;right:0;top:44px;height:1px;background:#E3E7EE"></div>
+                  <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));position:relative">
+                    <div style="display:flex;flex-direction:column;align-items:center;gap:10px">
+                      <span style="width:32px;height:32px;border-radius:50%;background:{{ n1Bg }};border:1px solid {{ n1Border }};color:{{ n1Fg }};box-shadow:{{ n1Halo }};display:grid;place-items:center;flex:none;font-family:'IBM Plex Mono',monospace;font-size:13.5px">
+                        <sc-if value="{{ n1Done }}" hint-placeholder-val="{{ false }}"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block"><path d="M20 6 9 17l-5-5"/></svg></sc-if>
+                        <sc-if value="{{ n1Open }}" hint-placeholder-val="{{ true }}">1</sc-if>
+                      </span>
+                      <span style="font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:{{ n1Label }};text-align:center">Zugang</span>
+                    </div>
+                    <div style="display:flex;flex-direction:column;align-items:center;gap:10px">
+                      <span style="width:32px;height:32px;border-radius:50%;background:{{ n2Bg }};border:1px solid {{ n2Border }};color:{{ n2Fg }};box-shadow:{{ n2Halo }};display:grid;place-items:center;flex:none;font-family:'IBM Plex Mono',monospace;font-size:13.5px">
+                        <sc-if value="{{ n2Done }}" hint-placeholder-val="{{ false }}"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block"><path d="M20 6 9 17l-5-5"/></svg></sc-if>
+                        <sc-if value="{{ n2Open }}" hint-placeholder-val="{{ true }}">2</sc-if>
+                      </span>
+                      <span style="font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:{{ n2Label }};text-align:center">Unternehmen</span>
+                    </div>
+                    <div style="display:flex;flex-direction:column;align-items:center;gap:10px">
+                      <span style="width:32px;height:32px;border-radius:50%;background:{{ n3Bg }};border:1px solid {{ n3Border }};color:{{ n3Fg }};box-shadow:{{ n3Halo }};display:grid;place-items:center;flex:none;font-family:'IBM Plex Mono',monospace;font-size:13.5px">
+                        <sc-if value="{{ n3Done }}" hint-placeholder-val="{{ false }}"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block"><path d="M20 6 9 17l-5-5"/></svg></sc-if>
+                        <sc-if value="{{ n3Open }}" hint-placeholder-val="{{ true }}">3</sc-if>
+                      </span>
+                      <span style="font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:{{ n3Label }};text-align:center">Qualifikation</span>
+                    </div>
+                    <div style="display:flex;flex-direction:column;align-items:center;gap:10px">
+                      <span style="width:32px;height:32px;border-radius:50%;background:{{ n4Bg }};border:1px solid {{ n4Border }};color:{{ n4Fg }};box-shadow:{{ n4Halo }};display:grid;place-items:center;flex:none;font-family:'IBM Plex Mono',monospace;font-size:13.5px">4</span>
+                      <span style="font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:{{ n4Label }};text-align:center">Einsatzgebiet</span>
+                    </div>
+                  </div>
+                </div>
+
+                <sc-if value="{{ rStep1 }}" hint-placeholder-val="{{ false }}">
+                  <div style="padding-top:32px;display:flex;flex-direction:column;gap:20px">
+                    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px">
+                      <div><label style="display:block;font-size:13.5px;font-weight:500;color:#2E3A4C;padding-bottom:8px">Vorname</label><input type="text" value="Jens" style="width:100%;height:46px;padding:0 14px;border:1px solid #CBD2DD;border-radius:3px;font-size:15px;color:#2E3A4C;outline:none"></div>
+                      <div><label style="display:block;font-size:13.5px;font-weight:500;color:#2E3A4C;padding-bottom:8px">Nachname</label><input type="text" value="Ohlsen" style="width:100%;height:46px;padding:0 14px;border:1px solid #CBD2DD;border-radius:3px;font-size:15px;color:#2E3A4C;outline:none"></div>
+                    </div>
+                    <div><label style="display:block;font-size:13.5px;font-weight:500;color:#2E3A4C;padding-bottom:8px">E-Mail-Adresse</label><input type="text" value="j.ohlsen@sv-nordwest.de" style="width:100%;height:46px;padding:0 14px;border:1px solid #CBD2DD;border-radius:3px;font-size:15px;color:#2E3A4C;outline:none"><div style="font-size:12.5px;color:#9AA5B4;padding-top:6px">Diese Adresse wird für alle Anfragebenachrichtigungen verwendet.</div></div>
+                    <div>
+                      <label style="display:block;font-size:13.5px;font-weight:500;color:#2E3A4C;padding-bottom:8px">Telefonnummer</label>
+                      <div style="display:flex;align-items:center;height:46px;border:1px solid #CBD2DD;border-radius:3px;overflow:hidden;background:#FFFFFF">
+                        <span style="padding:0 14px;font-size:15px;color:#5B687C;border-right:1px solid #E3E7EE;height:100%;display:flex;align-items:center">+49</span>
+                        <input type="text" value="421 5580120" style="flex:1;min-width:0;height:100%;border:none;outline:none;padding:0 14px;font-size:15px;color:#2E3A4C;font-variant-numeric:tabular-nums">
+                      </div>
+                    </div>
+                    <div>
+                      <label style="display:block;font-size:13.5px;font-weight:500;color:#2E3A4C;padding-bottom:8px">Passwort</label>
+                      <div style="position:relative">
+                        <input type="text" value="Nordwest2026!" style="width:100%;height:46px;padding:0 100px 0 14px;border:1px solid #CBD2DD;border-radius:3px;font-size:15px;color:#2E3A4C;outline:none">
+                        <span style="position:absolute;right:14px;top:50%;transform:translateY(-50%);font-size:12.5px;font-weight:500;color:#14294A;cursor:pointer">Verbergen</span>
+                      </div>
+                      <div style="display:flex;align-items:center;gap:12px;padding-top:10px">
+                        <span style="display:flex;gap:4px;flex:1"><span style="height:3px;flex:1;background:#1B6E48"></span><span style="height:3px;flex:1;background:#1B6E48"></span><span style="height:3px;flex:1;background:#1B6E48"></span><span style="height:3px;flex:1;background:#1B6E48"></span></span>
+                        <span style="font-size:12.5px;color:#1B6E48;white-space:nowrap">Sehr gut</span>
+                      </div>
+                      <div style="display:flex;flex-direction:column;gap:6px;padding-top:14px">
+                        <span style="display:flex;align-items:center;gap:8px"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="color:#5B687C;flex:none;display:block"><path d="M20 6 9 17l-5-5"/></svg><span style="font-size:12.5px;color:#5B687C">Mindestens 10 Zeichen</span></span>
+                        <span style="display:flex;align-items:center;gap:8px"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="color:#5B687C;flex:none;display:block"><path d="M20 6 9 17l-5-5"/></svg><span style="font-size:12.5px;color:#5B687C">Groß- und Kleinbuchstaben</span></span>
+                        <span style="display:flex;align-items:center;gap:8px"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="color:#5B687C;flex:none;display:block"><path d="M20 6 9 17l-5-5"/></svg><span style="font-size:12.5px;color:#5B687C">Mindestens eine Zahl</span></span>
+                        <span style="display:flex;align-items:center;gap:8px"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="color:#5B687C;flex:none;display:block"><path d="M20 6 9 17l-5-5"/></svg><span style="font-size:12.5px;color:#5B687C">Mindestens ein Sonderzeichen</span></span>
+                      </div>
+                    </div>
+                  </div>
+                </sc-if>
+
+                <sc-if value="{{ rStep2 }}" hint-placeholder-val="{{ false }}">
+                  <div style="padding-top:32px;display:flex;flex-direction:column;gap:20px">
+                    <div><label style="display:block;font-size:13.5px;font-weight:500;color:#2E3A4C;padding-bottom:8px">Firmenname</label><input type="text" value="Sachverständige Nordwest GbR" style="width:100%;height:46px;padding:0 14px;border:1px solid #CBD2DD;border-radius:3px;font-size:15px;color:#2E3A4C;outline:none"></div>
+                    <div>
+                      <label style="display:block;font-size:13.5px;font-weight:500;color:#2E3A4C;padding-bottom:8px">Rechtsform</label>
+                      <div style="height:46px;padding:0 14px;border:1px solid #CBD2DD;border-radius:3px;font-size:15px;color:#2E3A4C;background:#FFFFFF;display:flex;align-items:center;justify-content:space-between;gap:8px"><span>GbR</span><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="color:#5B687C;flex:none;display:block"><path d="m6 9 6 6 6-6"/></svg></div>
+                      <div style="font-size:12.5px;color:#9AA5B4;padding-top:6px">Einzelunternehmen · GbR · GmbH · UG · GmbH &amp; Co. KG · Sonstige</div>
+                    </div>
+                    <div><label style="display:block;font-size:13.5px;font-weight:500;color:#2E3A4C;padding-bottom:8px">Straße und Hausnummer</label><input type="text" value="Bahnhofstraße 12" style="width:100%;height:46px;padding:0 14px;border:1px solid #CBD2DD;border-radius:3px;font-size:15px;color:#2E3A4C;outline:none"></div>
+                    <div style="display:grid;grid-template-columns:minmax(120px,160px) minmax(0,1fr);gap:16px">
+                      <div>
+                        <label style="display:block;font-size:13.5px;font-weight:500;color:#2E3A4C;padding-bottom:8px">PLZ</label>
+                        <input type="text" value="28195" style="width:100%;height:46px;padding:0 14px;border:1px solid #CBD2DD;border-radius:3px;font-size:15px;color:#2E3A4C;outline:none;font-variant-numeric:tabular-nums">
+                        <div style="font-size:12.5px;color:#9AA5B4;padding-top:6px">Fünfstellig</div>
+                      </div>
+                      <div>
+                        <label style="display:block;font-size:13.5px;font-weight:500;color:#2E3A4C;padding-bottom:8px">Ort</label>
+                        <div style="display:flex;align-items:center;gap:12px">
+                          <input type="text" value="Bremen" style="flex:1;min-width:0;height:46px;padding:0 14px;border:1px solid #CBD2DD;border-radius:3px;font-size:15px;color:#2E3A4C;outline:none">
+                          <span style="font-size:13.5px;color:#5B687C;white-space:nowrap">28195 · Bremen</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div>
+                      <label style="display:block;font-size:13.5px;font-weight:500;color:#2E3A4C;padding-bottom:8px">USt-IdNr.</label>
+                      <div style="display:flex;align-items:center;height:46px;border:1px solid #CBD2DD;border-radius:3px;overflow:hidden;background:#FFFFFF">
+                        <span style="padding:0 14px;font-size:15px;color:#5B687C;border-right:1px solid #E3E7EE;height:100%;display:flex;align-items:center">DE</span>
+                        <input type="text" value="298114552" style="flex:1;min-width:0;height:100%;border:none;outline:none;padding:0 14px;font-family:'IBM Plex Mono',monospace;font-size:15px;color:#2E3A4C;font-variant-numeric:tabular-nums">
+                      </div>
+                    </div>
+                    <div>
+                      <div style="display:flex;align-items:baseline;justify-content:space-between;gap:16px;padding-bottom:8px">
+                        <label style="font-size:13.5px;font-weight:500;color:#2E3A4C">Website</label>
+                        <span style="font-size:13.5px;color:#9AA5B4">optional</span>
+                      </div>
+                      <input type="text" placeholder="www.sv-nordwest.de" style="width:100%;height:46px;padding:0 14px;border:1px solid #CBD2DD;border-radius:3px;font-size:15px;color:#2E3A4C;outline:none">
+                    </div>
+                  </div>
+                </sc-if>
+
+                <sc-if value="{{ rStep4 }}" hint-placeholder-val="{{ false }}">
+                  <div style="padding-top:32px">
+                    <p style="font-size:15px;line-height:1.65;color:#5B687C;max-width:60ch">Legen Sie fest, aus welchen Postleitzahlgebieten Sie Anfragen erhalten. Sie können das Gebiet später jederzeit im Portal ändern.</p>
+                    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr)) auto;gap:12px;align-items:end;padding-top:20px">
+                      <div><label style="display:block;font-size:13.5px;font-weight:500;color:#2E3A4C;padding-bottom:8px">PLZ von</label><input type="text" placeholder="26121" style="width:100%;height:46px;padding:0 14px;border:1px solid #CBD2DD;border-radius:3px;font-size:15px;color:#2E3A4C;outline:none;font-variant-numeric:tabular-nums"></div>
+                      <div><label style="display:block;font-size:13.5px;font-weight:500;color:#2E3A4C;padding-bottom:8px">PLZ bis</label><input type="text" placeholder="26135" style="width:100%;height:46px;padding:0 14px;border:1px solid #CBD2DD;border-radius:3px;font-size:15px;color:#2E3A4C;outline:none;font-variant-numeric:tabular-nums"></div>
+                      <button type="button" style="height:46px;padding:0 18px;background:#FFFFFF;color:#14294A;border:1px solid #14294A;border-radius:3px;font-size:15px;font-weight:500;cursor:pointer;white-space:nowrap;transition:background 140ms cubic-bezier(0.4,0,0.2,1)" style-hover="background:#E8EDF5">Hinzufügen</button>
+                    </div>
+                    <div style="display:flex;gap:8px;flex-wrap:wrap;padding-top:16px">
+                      <span style="height:32px;padding:0 12px;border:1px solid #CBD2DD;border-radius:3px;display:inline-flex;align-items:center;gap:10px;font-size:13.5px;color:#2E3A4C;background:#FFFFFF">Bremen · 28195–28779<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="color:#5B687C;display:block;cursor:pointer"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></span>
+                      <span style="height:32px;padding:0 12px;border:1px solid #CBD2DD;border-radius:3px;display:inline-flex;align-items:center;gap:10px;font-size:13.5px;color:#2E3A4C;background:#FFFFFF">Oldenburg · 26121–26135<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="color:#5B687C;display:block;cursor:pointer"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></span>
+                    </div>
+
+                    <div style="border:1px solid #E3E7EE;border-radius:3px;padding:20px;margin-top:24px">
+                      <div style="font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C;padding-bottom:16px">Abdeckung</div>
+                      <div style="display:grid;grid-template-columns:repeat(14,1fr);gap:3px;max-width:420px">
+                        <div style="aspect-ratio:1"></div><div style="aspect-ratio:1"></div><div style="aspect-ratio:1"></div><div style="aspect-ratio:1;background:#F1F3F7"></div><div style="aspect-ratio:1;background:#F1F3F7"></div><div style="aspect-ratio:1;background:#F1F3F7"></div><div style="aspect-ratio:1;background:#F1F3F7"></div><div style="aspect-ratio:1;background:#F1F3F7"></div><div style="aspect-ratio:1;background:#F1F3F7"></div><div style="aspect-ratio:1"></div><div style="aspect-ratio:1"></div><div style="aspect-ratio:1"></div><div style="aspect-ratio:1"></div><div style="aspect-ratio:1"></div>
+                        <div style="aspect-ratio:1"></div><div style="aspect-ratio:1;background:#F1F3F7"></div><div style="aspect-ratio:1;background:#E8EDF5"></div><div style="aspect-ratio:1;background:#14294A"></div><div style="aspect-ratio:1;background:#14294A"></div><div style="aspect-ratio:1;background:#E8EDF5"></div><div style="aspect-ratio:1;background:#F1F3F7"></div><div style="aspect-ratio:1;background:#F1F3F7"></div><div style="aspect-ratio:1;background:#F1F3F7"></div><div style="aspect-ratio:1;background:#F1F3F7"></div><div style="aspect-ratio:1"></div><div style="aspect-ratio:1"></div><div style="aspect-ratio:1"></div><div style="aspect-ratio:1"></div>
+                        <div style="aspect-ratio:1"></div><div style="aspect-ratio:1;background:#F1F3F7"></div><div style="aspect-ratio:1;background:#14294A"></div><div style="aspect-ratio:1;background:#14294A"></div><div style="aspect-ratio:1;background:#E8EDF5"></div><div style="aspect-ratio:1;background:#F1F3F7"></div><div style="aspect-ratio:1;background:#F1F3F7"></div><div style="aspect-ratio:1;background:#F1F3F7"></div><div style="aspect-ratio:1;background:#F1F3F7"></div><div style="aspect-ratio:1;background:#F1F3F7"></div><div style="aspect-ratio:1;background:#F1F3F7"></div><div style="aspect-ratio:1"></div><div style="aspect-ratio:1"></div><div style="aspect-ratio:1"></div>
+                        <div style="aspect-ratio:1"></div><div style="aspect-ratio:1;background:#F1F3F7"></div><div style="aspect-ratio:1;background:#F1F3F7"></div><div style="aspect-ratio:1;background:#F1F3F7"></div><div style="aspect-ratio:1;background:#F1F3F7"></div><div style="aspect-ratio:1;background:#F1F3F7"></div><div style="aspect-ratio:1;background:#F1F3F7"></div><div style="aspect-ratio:1;background:#F1F3F7"></div><div style="aspect-ratio:1;background:#F1F3F7"></div><div style="aspect-ratio:1;background:#F1F3F7"></div><div style="aspect-ratio:1;background:#F1F3F7"></div><div style="aspect-ratio:1"></div><div style="aspect-ratio:1"></div><div style="aspect-ratio:1"></div>
+                        <div style="aspect-ratio:1"></div><div style="aspect-ratio:1"></div><div style="aspect-ratio:1;background:#F1F3F7"></div><div style="aspect-ratio:1;background:#F1F3F7"></div><div style="aspect-ratio:1;background:#F1F3F7"></div><div style="aspect-ratio:1;background:#F1F3F7"></div><div style="aspect-ratio:1;background:#F1F3F7"></div><div style="aspect-ratio:1;background:#F1F3F7"></div><div style="aspect-ratio:1;background:#F1F3F7"></div><div style="aspect-ratio:1;background:#F1F3F7"></div><div style="aspect-ratio:1"></div><div style="aspect-ratio:1"></div><div style="aspect-ratio:1"></div><div style="aspect-ratio:1"></div>
+                        <div style="aspect-ratio:1"></div><div style="aspect-ratio:1"></div><div style="aspect-ratio:1"></div><div style="aspect-ratio:1;background:#F1F3F7"></div><div style="aspect-ratio:1;background:#F1F3F7"></div><div style="aspect-ratio:1;background:#F1F3F7"></div><div style="aspect-ratio:1;background:#F1F3F7"></div><div style="aspect-ratio:1;background:#F1F3F7"></div><div style="aspect-ratio:1"></div><div style="aspect-ratio:1"></div><div style="aspect-ratio:1"></div><div style="aspect-ratio:1"></div><div style="aspect-ratio:1"></div><div style="aspect-ratio:1"></div>
+                      </div>
+                      <div style="display:flex;align-items:center;gap:20px;flex-wrap:wrap;padding-top:14px">
+                        <span style="display:inline-flex;align-items:center;gap:8px"><span style="width:10px;height:10px;background:#14294A"></span><span style="font-size:12.5px;color:#5B687C">Ihr Gebiet</span></span>
+                        <span style="display:inline-flex;align-items:center;gap:8px"><span style="width:10px;height:10px;background:#E8EDF5"></span><span style="font-size:12.5px;color:#5B687C">Randgebiet</span></span>
+                        <span style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#9AA5B4">Schematisch · finale Karte auf PLZ-Geodaten</span>
+                      </div>
+                    </div>
+
+                    <div style="padding-top:24px;display:flex;flex-direction:column;gap:16px">
+                      <div style="display:flex;gap:12px">
+                        <span style="width:18px;height:18px;border:1px solid #14294A;border-radius:3px;background:#14294A;flex:none;display:grid;place-items:center;color:#FFFFFF;margin-top:2px"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block"><path d="M20 6 9 17l-5-5"/></svg></span>
+                        <span style="font-size:13.5px;line-height:1.55;color:#5B687C">Ich akzeptiere die <a href="#" style="color:#14294A;border-bottom:1px solid #14294A;padding-bottom:2px">Allgemeinen Geschäftsbedingungen</a> und die Provisionsvereinbarung von 15 % auf abgeschlossene Aufträge.</span>
+                      </div>
+                      <div style="display:flex;gap:12px">
+                        <span style="width:18px;height:18px;border:1px solid #14294A;border-radius:3px;background:#14294A;flex:none;display:grid;place-items:center;color:#FFFFFF;margin-top:2px"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block"><path d="M20 6 9 17l-5-5"/></svg></span>
+                        <span style="font-size:13.5px;line-height:1.55;color:#5B687C">Ich habe die <a href="#" style="color:#14294A;border-bottom:1px solid #14294A;padding-bottom:2px">Datenschutzerklärung</a> gelesen und stimme der Verarbeitung meiner Daten zu.</span>
+                      </div>
+                    </div>
+
+                    <div style="border:1px solid #E3E7EE;border-radius:5px;margin-top:24px">
+                      <div style="padding:16px 20px;border-bottom:1px solid #E3E7EE;font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C">Zusammenfassung</div>
+                      <div style="padding:16px 20px;border-bottom:1px solid #F1F3F7">
+                        <div style="display:flex;align-items:baseline;justify-content:space-between;gap:16px;padding-bottom:10px">
+                          <span style="font-size:13.5px;font-weight:500;color:#2E3A4C">Zugang</span>
+                          <button type="button" onClick="{{ rGo1 }}" style="background:transparent;border:none;color:#14294A;font-size:13.5px;font-weight:500;cursor:pointer;padding:0">Bearbeiten</button>
+                        </div>
+                        <div style="font-size:13.5px;line-height:1.7;color:#5B687C">Jens Ohlsen · j.ohlsen@sv-nordwest.de · <span style="font-family:'IBM Plex Mono',monospace">+49 421 5580120</span></div>
+                      </div>
+                      <div style="padding:16px 20px;border-bottom:1px solid #F1F3F7">
+                        <div style="display:flex;align-items:baseline;justify-content:space-between;gap:16px;padding-bottom:10px">
+                          <span style="font-size:13.5px;font-weight:500;color:#2E3A4C">Unternehmen</span>
+                          <button type="button" onClick="{{ rGo2 }}" style="background:transparent;border:none;color:#14294A;font-size:13.5px;font-weight:500;cursor:pointer;padding:0">Bearbeiten</button>
+                        </div>
+                        <div style="font-size:13.5px;line-height:1.7;color:#5B687C">Sachverständige Nordwest GbR · Bahnhofstraße 12, 28195 Bremen · <span style="font-family:'IBM Plex Mono',monospace">DE 298114552</span></div>
+                      </div>
+                      <div style="padding:16px 20px;border-bottom:1px solid #F1F3F7">
+                        <div style="display:flex;align-items:baseline;justify-content:space-between;gap:16px;padding-bottom:10px">
+                          <span style="font-size:13.5px;font-weight:500;color:#2E3A4C">Qualifikation</span>
+                          <button type="button" onClick="{{ rGo3 }}" style="background:transparent;border:none;color:#14294A;font-size:13.5px;font-weight:500;cursor:pointer;padding:0">Bearbeiten</button>
+                        </div>
+                        <div style="font-size:13.5px;line-height:1.7;color:#5B687C">DEKRA · <span style="font-family:'IBM Plex Mono',monospace">DE-KFZ-114-2291</span> · gültig bis 31.12.2028 · 4 Gutachtenarten</div>
+                      </div>
+                      <div style="padding:16px 20px">
+                        <div style="display:flex;align-items:baseline;justify-content:space-between;gap:16px;padding-bottom:10px">
+                          <span style="font-size:13.5px;font-weight:500;color:#2E3A4C">Einsatzgebiet</span>
+                          <span style="font-size:13.5px;color:#9AA5B4">aktueller Schritt</span>
+                        </div>
+                        <div style="font-size:13.5px;line-height:1.7;color:#5B687C"><span style="font-family:'IBM Plex Mono',monospace">28195–28779</span> · <span style="font-family:'IBM Plex Mono',monospace">26121–26135</span></div>
+                      </div>
+                    </div>
+                  </div>
+                </sc-if>
+
+                <sc-if value="{{ rStep3 }}" hint-placeholder-val="{{ true }}">
+                <div style="padding-top:32px;display:flex;flex-direction:column;gap:20px">
+                  <div>
+                    <label style="display:block;font-size:13.5px;font-weight:500;color:#2E3A4C;padding-bottom:8px">Zertifizierungsstelle</label>
+                    <div style="height:46px;padding:0 14px;border:1px solid #CBD2DD;border-radius:3px;font-size:15px;color:#2E3A4C;background:#FFFFFF;display:flex;align-items:center;justify-content:space-between;gap:8px"><span>DEKRA</span><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="color:#5B687C;flex:none;display:block"><path d="m6 9 6 6 6-6"/></svg></div>
+                  </div>
+                  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px">
+                    <div>
+                      <label style="display:block;font-size:13.5px;font-weight:500;color:#2E3A4C;padding-bottom:8px">Zertifizierungsnummer</label>
+                      <input type="text" value="DE-KFZ-114-2291" style="width:100%;height:46px;padding:0 14px;border:1px solid #CBD2DD;border-radius:3px;font-family:'IBM Plex Mono',monospace;font-size:15px;color:#2E3A4C;outline:none;font-variant-numeric:tabular-nums">
+                    </div>
+                    <div>
+                      <label style="display:block;font-size:13.5px;font-weight:500;color:#2E3A4C;padding-bottom:8px">Zertifikat gültig bis</label>
+                      <div style="height:46px;padding:0 14px;border:1px solid #CBD2DD;border-radius:3px;background:#FFFFFF;display:flex;align-items:center;justify-content:space-between;gap:8px"><span style="font-family:'IBM Plex Mono',monospace;font-size:15px;color:#2E3A4C;font-variant-numeric:tabular-nums">31.12.2028</span><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="color:#5B687C;flex:none;display:block"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg></div>
+                    </div>
+                  </div>
+                  <div>
+                    <label style="display:block;font-size:13.5px;font-weight:500;color:#2E3A4C;padding-bottom:8px">Nachweis der Qualifikation</label>
+                    <div style="height:64px;border:1px solid #E3E7EE;border-radius:3px;display:flex;align-items:center;gap:12px;padding:0 16px;background:#FFFFFF">
+                      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="color:#14294A;flex:none;display:block"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"/><path d="M14 2v5h6"/><path d="M9 13h6"/><path d="M9 17h6"/></svg>
+                      <div style="min-width:0;flex:1">
+                        <div style="font-size:15px;font-weight:500;color:#2E3A4C;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Zertifikat_DEKRA_2026.pdf</div>
+                        <div style="font-family:'IBM Plex Mono',monospace;font-size:12.5px;color:#9AA5B4;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">1,2 MB · 18.08.2026 · 09:12</div>
+                      </div>
+                      <span style="font-size:13.5px;font-weight:500;color:#14294A;cursor:pointer;white-space:nowrap">Entfernen</span>
+                    </div>
+                  </div>
+                  <div>
+                    <label style="display:block;font-size:13.5px;font-weight:500;color:#2E3A4C;padding-bottom:8px">Angebotene Gutachtenarten</label>
+                    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:8px">
+                      <div style="border:1px solid #14294A;background:#E8EDF5;border-radius:3px;padding:12px 14px;display:flex;align-items:center;justify-content:space-between;gap:12px"><span style="font-size:13.5px;color:#14294A;font-weight:500">Unfallgutachten</span><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="color:#14294A;flex:none;display:block"><path d="M20 6 9 17l-5-5"/></svg></div>
+                      <div style="border:1px solid #14294A;background:#E8EDF5;border-radius:3px;padding:12px 14px;display:flex;align-items:center;justify-content:space-between;gap:12px"><span style="font-size:13.5px;color:#14294A;font-weight:500">Haftpflichtgutachten</span><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="color:#14294A;flex:none;display:block"><path d="M20 6 9 17l-5-5"/></svg></div>
+                      <div style="border:1px solid #CBD2DD;background:#FFFFFF;border-radius:3px;padding:12px 14px;display:flex;align-items:center;justify-content:space-between;gap:12px"><span style="font-size:13.5px;color:#2E3A4C">Kaskogutachten</span></div>
+                      <div style="border:1px solid #14294A;background:#E8EDF5;border-radius:3px;padding:12px 14px;display:flex;align-items:center;justify-content:space-between;gap:12px"><span style="font-size:13.5px;color:#14294A;font-weight:500">Wertgutachten</span><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="color:#14294A;flex:none;display:block"><path d="M20 6 9 17l-5-5"/></svg></div>
+                      <div style="border:1px solid #CBD2DD;background:#FFFFFF;border-radius:3px;padding:12px 14px;display:flex;align-items:center;justify-content:space-between;gap:12px"><span style="font-size:13.5px;color:#2E3A4C">Oldtimergutachten</span></div>
+                      <div style="border:1px solid #14294A;background:#E8EDF5;border-radius:3px;padding:12px 14px;display:flex;align-items:center;justify-content:space-between;gap:12px"><span style="font-size:13.5px;color:#14294A;font-weight:500">Beweissicherung</span><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="color:#14294A;flex:none;display:block"><path d="M20 6 9 17l-5-5"/></svg></div>
+                    </div>
+                  </div>
+                </div>
+
+                </sc-if>
+
+                <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;padding-top:32px;flex-wrap:wrap">
+                  <sc-if value="{{ rHasBack }}" hint-placeholder-val="{{ true }}">
+                    <button type="button" onClick="{{ rBack }}" style="height:46px;padding:0 4px;background:transparent;color:#14294A;border:none;font-size:15px;font-weight:500;cursor:pointer;display:inline-flex;align-items:center;gap:8px"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>Zurück</button>
+                  </sc-if>
+                  <sc-if value="{{ rFirstStep }}" hint-placeholder-val="{{ false }}">
+                    <a href="#" onClick="{{ g1 }}" style="font-size:13.5px;font-weight:500;color:#14294A">Bereits Partner? Anmelden</a>
+                  </sc-if>
+                  <button type="button" onClick="{{ rNext }}" style="height:46px;padding:0 28px;background:#14294A;color:#FFFFFF;border:1px solid #14294A;border-radius:3px;font-size:15px;font-weight:500;cursor:pointer;transition:background 140ms cubic-bezier(0.4,0,0.2,1)" style-hover="background:#27508B;border-color:#27508B" style-active="background:#0E1E36;transform:translateY(1px)">{{ rNextLabel }}</button>
+                </div>
+                <div style="display:flex;align-items:center;justify-content:flex-end;gap:8px;padding-top:16px">
+                  <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="color:#9AA5B4;flex:none;display:block"><path d="M20 6 9 17l-5-5"/></svg>
+                  <span style="font-family:'IBM Plex Mono',monospace;font-size:12.5px;color:#9AA5B4">Automatisch gespeichert · 14:32</span>
+                </div>
+                <div style="border-top:1px solid #E3E7EE;margin-top:24px;padding-top:16px;font-family:'IBM Plex Mono',monospace;font-size:11.5px;line-height:1.7;color:#9AA5B4">Schritt {{ rStepNum }} von 4 · über die Knotenpunkte navigierbar<br>Qualifikationsnachweise sind noch nicht im bestätigten Umfang</div>
+              </div>
+            </sc-if>
+
+            <sc-if value="{{ isCode }}" hint-placeholder-val="{{ false }}">
+              <div>
+                <div style="padding-top:32px">
+                  <div style="display:flex;gap:8px;flex-wrap:wrap">
+                    <span style="width:52px;height:56px;border:1px solid {{ codeBorder }};background:{{ codeFill }};border-radius:3px;display:grid;place-items:center;font-family:'IBM Plex Mono',monospace;font-size:22px;color:#2E3A4C">{{ c1 }}</span>
+                    <span style="width:52px;height:56px;border:1px solid {{ codeBorder }};background:{{ codeFill }};border-radius:3px;display:grid;place-items:center;font-family:'IBM Plex Mono',monospace;font-size:22px;color:#2E3A4C">{{ c2 }}</span>
+                    <span style="width:52px;height:56px;border:1px solid {{ codeBorder }};background:{{ codeFill }};border-radius:3px;display:grid;place-items:center;font-family:'IBM Plex Mono',monospace;font-size:22px;color:#2E3A4C">{{ c3 }}</span>
+                    <span style="width:52px;height:56px;border:1px solid {{ codeBorder }};background:{{ codeFill }};border-radius:3px;display:grid;place-items:center;font-family:'IBM Plex Mono',monospace;font-size:22px;color:#2E3A4C">{{ c4 }}</span>
+                    <span style="width:52px;height:56px;border:1px solid {{ codeBorder }};background:{{ codeFill }};border-radius:3px;display:grid;place-items:center;font-family:'IBM Plex Mono',monospace;font-size:22px;color:#2E3A4C">{{ c5 }}</span>
+                    <span style="width:52px;height:56px;border:1px solid {{ codeBorder }};background:{{ codeFill }};border-radius:3px;display:grid;place-items:center;font-family:'IBM Plex Mono',monospace;font-size:22px;color:#2E3A4C">{{ c6 }}</span>
+                  </div>
+                  <sc-if value="{{ codeError }}" hint-placeholder-val="{{ false }}">
+                    <div style="display:flex;align-items:flex-start;gap:6px;padding-top:8px">
+                      <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="color:#A32318;flex:none;display:block;margin-top:3px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                      <span style="font-size:12.5px;line-height:1.5;color:#A32318">Der Code ist ungültig oder abgelaufen.</span>
+                    </div>
+                  </sc-if>
+                </div>
+                <sc-if value="{{ isTwoFactor }}" hint-placeholder-val="{{ false }}">
+                  <div style="display:flex;gap:12px;padding-top:24px">
+                    <span style="width:18px;height:18px;border:1px solid #CBD2DD;border-radius:3px;flex:none;margin-top:2px"></span>
+                    <span style="font-size:13.5px;line-height:1.55;color:#5B687C">Diesem Gerät für 30 Tage vertrauen.</span>
+                  </div>
+                </sc-if>
+                <button type="button" style="width:100%;height:46px;margin-top:24px;background:#14294A;color:#FFFFFF;border:1px solid #14294A;border-radius:3px;font-size:15px;font-weight:500;cursor:pointer;transition:background 140ms cubic-bezier(0.4,0,0.2,1)" style-hover="background:#27508B;border-color:#27508B">Bestätigen</button>
+                <div style="height:1px;background:#E3E7EE;margin-top:32px"></div>
+                <div style="font-size:13.5px;color:#5B687C;padding-top:20px">Code nicht erhalten? <span style="color:#9AA5B4">Erneut senden möglich in </span><span style="font-family:'IBM Plex Mono',monospace;color:#2E3A4C;font-variant-numeric:tabular-nums">00:38</span></div>
+                <sc-if value="{{ showCodeVariants }}" hint-placeholder-val="{{ true }}">
+                  <div style="display:flex;gap:8px;padding-top:24px">
+                    <button type="button" onClick="{{ v0 }}" style="height:26px;padding:0 10px;border:1px solid #CBD2DD;border-radius:3px;font-family:'IBM Plex Mono',monospace;font-size:11.5px;cursor:pointer;background:{{ vb0 }};color:{{ vf0 }}">Teilweise</button>
+                    <button type="button" onClick="{{ v1 }}" style="height:26px;padding:0 10px;border:1px solid #CBD2DD;border-radius:3px;font-family:'IBM Plex Mono',monospace;font-size:11.5px;cursor:pointer;background:{{ vb1 }};color:{{ vf1 }}">Vollständig</button>
+                    <button type="button" onClick="{{ v2 }}" style="height:26px;padding:0 10px;border:1px solid #CBD2DD;border-radius:3px;font-family:'IBM Plex Mono',monospace;font-size:11.5px;cursor:pointer;background:{{ vb2 }};color:{{ vf2 }}">Fehler</button>
+                  </div>
+                </sc-if>
+                <sc-if value="{{ isTwoFactor }}" hint-placeholder-val="{{ false }}">
+                  <div style="display:flex;gap:8px;padding-top:24px">
+                    <button type="button" onClick="{{ v0 }}" style="height:26px;padding:0 10px;border:1px solid #CBD2DD;border-radius:3px;font-family:'IBM Plex Mono',monospace;font-size:11.5px;cursor:pointer;background:{{ vb0 }};color:{{ vf0 }}">Anmeldung</button>
+                    <button type="button" onClick="{{ v1 }}" style="height:26px;padding:0 10px;border:1px solid #CBD2DD;border-radius:3px;font-family:'IBM Plex Mono',monospace;font-size:11.5px;cursor:pointer;background:{{ vb1 }};color:{{ vf1 }}">Zwei-Faktor</button>
+                  </div>
+                  <div style="border-top:1px solid #E3E7EE;margin-top:24px;padding-top:16px;font-family:'IBM Plex Mono',monospace;font-size:11.5px;line-height:1.7;color:#9AA5B4">Zugriffe werden protokolliert · Code aus der Authenticator-App</div>
+                </sc-if>
+              </div>
+            </sc-if>
+
+            <sc-if value="{{ isInvite }}" hint-placeholder-val="{{ false }}">
+              <div>
+                <sc-if value="{{ inviteValid }}" hint-placeholder-val="{{ true }}">
+                  <div>
+                    <div style="border:1px solid #E3E7EE;border-left:3px solid #14294A;border-radius:3px;background:#F8F9FB;padding:16px 20px;margin-top:24px">
+                      <p style="font-size:15px;line-height:1.65;color:#2E3A4C">„Sehr geehrter Herr Ohlsen, wir würden Sie gern als Partner für den Raum Bremen und Oldenburg aufnehmen. Ihre Nachweise liegen uns bereits vor.“</p>
+                      <div style="font-family:'IBM Plex Mono',monospace;font-size:12.5px;color:#9AA5B4;padding-top:12px">K. Ahrens · DKGZ Administration · 14.08.2026</div>
+                    </div>
+                    <div style="padding-top:24px;display:flex;flex-direction:column;gap:20px">
+                      <div>
+                        <div style="display:flex;align-items:baseline;justify-content:space-between;gap:16px;padding-bottom:8px">
+                          <label style="font-size:13.5px;font-weight:500;color:#2E3A4C">E-Mail-Adresse</label>
+                          <span style="font-size:13.5px;color:#9AA5B4">gesperrt</span>
+                        </div>
+                        <div style="position:relative">
+                          <div style="width:100%;height:46px;padding:0 40px 0 14px;background:#F8F9FB;border-radius:3px;font-size:15px;color:#5B687C;display:flex;align-items:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">j.ohlsen@sv-nordwest.de</div>
+                          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="position:absolute;right:14px;top:50%;transform:translateY(-50%);color:#9AA5B4;display:block"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                        </div>
+                      </div>
+                      <div>
+                        <label style="display:block;font-size:13.5px;font-weight:500;color:#2E3A4C;padding-bottom:8px">Passwort festlegen</label>
+                        <div style="position:relative">
+                          <input type="text" value="Nordwest2026!" style="width:100%;height:46px;padding:0 100px 0 14px;border:1px solid #CBD2DD;border-radius:3px;font-size:15px;color:#2E3A4C;outline:none">
+                          <span style="position:absolute;right:14px;top:50%;transform:translateY(-50%);font-size:12.5px;font-weight:500;color:#14294A;cursor:pointer">Verbergen</span>
+                        </div>
+                        <div style="display:flex;align-items:center;gap:12px;padding-top:10px">
+                          <span style="display:flex;gap:4px;flex:1"><span style="height:3px;flex:1;background:#27508B"></span><span style="height:3px;flex:1;background:#27508B"></span><span style="height:3px;flex:1;background:#27508B"></span><span style="height:3px;flex:1;background:#E3E7EE"></span></span>
+                          <span style="font-size:12.5px;color:#27508B;white-space:nowrap">Gut</span>
+                        </div>
+                        <div style="display:flex;flex-direction:column;gap:6px;padding-top:14px">
+                          <span style="display:flex;align-items:center;gap:8px"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="color:#5B687C;flex:none;display:block"><path d="M20 6 9 17l-5-5"/></svg><span style="font-size:12.5px;color:#5B687C">Mindestens 10 Zeichen</span></span>
+                          <span style="display:flex;align-items:center;gap:8px"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="color:#5B687C;flex:none;display:block"><path d="M20 6 9 17l-5-5"/></svg><span style="font-size:12.5px;color:#5B687C">Groß- und Kleinbuchstaben</span></span>
+                          <span style="display:flex;align-items:center;gap:8px"><span style="width:14px;height:14px;border:1px solid #CBD2DD;border-radius:50%;flex:none"></span><span style="font-size:12.5px;color:#9AA5B4">Mindestens eine Zahl</span></span>
+                          <span style="display:flex;align-items:center;gap:8px"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="color:#5B687C;flex:none;display:block"><path d="M20 6 9 17l-5-5"/></svg><span style="font-size:12.5px;color:#5B687C">Mindestens ein Sonderzeichen</span></span>
+                        </div>
+                      </div>
+                      <div>
+                        <label style="display:block;font-size:13.5px;font-weight:500;color:#2E3A4C;padding-bottom:8px">Passwort wiederholen</label>
+                        <input type="password" value="Nordwest2026!" style="width:100%;height:46px;padding:0 14px;border:1px solid #CBD2DD;border-radius:3px;font-size:15px;color:#2E3A4C;outline:none">
+                      </div>
+                    </div>
+                    <button type="button" style="width:100%;height:46px;margin-top:24px;background:#14294A;color:#FFFFFF;border:1px solid #14294A;border-radius:3px;font-size:15px;font-weight:500;cursor:pointer;transition:background 140ms cubic-bezier(0.4,0,0.2,1)" style-hover="background:#27508B;border-color:#27508B">Einladung annehmen und fortfahren</button>
+                  </div>
+                </sc-if>
+                <sc-if value="{{ inviteExpired }}" hint-placeholder-val="{{ false }}">
+                  <div style="padding-top:32px">
+                    <div style="border:1px solid #9C6F15;border-radius:3px;background:rgba(156,111,21,0.04);padding:16px">
+                      <div style="display:flex;align-items:center;gap:8px">
+                        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="color:#9C6F15;flex:none;display:block"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                        <span style="font-size:15px;font-weight:600;color:#9C6F15">Einladung abgelaufen</span>
+                      </div>
+                      <p style="font-size:13.5px;line-height:1.55;color:#5B687C;padding:10px 0 0 24px">Diese Einladung war 14 Tage gültig. Sie wurde am 14.08.2026 versendet.</p>
+                    </div>
+                    <p style="font-size:15px;line-height:1.65;color:#5B687C;padding-top:24px">Bitte wenden Sie sich an die DKGZ-Administration, um eine neue Einladung zu erhalten.</p>
+                    <div style="border:1px solid #E3E7EE;border-radius:3px;padding:16px;margin-top:20px">
+                      <div style="font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C;padding-bottom:8px">Kontakt</div>
+                      <div style="font-family:'IBM Plex Mono',monospace;font-size:15px;color:#14294A;font-variant-numeric:tabular-nums">+49 179 4480169</div>
+                      <div style="font-size:13.5px;color:#5B687C">Mo–Fr 08:00–18:00</div>
+                    </div>
+                  </div>
+                </sc-if>
+                <div style="display:flex;gap:8px;padding-top:24px">
+                  <button type="button" onClick="{{ v0 }}" style="height:26px;padding:0 10px;border:1px solid #CBD2DD;border-radius:3px;font-family:'IBM Plex Mono',monospace;font-size:11.5px;cursor:pointer;background:{{ vb0 }};color:{{ vf0 }}">Gültig</button>
+                  <button type="button" onClick="{{ v1 }}" style="height:26px;padding:0 10px;border:1px solid #CBD2DD;border-radius:3px;font-family:'IBM Plex Mono',monospace;font-size:11.5px;cursor:pointer;background:{{ vb1 }};color:{{ vf1 }}">Abgelaufen</button>
+                </div>
+              </div>
+            </sc-if>
+
+            <sc-if value="{{ isPending }}" hint-placeholder-val="{{ false }}">
+              <div style="padding-top:8px">
+                <div style="width:56px;height:56px;border-radius:50%;border:1.5px solid #14294A;display:grid;place-items:center;color:#14294A"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+                <h2 style="font-size:30px;line-height:1.2;font-weight:600;letter-spacing:-0.018em;color:#14294A;padding-top:24px">Ihre Registrierung wird geprüft.</h2>
+                <p style="font-size:15px;line-height:1.65;color:#5B687C;padding-top:12px;max-width:56ch">DKGZ prüft jede Partnerregistrierung einzeln — Qualifikationsnachweis, Haftpflicht und Einsatzgebiet. Sobald die Freigabe erteilt ist, erhalten Sie eine E-Mail und sehen hier Ihre ersten Anfragen.</p>
+
+                <div style="padding-top:32px">
+                  <div style="display:grid;grid-template-columns:20px minmax(0,1fr);gap:16px">
+                    <div style="display:flex;flex-direction:column;align-items:center"><span style="width:10px;height:10px;border-radius:50%;background:#14294A;margin-top:5px"></span><span style="width:1px;flex:1;background:#E3E7EE;min-height:32px"></span></div>
+                    <div style="padding-bottom:20px"><div style="font-size:15px;font-weight:500;color:#2E3A4C">Registrierung eingegangen</div><div style="font-family:'IBM Plex Mono',monospace;font-size:12.5px;color:#9AA5B4;font-variant-numeric:tabular-nums">15.08.2026 · 11:24</div></div>
+                    <div style="display:flex;flex-direction:column;align-items:center"><span style="width:10px;height:10px;border-radius:50%;background:#14294A;margin-top:5px;animation:dkgz-pulse 2400ms ease-in-out infinite"></span><span style="width:1px;flex:1;background:#E3E7EE;min-height:32px"></span></div>
+                    <div style="padding-bottom:20px"><div style="font-size:15px;font-weight:500;color:#2E3A4C">Prüfung durch DKGZ</div><div style="font-family:'IBM Plex Mono',monospace;font-size:12.5px;color:#9C6F15">läuft</div></div>
+                    <div style="display:flex;flex-direction:column;align-items:center"><span style="width:10px;height:10px;border-radius:50%;border:1px solid #CBD2DD;background:#FFFFFF;margin-top:5px"></span></div>
+                    <div><div style="font-size:15px;color:#9AA5B4">Freigabe und Zugang</div><div style="font-family:'IBM Plex Mono',monospace;font-size:12.5px;color:#CBD2DD">offen</div></div>
+                  </div>
+                </div>
+
+                <div style="border:1px solid #E3E7EE;border-radius:3px;padding:16px;margin-top:24px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap">
+                  <span style="font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C">Vorgangsnummer</span>
+                  <span style="font-family:'IBM Plex Mono',monospace;font-size:15px;color:#14294A;font-variant-numeric:tabular-nums;white-space:nowrap">REG-2026-00184</span>
+                </div>
+                <div style="height:1px;background:#E3E7EE;margin-top:32px"></div>
+                <a href="#" onClick="{{ g1 }}" style="display:inline-flex;align-items:center;gap:8px;font-size:13.5px;font-weight:500;color:#14294A;margin-top:20px"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>Abmelden</a>
+              </div>
+            </sc-if>
+
+            <sc-if value="{{ isRejected }}" hint-placeholder-val="{{ false }}">
+              <div style="padding-top:8px">
+                <div style="width:56px;height:56px;border-radius:50%;border:1.5px solid #14294A;display:grid;place-items:center;color:#14294A"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></div>
+                <h2 style="font-size:30px;line-height:1.2;font-weight:600;letter-spacing:-0.018em;color:#14294A;padding-top:24px">Registrierung nicht freigegeben.</h2>
+                <p style="font-size:15px;line-height:1.65;color:#5B687C;padding-top:12px;max-width:56ch">Ihre Registrierung wurde geprüft und konnte nicht freigegeben werden. Eine erneute Registrierung ist möglich, sobald die genannten Unterlagen vorliegen.</p>
+                <div style="border:1px solid #E3E7EE;border-radius:3px;background:#F8F9FB;padding:16px 20px;margin-top:24px">
+                  <div style="font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C;padding-bottom:8px">Begründung</div>
+                  <p style="font-size:15px;line-height:1.65;color:#2E3A4C">Der eingereichte Qualifikationsnachweis war nicht lesbar. Bitte reichen Sie das Zertifikat der Zertifizierungsstelle vollständig und als PDF ein.</p>
+                  <div style="font-family:'IBM Plex Mono',monospace;font-size:12.5px;color:#9AA5B4;padding-top:12px">REG-2026-00184 · Entscheidung 17.08.2026</div>
+                </div>
+                <div style="display:flex;align-items:center;gap:16px;padding-top:24px;flex-wrap:wrap">
+                  <button type="button" onClick="{{ g4 }}" style="height:46px;padding:0 24px;background:#14294A;color:#FFFFFF;border:1px solid #14294A;border-radius:3px;font-size:15px;font-weight:500;cursor:pointer">Erneut registrieren</button>
+                  <span style="font-size:13.5px;color:#5B687C">Rückfragen: <span style="font-family:'IBM Plex Mono',monospace;color:#14294A">+49 179 4480169</span></span>
+                </div>
+              </div>
+            </sc-if>
+
+            <sc-if value="{{ isBlocked }}" hint-placeholder-val="{{ false }}">
+              <div style="padding-top:8px">
+                <div style="width:56px;height:56px;border-radius:50%;border:1.5px solid #14294A;display:grid;place-items:center;color:#14294A"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+                <h2 style="font-size:30px;line-height:1.2;font-weight:600;letter-spacing:-0.018em;color:#14294A;padding-top:24px">Ihr Zugang ist derzeit gesperrt.</h2>
+                <p style="font-size:15px;line-height:1.65;color:#5B687C;padding-top:12px;max-width:56ch">Ihr Partnerkonto wurde vorübergehend gesperrt. Laufende Aufträge bleiben bestehen und sind weiterhin abzuschließen.</p>
+                <div style="border:1px solid #E3E7EE;border-radius:3px;background:#F8F9FB;padding:16px 20px;margin-top:24px">
+                  <div style="display:flex;align-items:center;gap:8px;padding-bottom:10px">
+                    <span style="width:6px;height:6px;border-radius:50%;background:#A32318;flex:none"></span>
+                    <span style="font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C">Grund der Sperre</span>
+                  </div>
+                  <p style="font-size:15px;line-height:1.65;color:#2E3A4C">Der Nachweis der Berufshaftpflichtversicherung ist am 31.07.2026 abgelaufen.</p>
+                  <div style="font-family:'IBM Plex Mono',monospace;font-size:12.5px;color:#9AA5B4;padding-top:12px">Gesperrt seit 01.08.2026 · DKGZ-SV-0071</div>
+                </div>
+                <div style="display:flex;align-items:center;gap:16px;padding-top:24px;flex-wrap:wrap">
+                  <button type="button" style="height:46px;padding:0 24px;background:#14294A;color:#FFFFFF;border:1px solid #14294A;border-radius:3px;font-size:15px;font-weight:500;cursor:pointer">Nachweis einreichen</button>
+                  <span style="font-size:13.5px;color:#5B687C">oder <span style="font-family:'IBM Plex Mono',monospace;color:#14294A">+49 179 4480169</span></span>
+                </div>
+              </div>
+            </sc-if>
+
+            <sc-if value="{{ isAdminLogin }}" hint-placeholder-val="{{ false }}">
+              <div>
+                <div style="padding-top:32px;display:flex;flex-direction:column;gap:20px">
+                  <div>
+                    <label style="display:block;font-size:13.5px;font-weight:500;color:#2E3A4C;padding-bottom:8px">E-Mail-Adresse</label>
+                    <input type="text" placeholder="vorname.nachname@dkgz.de" style="width:100%;height:46px;padding:0 14px;border:1px solid #CBD2DD;border-radius:3px;font-size:15px;color:#2E3A4C;outline:none;transition:border-color 120ms cubic-bezier(0.4,0,0.2,1)" style-hover="border-color:#9AA5B4">
+                  </div>
+                  <div>
+                    <label style="display:block;font-size:13.5px;font-weight:500;color:#2E3A4C;padding-bottom:8px">Passwort</label>
+                    <div style="position:relative">
+                      <input type="password" value="passwort" style="width:100%;height:46px;padding:0 96px 0 14px;border:1px solid #CBD2DD;border-radius:3px;font-size:15px;color:#2E3A4C;outline:none;transition:border-color 120ms cubic-bezier(0.4,0,0.2,1)" style-hover="border-color:#9AA5B4">
+                      <span style="position:absolute;right:14px;top:50%;transform:translateY(-50%);font-size:12.5px;font-weight:500;color:#14294A;cursor:pointer">Anzeigen</span>
+                    </div>
+                  </div>
+                </div>
+                <button type="button" style="width:100%;height:46px;margin-top:24px;background:#14294A;color:#FFFFFF;border:1px solid #14294A;border-radius:3px;font-size:15px;font-weight:500;cursor:pointer;transition:background 140ms cubic-bezier(0.4,0,0.2,1)" style-hover="background:#27508B;border-color:#27508B">Anmelden</button>
+                <div style="font-family:'IBM Plex Mono',monospace;font-size:12.5px;color:#9AA5B4;padding-top:16px">Zugriffe werden protokolliert.</div>
+                <div style="border-top:1px solid #E3E7EE;margin-top:32px;padding-top:16px;font-family:'IBM Plex Mono',monospace;font-size:11.5px;line-height:1.7;color:#9AA5B4">Kein „Angemeldet bleiben“, keine Registrierung, kein Passwort-Link.</div>
+              </div>
+            </sc-if>
+
+            <sc-if value="{{ showAdminVariants }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;gap:8px;padding-top:24px">
+                <button type="button" onClick="{{ v0 }}" style="height:26px;padding:0 10px;border:1px solid #CBD2DD;border-radius:3px;font-family:'IBM Plex Mono',monospace;font-size:11.5px;cursor:pointer;background:{{ vb0 }};color:{{ vf0 }}">Anmeldung</button>
+                <button type="button" onClick="{{ v1 }}" style="height:26px;padding:0 10px;border:1px solid #CBD2DD;border-radius:3px;font-family:'IBM Plex Mono',monospace;font-size:11.5px;cursor:pointer;background:{{ vb1 }};color:{{ vf1 }}">Zwei-Faktor</button>
+              </div>
+            </sc-if>
+
+            <sc-if value="{{ isExpired }}" hint-placeholder-val="{{ false }}">
+              <div style="padding-top:8px">
+                <p style="font-size:15px;line-height:1.65;color:#5B687C;max-width:56ch">Dieser Zustand erscheint als Modal über der abgedunkelten Anwendung — siehe die Darstellung rechts. Die Unschärfe ist ausschließlich hier auf dem Hintergrund erlaubt, niemals auf einer Fläche.</p>
+                <div style="border:1px solid #E3E7EE;border-radius:3px;background:#F8F9FB;padding:16px;margin-top:24px;font-family:'IBM Plex Mono',monospace;font-size:12.5px;line-height:1.9;color:#5B687C">
+                  Breite 480 px · Radius 5 px<br>
+                  Schatten 0 16px 48px rgba(10,22,40,0.16)<br>
+                  Hintergrund: Anwendung, 40 % Deckkraft, 4 px Unschärfe<br>
+                  Primär „Erneut anmelden“ · Tertiär „Zur Website“
+                </div>
+              </div>
+            </sc-if>
+          </div>
+        </div>
+      </div>
+
+      <sc-if value="{{ showMobile }}" hint-placeholder-val="{{ false }}">
+        <div style="width:390px;flex:none;background:#FFFFFF;border:1px solid #E3E7EE">
+          <div style="height:168px;background:#0A1628;padding:24px;position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:space-between">
+            <div style="position:absolute;left:-24px;bottom:-16px;width:96px;height:96px;border-radius:50%;border:1px solid rgba(255,255,255,0.07);display:grid;place-items:center;pointer-events:none"><div style="width:72px;height:72px;border-radius:50%;border:1px solid rgba(255,255,255,0.07)"></div></div>
+            <div style="display:flex;align-items:center;gap:10px;position:relative">
+              <div style="width:32px;height:32px;border-radius:50%;border:1px solid rgba(255,255,255,0.55);display:grid;place-items:center;flex:none"><div style="width:25px;height:25px;border-radius:50%;border:1px solid var(--dkgz-accent,#B08A2E)"></div></div>
+              <span style="font-size:20px;font-weight:700;letter-spacing:-0.022em;color:#FFFFFF;line-height:1">DKGZ</span>
+              <span style="width:1px;height:20px;background:var(--dkgz-accent,#B08A2E)"></span>
+              <span style="font-size:8px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.72);line-height:1.4">Deutsche<br>KFZ-Gutachterzentrale</span>
+            </div>
+            <h2 style="font-size:20px;line-height:1.3;font-weight:600;letter-spacing:-0.012em;color:#FFFFFF;position:relative">{{ mobileHeadline }}</h2>
+          </div>
+          <div style="padding:32px 20px 40px">
+            <div style="font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:{{ eyebrowColor }}">{{ eyebrow }}</div>
+            <div style="width:24px;height:2px;background:{{ ruleColor }};margin-top:10px"></div>
+            <h2 style="font-size:24px;line-height:1.2;font-weight:600;letter-spacing:-0.018em;color:#14294A;padding-top:20px;text-wrap:pretty">{{ title }}</h2>
+            <sc-if value="{{ hasSub }}" hint-placeholder-val="{{ true }}">
+              <p style="font-size:15px;line-height:1.6;color:#5B687C;padding-top:8px">{{ sub }}</p>
+            </sc-if>
+            <sc-if value="{{ mCreds }}" hint-placeholder-val="{{ true }}">
+              <div style="padding-top:24px;display:flex;flex-direction:column;gap:16px">
+                <div><label style="display:block;font-size:13.5px;font-weight:500;color:#2E3A4C;padding-bottom:8px">E-Mail-Adresse</label><input type="text" placeholder="name@buero.de" style="width:100%;height:46px;padding:0 14px;border:1px solid #CBD2DD;border-radius:3px;font-size:15px;color:#2E3A4C;outline:none"></div>
+                <div><label style="display:block;font-size:13.5px;font-weight:500;color:#2E3A4C;padding-bottom:8px">Passwort</label><div style="position:relative"><input type="password" value="passwort" style="width:100%;height:46px;padding:0 96px 0 14px;border:1px solid #CBD2DD;border-radius:3px;font-size:15px;color:#2E3A4C;outline:none"><span style="position:absolute;right:14px;top:50%;transform:translateY(-50%);font-size:12.5px;font-weight:500;color:#14294A">Anzeigen</span></div></div>
+              </div>
+            </sc-if>
+            <sc-if value="{{ mEmailOnly }}" hint-placeholder-val="{{ false }}">
+              <div style="padding-top:24px">
+                <label style="display:block;font-size:13.5px;font-weight:500;color:#2E3A4C;padding-bottom:8px">E-Mail-Adresse</label>
+                <input type="text" placeholder="name@buero.de" style="width:100%;height:46px;padding:0 14px;border:1px solid #CBD2DD;border-radius:3px;font-size:15px;color:#2E3A4C;outline:none">
+                <div style="font-size:12.5px;color:#9AA5B4;padding-top:6px">Die im Portal hinterlegte Adresse.</div>
+              </div>
+            </sc-if>
+            <sc-if value="{{ mCode }}" hint-placeholder-val="{{ false }}">
+              <div style="padding-top:24px">
+                <div style="display:flex;gap:6px">
+                  <span style="flex:1;height:52px;border:1px solid #CBD2DD;border-radius:3px;display:grid;place-items:center;font-family:'IBM Plex Mono',monospace;font-size:20px;color:#2E3A4C">4</span>
+                  <span style="flex:1;height:52px;border:1px solid #CBD2DD;border-radius:3px;display:grid;place-items:center;font-family:'IBM Plex Mono',monospace;font-size:20px;color:#2E3A4C">8</span>
+                  <span style="flex:1;height:52px;border:1px solid #CBD2DD;border-radius:3px;display:grid;place-items:center;font-family:'IBM Plex Mono',monospace;font-size:20px;color:#2E3A4C">1</span>
+                  <span style="flex:1;height:52px;border:1px solid #14294A;border-radius:3px;display:grid;place-items:center;font-family:'IBM Plex Mono',monospace;font-size:20px;color:#2E3A4C"></span>
+                  <span style="flex:1;height:52px;border:1px solid #CBD2DD;border-radius:3px;display:grid;place-items:center"></span>
+                  <span style="flex:1;height:52px;border:1px solid #CBD2DD;border-radius:3px;display:grid;place-items:center"></span>
+                </div>
+                <div style="font-size:12.5px;color:#9AA5B4;padding-top:8px">Sechsstelliger Code, zehn Minuten gültig.</div>
+              </div>
+            </sc-if>
+            <sc-if value="{{ mStatus }}" hint-placeholder-val="{{ false }}">
+              <div style="padding-top:24px">
+                <div style="border:1px solid #E3E7EE;border-radius:3px;background:#F8F9FB;padding:16px">
+                  <div style="display:flex;align-items:center;gap:8px;padding-bottom:8px">
+                    <span style="width:6px;height:6px;border-radius:50%;background:{{ mStatusDot }};flex:none"></span>
+                    <span style="font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C">{{ mStatusLabel }}</span>
+                  </div>
+                  <p style="font-size:13.5px;line-height:1.6;color:#2E3A4C">{{ mStatusText }}</p>
+                  <div style="font-family:'IBM Plex Mono',monospace;font-size:12.5px;color:#9AA5B4;padding-top:10px">{{ mStatusRef }}</div>
+                </div>
+              </div>
+            </sc-if>
+            <button type="button" style="width:100%;height:46px;margin-top:20px;background:#14294A;color:#FFFFFF;border:1px solid #14294A;border-radius:3px;font-size:15px;font-weight:500;cursor:pointer">{{ mobileCta }}</button>
+            <sc-if value="{{ mSecondary }}" hint-placeholder-val="{{ true }}">
+              <div>
+                <div style="height:1px;background:#E3E7EE;margin-top:24px"></div>
+                <div style="text-align:center;font-size:13.5px;color:#5B687C;padding-top:16px">{{ mSecondaryText }} <a href="#" style="font-weight:500;color:#14294A">{{ mSecondaryLink }}</a></div>
+              </div>
+            </sc-if>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#9AA5B4;padding-top:20px;border-top:1px solid #F1F3F7;margin-top:20px">Unter 900 px: linkes Panel wird 168-px-Kopfband, Siegel 20 %, Aussage einzeilig</div>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isExpired }}" hint-placeholder-val="{{ false }}">
+        <div style="width:520px;flex:none;position:relative;background:#F8F9FB;border:1px solid #E3E7EE;min-height:420px;overflow:hidden">
+          <div style="padding:20px;filter:blur(4px);opacity:0.4">
+            <div style="display:flex;gap:12px;padding-bottom:16px">
+              <div style="height:28px;width:120px;background:#14294A;border-radius:3px"></div>
+              <div style="height:28px;flex:1;background:#E3E7EE;border-radius:3px"></div>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;padding-bottom:16px">
+              <div style="height:88px;background:#FFFFFF;border:1px solid #E3E7EE;border-radius:5px"></div>
+              <div style="height:88px;background:#FFFFFF;border:1px solid #E3E7EE;border-radius:5px"></div>
+              <div style="height:88px;background:#FFFFFF;border:1px solid #E3E7EE;border-radius:5px"></div>
+            </div>
+            <div style="height:180px;background:#FFFFFF;border:1px solid #E3E7EE;border-radius:5px"></div>
+          </div>
+          <div style="position:absolute;inset:0;background:rgba(10,22,40,0.32);display:grid;place-items:center;padding:20px">
+            <div style="width:100%;max-width:480px;background:#FFFFFF;border-radius:5px;box-shadow:0 16px 48px rgba(10,22,40,0.16);padding:32px">
+              <div style="width:44px;height:44px;border-radius:50%;border:1.5px solid #14294A;display:grid;place-items:center;color:#14294A"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+              <h3 style="font-size:22px;line-height:1.3;font-weight:600;letter-spacing:-0.012em;color:#14294A;padding-top:20px">Ihre Sitzung ist abgelaufen</h3>
+              <p style="font-size:15px;line-height:1.65;color:#5B687C;padding-top:8px">Aus Sicherheitsgründen wurden Sie nach 30 Minuten ohne Aktivität abgemeldet.</p>
+              <button type="button" onClick="{{ g1 }}" style="width:100%;height:46px;margin-top:24px;background:#14294A;color:#FFFFFF;border:1px solid #14294A;border-radius:3px;font-size:15px;font-weight:500;cursor:pointer;transition:background 140ms cubic-bezier(0.4,0,0.2,1)" style-hover="background:#27508B;border-color:#27508B">Erneut anmelden</button>
+              <div style="text-align:center;padding-top:12px"><a href="#" style="font-size:13.5px;font-weight:500;color:#14294A">Zur Website</a></div>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+
+    </div>
+  </div>
+</div>
+
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{
+  &quot;accent&quot;: {
+    &quot;editor&quot;: &quot;color&quot;,
+    &quot;default&quot;: &quot;#B08A2E&quot;,
+    &quot;tsType&quot;: &quot;string&quot;,
+    &quot;options&quot;: [&quot;#B08A2E&quot;, &quot;#8C6D22&quot;, &quot;#A28B5B&quot;, &quot;#14294A&quot;],
+    &quot;section&quot;: &quot;Marke&quot;
+  }
+}">
+class Component extends DCLogic {
+  state = { screen: 1, variant: 0, mobile: false, rStep: 3 };
+
+  componentDidMount() { this.sync(); }
+  componentDidUpdate() { this.sync(); }
+
+  sync() {
+    document.documentElement.style.setProperty('--dkgz-accent', this.props.accent || '#B08A2E');
+  }
+
+  meta() {
+    const s = this.state.screen;
+    const M = {
+      1:  { num: '01', label: 'Anmeldung — Sachverständigen-Login', route: '/portal/anmeldung', eyebrow: 'Partnerportal', title: 'Anmeldung', sub: 'Melden Sie sich mit Ihren Zugangsdaten an.',
+            leftHeadline: 'Bundesweites Netz geprüfter Kfz-Sachverständiger.', leftSub: 'Zugang für freigegebene Partner der Deutschen KFZ-Gutachterzentrale.', facts: true, mobileHeadline: 'Bundesweites Netz geprüfter Sachverständiger.', mobileCta: 'Anmelden' },
+      2:  { num: '02', label: 'Passwort vergessen', route: '/portal/passwort-vergessen', eyebrow: 'Partnerportal', title: 'Passwort zurücksetzen', sub: 'Wir senden Ihnen einen Link an Ihre hinterlegte Adresse.',
+            leftHeadline: 'Ihr Zugang bleibt geschützt.', leftSub: 'Das Zurücksetzen erfolgt ausschließlich über die im Portal hinterlegte Adresse.', reassurance: 'Ein Link zum Zurücksetzen ist 24 Stunden gültig und nur einmal verwendbar. Ihre bestehenden Aufträge bleiben davon unberührt.', mobileHeadline: 'Ihr Zugang bleibt geschützt.', mobileCta: 'Link anfordern' },
+      3:  { num: '03', label: 'Neues Passwort festlegen', route: '/portal/passwort-neu', eyebrow: 'Partnerportal', title: 'Neues Passwort festlegen', sub: 'Wählen Sie ein Passwort mit mindestens zehn Zeichen.',
+            leftHeadline: 'Ihr Zugang bleibt geschützt.', leftSub: 'Nach dem Speichern werden Sie an allen Geräten neu angemeldet.', reassurance: 'Das neue Passwort gilt sofort. Bestehende Sitzungen auf anderen Geräten werden beendet.', mobileHeadline: 'Ihr Zugang bleibt geschützt.', mobileCta: 'Passwort speichern' },
+      4:  { num: '04', label: 'Registrierung — Schritt ' + this.state.rStep + ' von 4', route: '/portal/registrierung', eyebrow: 'Registrierung',
+            title: ['Zugang einrichten', 'Ihr Unternehmen', 'Qualifikation', 'Einsatzgebiet'][this.state.rStep - 1],
+            sub: ['Diese Zugangsdaten verwenden Sie später im Portal.', 'Angaben zum Büro und zur Umsatzsteuer.', 'Nachweise werden vor der Freigabe durch DKGZ geprüft.', 'Aus diesen Gebieten erhalten Sie Anfragen.'][this.state.rStep - 1],
+            leftHeadline: 'Bundesweites Netz geprüfter Kfz-Sachverständiger.', leftSub: 'Vier Schritte, etwa fünf Minuten. Ihre Angaben werden automatisch gespeichert.', facts: true, wide: true, mobileHeadline: 'Aufnahme in das Partnernetz.', mobileCta: 'Weiter' },
+      5:  { num: '05', label: 'E-Mail-Adresse bestätigen', route: '/portal/bestaetigung', eyebrow: 'Registrierung', title: 'E-Mail-Adresse bestätigen', sub: 'Wir haben einen sechsstelligen Code an j.ohlsen@sv-nordwest.de gesendet.',
+            leftHeadline: 'Noch ein Schritt bis zur Prüfung.', leftSub: 'Die Bestätigung der Adresse stellt sicher, dass Anfragen zuverlässig ankommen.', reassurance: 'Der Code ist zehn Minuten gültig. Ohne bestätigte Adresse werden keine Anfragen zugestellt.', mobileHeadline: 'Noch ein Schritt bis zur Prüfung.', mobileCta: 'Bestätigen' },
+      6:  { num: '06', label: 'Einladung annehmen', route: '/portal/einladung/:token', eyebrow: 'Partnerportal', title: 'Einladung annehmen', sub: 'Legen Sie ein Passwort fest, um Ihren Zugang einzurichten.',
+            leftHeadline: 'Sie wurden zur Deutschen KFZ-Gutachterzentrale eingeladen.', leftSub: 'Ihre Nachweise liegen der Administration bereits vor.', facts: true, mobileHeadline: 'Sie wurden eingeladen.', mobileCta: 'Einladung annehmen' },
+      7:  { num: '07', label: 'Prüfung läuft — Freigabe ausstehend', route: '/portal/pruefung', eyebrow: 'Partnerportal', title: 'Prüfung läuft', sub: '', noSub: true,
+            leftHeadline: 'Jede Registrierung wird einzeln geprüft.', leftSub: 'Der einheitliche Standard im Netz entsteht durch diese Prüfung.', reassurance: 'Die Prüfung dauert in der Regel zwei Werktage. Sie müssen nichts weiter tun.', mobileHeadline: 'Jede Registrierung wird geprüft.', mobileCta: 'Abmelden' },
+      8:  { num: '08', label: 'Registrierung abgelehnt', route: '/portal/abgelehnt', eyebrow: 'Partnerportal', title: 'Registrierung', sub: '', noSub: true,
+            leftHeadline: 'Jede Registrierung wird einzeln geprüft.', leftSub: 'Eine Ablehnung ist keine endgültige Entscheidung.', reassurance: 'Sobald die fehlenden Unterlagen vorliegen, ist eine erneute Registrierung jederzeit möglich.', mobileHeadline: 'Registrierung geprüft.', mobileCta: 'Erneut registrieren' },
+      9:  { num: '09', label: 'Konto gesperrt', route: '/portal/gesperrt', eyebrow: 'Partnerportal', title: 'Zugang gesperrt', sub: '', noSub: true,
+            leftHeadline: 'Der Standard im Netz wird laufend geprüft.', leftSub: 'Gültige Nachweise sind Voraussetzung für die Vermittlung.', reassurance: 'Nach Eingang des aktuellen Nachweises wird der Zugang in der Regel am nächsten Werktag wieder freigegeben.', mobileHeadline: 'Zugang derzeit gesperrt.', mobileCta: 'Nachweis einreichen' },
+      10: { num: '10', label: 'Admin-Anmeldung', route: '/admin/anmeldung', eyebrow: 'Administration', title: 'Anmeldung', sub: 'Interner Zugang der Deutschen KFZ-Gutachterzentrale.', plainLeft: true, adminRule: true, mobileHeadline: 'Interner Zugang.', mobileCta: 'Anmelden' },
+      11: { num: '11', label: 'Sitzung abgelaufen — Modal', route: 'überlagert jede Portalseite', eyebrow: 'Partnerportal', title: 'Sitzung abgelaufen', sub: '', noSub: true,
+            leftHeadline: 'Sitzungen enden nach 30 Minuten.', leftSub: 'Ein Schutz für die Kundendaten in Ihren Aufträgen.', reassurance: 'Nicht gespeicherte Eingaben in Formularen bleiben nach der erneuten Anmeldung erhalten.', mobileHeadline: 'Sitzung abgelaufen.', mobileCta: 'Erneut anmelden' }
+    };
+    return M[s];
+  }
+
+  renderVals() {
+    const s = this.state.screen;
+    const v = this.state.variant;
+    const m = this.meta();
+    const accent = this.props.accent || '#B08A2E';
+
+    const rs = this.state.rStep;
+    const node = i => {
+      const done = i < rs, cur = i === rs;
+      return {
+        ['n' + i + 'Bg']: done || cur ? '#14294A' : '#FFFFFF',
+        ['n' + i + 'Border']: done || cur ? '#14294A' : '#CBD2DD',
+        ['n' + i + 'Fg']: done || cur ? '#FFFFFF' : '#9AA5B4',
+        ['n' + i + 'Halo']: cur ? '0 0 0 4px #E8EDF5' : 'none',
+        ['n' + i + 'Label']: done || cur ? '#14294A' : '#9AA5B4',
+        ['n' + i + 'Done']: done,
+        ['n' + i + 'Open']: !done
+      };
+    };
+
+    const mMeta = {
+      1:  { creds: true, sec: 'Noch kein Partner?', link: 'Jetzt registrieren' },
+      2:  { emailOnly: true, sec: 'Zugangsdaten bekannt?', link: 'Zur Anmeldung' },
+      3:  { creds: true, sec: '', link: '' },
+      4:  { creds: true, sec: 'Bereits Partner?', link: 'Anmelden' },
+      5:  { code: true, sec: 'Code nicht erhalten?', link: 'Erneut senden' },
+      6:  { creds: true, sec: '', link: '' },
+      7:  { status: true, dot: '#9C6F15', label: 'Status', text: 'Ihre Registrierung wird von DKGZ geprüft. Sie erhalten eine E-Mail, sobald der Zugang freigegeben ist.', ref: 'REG-2026-00184', sec: '', link: '' },
+      8:  { status: true, dot: '#9AA5B4', label: 'Begründung', text: 'Der eingereichte Qualifikationsnachweis war nicht lesbar. Bitte reichen Sie das Zertifikat vollständig als PDF ein.', ref: 'REG-2026-00184 · 17.08.2026', sec: '', link: '' },
+      9:  { status: true, dot: '#A32318', label: 'Grund der Sperre', text: 'Der Nachweis der Berufshaftpflichtversicherung ist am 31.07.2026 abgelaufen.', ref: 'Gesperrt seit 01.08.2026', sec: '', link: '' },
+      10: { creds: true, sec: '', link: '' },
+      11: { status: true, dot: '#9C6F15', label: 'Sitzung', text: 'Aus Sicherheitsgründen wurden Sie nach 30 Minuten ohne Aktivität abgemeldet.', ref: 'Zeitlimit 30 Minuten', sec: '', link: '' }
+    }[s];
+
+    const vals = {
+      num: m.num, label: m.label, route: m.route,
+      eyebrow: m.eyebrow, title: m.title, sub: m.sub, hasSub: !m.noSub, hasTitle: s !== 7 && s !== 8 && s !== 9,
+
+      rStep1: rs === 1, rStep2: rs === 2, rStep3: rs === 3, rStep4: rs === 4,
+      rStepNum: String(rs),
+      rHasBack: rs > 1, rFirstStep: rs === 1,
+      rNextLabel: rs === 4 ? 'Registrierung abschließen' : 'Weiter',
+      rBack: () => this.setState(st => ({ rStep: Math.max(1, st.rStep - 1) })),
+      rNext: () => rs === 4 ? this.setState({ screen: 5, variant: 0 }) : this.setState(st => ({ rStep: st.rStep + 1 })),
+      rGo1: () => this.setState({ rStep: 1 }),
+      rGo2: () => this.setState({ rStep: 2 }),
+      rGo3: () => this.setState({ rStep: 3 }),
+
+      mCreds: !!mMeta.creds, mEmailOnly: !!mMeta.emailOnly, mCode: !!mMeta.code, mStatus: !!mMeta.status,
+      mStatusDot: mMeta.dot || '#9AA5B4', mStatusLabel: mMeta.label || '', mStatusText: mMeta.text || '', mStatusRef: mMeta.ref || '',
+      mSecondary: !!mMeta.sec, mSecondaryText: mMeta.sec || '', mSecondaryLink: mMeta.link || '',
+      eyebrowColor: m.adminRule ? '#5B687C' : accent,
+      ruleColor: m.adminRule ? '#14294A' : accent,
+      formWidth: m.wide ? '560px' : '420px',
+      leftHeadline: m.leftHeadline, leftSub: m.leftSub,
+      leftPlain: !!m.plainLeft, leftFull: !m.plainLeft,
+      showFacts: !!m.facts, showReassurance: !m.facts && !m.plainLeft,
+      reassurance: m.reassurance || '',
+      mobileHeadline: m.mobileHeadline, mobileCta: m.mobileCta,
+      showMobile: this.state.mobile,
+      mBg: this.state.mobile ? '#14294A' : '#FFFFFF',
+      mFg: this.state.mobile ? '#FFFFFF' : '#5B687C',
+      toggleMobile: () => this.setState(st => ({ mobile: !st.mobile })),
+
+      isLogin: s === 1, isForgot: s === 2, isReset: s === 3, isRegister: s === 4,
+      isInvite: s === 6, isPending: s === 7, isRejected: s === 8,
+      isBlocked: s === 9, isExpired: s === 11,
+      isAdminLogin: s === 10 && v === 0,
+      isTwoFactor: s === 10 && v === 1,
+      isCode: s === 5 || (s === 10 && v === 1),
+      showCodeVariants: s === 5,
+      showAdminVariants: s === 10 && v === 0,
+
+      showErrorSummary: s === 1 && v === 2,
+      showRateLimit: s === 1 && v === 3,
+      loginEnabled: !(s === 1 && v === 3),
+      emailValue: s === 1 && v >= 1 ? 'm.reinhardt@kfz-gutachten-d.de' : '',
+      pwValue: s === 1 && v >= 1 ? 'passwort123' : '',
+      emailBorder: s === 1 && v === 2 ? '#A32318' : '#CBD2DD',
+      emailFill: s === 1 && v === 2 ? 'rgba(163,35,24,0.03)' : '#FFFFFF',
+
+      forgotForm: s === 2 && v === 0, forgotSent: s === 2 && v === 1,
+      resetForm: s === 3 && v === 0, resetExpired: s === 3 && v === 1,
+      inviteValid: s === 6 && v === 0, inviteExpired: s === 6 && v === 1,
+
+      codeError: s === 5 && v === 2,
+      codeBorder: s === 5 && v === 2 ? '#A32318' : '#CBD2DD',
+      codeFill: s === 5 && v === 2 ? 'rgba(163,35,24,0.03)' : '#FFFFFF'
+    };
+
+    if (s === 10 && v === 1) {
+      vals.title = 'Zwei-Faktor-Authentifizierung';
+      vals.sub = 'Geben Sie den Code aus Ihrer Authenticator-App ein.';
+      vals.hasSub = true;
+      vals.num = '10b';
+      vals.label = 'Admin-Anmeldung — zweiter Faktor';
+      vals.route = '/admin/anmeldung/2fa';
+    }
+
+    for (let i = 1; i <= 4; i++) Object.assign(vals, node(i));
+
+    const digits = s === 5 ? (v === 0 ? ['4','8','1','','',''] : ['4','8','1','2','0','7'])
+      : (s === 10 && v === 1) ? ['9','0','4','1','',''] : ['','','','','',''];
+    for (let i = 0; i < 6; i++) vals['c' + (i + 1)] = digits[i];
+
+    for (let i = 1; i <= 11; i++) {
+      vals['g' + i] = () => this.setState({ screen: i, variant: 0 });
+      vals['k' + i] = s === i ? '#14294A' : '#FFFFFF';
+      vals['f' + i] = s === i ? '#FFFFFF' : '#5B687C';
+    }
+    for (let i = 0; i <= 3; i++) {
+      vals['v' + i] = () => this.setState({ variant: i });
+      vals['vb' + i] = v === i ? '#14294A' : '#FFFFFF';
+      vals['vf' + i] = v === i ? '#FFFFFF' : '#5B687C';
+    }
+    return vals;
+  }
+}
+</script>
+</body>
+</html>

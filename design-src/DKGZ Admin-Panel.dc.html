@@ -1,0 +1,1079 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<script src="https://unpkg.com/lucide@0.417.0/dist/umd/lucide.min.js"></script>
+<style>
+:root{--dkgz-accent:#B08A2E}
+*{box-sizing:border-box}
+body{margin:0;background:#F1F3F7;color:#2E3A4C;font-family:'IBM Plex Sans','Helvetica Neue',Helvetica,Arial,sans-serif;font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+h1,h2,h3,h4,p{margin:0}
+a{color:#14294A;text-decoration:none;border-bottom:1px solid transparent}
+a:hover{color:#27508B}
+table{border-collapse:collapse}
+input,button,textarea{font-family:inherit}
+::selection{background:#E8EDF5}
+</style>
+</helmet>
+
+<div style="background:#F1F3F7;min-height:100vh">
+
+<div style="background:#F8F9FB;border-bottom:1px solid #E3E7EE;padding:10px 24px;position:sticky;top:0;z-index:60"><div style="display:flex;align-items:center;gap:16px;overflow-x:auto;min-width:0">
+  <span style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#9AA5B4;white-space:nowrap">Pass 5 · Administration</span>
+  <div style="display:flex;gap:6px">
+    <button type="button" onClick="{{ n1 }}" style="height:26px;padding:0 10px;border:1px solid #CBD2DD;border-radius:3px;font-family:'IBM Plex Mono',monospace;font-size:11.5px;cursor:pointer;white-space:nowrap;background:{{ k1 }};color:{{ f1 }}">01 Anmeldung</button>
+    <button type="button" onClick="{{ n2 }}" style="height:26px;padding:0 10px;border:1px solid #CBD2DD;border-radius:3px;font-family:'IBM Plex Mono',monospace;font-size:11.5px;cursor:pointer;white-space:nowrap;background:{{ k2 }};color:{{ f2 }}">02 Dashboard</button>
+    <button type="button" onClick="{{ n3 }}" style="height:26px;padding:0 10px;border:1px solid #CBD2DD;border-radius:3px;font-family:'IBM Plex Mono',monospace;font-size:11.5px;cursor:pointer;white-space:nowrap;background:{{ k3 }};color:{{ f3 }}">03 Anfragen</button>
+    <button type="button" onClick="{{ n4 }}" style="height:26px;padding:0 10px;border:1px solid #CBD2DD;border-radius:3px;font-family:'IBM Plex Mono',monospace;font-size:11.5px;cursor:pointer;white-space:nowrap;background:{{ k4 }};color:{{ f4 }}">04 Anfrage-Detail</button>
+    <button type="button" onClick="{{ n5 }}" style="height:26px;padding:0 10px;border:1px solid #CBD2DD;border-radius:3px;font-family:'IBM Plex Mono',monospace;font-size:11.5px;cursor:pointer;white-space:nowrap;background:{{ k5 }};color:{{ f5 }}">05 Aufträge</button>
+    <button type="button" onClick="{{ n6 }}" style="height:26px;padding:0 10px;border:1px solid #CBD2DD;border-radius:3px;font-family:'IBM Plex Mono',monospace;font-size:11.5px;cursor:pointer;white-space:nowrap;background:{{ k6 }};color:{{ f6 }}">06 Auftrag-Detail</button>
+    <button type="button" onClick="{{ n7 }}" style="height:26px;padding:0 10px;border:1px solid #CBD2DD;border-radius:3px;font-family:'IBM Plex Mono',monospace;font-size:11.5px;cursor:pointer;white-space:nowrap;background:{{ k7 }};color:{{ f7 }}">07 Sachverständige</button>
+    <button type="button" onClick="{{ n8 }}" style="height:26px;padding:0 10px;border:1px solid #CBD2DD;border-radius:3px;font-family:'IBM Plex Mono',monospace;font-size:11.5px;cursor:pointer;white-space:nowrap;background:{{ k8 }};color:{{ f8 }}">08 SV-Detail</button>
+    <button type="button" onClick="{{ n9 }}" style="height:26px;padding:0 10px;border:1px solid #CBD2DD;border-radius:3px;font-family:'IBM Plex Mono',monospace;font-size:11.5px;cursor:pointer;white-space:nowrap;background:{{ k9 }};color:{{ f9 }}">09 Einladungen</button>
+    <button type="button" onClick="{{ n10 }}" style="height:26px;padding:0 10px;border:1px solid #CBD2DD;border-radius:3px;font-family:'IBM Plex Mono',monospace;font-size:11.5px;cursor:pointer;white-space:nowrap;background:{{ k10 }};color:{{ f10 }}">10 Provisionen</button>
+    <button type="button" onClick="{{ n11 }}" style="height:26px;padding:0 10px;border:1px solid #CBD2DD;border-radius:3px;font-family:'IBM Plex Mono',monospace;font-size:11.5px;cursor:pointer;white-space:nowrap;background:{{ k11 }};color:{{ f11 }}">11 Provision-Detail</button>
+    <button type="button" onClick="{{ n12 }}" style="height:26px;padding:0 10px;border:1px solid #CBD2DD;border-radius:3px;font-family:'IBM Plex Mono',monospace;font-size:11.5px;cursor:pointer;white-space:nowrap;background:{{ k12 }};color:{{ f12 }}">12 Einstellungen</button>
+    <button type="button" onClick="{{ n13 }}" style="height:26px;padding:0 10px;border:1px solid #CBD2DD;border-radius:3px;font-family:'IBM Plex Mono',monospace;font-size:11.5px;cursor:pointer;white-space:nowrap;background:{{ k13 }};color:{{ f13 }}">13 Zustände</button>
+  </div>
+  </div>
+</div>
+
+<sc-if value="{{ isLogin }}" hint-placeholder-val="{{ false }}">
+<div style="min-height:760px;display:grid;place-items:center;padding:48px 24px;background:#FFFFFF">
+  <div style="width:100%;max-width:420px">
+    <div style="display:flex;align-items:center;gap:12px">
+      <span style="font-size:22px;font-weight:700;letter-spacing:-0.022em;color:#14294A;line-height:1">DKGZ</span>
+      <span style="width:1px;height:24px;background:var(--dkgz-accent,#B08A2E)"></span>
+      <span style="font-size:9px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:#5B687C;line-height:1.5">Deutsche<br>KFZ-Gutachterzentrale</span>
+    </div>
+    <div style="font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C;padding-top:32px">Administration</div>
+    <h1 style="font-size:30px;line-height:1.2;font-weight:600;letter-spacing:-0.018em;color:#14294A;padding-top:8px">Anmeldung</h1>
+    <div style="display:flex;flex-direction:column;gap:16px;padding-top:32px">
+      <div><label style="display:block;font-size:13.5px;font-weight:500;color:#2E3A4C;padding-bottom:8px">Benutzerkonto</label><input type="text" placeholder="vorname.nachname@dkgz.de" style="width:100%;height:40px;padding:0 12px;border:1px solid #CBD2DD;border-radius:3px;font-size:15px;color:#2E3A4C;outline:none"></div>
+      <div><label style="display:block;font-size:13.5px;font-weight:500;color:#2E3A4C;padding-bottom:8px">Passwort</label><input type="password" value="passwort" style="width:100%;height:40px;padding:0 12px;border:1px solid #CBD2DD;border-radius:3px;font-size:15px;color:#2E3A4C;outline:none"></div>
+      <div><label style="display:block;font-size:13.5px;font-weight:500;color:#2E3A4C;padding-bottom:8px">Bestätigungscode</label><input type="text" placeholder="6-stellig" style="width:100%;height:40px;padding:0 12px;border:1px solid #CBD2DD;border-radius:3px;font-size:15px;color:#2E3A4C;outline:none;font-variant-numeric:tabular-nums"></div>
+    </div>
+    <button type="button" onClick="{{ n2 }}" style="width:100%;height:44px;margin-top:24px;background:#14294A;color:#FFFFFF;border:1px solid #14294A;border-radius:3px;font-size:15px;font-weight:500;cursor:pointer;transition:background 140ms cubic-bezier(0.4,0,0.2,1)" style-hover="background:#27508B;border-color:#27508B">Anmelden</button>
+    <p style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#9AA5B4;padding-top:24px;border-top:1px solid #E3E7EE;margin-top:24px">Interner Zugang · Zugriffe werden protokolliert</p>
+  </div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isApp }}" hint-placeholder-val="{{ true }}">
+<div style="display:grid;grid-template-columns:minmax(200px,240px) minmax(0,1fr);min-height:900px;background:#F8F9FB">
+
+  <div style="background:#0A1628;display:flex;flex-direction:column">
+    <div style="height:64px;padding:0 20px;display:flex;align-items:center;gap:10px;border-bottom:1px solid rgba(255,255,255,0.10)">
+      <span style="font-size:20px;font-weight:700;letter-spacing:-0.022em;color:#FFFFFF;line-height:1">DKGZ</span>
+      <span style="width:1px;height:20px;background:var(--dkgz-accent,#B08A2E)"></span>
+      <span style="font-size:9px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.60);line-height:1.4">Admini-<br>stration</span>
+    </div>
+    <div style="padding:16px 0;display:flex;flex-direction:column">
+      <button type="button" onClick="{{ n2 }}" style="height:40px;padding:0 20px;background:{{ navBg2 }};border:none;border-left:2px solid {{ navMk2 }};display:flex;align-items:center;gap:12px;cursor:pointer;color:{{ navFg2 }};font-size:15px;text-align:left"><span data-lucide="bar-chart-3" width="20" height="20" style="display:block;flex:none"></span>Dashboard</button>
+      <button type="button" onClick="{{ n3 }}" style="height:40px;padding:0 20px;background:{{ navBg3 }};border:none;border-left:2px solid {{ navMk3 }};display:flex;align-items:center;gap:12px;cursor:pointer;color:{{ navFg3 }};font-size:15px;text-align:left"><span data-lucide="file-text" width="20" height="20" style="display:block;flex:none"></span>Anfragen<span style="margin-left:auto;font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#FFFFFF;background:#27508B;border-radius:3px;padding:1px 6px;font-variant-numeric:tabular-nums">9</span></button>
+      <button type="button" onClick="{{ n5 }}" style="height:40px;padding:0 20px;background:{{ navBg5 }};border:none;border-left:2px solid {{ navMk5 }};display:flex;align-items:center;gap:12px;cursor:pointer;color:{{ navFg5 }};font-size:15px;text-align:left"><span data-lucide="clipboard-check" width="20" height="20" style="display:block;flex:none"></span>Aufträge</button>
+      <button type="button" onClick="{{ n7 }}" style="height:40px;padding:0 20px;background:{{ navBg7 }};border:none;border-left:2px solid {{ navMk7 }};display:flex;align-items:center;gap:12px;cursor:pointer;color:{{ navFg7 }};font-size:15px;text-align:left"><span data-lucide="user" width="20" height="20" style="display:block;flex:none"></span>Sachverständige</button>
+      <button type="button" onClick="{{ n9 }}" style="height:40px;padding:0 20px;background:{{ navBg9 }};border:none;border-left:2px solid {{ navMk9 }};display:flex;align-items:center;gap:12px;cursor:pointer;color:{{ navFg9 }};font-size:15px;text-align:left"><span data-lucide="mail" width="20" height="20" style="display:block;flex:none"></span>Einladungen</button>
+      <button type="button" onClick="{{ n10 }}" style="height:40px;padding:0 20px;background:{{ navBg10 }};border:none;border-left:2px solid {{ navMk10 }};display:flex;align-items:center;gap:12px;cursor:pointer;color:{{ navFg10 }};font-size:15px;text-align:left"><span data-lucide="euro" width="20" height="20" style="display:block;flex:none"></span>Provisionen</button>
+      <div style="height:1px;background:rgba(255,255,255,0.10);margin:16px 20px"></div>
+      <button type="button" onClick="{{ n12 }}" style="height:40px;padding:0 20px;background:{{ navBg12 }};border:none;border-left:2px solid {{ navMk12 }};display:flex;align-items:center;gap:12px;cursor:pointer;color:{{ navFg12 }};font-size:15px;text-align:left"><span data-lucide="settings" width="20" height="20" style="display:block;flex:none"></span>Einstellungen</button>
+      <button type="button" onClick="{{ n13 }}" style="height:40px;padding:0 20px;background:{{ navBg13 }};border:none;border-left:2px solid {{ navMk13 }};display:flex;align-items:center;gap:12px;cursor:pointer;color:{{ navFg13 }};font-size:15px;text-align:left"><span data-lucide="filter" width="20" height="20" style="display:block;flex:none"></span>Zustände</button>
+    </div>
+    <div style="margin-top:auto;padding:20px;border-top:1px solid rgba(255,255,255,0.10)">
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:rgba(255,255,255,0.45);line-height:1.6">K. Ahrens<br>Administration</div>
+      <button type="button" onClick="{{ n1 }}" style="background:transparent;border:none;color:rgba(255,255,255,0.60);font-size:13.5px;display:flex;align-items:center;gap:10px;padding:12px 0 0;cursor:pointer"><span data-lucide="log-out" width="18" height="18" style="display:block"></span>Abmelden</button>
+    </div>
+  </div>
+
+  <div style="display:flex;flex-direction:column;min-width:0">
+    <div style="height:64px;background:#FFFFFF;border-bottom:1px solid #E3E7EE;padding:0 24px;display:flex;align-items:center;justify-content:space-between;gap:24px">
+      <div style="font-size:17px;font-weight:600;color:#14294A">{{ pageTitle }}</div>
+      <div style="display:flex;align-items:center;gap:20px">
+        <div style="height:32px;width:280px;padding:0 10px;border:1px solid #CBD2DD;border-radius:3px;display:flex;align-items:center;gap:8px"><span data-lucide="search" width="16" height="16" style="color:#9AA5B4;flex:none;display:block"></span><span style="font-size:13.5px;color:#9AA5B4">Referenz, Sachverständiger oder PLZ</span></div>
+        <span data-lucide="bell" width="20" height="20" style="color:#5B687C;display:block"></span>
+        <span style="width:1px;height:24px;background:#E3E7EE"></span>
+        <div style="display:flex;align-items:center;gap:10px">
+          <span style="width:32px;height:32px;border-radius:50%;background:#E8EDF5;color:#14294A;display:grid;place-items:center;font-size:11.5px;font-weight:600">KA</span>
+          <span data-lucide="chevron-down" width="16" height="16" style="color:#5B687C;display:block"></span>
+        </div>
+      </div>
+    </div>
+
+    <div style="padding:24px;min-width:0">
+
+      <sc-if value="{{ isDashboard }}" hint-placeholder-val="{{ true }}">
+        <div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(184px,1fr));gap:12px">
+            <div style="background:#FFFFFF;border:1px solid #E3E7EE;border-radius:5px;padding:16px;min-height:104px;display:flex;flex-direction:column;justify-content:space-between;gap:8px">
+              <div style="font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C;text-wrap:pretty">Offene Anfragen</div>
+              <div style="font-size:30px;line-height:1.2;font-weight:600;letter-spacing:-0.018em;color:#14294A;padding-top:8px;font-variant-numeric:tabular-nums">9</div>
+            </div>
+            <div style="background:#FFFFFF;border:1px solid #E3E7EE;border-radius:5px;padding:16px;min-height:104px;display:flex;flex-direction:column;justify-content:space-between;gap:8px">
+              <div style="font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C;text-wrap:pretty">Heute vermittelt</div>
+              <div style="font-size:30px;line-height:1.2;font-weight:600;letter-spacing:-0.018em;color:#14294A;padding-top:8px;font-variant-numeric:tabular-nums">14</div>
+            </div>
+            <div style="background:#FFFFFF;border:1px solid #E3E7EE;border-radius:5px;padding:16px;min-height:104px;display:flex;flex-direction:column;justify-content:space-between;gap:8px">
+              <div style="font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C;text-wrap:pretty">Aktive Aufträge</div>
+              <div style="font-size:30px;line-height:1.2;font-weight:600;letter-spacing:-0.018em;color:#14294A;padding-top:8px;font-variant-numeric:tabular-nums">63</div>
+            </div>
+            <div style="background:#FFFFFF;border:1px solid #E3E7EE;border-radius:5px;padding:16px;min-height:104px;display:flex;flex-direction:column;justify-content:space-between;gap:8px">
+              <div style="font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C;text-wrap:pretty">Sachverständige</div>
+              <div style="font-size:30px;line-height:1.2;font-weight:600;letter-spacing:-0.018em;color:#14294A;padding-top:8px;font-variant-numeric:tabular-nums">148</div>
+            </div>
+            <div style="background:#FFFFFF;border:1px solid #E3E7EE;border-radius:5px;padding:16px;min-height:104px;display:flex;flex-direction:column;justify-content:space-between;gap:8px">
+              <div style="font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C;text-wrap:pretty">Wartend auf Freigabe</div>
+              <div style="display:flex;align-items:center;gap:8px;padding-top:8px"><span style="width:6px;height:6px;border-radius:50%;background:#9C6F15;flex:none"></span><span style="font-size:30px;line-height:1.2;font-weight:600;letter-spacing:-0.018em;color:#14294A;font-variant-numeric:tabular-nums">6</span></div>
+            </div>
+            <div style="background:#FFFFFF;border:1px solid #E3E7EE;border-radius:5px;padding:16px;min-height:104px;display:flex;flex-direction:column;justify-content:space-between;gap:8px">
+              <div style="font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C;text-wrap:pretty">Provision offen</div>
+              <div style="font-family:'IBM Plex Mono',monospace;font-size:20px;line-height:1.3;font-weight:500;color:#14294A;font-variant-numeric:tabular-nums;white-space:nowrap">18.472,50 €</div>
+            </div>
+          </div>
+
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(380px,1fr));gap:16px;padding-top:16px;align-items:start">
+            <div style="background:#FFFFFF;border:1px solid #E3E7EE;border-radius:5px;padding:20px">
+              <div style="display:flex;align-items:baseline;justify-content:space-between;gap:16px">
+                <span style="font-size:17px;font-weight:600;color:#14294A">Anfragen pro Woche</span>
+                <span style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#9AA5B4">KW 25–33 · 2026</span>
+              </div>
+              <div style="display:flex;align-items:flex-end;gap:14px;height:180px;padding-top:24px;border-bottom:1px solid #E3E7EE">
+                <div style="flex:1;display:flex;flex-direction:column;justify-content:flex-end;height:100%"><span style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#9AA5B4;text-align:center;padding-bottom:6px;font-variant-numeric:tabular-nums">38</span><span style="height:38%;background:#14294A;display:block"></span></div>
+                <div style="flex:1;display:flex;flex-direction:column;justify-content:flex-end;height:100%"><span style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#9AA5B4;text-align:center;padding-bottom:6px;font-variant-numeric:tabular-nums">45</span><span style="height:45%;background:#14294A;display:block"></span></div>
+                <div style="flex:1;display:flex;flex-direction:column;justify-content:flex-end;height:100%"><span style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#9AA5B4;text-align:center;padding-bottom:6px;font-variant-numeric:tabular-nums">41</span><span style="height:41%;background:#14294A;display:block"></span></div>
+                <div style="flex:1;display:flex;flex-direction:column;justify-content:flex-end;height:100%"><span style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#9AA5B4;text-align:center;padding-bottom:6px;font-variant-numeric:tabular-nums">57</span><span style="height:57%;background:#14294A;display:block"></span></div>
+                <div style="flex:1;display:flex;flex-direction:column;justify-content:flex-end;height:100%"><span style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#9AA5B4;text-align:center;padding-bottom:6px;font-variant-numeric:tabular-nums">52</span><span style="height:52%;background:#14294A;display:block"></span></div>
+                <div style="flex:1;display:flex;flex-direction:column;justify-content:flex-end;height:100%"><span style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#9AA5B4;text-align:center;padding-bottom:6px;font-variant-numeric:tabular-nums">64</span><span style="height:64%;background:#14294A;display:block"></span></div>
+                <div style="flex:1;display:flex;flex-direction:column;justify-content:flex-end;height:100%"><span style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#9AA5B4;text-align:center;padding-bottom:6px;font-variant-numeric:tabular-nums">71</span><span style="height:71%;background:#14294A;display:block"></span></div>
+                <div style="flex:1;display:flex;flex-direction:column;justify-content:flex-end;height:100%"><span style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#9AA5B4;text-align:center;padding-bottom:6px;font-variant-numeric:tabular-nums">68</span><span style="height:68%;background:#14294A;display:block"></span></div>
+                <div style="flex:1;display:flex;flex-direction:column;justify-content:flex-end;height:100%"><span style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#9AA5B4;text-align:center;padding-bottom:6px;font-variant-numeric:tabular-nums">79</span><span style="height:79%;background:#14294A;display:block"></span></div>
+              </div>
+              <div style="display:flex;gap:14px;padding-top:8px">
+                <span style="flex:1;font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#9AA5B4;text-align:center">25</span>
+                <span style="flex:1;font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#9AA5B4;text-align:center">26</span>
+                <span style="flex:1;font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#9AA5B4;text-align:center">27</span>
+                <span style="flex:1;font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#9AA5B4;text-align:center">28</span>
+                <span style="flex:1;font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#9AA5B4;text-align:center">29</span>
+                <span style="flex:1;font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#9AA5B4;text-align:center">30</span>
+                <span style="flex:1;font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#9AA5B4;text-align:center">31</span>
+                <span style="flex:1;font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#9AA5B4;text-align:center">32</span>
+                <span style="flex:1;font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#9AA5B4;text-align:center">33</span>
+              </div>
+            </div>
+
+            <div style="background:#FFFFFF;border:1px solid #E3E7EE;border-radius:5px">
+              <div style="padding:16px 20px;border-bottom:1px solid #E3E7EE;display:flex;align-items:center;justify-content:space-between;gap:16px">
+                <span style="font-size:17px;font-weight:600;color:#14294A">Erfordert Aufmerksamkeit</span>
+                <span style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#9AA5B4">5 Vorgänge</span>
+              </div>
+              <table style="width:100%">
+                <thead>
+                  <tr>
+                    <th style="text-align:left;font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C;padding:10px 20px;border-bottom:1px solid #E3E7EE;white-space:nowrap">Referenz</th>
+                    <th style="text-align:left;font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C;padding:10px 12px;border-bottom:1px solid #E3E7EE">Sachverhalt</th>
+                    <th style="text-align:right;font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C;padding:10px 20px;border-bottom:1px solid #E3E7EE;white-space:nowrap">Seit</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr style="transition:background 120ms cubic-bezier(0.4,0,0.2,1);cursor:pointer" style-hover="background:#F8F9FB" onClick="{{ n4 }}">
+                    <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#14294A;padding:12px 20px;border-bottom:1px solid #F1F3F7;white-space:nowrap;font-variant-numeric:tabular-nums">DKGZ-2026-04805</td>
+                    <td style="padding:12px;border-bottom:1px solid #F1F3F7"><span style="display:inline-flex;align-items:center;gap:8px"><span style="width:6px;height:6px;border-radius:50%;background:#A32318;flex:none"></span><span style="font-size:13.5px;color:#2E3A4C">Von allen 4 Partnern abgelehnt</span></span></td>
+                    <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#5B687C;padding:12px 20px;border-bottom:1px solid #F1F3F7;text-align:right;white-space:nowrap">2 Tage</td>
+                  </tr>
+                  <tr style="transition:background 120ms cubic-bezier(0.4,0,0.2,1);cursor:pointer" style-hover="background:#F8F9FB" onClick="{{ n4 }}">
+                    <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#14294A;padding:12px 20px;border-bottom:1px solid #F1F3F7;white-space:nowrap;font-variant-numeric:tabular-nums">DKGZ-2026-04799</td>
+                    <td style="padding:12px;border-bottom:1px solid #F1F3F7"><span style="display:inline-flex;align-items:center;gap:8px"><span style="width:6px;height:6px;border-radius:50%;background:#A32318;flex:none"></span><span style="font-size:13.5px;color:#2E3A4C">Kein Partner im PLZ-Gebiet 17033</span></span></td>
+                    <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#5B687C;padding:12px 20px;border-bottom:1px solid #F1F3F7;text-align:right;white-space:nowrap">3 Tage</td>
+                  </tr>
+                  <tr style="transition:background 120ms cubic-bezier(0.4,0,0.2,1);cursor:pointer" style-hover="background:#F8F9FB" onClick="{{ n6 }}">
+                    <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#14294A;padding:12px 20px;border-bottom:1px solid #F1F3F7;white-space:nowrap;font-variant-numeric:tabular-nums">DKGZ-2026-04762</td>
+                    <td style="padding:12px;border-bottom:1px solid #F1F3F7"><span style="display:inline-flex;align-items:center;gap:8px"><span style="width:6px;height:6px;border-radius:50%;background:#9C6F15;flex:none"></span><span style="font-size:13.5px;color:#2E3A4C">Gutachten seit 9 Tagen nicht hochgeladen</span></span></td>
+                    <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#5B687C;padding:12px 20px;border-bottom:1px solid #F1F3F7;text-align:right;white-space:nowrap">9 Tage</td>
+                  </tr>
+                  <tr style="transition:background 120ms cubic-bezier(0.4,0,0.2,1);cursor:pointer" style-hover="background:#F8F9FB" onClick="{{ n8 }}">
+                    <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#14294A;padding:12px 20px;border-bottom:1px solid #F1F3F7;white-space:nowrap;font-variant-numeric:tabular-nums">DKGZ-SV-0163</td>
+                    <td style="padding:12px;border-bottom:1px solid #F1F3F7"><span style="display:inline-flex;align-items:center;gap:8px"><span style="width:6px;height:6px;border-radius:50%;background:#9C6F15;flex:none"></span><span style="font-size:13.5px;color:#2E3A4C">Haftpflichtnachweis läuft am 31.08. ab</span></span></td>
+                    <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#5B687C;padding:12px 20px;border-bottom:1px solid #F1F3F7;text-align:right;white-space:nowrap">13 Tage</td>
+                  </tr>
+                  <tr style="transition:background 120ms cubic-bezier(0.4,0,0.2,1);cursor:pointer" style-hover="background:#F8F9FB" onClick="{{ n10 }}">
+                    <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#14294A;padding:12px 20px;white-space:nowrap;font-variant-numeric:tabular-nums">DKGZ-2026-04711</td>
+                    <td style="padding:12px"><span style="display:inline-flex;align-items:center;gap:8px"><span style="width:6px;height:6px;border-radius:50%;background:#9C6F15;flex:none"></span><span style="font-size:13.5px;color:#2E3A4C">Provision seit 30 Tagen offen</span></span></td>
+                    <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#5B687C;padding:12px 20px;text-align:right;white-space:nowrap">30 Tage</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isRequests }}" hint-placeholder-val="{{ false }}">
+        <div>
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;padding-bottom:16px">
+            <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+              <div style="height:32px;padding:0 10px;border:1px solid #14294A;border-radius:3px;display:flex;align-items:center;gap:8px;background:#E8EDF5"><span data-lucide="filter" width="16" height="16" style="color:#14294A;flex:none;display:block"></span><span style="font-size:13.5px;color:#14294A;font-weight:500">Status: Vermittelt</span><span data-lucide="x" width="14" height="14" style="color:#14294A;flex:none;display:block"></span></div>
+              <div style="height:32px;padding:0 10px;border:1px solid #CBD2DD;border-radius:3px;display:flex;align-items:center;gap:8px;background:#FFFFFF"><span style="font-size:13.5px;color:#2E3A4C">PLZ-Bereich</span><span data-lucide="chevron-down" width="14" height="14" style="color:#5B687C;flex:none;display:block"></span></div>
+              <div style="height:32px;padding:0 10px;border:1px solid #CBD2DD;border-radius:3px;display:flex;align-items:center;gap:8px;background:#FFFFFF"><span style="font-size:13.5px;color:#2E3A4C">Art des Gutachtens</span><span data-lucide="chevron-down" width="14" height="14" style="color:#5B687C;flex:none;display:block"></span></div>
+              <div style="height:32px;padding:0 10px;border:1px solid #CBD2DD;border-radius:3px;display:flex;align-items:center;gap:8px;background:#FFFFFF"><span style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#2E3A4C;font-variant-numeric:tabular-nums">01.08.–18.08.2026</span><span data-lucide="chevron-down" width="14" height="14" style="color:#5B687C;flex:none;display:block"></span></div>
+            </div>
+            <div style="display:flex;align-items:center;gap:12px">
+              <span style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#5B687C;font-variant-numeric:tabular-nums">2 ausgewählt</span>
+              <button type="button" style="height:32px;padding:0 12px;background:#FFFFFF;color:#14294A;border:1px solid #14294A;border-radius:3px;font-size:13.5px;font-weight:500;cursor:pointer">Erneut vermitteln</button>
+              <button type="button" style="height:32px;padding:0 12px;background:#FFFFFF;color:#14294A;border:1px solid #CBD2DD;border-radius:3px;font-size:13.5px;font-weight:500;cursor:pointer;display:inline-flex;align-items:center;gap:8px"><span data-lucide="download" width="16" height="16" style="display:block"></span>Export</button>
+            </div>
+          </div>
+
+          <div style="background:#FFFFFF;border:1px solid #E3E7EE;border-radius:5px;overflow-x:auto">
+            <table style="width:100%;min-width:1100px">
+              <thead>
+                <tr>
+                  <th style="width:44px;padding:12px 0 12px 20px;border-bottom:1px solid #E3E7EE"><span style="width:16px;height:16px;border:1px solid #CBD2DD;border-radius:3px;display:block"></span></th>
+                  <th style="text-align:left;font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C;padding:12px;border-bottom:1px solid #E3E7EE;white-space:nowrap">Referenz</th>
+                  <th style="text-align:left;font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C;padding:12px;border-bottom:1px solid #E3E7EE;white-space:nowrap">Eingang</th>
+                  <th style="text-align:left;font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C;padding:12px;border-bottom:1px solid #E3E7EE;white-space:nowrap">Ort / PLZ</th>
+                  <th style="text-align:left;font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C;padding:12px;border-bottom:1px solid #E3E7EE;white-space:nowrap">Art</th>
+                  <th style="text-align:left;font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C;padding:12px;border-bottom:1px solid #E3E7EE;white-space:nowrap">Kunde</th>
+                  <th style="text-align:right;font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C;padding:12px;border-bottom:1px solid #E3E7EE;white-space:nowrap">Benachrichtigt</th>
+                  <th style="text-align:left;font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C;padding:12px 20px;border-bottom:1px solid #E3E7EE;white-space:nowrap">Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr style="background:#E8EDF5;box-shadow:inset 2px 0 0 #14294A;cursor:pointer" onClick="{{ n4 }}">
+                  <td style="padding:14px 0 14px 20px;border-bottom:1px solid #E3E7EE"><span style="width:16px;height:16px;border:1px solid #14294A;border-radius:3px;background:#14294A;display:grid;place-items:center;color:#FFFFFF"><span data-lucide="check" width="11" height="11" style="display:block"></span></span></td>
+                  <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#14294A;padding:14px 12px;border-bottom:1px solid #E3E7EE;white-space:nowrap;font-variant-numeric:tabular-nums">DKGZ-2026-04821</td>
+                  <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#5B687C;padding:14px 12px;border-bottom:1px solid #E3E7EE;white-space:nowrap;font-variant-numeric:tabular-nums">18.08. 08:42</td>
+                  <td style="font-size:13.5px;color:#2E3A4C;padding:14px 12px;border-bottom:1px solid #E3E7EE;white-space:nowrap">Düsseldorf · 40589</td>
+                  <td style="font-size:13.5px;color:#2E3A4C;padding:14px 12px;border-bottom:1px solid #E3E7EE">Unfallgutachten</td>
+                  <td style="font-size:13.5px;color:#2E3A4C;padding:14px 12px;border-bottom:1px solid #E3E7EE;white-space:nowrap">M. Reinhardt</td>
+                  <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#2E3A4C;text-align:right;padding:14px 12px;border-bottom:1px solid #E3E7EE;font-variant-numeric:tabular-nums">4</td>
+                  <td style="padding:14px 20px;border-bottom:1px solid #E3E7EE;white-space:nowrap"><span style="display:inline-flex;align-items:center;gap:8px"><span style="width:6px;height:6px;border-radius:50%;background:#9C6F15"></span><span style="font-size:13.5px;color:#2E3A4C">Vermittelt</span></span></td>
+                </tr>
+                <tr style="transition:background 120ms cubic-bezier(0.4,0,0.2,1);cursor:pointer" style-hover="background:#F8F9FB" onClick="{{ n4 }}">
+                  <td style="padding:14px 0 14px 20px;border-bottom:1px solid #F1F3F7"><span style="width:16px;height:16px;border:1px solid #14294A;border-radius:3px;background:#14294A;display:grid;place-items:center;color:#FFFFFF"><span data-lucide="check" width="11" height="11" style="display:block"></span></span></td>
+                  <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#14294A;padding:14px 12px;border-bottom:1px solid #F1F3F7;white-space:nowrap;font-variant-numeric:tabular-nums">DKGZ-2026-04820</td>
+                  <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#5B687C;padding:14px 12px;border-bottom:1px solid #F1F3F7;white-space:nowrap;font-variant-numeric:tabular-nums">18.08. 08:06</td>
+                  <td style="font-size:13.5px;color:#2E3A4C;padding:14px 12px;border-bottom:1px solid #F1F3F7;white-space:nowrap">Neuss · 41462</td>
+                  <td style="font-size:13.5px;color:#2E3A4C;padding:14px 12px;border-bottom:1px solid #F1F3F7">Wertgutachten</td>
+                  <td style="font-size:13.5px;color:#2E3A4C;padding:14px 12px;border-bottom:1px solid #F1F3F7;white-space:nowrap">T. Kowalczyk</td>
+                  <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#2E3A4C;text-align:right;padding:14px 12px;border-bottom:1px solid #F1F3F7;font-variant-numeric:tabular-nums">3</td>
+                  <td style="padding:14px 20px;border-bottom:1px solid #F1F3F7;white-space:nowrap"><span style="display:inline-flex;align-items:center;gap:8px"><span style="width:6px;height:6px;border-radius:50%;background:#9C6F15"></span><span style="font-size:13.5px;color:#2E3A4C">Vermittelt</span></span></td>
+                </tr>
+                <tr style="transition:background 120ms cubic-bezier(0.4,0,0.2,1);cursor:pointer" style-hover="background:#F8F9FB" onClick="{{ n4 }}">
+                  <td style="padding:14px 0 14px 20px;border-bottom:1px solid #F1F3F7"><span style="width:16px;height:16px;border:1px solid #CBD2DD;border-radius:3px;display:block"></span></td>
+                  <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#14294A;padding:14px 12px;border-bottom:1px solid #F1F3F7;white-space:nowrap;font-variant-numeric:tabular-nums">DKGZ-2026-04817</td>
+                  <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#5B687C;padding:14px 12px;border-bottom:1px solid #F1F3F7;white-space:nowrap;font-variant-numeric:tabular-nums">17.08. 08:42</td>
+                  <td style="font-size:13.5px;color:#2E3A4C;padding:14px 12px;border-bottom:1px solid #F1F3F7;white-space:nowrap">Düsseldorf · 40589</td>
+                  <td style="font-size:13.5px;color:#2E3A4C;padding:14px 12px;border-bottom:1px solid #F1F3F7">Unfallgutachten</td>
+                  <td style="font-size:13.5px;color:#2E3A4C;padding:14px 12px;border-bottom:1px solid #F1F3F7;white-space:nowrap">M. Reinhardt</td>
+                  <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#2E3A4C;text-align:right;padding:14px 12px;border-bottom:1px solid #F1F3F7;font-variant-numeric:tabular-nums">4</td>
+                  <td style="padding:14px 20px;border-bottom:1px solid #F1F3F7;white-space:nowrap"><span style="display:inline-flex;align-items:center;gap:8px"><span style="width:6px;height:6px;border-radius:50%;background:#1B6E48"></span><span style="font-size:13.5px;color:#2E3A4C">Angenommen</span></span></td>
+                </tr>
+                <tr style="transition:background 120ms cubic-bezier(0.4,0,0.2,1);cursor:pointer" style-hover="background:#F8F9FB" onClick="{{ n4 }}">
+                  <td style="padding:14px 0 14px 20px;border-bottom:1px solid #F1F3F7"><span style="width:16px;height:16px;border:1px solid #CBD2DD;border-radius:3px;display:block"></span></td>
+                  <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#14294A;padding:14px 12px;border-bottom:1px solid #F1F3F7;white-space:nowrap;font-variant-numeric:tabular-nums">DKGZ-2026-04805</td>
+                  <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#5B687C;padding:14px 12px;border-bottom:1px solid #F1F3F7;white-space:nowrap;font-variant-numeric:tabular-nums">16.08. 14:20</td>
+                  <td style="font-size:13.5px;color:#2E3A4C;padding:14px 12px;border-bottom:1px solid #F1F3F7;white-space:nowrap">Kiel · 24103</td>
+                  <td style="font-size:13.5px;color:#2E3A4C;padding:14px 12px;border-bottom:1px solid #F1F3F7">Oldtimergutachten</td>
+                  <td style="font-size:13.5px;color:#2E3A4C;padding:14px 12px;border-bottom:1px solid #F1F3F7;white-space:nowrap">H. Petersen</td>
+                  <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#2E3A4C;text-align:right;padding:14px 12px;border-bottom:1px solid #F1F3F7;font-variant-numeric:tabular-nums">4</td>
+                  <td style="padding:14px 20px;border-bottom:1px solid #F1F3F7;white-space:nowrap"><span style="display:inline-flex;align-items:center;gap:8px"><span style="width:6px;height:6px;border-radius:50%;background:#A32318"></span><span style="font-size:13.5px;color:#2E3A4C">Abgelehnt</span></span></td>
+                </tr>
+                <tr style="transition:background 120ms cubic-bezier(0.4,0,0.2,1);cursor:pointer" style-hover="background:#F8F9FB" onClick="{{ n4 }}">
+                  <td style="padding:14px 0 14px 20px;border-bottom:1px solid #F1F3F7"><span style="width:16px;height:16px;border:1px solid #CBD2DD;border-radius:3px;display:block"></span></td>
+                  <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#14294A;padding:14px 12px;border-bottom:1px solid #F1F3F7;white-space:nowrap;font-variant-numeric:tabular-nums">DKGZ-2026-04799</td>
+                  <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#5B687C;padding:14px 12px;border-bottom:1px solid #F1F3F7;white-space:nowrap;font-variant-numeric:tabular-nums">15.08. 11:55</td>
+                  <td style="font-size:13.5px;color:#2E3A4C;padding:14px 12px;border-bottom:1px solid #F1F3F7;white-space:nowrap">Neubrandenburg · 17033</td>
+                  <td style="font-size:13.5px;color:#2E3A4C;padding:14px 12px;border-bottom:1px solid #F1F3F7">Unfallgutachten</td>
+                  <td style="font-size:13.5px;color:#2E3A4C;padding:14px 12px;border-bottom:1px solid #F1F3F7;white-space:nowrap">A. Radtke</td>
+                  <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#A32318;text-align:right;padding:14px 12px;border-bottom:1px solid #F1F3F7;font-variant-numeric:tabular-nums">0</td>
+                  <td style="padding:14px 20px;border-bottom:1px solid #F1F3F7;white-space:nowrap"><span style="display:inline-flex;align-items:center;gap:8px"><span style="width:6px;height:6px;border-radius:50%;background:#14294A"></span><span style="font-size:13.5px;color:#2E3A4C">Neu</span></span></td>
+                </tr>
+                <tr style="transition:background 120ms cubic-bezier(0.4,0,0.2,1);cursor:pointer" style-hover="background:#F8F9FB" onClick="{{ n4 }}">
+                  <td style="padding:14px 0 14px 20px"><span style="width:16px;height:16px;border:1px solid #CBD2DD;border-radius:3px;display:block"></span></td>
+                  <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#14294A;padding:14px 12px;white-space:nowrap;font-variant-numeric:tabular-nums">DKGZ-2026-04788</td>
+                  <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#5B687C;padding:14px 12px;white-space:nowrap;font-variant-numeric:tabular-nums">13.08. 09:31</td>
+                  <td style="font-size:13.5px;color:#2E3A4C;padding:14px 12px;white-space:nowrap">Krefeld · 47798</td>
+                  <td style="font-size:13.5px;color:#2E3A4C;padding:14px 12px">Unfallgutachten</td>
+                  <td style="font-size:13.5px;color:#2E3A4C;padding:14px 12px;white-space:nowrap">B. Özdemir</td>
+                  <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#2E3A4C;text-align:right;padding:14px 12px;font-variant-numeric:tabular-nums">5</td>
+                  <td style="padding:14px 20px;white-space:nowrap"><span style="display:inline-flex;align-items:center;gap:8px"><span style="width:6px;height:6px;border-radius:50%;background:#1B6E48"></span><span style="font-size:13.5px;color:#2E3A4C">Abgeschlossen</span></span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isRequestDetail }}" hint-placeholder-val="{{ false }}">
+        <div>
+          <button type="button" onClick="{{ n3 }}" style="background:transparent;border:none;color:#5B687C;font-size:13.5px;cursor:pointer;padding:0 0 16px;display:flex;align-items:center;gap:8px"><span data-lucide="chevron-left" width="16" height="16" style="display:block"></span>Zurück zu den Anfragen</button>
+
+          <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:24px;flex-wrap:wrap;padding-bottom:20px">
+            <div>
+              <div style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#5B687C;font-variant-numeric:tabular-nums">DKGZ-2026-04817 · Eingang 17.08.2026 · 08:42</div>
+              <div style="font-size:30px;line-height:1.2;font-weight:600;letter-spacing:-0.018em;color:#14294A;padding-top:4px">Unfallgutachten · Düsseldorf 40589</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:12px">
+              <span style="display:inline-flex;align-items:center;gap:8px"><span style="width:6px;height:6px;border-radius:50%;background:#1B6E48"></span><span style="font-size:15px;color:#2E3A4C">Angenommen</span></span>
+              <button type="button" style="height:32px;padding:0 12px;background:#FFFFFF;color:#14294A;border:1px solid #CBD2DD;border-radius:3px;font-size:13.5px;font-weight:500;cursor:pointer">Erneut vermitteln</button>
+            </div>
+          </div>
+
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px">
+            <div style="background:#FFFFFF;border:1px solid #E3E7EE;border-radius:5px">
+              <div style="padding:14px 20px;border-bottom:1px solid #E3E7EE;font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C">Anfragedaten</div>
+              <table style="width:100%">
+                <tbody>
+                  <tr><td style="font-size:13.5px;color:#5B687C;padding:12px 20px;border-bottom:1px solid #F1F3F7;width:180px">Fahrzeug</td><td style="font-size:13.5px;color:#2E3A4C;padding:12px 20px;border-bottom:1px solid #F1F3F7">VW Passat B8 · 2019 · <span style="font-family:'IBM Plex Mono',monospace">D-AB 1234</span></td></tr>
+                  <tr><td style="font-size:13.5px;color:#5B687C;padding:12px 20px;border-bottom:1px solid #F1F3F7">Standort</td><td style="font-size:13.5px;color:#2E3A4C;padding:12px 20px;border-bottom:1px solid #F1F3F7">Düsseldorf-Wersten · 40589</td></tr>
+                  <tr><td style="font-size:13.5px;color:#5B687C;padding:12px 20px;border-bottom:1px solid #F1F3F7">Beschreibung</td><td style="font-size:13.5px;color:#2E3A4C;padding:12px 20px;border-bottom:1px solid #F1F3F7">Heckschaden nach Auffahrunfall, fahrbereit</td></tr>
+                  <tr><td style="font-size:13.5px;color:#5B687C;padding:12px 20px;border-bottom:1px solid #F1F3F7">Dringlichkeit</td><td style="font-size:13.5px;color:#2E3A4C;padding:12px 20px;border-bottom:1px solid #F1F3F7">Innerhalb von zwei Werktagen</td></tr>
+                  <tr><td style="font-size:13.5px;color:#5B687C;padding:12px 20px">Fotos</td><td style="font-size:13.5px;color:#2E3A4C;padding:12px 20px">3 Dateien</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div style="background:#FFFFFF;border:1px solid #E3E7EE;border-radius:5px">
+              <div style="padding:14px 20px;border-bottom:1px solid #E3E7EE;font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C">Kundendaten</div>
+              <table style="width:100%">
+                <tbody>
+                  <tr><td style="font-size:13.5px;color:#5B687C;padding:12px 20px;border-bottom:1px solid #F1F3F7;width:180px">Name</td><td style="font-size:13.5px;color:#2E3A4C;padding:12px 20px;border-bottom:1px solid #F1F3F7">Martina Reinhardt</td></tr>
+                  <tr><td style="font-size:13.5px;color:#5B687C;padding:12px 20px;border-bottom:1px solid #F1F3F7">Telefon</td><td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#2E3A4C;padding:12px 20px;border-bottom:1px solid #F1F3F7;font-variant-numeric:tabular-nums">+49 211 3300124</td></tr>
+                  <tr><td style="font-size:13.5px;color:#5B687C;padding:12px 20px;border-bottom:1px solid #F1F3F7">E-Mail</td><td style="font-size:13.5px;color:#2E3A4C;padding:12px 20px;border-bottom:1px solid #F1F3F7">m.reinhardt@web.de</td></tr>
+                  <tr><td style="font-size:13.5px;color:#5B687C;padding:12px 20px;border-bottom:1px solid #F1F3F7">Art</td><td style="font-size:13.5px;color:#2E3A4C;padding:12px 20px;border-bottom:1px solid #F1F3F7">Privatperson</td></tr>
+                  <tr><td style="font-size:13.5px;color:#5B687C;padding:12px 20px">Bewertung</td><td style="padding:12px 20px"><span style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#2E3A4C;font-variant-numeric:tabular-nums">9 / 10</span></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div style="background:#FFFFFF;border:1px solid #E3E7EE;border-radius:5px;margin-top:16px;overflow-x:auto">
+            <div style="padding:16px 20px;border-bottom:1px solid #E3E7EE;display:flex;align-items:baseline;justify-content:space-between;gap:16px;flex-wrap:wrap">
+              <div>
+                <div style="font-size:17px;font-weight:600;color:#14294A">Vermittlungsverlauf</div>
+                <div style="font-size:13.5px;color:#5B687C;padding-top:2px">Jeder Sachverständige, an den diese Anfrage weitergeleitet wurde — in der Reihenfolge der Benachrichtigung.</div>
+              </div>
+              <span style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#9AA5B4;white-space:nowrap">4 benachrichtigt · 1 angenommen</span>
+            </div>
+            <table style="width:100%;min-width:1000px">
+              <thead>
+                <tr>
+                  <th style="text-align:left;font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C;padding:12px 20px;border-bottom:1px solid #E3E7EE;white-space:nowrap">Sachverständiger</th>
+                  <th style="text-align:left;font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C;padding:12px;border-bottom:1px solid #E3E7EE;white-space:nowrap">Partner-ID</th>
+                  <th style="text-align:left;font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C;padding:12px;border-bottom:1px solid #E3E7EE;white-space:nowrap">PLZ-Gebiet</th>
+                  <th style="text-align:left;font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C;padding:12px;border-bottom:1px solid #E3E7EE;white-space:nowrap">Benachrichtigt</th>
+                  <th style="text-align:left;font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C;padding:12px;border-bottom:1px solid #E3E7EE;white-space:nowrap">Gesehen</th>
+                  <th style="text-align:left;font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C;padding:12px;border-bottom:1px solid #E3E7EE;white-space:nowrap">Reaktion</th>
+                  <th style="text-align:left;font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C;padding:12px 20px;border-bottom:1px solid #E3E7EE;white-space:nowrap">Ergebnis</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr style="background:#E8EDF5;box-shadow:inset 2px 0 0 #14294A">
+                  <td style="font-size:13.5px;font-weight:500;color:#14294A;padding:14px 20px;border-bottom:1px solid #E3E7EE;white-space:nowrap">Kfz-SV-Büro Reinhardt</td>
+                  <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#14294A;padding:14px 12px;border-bottom:1px solid #E3E7EE;white-space:nowrap">DKGZ-SV-0142</td>
+                  <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#2E3A4C;padding:14px 12px;border-bottom:1px solid #E3E7EE;white-space:nowrap;font-variant-numeric:tabular-nums">40210–40629</td>
+                  <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#2E3A4C;padding:14px 12px;border-bottom:1px solid #E3E7EE;white-space:nowrap;font-variant-numeric:tabular-nums">17.08. 08:42:11</td>
+                  <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#2E3A4C;padding:14px 12px;border-bottom:1px solid #E3E7EE;white-space:nowrap;font-variant-numeric:tabular-nums">17.08. 09:04:38</td>
+                  <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#2E3A4C;padding:14px 12px;border-bottom:1px solid #E3E7EE;white-space:nowrap;font-variant-numeric:tabular-nums">25 Min.</td>
+                  <td style="padding:14px 20px;border-bottom:1px solid #E3E7EE;white-space:nowrap"><span style="display:inline-flex;align-items:center;gap:8px"><span style="width:6px;height:6px;border-radius:50%;background:#1B6E48"></span><span style="font-size:13.5px;font-weight:500;color:#14294A">Angenommen</span></span></td>
+                </tr>
+                <tr style="transition:background 120ms cubic-bezier(0.4,0,0.2,1)" style-hover="background:#F8F9FB">
+                  <td style="font-size:13.5px;color:#2E3A4C;padding:14px 20px;border-bottom:1px solid #F1F3F7;white-space:nowrap">Gutachterbüro Sander &amp; Co.</td>
+                  <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#14294A;padding:14px 12px;border-bottom:1px solid #F1F3F7;white-space:nowrap">DKGZ-SV-0088</td>
+                  <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#2E3A4C;padding:14px 12px;border-bottom:1px solid #F1F3F7;white-space:nowrap;font-variant-numeric:tabular-nums">40468–40699</td>
+                  <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#2E3A4C;padding:14px 12px;border-bottom:1px solid #F1F3F7;white-space:nowrap;font-variant-numeric:tabular-nums">17.08. 08:42:11</td>
+                  <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#2E3A4C;padding:14px 12px;border-bottom:1px solid #F1F3F7;white-space:nowrap;font-variant-numeric:tabular-nums">17.08. 08:58:02</td>
+                  <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#2E3A4C;padding:14px 12px;border-bottom:1px solid #F1F3F7;white-space:nowrap;font-variant-numeric:tabular-nums">16 Min.</td>
+                  <td style="padding:14px 20px;border-bottom:1px solid #F1F3F7;white-space:nowrap"><span style="display:inline-flex;align-items:center;gap:8px"><span style="width:6px;height:6px;border-radius:50%;background:#A32318"></span><span style="font-size:13.5px;color:#2E3A4C">Abgelehnt</span></span></td>
+                </tr>
+                <tr style="transition:background 120ms cubic-bezier(0.4,0,0.2,1)" style-hover="background:#F8F9FB">
+                  <td style="font-size:13.5px;color:#2E3A4C;padding:14px 20px;border-bottom:1px solid #F1F3F7;white-space:nowrap">SV Ingenieurbüro Timm</td>
+                  <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#14294A;padding:14px 12px;border-bottom:1px solid #F1F3F7;white-space:nowrap">DKGZ-SV-0117</td>
+                  <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#2E3A4C;padding:14px 12px;border-bottom:1px solid #F1F3F7;white-space:nowrap;font-variant-numeric:tabular-nums">40210–40885</td>
+                  <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#2E3A4C;padding:14px 12px;border-bottom:1px solid #F1F3F7;white-space:nowrap;font-variant-numeric:tabular-nums">17.08. 08:42:11</td>
+                  <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#9AA5B4;padding:14px 12px;border-bottom:1px solid #F1F3F7;white-space:nowrap">nicht geöffnet</td>
+                  <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#9AA5B4;padding:14px 12px;border-bottom:1px solid #F1F3F7;white-space:nowrap">—</td>
+                  <td style="padding:14px 20px;border-bottom:1px solid #F1F3F7;white-space:nowrap"><span style="display:inline-flex;align-items:center;gap:8px"><span style="width:6px;height:6px;border-radius:50%;background:#9AA5B4"></span><span style="font-size:13.5px;color:#5B687C">Geschlossen</span></span></td>
+                </tr>
+                <tr style="transition:background 120ms cubic-bezier(0.4,0,0.2,1)" style-hover="background:#F8F9FB">
+                  <td style="font-size:13.5px;color:#2E3A4C;padding:14px 20px;white-space:nowrap">Kfz-Prüfstelle Rheinbogen</td>
+                  <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#14294A;padding:14px 12px;white-space:nowrap">DKGZ-SV-0154</td>
+                  <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#2E3A4C;padding:14px 12px;white-space:nowrap;font-variant-numeric:tabular-nums">40545–40629</td>
+                  <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#2E3A4C;padding:14px 12px;white-space:nowrap;font-variant-numeric:tabular-nums">17.08. 08:42:11</td>
+                  <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#2E3A4C;padding:14px 12px;white-space:nowrap;font-variant-numeric:tabular-nums">17.08. 09:11:20</td>
+                  <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#9AA5B4;padding:14px 12px;white-space:nowrap">—</td>
+                  <td style="padding:14px 20px;white-space:nowrap"><span style="display:inline-flex;align-items:center;gap:8px"><span style="width:6px;height:6px;border-radius:50%;background:#9AA5B4"></span><span style="font-size:13.5px;color:#5B687C">Geschlossen</span></span></td>
+                </tr>
+              </tbody>
+            </table>
+            <div style="padding:14px 20px;border-top:1px solid #E3E7EE;background:#F8F9FB">
+              <span style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#9AA5B4">Auswahlkriterium: Einsatzgebiet deckt 40589 · Leistung „Unfallgutachten“ aktiv · Status „Verfügbar“ · Reihenfolge nach Eingang der Bestätigung</span>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isOrders }}" hint-placeholder-val="{{ false }}">
+        <div>
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;padding-bottom:16px">
+            <div style="display:flex;border:1px solid #CBD2DD;border-radius:3px;overflow:hidden">
+              <span style="height:32px;padding:0 14px;display:inline-flex;align-items:center;font-size:13.5px;font-weight:500;background:#14294A;color:#FFFFFF">Alle</span>
+              <span style="height:32px;padding:0 14px;display:inline-flex;align-items:center;font-size:13.5px;color:#2E3A4C;border-left:1px solid #CBD2DD;background:#FFFFFF">In Bearbeitung</span>
+              <span style="height:32px;padding:0 14px;display:inline-flex;align-items:center;font-size:13.5px;color:#2E3A4C;border-left:1px solid #CBD2DD;background:#FFFFFF">Abgeschlossen</span>
+              <span style="height:32px;padding:0 14px;display:inline-flex;align-items:center;font-size:13.5px;color:#2E3A4C;border-left:1px solid #CBD2DD;background:#FFFFFF">Storniert</span>
+            </div>
+            <span style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#5B687C;font-variant-numeric:tabular-nums">63 aktive · 412 gesamt</span>
+          </div>
+          <div style="background:#FFFFFF;border:1px solid #E3E7EE;border-radius:5px;overflow-x:auto">
+            <table style="width:100%;min-width:1080px">
+              <thead>
+                <tr>
+                  <th style="text-align:left;font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C;padding:12px 20px;border-bottom:1px solid #E3E7EE;white-space:nowrap">Referenz</th>
+                  <th style="text-align:left;font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C;padding:12px;border-bottom:1px solid #E3E7EE;white-space:nowrap">Sachverständiger</th>
+                  <th style="text-align:left;font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C;padding:12px;border-bottom:1px solid #E3E7EE;white-space:nowrap">Kunde</th>
+                  <th style="text-align:left;font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C;padding:12px;border-bottom:1px solid #E3E7EE;white-space:nowrap">Art</th>
+                  <th style="text-align:left;font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C;padding:12px;border-bottom:1px solid #E3E7EE;white-space:nowrap">Status</th>
+                  <th style="text-align:right;font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C;padding:12px;border-bottom:1px solid #E3E7EE;white-space:nowrap">Honorar</th>
+                  <th style="text-align:right;font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C;padding:12px 20px;border-bottom:1px solid #E3E7EE;white-space:nowrap">Provision</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr style="transition:background 120ms cubic-bezier(0.4,0,0.2,1);cursor:pointer" style-hover="background:#F8F9FB" onClick="{{ n6 }}">
+                  <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#14294A;padding:14px 20px;border-bottom:1px solid #F1F3F7;white-space:nowrap;font-variant-numeric:tabular-nums">DKGZ-2026-04817</td>
+                  <td style="font-size:13.5px;color:#2E3A4C;padding:14px 12px;border-bottom:1px solid #F1F3F7;white-space:nowrap">Kfz-SV-Büro Reinhardt</td>
+                  <td style="font-size:13.5px;color:#2E3A4C;padding:14px 12px;border-bottom:1px solid #F1F3F7;white-space:nowrap">M. Reinhardt</td>
+                  <td style="font-size:13.5px;color:#2E3A4C;padding:14px 12px;border-bottom:1px solid #F1F3F7">Unfallgutachten</td>
+                  <td style="padding:14px 12px;border-bottom:1px solid #F1F3F7;white-space:nowrap"><span style="display:inline-flex;align-items:center;gap:8px"><span style="width:6px;height:6px;border-radius:50%;background:#9C6F15"></span><span style="font-size:13.5px;color:#2E3A4C">In Bearbeitung</span></span></td>
+                  <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#9AA5B4;text-align:right;padding:14px 12px;border-bottom:1px solid #F1F3F7;white-space:nowrap">offen</td>
+                  <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#9AA5B4;text-align:right;padding:14px 20px;border-bottom:1px solid #F1F3F7;white-space:nowrap">—</td>
+                </tr>
+                <tr style="transition:background 120ms cubic-bezier(0.4,0,0.2,1);cursor:pointer" style-hover="background:#F8F9FB" onClick="{{ n6 }}">
+                  <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#14294A;padding:14px 20px;border-bottom:1px solid #F1F3F7;white-space:nowrap;font-variant-numeric:tabular-nums">DKGZ-2026-04812</td>
+                  <td style="font-size:13.5px;color:#2E3A4C;padding:14px 12px;border-bottom:1px solid #F1F3F7;white-space:nowrap">Gutachterbüro Sander &amp; Co.</td>
+                  <td style="font-size:13.5px;color:#2E3A4C;padding:14px 12px;border-bottom:1px solid #F1F3F7;white-space:nowrap">T. Kowalczyk</td>
+                  <td style="font-size:13.5px;color:#2E3A4C;padding:14px 12px;border-bottom:1px solid #F1F3F7">Wertgutachten</td>
+                  <td style="padding:14px 12px;border-bottom:1px solid #F1F3F7;white-space:nowrap"><span style="display:inline-flex;align-items:center;gap:8px"><span style="width:6px;height:6px;border-radius:50%;background:#1B6E48"></span><span style="font-size:13.5px;color:#2E3A4C">Abgeschlossen</span></span></td>
+                  <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#2E3A4C;text-align:right;padding:14px 12px;border-bottom:1px solid #F1F3F7;white-space:nowrap;font-variant-numeric:tabular-nums">420,00 €</td>
+                  <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#2E3A4C;text-align:right;padding:14px 20px;border-bottom:1px solid #F1F3F7;white-space:nowrap;font-variant-numeric:tabular-nums">63,00 €</td>
+                </tr>
+                <tr style="transition:background 120ms cubic-bezier(0.4,0,0.2,1);cursor:pointer" style-hover="background:#F8F9FB" onClick="{{ n6 }}">
+                  <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#14294A;padding:14px 20px;border-bottom:1px solid #F1F3F7;white-space:nowrap;font-variant-numeric:tabular-nums">DKGZ-2026-04809</td>
+                  <td style="font-size:13.5px;color:#2E3A4C;padding:14px 12px;border-bottom:1px solid #F1F3F7;white-space:nowrap">SV Ingenieurbüro Timm</td>
+                  <td style="font-size:13.5px;color:#2E3A4C;padding:14px 12px;border-bottom:1px solid #F1F3F7;white-space:nowrap">S. Brandt</td>
+                  <td style="font-size:13.5px;color:#2E3A4C;padding:14px 12px;border-bottom:1px solid #F1F3F7">Fahrzeugschadengutachten</td>
+                  <td style="padding:14px 12px;border-bottom:1px solid #F1F3F7;white-space:nowrap"><span style="display:inline-flex;align-items:center;gap:8px"><span style="width:6px;height:6px;border-radius:50%;background:#1B6E48"></span><span style="font-size:13.5px;color:#2E3A4C">Abgeschlossen</span></span></td>
+                  <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#2E3A4C;text-align:right;padding:14px 12px;border-bottom:1px solid #F1F3F7;white-space:nowrap;font-variant-numeric:tabular-nums">1.640,00 €</td>
+                  <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#2E3A4C;text-align:right;padding:14px 20px;border-bottom:1px solid #F1F3F7;white-space:nowrap;font-variant-numeric:tabular-nums">246,00 €</td>
+                </tr>
+                <tr style="transition:background 120ms cubic-bezier(0.4,0,0.2,1);cursor:pointer" style-hover="background:#F8F9FB" onClick="{{ n6 }}">
+                  <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#14294A;padding:14px 20px;white-space:nowrap;font-variant-numeric:tabular-nums">DKGZ-2026-04785</td>
+                  <td style="font-size:13.5px;color:#2E3A4C;padding:14px 12px;white-space:nowrap">Kfz-Prüfstelle Rheinbogen</td>
+                  <td style="font-size:13.5px;color:#2E3A4C;padding:14px 12px;white-space:nowrap">L. Hoffmann</td>
+                  <td style="font-size:13.5px;color:#2E3A4C;padding:14px 12px">Beweissicherung</td>
+                  <td style="padding:14px 12px;white-space:nowrap"><span style="display:inline-flex;align-items:center;gap:8px"><span style="width:6px;height:6px;border-radius:50%;background:#A32318"></span><span style="font-size:13.5px;color:#2E3A4C">Storniert</span></span></td>
+                  <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#9AA5B4;text-align:right;padding:14px 12px;white-space:nowrap">—</td>
+                  <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#9AA5B4;text-align:right;padding:14px 20px;white-space:nowrap">—</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isOrderDetail }}" hint-placeholder-val="{{ false }}">
+        <div>
+          <button type="button" onClick="{{ n5 }}" style="background:transparent;border:none;color:#5B687C;font-size:13.5px;cursor:pointer;padding:0 0 16px;display:flex;align-items:center;gap:8px"><span data-lucide="chevron-left" width="16" height="16" style="display:block"></span>Zurück zu den Aufträgen</button>
+          <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:24px;flex-wrap:wrap;padding-bottom:20px">
+            <div>
+              <div style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#5B687C;font-variant-numeric:tabular-nums">DKGZ-2026-04809</div>
+              <div style="font-size:30px;line-height:1.2;font-weight:600;letter-spacing:-0.018em;color:#14294A;padding-top:4px">Fahrzeugschadengutachten · Berlin</div>
+            </div>
+            <span style="display:inline-flex;align-items:center;gap:8px"><span style="width:6px;height:6px;border-radius:50%;background:#1B6E48"></span><span style="font-size:15px;color:#2E3A4C">Abgeschlossen</span></span>
+          </div>
+
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px;align-items:start">
+            <div style="background:#FFFFFF;border:1px solid #E3E7EE;border-radius:5px;padding:20px">
+              <div style="font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C;padding-bottom:16px">Verlauf</div>
+              <div style="display:grid;grid-template-columns:20px minmax(0,1fr);gap:12px">
+                <div style="display:flex;flex-direction:column;align-items:center"><span style="width:10px;height:10px;border-radius:50%;background:#14294A;margin-top:5px"></span><span style="width:1px;flex:1;background:#E3E7EE;min-height:28px"></span></div>
+                <div style="padding-bottom:14px"><div style="font-size:13.5px;font-weight:500;color:#2E3A4C">Eingegangen</div><div style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#9AA5B4">16.08. · 07:19</div></div>
+                <div style="display:flex;flex-direction:column;align-items:center"><span style="width:10px;height:10px;border-radius:50%;background:#14294A;margin-top:5px"></span><span style="width:1px;flex:1;background:#E3E7EE;min-height:28px"></span></div>
+                <div style="padding-bottom:14px"><div style="font-size:13.5px;font-weight:500;color:#2E3A4C">Vermittelt an 3</div><div style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#9AA5B4">16.08. · 07:19</div></div>
+                <div style="display:flex;flex-direction:column;align-items:center"><span style="width:10px;height:10px;border-radius:50%;background:#14294A;margin-top:5px"></span><span style="width:1px;flex:1;background:#E3E7EE;min-height:28px"></span></div>
+                <div style="padding-bottom:14px"><div style="font-size:13.5px;font-weight:500;color:#2E3A4C">Angenommen</div><div style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#9AA5B4">16.08. · 08:02</div></div>
+                <div style="display:flex;flex-direction:column;align-items:center"><span style="width:10px;height:10px;border-radius:50%;background:#14294A;margin-top:5px"></span><span style="width:1px;flex:1;background:#E3E7EE;min-height:28px"></span></div>
+                <div style="padding-bottom:14px"><div style="font-size:13.5px;font-weight:500;color:#2E3A4C">Unterlagen vollständig</div><div style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#9AA5B4">17.08. · 16:40</div></div>
+                <div style="display:flex;flex-direction:column;align-items:center"><span style="width:10px;height:10px;border-radius:50%;background:#14294A;margin-top:5px"></span></div>
+                <div><div style="font-size:13.5px;font-weight:500;color:#2E3A4C">Abgeschlossen</div><div style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#9AA5B4">17.08. · 16:44</div></div>
+              </div>
+            </div>
+
+            <div style="display:flex;flex-direction:column;gap:16px;min-width:0">
+              <div style="background:#FFFFFF;border:1px solid #E3E7EE;border-radius:5px;padding:20px;display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:24px">
+                <div>
+                  <div style="font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C;padding-bottom:12px">Sachverständiger</div>
+                  <div style="font-size:15px;font-weight:600;color:#14294A">SV Ingenieurbüro Timm</div>
+                  <div style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#5B687C;padding-top:4px">DKGZ-SV-0117</div>
+                  <button type="button" onClick="{{ n8 }}" style="background:transparent;border:none;color:#14294A;font-size:13.5px;font-weight:500;cursor:pointer;padding:8px 0 0">Profil öffnen</button>
+                </div>
+                <div>
+                  <div style="font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C;padding-bottom:12px">Kunde</div>
+                  <div style="font-size:15px;font-weight:600;color:#14294A">Sabine Brandt</div>
+                  <div style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#5B687C;padding-top:4px;font-variant-numeric:tabular-nums">+49 30 22014477</div>
+                  <div style="font-size:13.5px;color:#5B687C">Berlin · 10117</div>
+                </div>
+              </div>
+
+              <div style="background:#FFFFFF;border:1px solid #E3E7EE;border-radius:5px">
+                <div style="padding:14px 20px;border-bottom:1px solid #E3E7EE;font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C">Hinterlegte Dokumente</div>
+                <div style="display:flex;align-items:center;gap:12px;padding:14px 20px;border-bottom:1px solid #F1F3F7;flex-wrap:wrap">
+                  <span data-lucide="file-text" width="20" height="20" style="color:#14294A;flex:none;display:block"></span>
+                  <div style="min-width:0;flex:1"><div style="font-size:13.5px;font-weight:500;color:#2E3A4C;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Gutachten_DKGZ-2026-04809.pdf</div><div style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#9AA5B4;font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">3,1 MB · 17.08.2026 · 16:38</div></div>
+                  <button type="button" style="height:28px;padding:0 10px;background:#FFFFFF;color:#14294A;border:1px solid #CBD2DD;border-radius:3px;font-size:13.5px;cursor:pointer">Ansehen</button>
+                  <span data-lucide="download" width="18" height="18" style="color:#5B687C;flex:none;display:block"></span>
+                </div>
+                <div style="display:flex;align-items:center;gap:12px;padding:14px 20px">
+                  <span data-lucide="file-text" width="20" height="20" style="color:#14294A;flex:none;display:block"></span>
+                  <div style="min-width:0;flex:1"><div style="font-size:13.5px;font-weight:500;color:#2E3A4C;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Rechnung_04809.pdf</div><div style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#9AA5B4;font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">286 KB · 17.08.2026 · 16:40</div></div>
+                  <button type="button" style="height:28px;padding:0 10px;background:#FFFFFF;color:#14294A;border:1px solid #CBD2DD;border-radius:3px;font-size:13.5px;cursor:pointer">Ansehen</button>
+                  <span data-lucide="download" width="18" height="18" style="color:#5B687C;flex:none;display:block"></span>
+                </div>
+              </div>
+            </div>
+
+            <div style="background:#FFFFFF;border:1px solid #14294A;border-radius:5px;padding:20px">
+              <div style="font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C">Abrechnung</div>
+              <table style="width:100%;margin-top:16px">
+                <tbody>
+                  <tr><td style="font-size:13.5px;color:#5B687C;padding:8px 0;border-bottom:1px solid #F1F3F7">Honorar netto</td><td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#2E3A4C;text-align:right;padding:8px 0;border-bottom:1px solid #F1F3F7;white-space:nowrap;font-variant-numeric:tabular-nums">1.640,00 €</td></tr>
+                  <tr><td style="font-size:13.5px;color:#5B687C;padding:8px 0;border-bottom:1px solid #F1F3F7">Provision 15 %</td><td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#2E3A4C;text-align:right;padding:8px 0;border-bottom:1px solid #F1F3F7;white-space:nowrap;font-variant-numeric:tabular-nums">246,00 €</td></tr>
+                  <tr><td style="font-size:13.5px;font-weight:500;color:#14294A;padding:10px 0;border-top:2px solid #14294A">An Sachverständigen</td><td style="font-family:'IBM Plex Mono',monospace;font-size:15px;font-weight:500;color:#14294A;text-align:right;padding:10px 0;border-top:2px solid #14294A;white-space:nowrap;font-variant-numeric:tabular-nums">1.394,00 €</td></tr>
+                </tbody>
+              </table>
+              <div style="display:flex;align-items:center;gap:8px;padding-top:12px"><span style="width:6px;height:6px;border-radius:50%;background:#9C6F15"></span><span style="font-size:13.5px;color:#2E3A4C">Provision offen</span></div>
+              <button type="button" onClick="{{ n11 }}" style="width:100%;height:40px;margin-top:16px;background:#14294A;color:#FFFFFF;border:1px solid #14294A;border-radius:3px;font-size:15px;font-weight:500;cursor:pointer">Als abgerechnet markieren</button>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isAssessors }}" hint-placeholder-val="{{ false }}">
+        <div>
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;padding-bottom:16px">
+            <div style="display:flex;align-items:center;gap:8px">
+              <div style="height:32px;padding:0 10px;border:1px solid #CBD2DD;border-radius:3px;display:flex;align-items:center;gap:8px;background:#FFFFFF"><span data-lucide="filter" width="16" height="16" style="color:#5B687C;flex:none;display:block"></span><span style="font-size:13.5px;color:#2E3A4C">Status: Alle</span><span data-lucide="chevron-down" width="14" height="14" style="color:#5B687C;flex:none;display:block"></span></div>
+              <div style="height:32px;padding:0 10px;border:1px solid #CBD2DD;border-radius:3px;display:flex;align-items:center;gap:8px;background:#FFFFFF"><span style="font-size:13.5px;color:#2E3A4C">Bundesland</span><span data-lucide="chevron-down" width="14" height="14" style="color:#5B687C;flex:none;display:block"></span></div>
+            </div>
+            <button type="button" onClick="{{ n9 }}" style="height:32px;padding:0 12px;background:#14294A;color:#FFFFFF;border:1px solid #14294A;border-radius:3px;font-size:13.5px;font-weight:500;cursor:pointer">Sachverständigen einladen</button>
+          </div>
+          <div style="background:#FFFFFF;border:1px solid #E3E7EE;border-radius:5px;overflow-x:auto">
+            <table style="width:100%;min-width:1080px">
+              <thead>
+                <tr>
+                  <th style="text-align:left;font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C;padding:12px 20px;border-bottom:1px solid #E3E7EE;white-space:nowrap">Büro</th>
+                  <th style="text-align:left;font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C;padding:12px;border-bottom:1px solid #E3E7EE;white-space:nowrap">Partner-ID</th>
+                  <th style="text-align:left;font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C;padding:12px;border-bottom:1px solid #E3E7EE;white-space:nowrap">Status</th>
+                  <th style="text-align:left;font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C;padding:12px;border-bottom:1px solid #E3E7EE;white-space:nowrap">Einsatzgebiet</th>
+                  <th style="text-align:right;font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C;padding:12px;border-bottom:1px solid #E3E7EE;white-space:nowrap">Abgeschlossen</th>
+                  <th style="text-align:right;font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C;padding:12px;border-bottom:1px solid #E3E7EE;white-space:nowrap">Annahmequote</th>
+                  <th style="text-align:right;font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C;padding:12px 20px;border-bottom:1px solid #E3E7EE;white-space:nowrap">Provision gesamt</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr style="transition:background 120ms cubic-bezier(0.4,0,0.2,1);cursor:pointer" style-hover="background:#F8F9FB" onClick="{{ n8 }}">
+                  <td style="font-size:13.5px;color:#2E3A4C;padding:14px 20px;border-bottom:1px solid #F1F3F7;white-space:nowrap">Kfz-SV-Büro Reinhardt</td>
+                  <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#14294A;padding:14px 12px;border-bottom:1px solid #F1F3F7;white-space:nowrap">DKGZ-SV-0142</td>
+                  <td style="padding:14px 12px;border-bottom:1px solid #F1F3F7;white-space:nowrap"><span style="display:inline-flex;align-items:center;gap:8px"><span style="width:6px;height:6px;border-radius:50%;background:#1B6E48"></span><span style="font-size:13.5px;color:#2E3A4C">Aktiv</span></span></td>
+                  <td style="font-size:13.5px;color:#2E3A4C;padding:14px 12px;border-bottom:1px solid #F1F3F7;white-space:nowrap">Düsseldorf, Neuss +2</td>
+                  <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#2E3A4C;text-align:right;padding:14px 12px;border-bottom:1px solid #F1F3F7;font-variant-numeric:tabular-nums">64</td>
+                  <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#2E3A4C;text-align:right;padding:14px 12px;border-bottom:1px solid #F1F3F7;font-variant-numeric:tabular-nums">78 %</td>
+                  <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#2E3A4C;text-align:right;padding:14px 20px;border-bottom:1px solid #F1F3F7;white-space:nowrap;font-variant-numeric:tabular-nums">8.412,50 €</td>
+                </tr>
+                <tr style="transition:background 120ms cubic-bezier(0.4,0,0.2,1);cursor:pointer" style-hover="background:#F8F9FB" onClick="{{ n8 }}">
+                  <td style="font-size:13.5px;color:#2E3A4C;padding:14px 20px;border-bottom:1px solid #F1F3F7;white-space:nowrap">Gutachterbüro Sander &amp; Co.</td>
+                  <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#14294A;padding:14px 12px;border-bottom:1px solid #F1F3F7;white-space:nowrap">DKGZ-SV-0088</td>
+                  <td style="padding:14px 12px;border-bottom:1px solid #F1F3F7;white-space:nowrap"><span style="display:inline-flex;align-items:center;gap:8px"><span style="width:6px;height:6px;border-radius:50%;background:#1B6E48"></span><span style="font-size:13.5px;color:#2E3A4C">Aktiv</span></span></td>
+                  <td style="font-size:13.5px;color:#2E3A4C;padding:14px 12px;border-bottom:1px solid #F1F3F7;white-space:nowrap">Düsseldorf Süd</td>
+                  <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#2E3A4C;text-align:right;padding:14px 12px;border-bottom:1px solid #F1F3F7;font-variant-numeric:tabular-nums">41</td>
+                  <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#2E3A4C;text-align:right;padding:14px 12px;border-bottom:1px solid #F1F3F7;font-variant-numeric:tabular-nums">62 %</td>
+                  <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#2E3A4C;text-align:right;padding:14px 20px;border-bottom:1px solid #F1F3F7;white-space:nowrap;font-variant-numeric:tabular-nums">5.187,00 €</td>
+                </tr>
+                <tr style="transition:background 120ms cubic-bezier(0.4,0,0.2,1);cursor:pointer" style-hover="background:#F8F9FB" onClick="{{ n8 }}">
+                  <td style="font-size:13.5px;color:#2E3A4C;padding:14px 20px;border-bottom:1px solid #F1F3F7;white-space:nowrap">SV Ingenieurbüro Timm</td>
+                  <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#14294A;padding:14px 12px;border-bottom:1px solid #F1F3F7;white-space:nowrap">DKGZ-SV-0117</td>
+                  <td style="padding:14px 12px;border-bottom:1px solid #F1F3F7;white-space:nowrap"><span style="display:inline-flex;align-items:center;gap:8px"><span style="width:6px;height:6px;border-radius:50%;background:#1B6E48"></span><span style="font-size:13.5px;color:#2E3A4C">Aktiv</span></span></td>
+                  <td style="font-size:13.5px;color:#2E3A4C;padding:14px 12px;border-bottom:1px solid #F1F3F7;white-space:nowrap">Berlin Mitte +3</td>
+                  <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#2E3A4C;text-align:right;padding:14px 12px;border-bottom:1px solid #F1F3F7;font-variant-numeric:tabular-nums">57</td>
+                  <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#2E3A4C;text-align:right;padding:14px 12px;border-bottom:1px solid #F1F3F7;font-variant-numeric:tabular-nums">71 %</td>
+                  <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#2E3A4C;text-align:right;padding:14px 20px;border-bottom:1px solid #F1F3F7;white-space:nowrap;font-variant-numeric:tabular-nums">7.943,25 €</td>
+                </tr>
+                <tr style="transition:background 120ms cubic-bezier(0.4,0,0.2,1);cursor:pointer" style-hover="background:#F8F9FB" onClick="{{ n8 }}">
+                  <td style="font-size:13.5px;color:#2E3A4C;padding:14px 20px;border-bottom:1px solid #F1F3F7;white-space:nowrap">Sachverständige Nordwest GbR</td>
+                  <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#14294A;padding:14px 12px;border-bottom:1px solid #F1F3F7;white-space:nowrap">DKGZ-SV-0163</td>
+                  <td style="padding:14px 12px;border-bottom:1px solid #F1F3F7;white-space:nowrap"><span style="display:inline-flex;align-items:center;gap:8px"><span style="width:6px;height:6px;border-radius:50%;background:#9C6F15"></span><span style="font-size:13.5px;color:#2E3A4C">Wartend</span></span></td>
+                  <td style="font-size:13.5px;color:#2E3A4C;padding:14px 12px;border-bottom:1px solid #F1F3F7;white-space:nowrap">Bremen, Oldenburg</td>
+                  <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#9AA5B4;text-align:right;padding:14px 12px;border-bottom:1px solid #F1F3F7;font-variant-numeric:tabular-nums">0</td>
+                  <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#9AA5B4;text-align:right;padding:14px 12px;border-bottom:1px solid #F1F3F7">—</td>
+                  <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#9AA5B4;text-align:right;padding:14px 20px;border-bottom:1px solid #F1F3F7;white-space:nowrap">—</td>
+                </tr>
+                <tr style="transition:background 120ms cubic-bezier(0.4,0,0.2,1);cursor:pointer" style-hover="background:#F8F9FB" onClick="{{ n8 }}">
+                  <td style="font-size:13.5px;color:#5B687C;padding:14px 20px;white-space:nowrap">Kfz-Gutachten Süd Meyer</td>
+                  <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#5B687C;padding:14px 12px;white-space:nowrap">DKGZ-SV-0071</td>
+                  <td style="padding:14px 12px;white-space:nowrap"><span style="display:inline-flex;align-items:center;gap:8px"><span style="width:6px;height:6px;border-radius:50%;background:#A32318"></span><span style="font-size:13.5px;color:#5B687C">Gesperrt</span></span></td>
+                  <td style="font-size:13.5px;color:#5B687C;padding:14px 12px;white-space:nowrap">München</td>
+                  <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#5B687C;text-align:right;padding:14px 12px;font-variant-numeric:tabular-nums">23</td>
+                  <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#5B687C;text-align:right;padding:14px 12px;font-variant-numeric:tabular-nums">34 %</td>
+                  <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#5B687C;text-align:right;padding:14px 20px;white-space:nowrap;font-variant-numeric:tabular-nums">2.104,00 €</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isAssessorDetail }}" hint-placeholder-val="{{ false }}">
+        <div style="position:relative">
+          <button type="button" onClick="{{ n7 }}" style="background:transparent;border:none;color:#5B687C;font-size:13.5px;cursor:pointer;padding:0 0 16px;display:flex;align-items:center;gap:8px"><span data-lucide="chevron-left" width="16" height="16" style="display:block"></span>Zurück zur Übersicht</button>
+          <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:24px;flex-wrap:wrap;padding-bottom:20px">
+            <div>
+              <div style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#5B687C">DKGZ-SV-0163 · Registriert am 15.08.2026</div>
+              <div style="font-size:30px;line-height:1.2;font-weight:600;letter-spacing:-0.018em;color:#14294A;padding-top:4px">Sachverständige Nordwest GbR</div>
+            </div>
+            <span style="display:inline-flex;align-items:center;gap:8px"><span style="width:6px;height:6px;border-radius:50%;background:#9C6F15"></span><span style="font-size:15px;color:#2E3A4C">Wartend auf Freigabe</span></span>
+          </div>
+
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:16px;align-items:start">
+            <div style="display:flex;flex-direction:column;gap:16px;min-width:0">
+              <div style="background:#FFFFFF;border:1px solid #E3E7EE;border-radius:5px">
+                <div style="padding:14px 20px;border-bottom:1px solid #E3E7EE;font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C">Stammdaten</div>
+                <table style="width:100%">
+                  <tbody>
+                    <tr><td style="font-size:13.5px;color:#5B687C;padding:12px 20px;border-bottom:1px solid #F1F3F7;width:200px">Ansprechpartner</td><td style="font-size:13.5px;color:#2E3A4C;padding:12px 20px;border-bottom:1px solid #F1F3F7">Jens Ohlsen</td></tr>
+                    <tr><td style="font-size:13.5px;color:#5B687C;padding:12px 20px;border-bottom:1px solid #F1F3F7">Anschrift</td><td style="font-size:13.5px;color:#2E3A4C;padding:12px 20px;border-bottom:1px solid #F1F3F7">Bahnhofstraße 12 · 28195 Bremen</td></tr>
+                    <tr><td style="font-size:13.5px;color:#5B687C;padding:12px 20px;border-bottom:1px solid #F1F3F7">Telefon</td><td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#2E3A4C;padding:12px 20px;border-bottom:1px solid #F1F3F7;font-variant-numeric:tabular-nums">+49 421 5580120</td></tr>
+                    <tr><td style="font-size:13.5px;color:#5B687C;padding:12px 20px;border-bottom:1px solid #F1F3F7">USt-IdNr.</td><td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#2E3A4C;padding:12px 20px;border-bottom:1px solid #F1F3F7">DE 298114552</td></tr>
+                    <tr><td style="font-size:13.5px;color:#5B687C;padding:12px 20px">Einsatzgebiet</td><td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#2E3A4C;padding:12px 20px;font-variant-numeric:tabular-nums">28195–28779 · 26121–26135</td></tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div style="background:#FFFFFF;border:1px solid #E3E7EE;border-radius:5px">
+                <div style="padding:14px 20px;border-bottom:1px solid #E3E7EE;font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C">Nachweise</div>
+                <div style="display:flex;align-items:center;gap:12px;padding:14px 20px;border-bottom:1px solid #F1F3F7;flex-wrap:wrap">
+                  <span data-lucide="file-text" width="20" height="20" style="color:#14294A;flex:none;display:block"></span>
+                  <div style="min-width:0;flex:1"><div style="font-size:13.5px;font-weight:500;color:#2E3A4C">Qualifikationsnachweis.pdf</div><div style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#9AA5B4;font-variant-numeric:tabular-nums">1,2 MB · 15.08.2026</div></div>
+                  <span style="display:inline-flex;align-items:center;gap:8px"><span style="width:6px;height:6px;border-radius:50%;background:#1B6E48"></span><span style="font-size:13.5px;color:#2E3A4C">Geprüft</span></span>
+                </div>
+                <div style="display:flex;align-items:center;gap:12px;padding:14px 20px">
+                  <span data-lucide="file-text" width="20" height="20" style="color:#14294A;flex:none;display:block"></span>
+                  <div style="min-width:0;flex:1"><div style="font-size:13.5px;font-weight:500;color:#2E3A4C">Haftpflicht_2026.pdf</div><div style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#9AA5B4;font-variant-numeric:tabular-nums">640 KB · gültig bis 31.08.2026</div></div>
+                  <span style="display:inline-flex;align-items:center;gap:8px"><span style="width:6px;height:6px;border-radius:50%;background:#9C6F15"></span><span style="font-size:13.5px;color:#2E3A4C">Läuft ab</span></span>
+                </div>
+              </div>
+
+              <div style="background:#FFFFFF;border:1px solid #E3E7EE;border-radius:5px">
+                <div style="padding:14px 20px;border-bottom:1px solid #E3E7EE;font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C">Angebotene Leistungen · 5 von 8</div>
+                <div style="padding:16px 20px;display:flex;gap:8px;flex-wrap:wrap">
+                  <span style="height:28px;padding:0 10px;border:1px solid #14294A;border-radius:3px;display:inline-flex;align-items:center;font-size:13.5px;color:#14294A;background:#E8EDF5">Unfallgutachten</span>
+                  <span style="height:28px;padding:0 10px;border:1px solid #14294A;border-radius:3px;display:inline-flex;align-items:center;font-size:13.5px;color:#14294A;background:#E8EDF5">Haftpflichtgutachten</span>
+                  <span style="height:28px;padding:0 10px;border:1px solid #14294A;border-radius:3px;display:inline-flex;align-items:center;font-size:13.5px;color:#14294A;background:#E8EDF5">Kaskogutachten</span>
+                  <span style="height:28px;padding:0 10px;border:1px solid #14294A;border-radius:3px;display:inline-flex;align-items:center;font-size:13.5px;color:#14294A;background:#E8EDF5">Wertgutachten</span>
+                  <span style="height:28px;padding:0 10px;border:1px solid #14294A;border-radius:3px;display:inline-flex;align-items:center;font-size:13.5px;color:#14294A;background:#E8EDF5">Beweissicherung</span>
+                </div>
+              </div>
+            </div>
+
+            <div style="display:flex;flex-direction:column;gap:16px">
+              <div style="background:#FFFFFF;border:1px solid #14294A;border-radius:5px;padding:20px">
+                <div style="font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C">Aktionen</div>
+                <button type="button" style="width:100%;height:44px;margin-top:16px;background:#14294A;color:#FFFFFF;border:1px solid #14294A;border-radius:3px;font-size:15px;font-weight:500;cursor:pointer;transition:background 140ms cubic-bezier(0.4,0,0.2,1)" style-hover="background:#27508B;border-color:#27508B">Freigeben</button>
+                <button type="button" style="width:100%;height:40px;margin-top:8px;background:#FFFFFF;color:#14294A;border:1px solid #14294A;border-radius:3px;font-size:15px;font-weight:500;cursor:pointer">Bearbeiten</button>
+                <button type="button" onClick="{{ openModal }}" style="width:100%;height:40px;margin-top:8px;background:#FFFFFF;color:#A32318;border:1px solid #A32318;border-radius:3px;font-size:15px;font-weight:500;cursor:pointer;transition:background 140ms cubic-bezier(0.4,0,0.2,1),color 140ms cubic-bezier(0.4,0,0.2,1)" style-hover="background:#A32318;color:#FFFFFF">Sperren</button>
+              </div>
+              <div style="background:#FFFFFF;border:1px solid #E3E7EE;border-radius:5px;padding:20px">
+                <div style="font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C;padding-bottom:12px">Auftragshistorie</div>
+                <p style="font-size:13.5px;line-height:1.6;color:#5B687C">Noch keine Aufträge. Nach der Freigabe erscheinen hier alle vermittelten Vorgänge mit Status und Honorar.</p>
+              </div>
+            </div>
+          </div>
+
+          <sc-if value="{{ modalOpen }}" hint-placeholder-val="{{ false }}">
+            <div style="position:fixed;inset:0;background:rgba(10,22,40,0.32);display:grid;place-items:center;padding:24px;z-index:80">
+              <div style="width:100%;max-width:480px;background:#FFFFFF;border-radius:5px;box-shadow:0 16px 48px rgba(10,22,40,0.16)">
+                <div style="padding:20px 24px;border-bottom:1px solid #E3E7EE;font-size:22px;line-height:1.3;font-weight:600;letter-spacing:-0.012em;color:#14294A">Sachverständigen sperren?</div>
+                <div style="padding:24px">
+                  <p style="font-size:15px;line-height:1.65;color:#2E3A4C">Sachverständige Nordwest GbR erhält ab sofort keine neuen Anfragen mehr. Laufende Aufträge bleiben bestehen und müssen abgeschlossen werden.</p>
+                  <div style="border:1px solid #E3E7EE;border-radius:3px;padding:14px;margin-top:16px;background:#F8F9FB">
+                    <label style="display:block;font-size:13.5px;font-weight:500;color:#2E3A4C;padding-bottom:8px">Grund der Sperre <span style="color:#A32318">*</span></label>
+                    <div style="height:40px;padding:0 12px;border:1px solid #CBD2DD;border-radius:3px;font-size:15px;color:#2E3A4C;background:#FFFFFF;display:flex;align-items:center;justify-content:space-between"><span>Nachweis abgelaufen</span><span data-lucide="chevron-down" width="16" height="16" style="color:#5B687C;display:block"></span></div>
+                  </div>
+                </div>
+                <div style="padding:16px 24px;border-top:1px solid #E3E7EE;display:flex;align-items:center;justify-content:flex-end;gap:12px">
+                  <button type="button" onClick="{{ closeModal }}" style="height:40px;padding:0 18px;background:#FFFFFF;color:#14294A;border:1px solid #14294A;border-radius:3px;font-size:15px;font-weight:500;cursor:pointer">Abbrechen</button>
+                  <button type="button" onClick="{{ closeModal }}" style="height:40px;padding:0 18px;background:#A32318;color:#FFFFFF;border:1px solid #A32318;border-radius:3px;font-size:15px;font-weight:500;cursor:pointer">Sperren</button>
+                </div>
+              </div>
+            </div>
+          </sc-if>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isInvites }}" hint-placeholder-val="{{ false }}">
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:16px;align-items:start">
+          <div style="background:#FFFFFF;border:1px solid #E3E7EE;border-radius:5px;padding:20px">
+            <div style="font-size:17px;font-weight:600;color:#14294A">Sachverständigen einladen</div>
+            <p style="font-size:13.5px;line-height:1.6;color:#5B687C;padding-top:8px">Die eingeladene Person legt selbst ein Passwort fest und ergänzt Einsatzgebiet und Leistungen.</p>
+            <div style="display:flex;flex-direction:column;gap:12px;padding-top:16px">
+              <div><label style="display:block;font-size:13.5px;font-weight:500;color:#2E3A4C;padding-bottom:8px">E-Mail <span style="color:#A32318">*</span></label><input type="text" placeholder="name@buero.de" style="width:100%;height:40px;padding:0 12px;border:1px solid #CBD2DD;border-radius:3px;font-size:15px;color:#2E3A4C;outline:none"></div>
+              <div><label style="display:block;font-size:13.5px;font-weight:500;color:#2E3A4C;padding-bottom:8px">Büro <span style="color:#9AA5B4;font-weight:400">optional</span></label><input type="text" placeholder="Firmenname" style="width:100%;height:40px;padding:0 12px;border:1px solid #CBD2DD;border-radius:3px;font-size:15px;color:#2E3A4C;outline:none"></div>
+              <div><label style="display:block;font-size:13.5px;font-weight:500;color:#2E3A4C;padding-bottom:8px">Nachricht <span style="color:#9AA5B4;font-weight:400">optional</span></label><div style="width:100%;height:88px;padding:10px 12px;border:1px solid #CBD2DD;border-radius:3px;font-size:15px;color:#9AA5B4;line-height:1.5">Erscheint in der Einladungs-E-Mail und im Portal.</div></div>
+            </div>
+            <button type="button" style="width:100%;height:40px;margin-top:16px;background:#14294A;color:#FFFFFF;border:1px solid #14294A;border-radius:3px;font-size:15px;font-weight:500;cursor:pointer">Einladung senden</button>
+          </div>
+          <div style="background:#FFFFFF;border:1px solid #E3E7EE;border-radius:5px;overflow-x:auto">
+            <div style="padding:16px 20px;border-bottom:1px solid #E3E7EE;display:flex;align-items:baseline;justify-content:space-between;gap:16px">
+              <span style="font-size:17px;font-weight:600;color:#14294A">Offene Einladungen</span>
+              <span style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#9AA5B4">5 gesendet · 2 angenommen</span>
+            </div>
+            <table style="width:100%;min-width:760px">
+              <thead>
+                <tr>
+                  <th style="text-align:left;font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C;padding:12px 20px;border-bottom:1px solid #E3E7EE;white-space:nowrap">E-Mail</th>
+                  <th style="text-align:left;font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C;padding:12px;border-bottom:1px solid #E3E7EE;white-space:nowrap">Büro</th>
+                  <th style="text-align:left;font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C;padding:12px;border-bottom:1px solid #E3E7EE;white-space:nowrap">Gesendet</th>
+                  <th style="text-align:left;font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C;padding:12px;border-bottom:1px solid #E3E7EE;white-space:nowrap">Status</th>
+                  <th style="text-align:right;font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C;padding:12px 20px;border-bottom:1px solid #E3E7EE"></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr style="transition:background 120ms cubic-bezier(0.4,0,0.2,1)" style-hover="background:#F8F9FB">
+                  <td style="font-size:13.5px;color:#2E3A4C;padding:14px 20px;border-bottom:1px solid #F1F3F7;white-space:nowrap">j.ohlsen@sv-nordwest.de</td>
+                  <td style="font-size:13.5px;color:#2E3A4C;padding:14px 12px;border-bottom:1px solid #F1F3F7;white-space:nowrap">SV Nordwest GbR</td>
+                  <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#5B687C;padding:14px 12px;border-bottom:1px solid #F1F3F7;white-space:nowrap;font-variant-numeric:tabular-nums">14.08.2026</td>
+                  <td style="padding:14px 12px;border-bottom:1px solid #F1F3F7;white-space:nowrap"><span style="display:inline-flex;align-items:center;gap:8px"><span style="width:6px;height:6px;border-radius:50%;background:#1B6E48"></span><span style="font-size:13.5px;color:#2E3A4C">Angenommen</span></span></td>
+                  <td style="padding:14px 20px;border-bottom:1px solid #F1F3F7;text-align:right"><button type="button" onClick="{{ n8 }}" style="background:transparent;border:none;color:#14294A;font-size:13.5px;font-weight:500;cursor:pointer">Profil</button></td>
+                </tr>
+                <tr style="transition:background 120ms cubic-bezier(0.4,0,0.2,1)" style-hover="background:#F8F9FB">
+                  <td style="font-size:13.5px;color:#2E3A4C;padding:14px 20px;border-bottom:1px solid #F1F3F7;white-space:nowrap">kontakt@gutachten-erfurt.de</td>
+                  <td style="font-size:13.5px;color:#2E3A4C;padding:14px 12px;border-bottom:1px solid #F1F3F7;white-space:nowrap">Gutachten Erfurt</td>
+                  <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#5B687C;padding:14px 12px;border-bottom:1px solid #F1F3F7;white-space:nowrap;font-variant-numeric:tabular-nums">16.08.2026</td>
+                  <td style="padding:14px 12px;border-bottom:1px solid #F1F3F7;white-space:nowrap"><span style="display:inline-flex;align-items:center;gap:8px"><span style="width:6px;height:6px;border-radius:50%;background:#9C6F15"></span><span style="font-size:13.5px;color:#2E3A4C">Gesendet</span></span></td>
+                  <td style="padding:14px 20px;border-bottom:1px solid #F1F3F7;text-align:right"><button type="button" style="background:transparent;border:none;color:#14294A;font-size:13.5px;font-weight:500;cursor:pointer">Erneut senden</button></td>
+                </tr>
+                <tr style="transition:background 120ms cubic-bezier(0.4,0,0.2,1)" style-hover="background:#F8F9FB">
+                  <td style="font-size:13.5px;color:#2E3A4C;padding:14px 20px;border-bottom:1px solid #F1F3F7;white-space:nowrap">buero@kfz-sv-rostock.de</td>
+                  <td style="font-size:13.5px;color:#9AA5B4;padding:14px 12px;border-bottom:1px solid #F1F3F7;white-space:nowrap">—</td>
+                  <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#5B687C;padding:14px 12px;border-bottom:1px solid #F1F3F7;white-space:nowrap;font-variant-numeric:tabular-nums">10.08.2026</td>
+                  <td style="padding:14px 12px;border-bottom:1px solid #F1F3F7;white-space:nowrap"><span style="display:inline-flex;align-items:center;gap:8px"><span style="width:6px;height:6px;border-radius:50%;background:#A32318"></span><span style="font-size:13.5px;color:#2E3A4C">Abgelaufen</span></span></td>
+                  <td style="padding:14px 20px;border-bottom:1px solid #F1F3F7;text-align:right"><button type="button" style="background:transparent;border:none;color:#14294A;font-size:13.5px;font-weight:500;cursor:pointer">Erneut senden</button></td>
+                </tr>
+                <tr style="transition:background 120ms cubic-bezier(0.4,0,0.2,1)" style-hover="background:#F8F9FB">
+                  <td style="font-size:13.5px;color:#2E3A4C;padding:14px 20px;white-space:nowrap">info@sv-allgaeu.de</td>
+                  <td style="font-size:13.5px;color:#2E3A4C;padding:14px 12px;white-space:nowrap">SV Allgäu</td>
+                  <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#5B687C;padding:14px 12px;white-space:nowrap;font-variant-numeric:tabular-nums">17.08.2026</td>
+                  <td style="padding:14px 12px;white-space:nowrap"><span style="display:inline-flex;align-items:center;gap:8px"><span style="width:6px;height:6px;border-radius:50%;background:#9C6F15"></span><span style="font-size:13.5px;color:#2E3A4C">Gesendet</span></span></td>
+                  <td style="padding:14px 20px;text-align:right"><button type="button" style="background:transparent;border:none;color:#14294A;font-size:13.5px;font-weight:500;cursor:pointer">Erneut senden</button></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isCommissions }}" hint-placeholder-val="{{ false }}">
+        <div>
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;padding-bottom:16px">
+            <div style="display:flex;align-items:center;gap:8px">
+              <div style="height:32px;padding:0 10px;border:1px solid #CBD2DD;border-radius:3px;display:flex;align-items:center;gap:8px;background:#FFFFFF"><span style="font-size:13.5px;color:#2E3A4C">Monat: August 2026</span><span data-lucide="chevron-down" width="14" height="14" style="color:#5B687C;flex:none;display:block"></span></div>
+              <div style="height:32px;padding:0 10px;border:1px solid #CBD2DD;border-radius:3px;display:flex;align-items:center;gap:8px;background:#FFFFFF"><span style="font-size:13.5px;color:#2E3A4C">Sachverständiger: Alle</span><span data-lucide="chevron-down" width="14" height="14" style="color:#5B687C;flex:none;display:block"></span></div>
+              <div style="height:32px;padding:0 10px;border:1px solid #CBD2DD;border-radius:3px;display:flex;align-items:center;gap:8px;background:#FFFFFF"><span style="font-size:13.5px;color:#2E3A4C">Status: Alle</span><span data-lucide="chevron-down" width="14" height="14" style="color:#5B687C;flex:none;display:block"></span></div>
+            </div>
+            <button type="button" style="height:32px;padding:0 12px;background:#FFFFFF;color:#14294A;border:1px solid #CBD2DD;border-radius:3px;font-size:13.5px;font-weight:500;cursor:pointer;display:inline-flex;align-items:center;gap:8px;transition:border-color 140ms cubic-bezier(0.4,0,0.2,1)" style-hover="border-color:#14294A"><span data-lucide="download" width="16" height="16" style="display:block"></span>Register exportieren</button>
+          </div>
+          <div style="background:#FFFFFF;border:1px solid #E3E7EE;border-radius:5px;overflow-x:auto">
+            <table style="width:100%;min-width:1000px">
+              <thead>
+                <tr>
+                  <th style="text-align:left;font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C;padding:12px 20px;border-bottom:1px solid #E3E7EE;white-space:nowrap">Auftragsreferenz</th>
+                  <th style="text-align:left;font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C;padding:12px;border-bottom:1px solid #E3E7EE;white-space:nowrap">Sachverständiger</th>
+                  <th style="text-align:right;font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C;padding:12px;border-bottom:1px solid #E3E7EE;white-space:nowrap">Honorar</th>
+                  <th style="text-align:right;font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C;padding:12px;border-bottom:1px solid #E3E7EE;white-space:nowrap">Provision 15 %</th>
+                  <th style="text-align:left;font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C;padding:12px;border-bottom:1px solid #E3E7EE;white-space:nowrap">Status</th>
+                  <th style="text-align:right;font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C;padding:12px 20px;border-bottom:1px solid #E3E7EE;white-space:nowrap">Datum</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr style="transition:background 120ms cubic-bezier(0.4,0,0.2,1);cursor:pointer" style-hover="background:#F8F9FB" onClick="{{ n11 }}">
+                  <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#14294A;padding:14px 20px;border-bottom:1px solid #F1F3F7;white-space:nowrap;font-variant-numeric:tabular-nums">DKGZ-2026-04809</td>
+                  <td style="font-size:13.5px;color:#2E3A4C;padding:14px 12px;border-bottom:1px solid #F1F3F7;white-space:nowrap">SV Ingenieurbüro Timm</td>
+                  <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#2E3A4C;text-align:right;padding:14px 12px;border-bottom:1px solid #F1F3F7;white-space:nowrap;font-variant-numeric:tabular-nums">1.640,00 €</td>
+                  <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#2E3A4C;text-align:right;padding:14px 12px;border-bottom:1px solid #F1F3F7;white-space:nowrap;font-variant-numeric:tabular-nums">246,00 €</td>
+                  <td style="padding:14px 12px;border-bottom:1px solid #F1F3F7;white-space:nowrap"><span style="display:inline-flex;align-items:center;gap:8px"><span style="width:6px;height:6px;border-radius:50%;background:#9C6F15"></span><span style="font-size:13.5px;color:#2E3A4C">Offen</span></span></td>
+                  <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#5B687C;text-align:right;padding:14px 20px;border-bottom:1px solid #F1F3F7;white-space:nowrap;font-variant-numeric:tabular-nums">17.08.2026</td>
+                </tr>
+                <tr style="transition:background 120ms cubic-bezier(0.4,0,0.2,1);cursor:pointer" style-hover="background:#F8F9FB" onClick="{{ n11 }}">
+                  <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#14294A;padding:14px 20px;border-bottom:1px solid #F1F3F7;white-space:nowrap;font-variant-numeric:tabular-nums">DKGZ-2026-04812</td>
+                  <td style="font-size:13.5px;color:#2E3A4C;padding:14px 12px;border-bottom:1px solid #F1F3F7;white-space:nowrap">Gutachterbüro Sander &amp; Co.</td>
+                  <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#2E3A4C;text-align:right;padding:14px 12px;border-bottom:1px solid #F1F3F7;white-space:nowrap;font-variant-numeric:tabular-nums">420,00 €</td>
+                  <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#2E3A4C;text-align:right;padding:14px 12px;border-bottom:1px solid #F1F3F7;white-space:nowrap;font-variant-numeric:tabular-nums">63,00 €</td>
+                  <td style="padding:14px 12px;border-bottom:1px solid #F1F3F7;white-space:nowrap"><span style="display:inline-flex;align-items:center;gap:8px"><span style="width:6px;height:6px;border-radius:50%;background:#14294A"></span><span style="font-size:13.5px;color:#2E3A4C">Abgerechnet</span></span></td>
+                  <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#5B687C;text-align:right;padding:14px 20px;border-bottom:1px solid #F1F3F7;white-space:nowrap;font-variant-numeric:tabular-nums">16.08.2026</td>
+                </tr>
+                <tr style="transition:background 120ms cubic-bezier(0.4,0,0.2,1);cursor:pointer" style-hover="background:#F8F9FB" onClick="{{ n11 }}">
+                  <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#14294A;padding:14px 20px;border-bottom:1px solid #F1F3F7;white-space:nowrap;font-variant-numeric:tabular-nums">DKGZ-2026-04788</td>
+                  <td style="font-size:13.5px;color:#2E3A4C;padding:14px 12px;border-bottom:1px solid #F1F3F7;white-space:nowrap">Kfz-SV-Büro Reinhardt</td>
+                  <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#2E3A4C;text-align:right;padding:14px 12px;border-bottom:1px solid #F1F3F7;white-space:nowrap;font-variant-numeric:tabular-nums">1.275,00 €</td>
+                  <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#2E3A4C;text-align:right;padding:14px 12px;border-bottom:1px solid #F1F3F7;white-space:nowrap;font-variant-numeric:tabular-nums">191,25 €</td>
+                  <td style="padding:14px 12px;border-bottom:1px solid #F1F3F7;white-space:nowrap"><span style="display:inline-flex;align-items:center;gap:8px"><span style="width:6px;height:6px;border-radius:50%;background:#1B6E48"></span><span style="font-size:13.5px;color:#2E3A4C">Bezahlt</span></span></td>
+                  <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#5B687C;text-align:right;padding:14px 20px;border-bottom:1px solid #F1F3F7;white-space:nowrap;font-variant-numeric:tabular-nums">13.08.2026</td>
+                </tr>
+                <tr style="transition:background 120ms cubic-bezier(0.4,0,0.2,1);cursor:pointer" style-hover="background:#F8F9FB" onClick="{{ n11 }}">
+                  <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#14294A;padding:14px 20px;border-bottom:1px solid #F1F3F7;white-space:nowrap;font-variant-numeric:tabular-nums">DKGZ-2026-04785</td>
+                  <td style="font-size:13.5px;color:#2E3A4C;padding:14px 12px;border-bottom:1px solid #F1F3F7;white-space:nowrap">Kfz-Prüfstelle Rheinbogen</td>
+                  <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#2E3A4C;text-align:right;padding:14px 12px;border-bottom:1px solid #F1F3F7;white-space:nowrap;font-variant-numeric:tabular-nums">290,00 €</td>
+                  <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#2E3A4C;text-align:right;padding:14px 12px;border-bottom:1px solid #F1F3F7;white-space:nowrap;font-variant-numeric:tabular-nums">43,50 €</td>
+                  <td style="padding:14px 12px;border-bottom:1px solid #F1F3F7;white-space:nowrap"><span style="display:inline-flex;align-items:center;gap:8px"><span style="width:6px;height:6px;border-radius:50%;background:#1B6E48"></span><span style="font-size:13.5px;color:#2E3A4C">Bezahlt</span></span></td>
+                  <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#5B687C;text-align:right;padding:14px 20px;border-bottom:1px solid #F1F3F7;white-space:nowrap;font-variant-numeric:tabular-nums">12.08.2026</td>
+                </tr>
+                <tr>
+                  <td style="font-size:13.5px;font-weight:500;color:#14294A;padding:14px 20px;border-top:2px solid #14294A;white-space:nowrap">Summe August 2026</td>
+                  <td style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#9AA5B4;padding:14px 12px;border-top:2px solid #14294A;white-space:nowrap">28 Aufträge</td>
+                  <td style="font-family:'IBM Plex Mono',monospace;font-size:15px;font-weight:500;color:#14294A;text-align:right;padding:14px 12px;border-top:2px solid #14294A;white-space:nowrap;font-variant-numeric:tabular-nums">24.630,00 €</td>
+                  <td style="font-family:'IBM Plex Mono',monospace;font-size:15px;font-weight:500;color:#14294A;text-align:right;padding:14px 12px;border-top:2px solid #14294A;white-space:nowrap;font-variant-numeric:tabular-nums">3.694,50 €</td>
+                  <td style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#9AA5B4;padding:14px 12px;border-top:2px solid #14294A;white-space:nowrap">davon offen 1.284,75 €</td>
+                  <td style="border-top:2px solid #14294A"></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isCommissionDetail }}" hint-placeholder-val="{{ false }}">
+        <div>
+          <button type="button" onClick="{{ n10 }}" style="background:transparent;border:none;color:#5B687C;font-size:13.5px;cursor:pointer;padding:0 0 16px;display:flex;align-items:center;gap:8px"><span data-lucide="chevron-left" width="16" height="16" style="display:block"></span>Zurück zum Provisionsregister</button>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(330px,1fr));gap:16px;align-items:start">
+            <div style="background:#FFFFFF;border:1px solid #E3E7EE;border-radius:5px">
+              <div style="padding:20px;border-bottom:1px solid #E3E7EE">
+                <div style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#5B687C;font-variant-numeric:tabular-nums">Provision zu DKGZ-2026-04809</div>
+                <div style="font-size:22px;line-height:1.3;font-weight:600;letter-spacing:-0.012em;color:#14294A;padding-top:4px">SV Ingenieurbüro Timm</div>
+              </div>
+              <table style="width:100%">
+                <tbody>
+                  <tr><td style="font-size:13.5px;color:#5B687C;padding:14px 20px;border-bottom:1px solid #F1F3F7;width:220px">Auftrag</td><td style="font-size:13.5px;color:#2E3A4C;padding:14px 20px;border-bottom:1px solid #F1F3F7">Fahrzeugschadengutachten · Berlin 10117<button type="button" onClick="{{ n6 }}" style="background:transparent;border:none;color:#14294A;font-size:13.5px;font-weight:500;cursor:pointer;padding:0 0 0 12px">Auftrag öffnen</button></td></tr>
+                  <tr><td style="font-size:13.5px;color:#5B687C;padding:14px 20px;border-bottom:1px solid #F1F3F7">Abgeschlossen am</td><td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#2E3A4C;padding:14px 20px;border-bottom:1px solid #F1F3F7;font-variant-numeric:tabular-nums">17.08.2026 · 16:44</td></tr>
+                  <tr><td style="font-size:13.5px;color:#5B687C;padding:14px 20px;border-bottom:1px solid #F1F3F7">Honorar netto</td><td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#2E3A4C;padding:14px 20px;border-bottom:1px solid #F1F3F7;font-variant-numeric:tabular-nums">1.640,00 €</td></tr>
+                  <tr><td style="font-size:13.5px;color:#5B687C;padding:14px 20px;border-bottom:1px solid #F1F3F7">Provisionssatz</td><td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#2E3A4C;padding:14px 20px;border-bottom:1px solid #F1F3F7;font-variant-numeric:tabular-nums">15,00 %</td></tr>
+                  <tr><td style="font-size:13.5px;color:#5B687C;padding:14px 20px;border-bottom:1px solid #F1F3F7">Provisionsbetrag</td><td style="font-family:'IBM Plex Mono',monospace;font-size:22px;color:#14294A;padding:14px 20px;border-bottom:1px solid #F1F3F7;font-variant-numeric:tabular-nums">246,00 €</td></tr>
+                  <tr><td style="font-size:13.5px;color:#5B687C;padding:14px 20px">Belege</td><td style="font-size:13.5px;color:#2E3A4C;padding:14px 20px">Gutachten und Rechnung hinterlegt</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div style="background:#FFFFFF;border:1px solid #14294A;border-radius:5px;padding:20px">
+              <div style="font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C">Abrechnung</div>
+              <div style="display:flex;align-items:center;gap:8px;padding-top:12px"><span style="width:6px;height:6px;border-radius:50%;background:#9C6F15"></span><span style="font-size:15px;color:#2E3A4C">Offen seit 1 Tag</span></div>
+              <div style="border-top:1px solid #E3E7EE;margin-top:16px;padding-top:16px">
+                <label style="display:block;font-size:13.5px;font-weight:500;color:#2E3A4C;padding-bottom:8px">Neuer Status</label>
+                <div style="height:40px;padding:0 12px;border:1px solid #CBD2DD;border-radius:3px;font-size:15px;color:#2E3A4C;background:#FFFFFF;display:flex;align-items:center;justify-content:space-between"><span>Abgerechnet</span><span data-lucide="chevron-down" width="16" height="16" style="color:#5B687C;display:block"></span></div>
+                <label style="display:block;font-size:13.5px;font-weight:500;color:#2E3A4C;padding:16px 0 8px">Belegnummer <span style="color:#9AA5B4;font-weight:400">optional</span></label>
+                <input type="text" placeholder="RE-2026-0812" style="width:100%;height:40px;padding:0 12px;border:1px solid #CBD2DD;border-radius:3px;font-size:15px;color:#2E3A4C;outline:none;font-variant-numeric:tabular-nums">
+              </div>
+              <button type="button" style="width:100%;height:40px;margin-top:16px;background:#14294A;color:#FFFFFF;border:1px solid #14294A;border-radius:3px;font-size:15px;font-weight:500;cursor:pointer">Status übernehmen</button>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isSettings }}" hint-placeholder-val="{{ false }}">
+        <div style="display:grid;grid-template-columns:minmax(180px,200px) minmax(320px,1fr);gap:16px;align-items:start">
+          <div style="background:#FFFFFF;border:1px solid #E3E7EE;border-radius:5px;padding:8px">
+            <div style="padding:8px 12px;font-size:13.5px;font-weight:500;color:#14294A;background:#E8EDF5;border-radius:3px">Vermittlung</div>
+            <div style="padding:8px 12px;font-size:13.5px;color:#5B687C">Gutachtenarten</div>
+            <div style="padding:8px 12px;font-size:13.5px;color:#5B687C">E-Mail-Vorlagen</div>
+            <div style="padding:8px 12px;font-size:13.5px;color:#5B687C">Administratoren</div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:16px">
+            <div style="background:#FFFFFF;border:1px solid #E3E7EE;border-radius:5px;padding:24px">
+              <div style="font-size:17px;font-weight:600;color:#14294A;padding-bottom:20px;border-bottom:1px solid #E3E7EE">Vermittlung</div>
+              <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;padding-top:20px">
+                <div>
+                  <label style="display:block;font-size:13.5px;font-weight:500;color:#2E3A4C;padding-bottom:8px">Provisionssatz</label>
+                  <div style="display:flex;align-items:center;border:1px solid #CBD2DD;border-radius:3px;height:40px;padding:0 12px;gap:8px"><input type="text" value="15,00" style="flex:1;min-width:0;height:100%;border:none;outline:none;font-family:'IBM Plex Mono',monospace;font-size:15px;color:#2E3A4C;font-variant-numeric:tabular-nums;text-align:right"><span style="font-family:'IBM Plex Mono',monospace;font-size:15px;color:#5B687C">%</span></div>
+                  <div style="font-size:13.5px;color:#9AA5B4;padding-top:6px">Gilt für neue Aufträge ab Speicherung.</div>
+                </div>
+                <div>
+                  <label style="display:block;font-size:13.5px;font-weight:500;color:#2E3A4C;padding-bottom:8px">Annahmefrist</label>
+                  <div style="display:flex;align-items:center;border:1px solid #CBD2DD;border-radius:3px;height:40px;padding:0 12px;gap:8px"><input type="text" value="8" style="flex:1;min-width:0;height:100%;border:none;outline:none;font-family:'IBM Plex Mono',monospace;font-size:15px;color:#2E3A4C;font-variant-numeric:tabular-nums;text-align:right"><span style="font-family:'IBM Plex Mono',monospace;font-size:15px;color:#5B687C">Std.</span></div>
+                  <div style="font-size:13.5px;color:#9AA5B4;padding-top:6px">Danach Weitergabe an weitere Partner.</div>
+                </div>
+                <div>
+                  <label style="display:block;font-size:13.5px;font-weight:500;color:#2E3A4C;padding-bottom:8px">Partner je Anfrage</label>
+                  <div style="display:flex;align-items:center;border:1px solid #CBD2DD;border-radius:3px;height:40px;padding:0 12px;gap:8px"><input type="text" value="5" style="flex:1;min-width:0;height:100%;border:none;outline:none;font-family:'IBM Plex Mono',monospace;font-size:15px;color:#2E3A4C;font-variant-numeric:tabular-nums;text-align:right"><span style="font-family:'IBM Plex Mono',monospace;font-size:15px;color:#5B687C">max.</span></div>
+                  <div style="font-size:13.5px;color:#9AA5B4;padding-top:6px">Sortiert nach Nähe zum Fahrzeugstandort.</div>
+                </div>
+              </div>
+            </div>
+
+            <div style="background:#FFFFFF;border:1px solid #E3E7EE;border-radius:5px">
+              <div style="padding:20px 24px;border-bottom:1px solid #E3E7EE;display:flex;align-items:center;justify-content:space-between;gap:16px">
+                <span style="font-size:17px;font-weight:600;color:#14294A">Gutachtenarten</span>
+                <button type="button" style="height:32px;padding:0 12px;background:#FFFFFF;color:#14294A;border:1px solid #14294A;border-radius:3px;font-size:13.5px;font-weight:500;cursor:pointer">Art hinzufügen</button>
+              </div>
+              <table style="width:100%">
+                <tbody>
+                  <tr><td style="font-size:13.5px;color:#2E3A4C;padding:12px 24px;border-bottom:1px solid #F1F3F7">Unfallgutachten</td><td style="padding:12px 24px;border-bottom:1px solid #F1F3F7;white-space:nowrap"><span style="display:inline-flex;align-items:center;gap:8px"><span style="width:6px;height:6px;border-radius:50%;background:#1B6E48"></span><span style="font-size:13.5px;color:#2E3A4C">Aktiv</span></span></td><td style="text-align:right;padding:12px 24px;border-bottom:1px solid #F1F3F7"><span data-lucide="square-pen" width="18" height="18" style="color:#5B687C;display:inline-block"></span></td></tr>
+                  <tr><td style="font-size:13.5px;color:#2E3A4C;padding:12px 24px;border-bottom:1px solid #F1F3F7">Haftpflichtgutachten</td><td style="padding:12px 24px;border-bottom:1px solid #F1F3F7;white-space:nowrap"><span style="display:inline-flex;align-items:center;gap:8px"><span style="width:6px;height:6px;border-radius:50%;background:#1B6E48"></span><span style="font-size:13.5px;color:#2E3A4C">Aktiv</span></span></td><td style="text-align:right;padding:12px 24px;border-bottom:1px solid #F1F3F7"><span data-lucide="square-pen" width="18" height="18" style="color:#5B687C;display:inline-block"></span></td></tr>
+                  <tr><td style="font-size:13.5px;color:#2E3A4C;padding:12px 24px;border-bottom:1px solid #F1F3F7">Kaskogutachten</td><td style="padding:12px 24px;border-bottom:1px solid #F1F3F7;white-space:nowrap"><span style="display:inline-flex;align-items:center;gap:8px"><span style="width:6px;height:6px;border-radius:50%;background:#1B6E48"></span><span style="font-size:13.5px;color:#2E3A4C">Aktiv</span></span></td><td style="text-align:right;padding:12px 24px;border-bottom:1px solid #F1F3F7"><span data-lucide="square-pen" width="18" height="18" style="color:#5B687C;display:inline-block"></span></td></tr>
+                  <tr><td style="font-size:13.5px;color:#2E3A4C;padding:12px 24px;border-bottom:1px solid #F1F3F7">Fahrzeugschadengutachten</td><td style="padding:12px 24px;border-bottom:1px solid #F1F3F7;white-space:nowrap"><span style="display:inline-flex;align-items:center;gap:8px"><span style="width:6px;height:6px;border-radius:50%;background:#1B6E48"></span><span style="font-size:13.5px;color:#2E3A4C">Aktiv</span></span></td><td style="text-align:right;padding:12px 24px;border-bottom:1px solid #F1F3F7"><span data-lucide="square-pen" width="18" height="18" style="color:#5B687C;display:inline-block"></span></td></tr>
+                  <tr><td style="font-size:13.5px;color:#2E3A4C;padding:12px 24px;border-bottom:1px solid #F1F3F7">Wertgutachten</td><td style="padding:12px 24px;border-bottom:1px solid #F1F3F7;white-space:nowrap"><span style="display:inline-flex;align-items:center;gap:8px"><span style="width:6px;height:6px;border-radius:50%;background:#1B6E48"></span><span style="font-size:13.5px;color:#2E3A4C">Aktiv</span></span></td><td style="text-align:right;padding:12px 24px;border-bottom:1px solid #F1F3F7"><span data-lucide="square-pen" width="18" height="18" style="color:#5B687C;display:inline-block"></span></td></tr>
+                  <tr><td style="font-size:13.5px;color:#2E3A4C;padding:12px 24px;border-bottom:1px solid #F1F3F7">Oldtimergutachten</td><td style="padding:12px 24px;border-bottom:1px solid #F1F3F7;white-space:nowrap"><span style="display:inline-flex;align-items:center;gap:8px"><span style="width:6px;height:6px;border-radius:50%;background:#1B6E48"></span><span style="font-size:13.5px;color:#2E3A4C">Aktiv</span></span></td><td style="text-align:right;padding:12px 24px;border-bottom:1px solid #F1F3F7"><span data-lucide="square-pen" width="18" height="18" style="color:#5B687C;display:inline-block"></span></td></tr>
+                  <tr><td style="font-size:13.5px;color:#2E3A4C;padding:12px 24px;border-bottom:1px solid #F1F3F7">Gebrauchtwagen-Check</td><td style="padding:12px 24px;border-bottom:1px solid #F1F3F7;white-space:nowrap"><span style="display:inline-flex;align-items:center;gap:8px"><span style="width:6px;height:6px;border-radius:50%;background:#1B6E48"></span><span style="font-size:13.5px;color:#2E3A4C">Aktiv</span></span></td><td style="text-align:right;padding:12px 24px;border-bottom:1px solid #F1F3F7"><span data-lucide="square-pen" width="18" height="18" style="color:#5B687C;display:inline-block"></span></td></tr>
+                  <tr><td style="font-size:13.5px;color:#5B687C;padding:12px 24px">Beweissicherung</td><td style="padding:12px 24px;white-space:nowrap"><span style="display:inline-flex;align-items:center;gap:8px"><span style="width:6px;height:6px;border-radius:50%;background:#9AA5B4"></span><span style="font-size:13.5px;color:#5B687C">Inaktiv</span></span></td><td style="text-align:right;padding:12px 24px"><span data-lucide="square-pen" width="18" height="18" style="color:#5B687C;display:inline-block"></span></td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div style="display:flex;gap:12px">
+              <button type="button" style="height:40px;padding:0 18px;background:#14294A;color:#FFFFFF;border:1px solid #14294A;border-radius:3px;font-size:15px;font-weight:500;cursor:pointer">Änderungen speichern</button>
+              <button type="button" style="height:40px;padding:0 18px;background:#FFFFFF;color:#14294A;border:1px solid #14294A;border-radius:3px;font-size:15px;font-weight:500;cursor:pointer">Verwerfen</button>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isStates }}" hint-placeholder-val="{{ false }}">
+        <div>
+          <p style="font-size:15px;line-height:1.6;color:#5B687C;max-width:72ch;padding-bottom:20px">Die drei Zustände, die in jeder Tabelle des Systems auftreten können. Alle drei sind textlich, ruhig und ohne Illustration.</p>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:16px">
+            <div style="background:#FFFFFF;border:1px solid #E3E7EE;border-radius:5px">
+              <div style="padding:14px 20px;border-bottom:1px solid #E3E7EE;font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C">Kein Ergebnis</div>
+              <div style="padding:32px 20px">
+                <div style="font-size:17px;font-weight:600;color:#14294A">Keine Anfragen für diese Filter</div>
+                <p style="font-size:13.5px;line-height:1.6;color:#5B687C;padding-top:8px">Im Zeitraum 01.08.–18.08.2026 gibt es keine Anfragen mit Status „Storniert“ im PLZ-Bereich 17.</p>
+                <button type="button" style="height:32px;padding:0 12px;margin-top:16px;background:#FFFFFF;color:#14294A;border:1px solid #14294A;border-radius:3px;font-size:13.5px;font-weight:500;cursor:pointer">Filter zurücksetzen</button>
+              </div>
+            </div>
+            <div style="background:#FFFFFF;border:1px solid #E3E7EE;border-radius:5px">
+              <div style="padding:14px 20px;border-bottom:1px solid #E3E7EE;font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C">Lädt</div>
+              <div style="padding:20px">
+                <div style="display:flex;flex-direction:column;gap:14px">
+                  <div style="display:flex;gap:12px"><span style="height:12px;background:#F1F3F7;flex:2"></span><span style="height:12px;background:#F1F3F7;flex:1"></span><span style="height:12px;background:#F1F3F7;flex:1"></span></div>
+                  <div style="display:flex;gap:12px"><span style="height:12px;background:#F1F3F7;flex:2"></span><span style="height:12px;background:#F1F3F7;flex:1"></span><span style="height:12px;background:#F1F3F7;flex:1"></span></div>
+                  <div style="display:flex;gap:12px"><span style="height:12px;background:#F1F3F7;flex:2"></span><span style="height:12px;background:#F1F3F7;flex:1"></span><span style="height:12px;background:#F1F3F7;flex:1"></span></div>
+                  <div style="display:flex;gap:12px"><span style="height:12px;background:#F1F3F7;flex:2"></span><span style="height:12px;background:#F1F3F7;flex:1"></span><span style="height:12px;background:#F1F3F7;flex:1"></span></div>
+                  <div style="display:flex;gap:12px"><span style="height:12px;background:#F1F3F7;flex:2"></span><span style="height:12px;background:#F1F3F7;flex:1"></span><span style="height:12px;background:#F1F3F7;flex:1"></span></div>
+                </div>
+                <div style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#9AA5B4;padding-top:16px">Skeleton mit Schimmer, 1200 ms · kein Spinner</div>
+              </div>
+            </div>
+            <div style="background:#FFFFFF;border:1px solid #A32318;border-radius:5px">
+              <div style="padding:14px 20px;border-bottom:1px solid #E3E7EE;font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#A32318">Fehlgeschlagene Aktion</div>
+              <div style="padding:32px 20px">
+                <div style="font-size:17px;font-weight:600;color:#14294A">Freigabe konnte nicht gespeichert werden</div>
+                <p style="font-size:13.5px;line-height:1.6;color:#5B687C;padding-top:8px">Die Verbindung wurde unterbrochen. Der Sachverständige bleibt im Status „Wartend“. Es wurde keine Benachrichtigung versendet.</p>
+                <div style="display:flex;gap:12px;padding-top:16px">
+                  <button type="button" style="height:32px;padding:0 12px;background:#14294A;color:#FFFFFF;border:1px solid #14294A;border-radius:3px;font-size:13.5px;font-weight:500;cursor:pointer">Erneut versuchen</button>
+                  <button type="button" style="height:32px;padding:0 4px;background:transparent;color:#14294A;border:none;font-size:13.5px;font-weight:500;cursor:pointer">Vorgang schließen</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+
+    </div>
+  </div>
+</div>
+</sc-if>
+
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{
+  &quot;accent&quot;: {
+    &quot;editor&quot;: &quot;color&quot;,
+    &quot;default&quot;: &quot;#B08A2E&quot;,
+    &quot;tsType&quot;: &quot;string&quot;,
+    &quot;options&quot;: [&quot;#B08A2E&quot;, &quot;#8C6D22&quot;, &quot;#A28B5B&quot;, &quot;#14294A&quot;],
+    &quot;section&quot;: &quot;Marke&quot;
+  }
+}">
+class Component extends DCLogic {
+  state = { screen: 2, modalOpen: false };
+
+  componentDidMount() { this.sync(); }
+  componentDidUpdate() { this.sync(); }
+  componentWillUnmount() { if (this._t) clearTimeout(this._t); }
+
+  sync() {
+    document.documentElement.style.setProperty('--dkgz-accent', this.props.accent || '#B08A2E');
+    this.paintIcons();
+  }
+
+  paintIcons() {
+    if (this._t) clearTimeout(this._t);
+    let tries = 0;
+    const go = () => {
+      if (window.lucide && window.lucide.createIcons) {
+        try {
+          window.lucide.createIcons({ attrs: { width: 20, height: 20, 'stroke-width': 1.5, 'aria-hidden': 'true' } });
+        } catch (e) {}
+        return;
+      }
+      if (tries++ < 80) this._t = setTimeout(go, 100);
+    };
+    go();
+  }
+
+  titleFor(s) {
+    return {
+      2: 'Dashboard', 3: 'Anfragen', 4: 'Anfrage-Detail', 5: 'Aufträge', 6: 'Auftrag-Detail',
+      7: 'Sachverständige', 8: 'Sachverständiger-Detail', 9: 'Einladungen',
+      10: 'Provisionen', 11: 'Provision-Detail', 12: 'Einstellungen', 13: 'Tabellenzustände'
+    }[s] || 'Administration';
+  }
+
+  renderVals() {
+    const s = this.state.screen;
+    const vals = {
+      isLogin: s === 1,
+      isApp: s >= 2,
+      isDashboard: s === 2,
+      isRequests: s === 3,
+      isRequestDetail: s === 4,
+      isOrders: s === 5,
+      isOrderDetail: s === 6,
+      isAssessors: s === 7,
+      isAssessorDetail: s === 8,
+      isInvites: s === 9,
+      isCommissions: s === 10,
+      isCommissionDetail: s === 11,
+      isSettings: s === 12,
+      isStates: s === 13,
+      pageTitle: this.titleFor(s),
+      modalOpen: this.state.modalOpen,
+      openModal: () => this.setState({ modalOpen: true }),
+      closeModal: () => this.setState({ modalOpen: false })
+    };
+    const active = { 2: 2, 3: 3, 4: 3, 5: 5, 6: 5, 7: 7, 8: 7, 9: 9, 10: 10, 11: 10, 12: 12, 13: 13 }[s];
+    for (let i = 1; i <= 13; i++) {
+      vals['n' + i] = () => this.setState({ screen: i, modalOpen: false });
+      vals['k' + i] = s === i ? '#14294A' : '#FFFFFF';
+      vals['f' + i] = s === i ? '#FFFFFF' : '#5B687C';
+      vals['navBg' + i] = active === i ? '#14294A' : 'transparent';
+      vals['navFg' + i] = active === i ? '#FFFFFF' : 'rgba(255,255,255,0.72)';
+      vals['navMk' + i] = active === i ? (this.props.accent || '#B08A2E') : 'transparent';
+    }
+    return vals;
+  }
+}
+</script>
+</body>
+</html>

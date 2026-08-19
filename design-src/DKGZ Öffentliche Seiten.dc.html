@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<script src="https://unpkg.com/lucide@0.417.0/dist/umd/lucide.min.js"></script>
+<script src="./image-slot.js"></script>
+<style>
+:root{--dkgz-accent:#B08A2E}
+*{box-sizing:border-box}
+body{margin:0;background:#F1F3F7;color:#2E3A4C;font-family:'IBM Plex Sans','Helvetica Neue',Helvetica,Arial,sans-serif;font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+h1,h2,h3,h4,p{margin:0}
+a{color:#14294A;text-decoration:none;border-bottom:1px solid transparent}
+a:hover{color:#27508B}
+table{border-collapse:collapse}
+input,button,textarea{font-family:inherit}
+::selection{background:#E8EDF5}
+</style>
+</helmet>
+
+<div style="background:#F1F3F7;padding:40px 24px 80px;display:flex;flex-direction:column;gap:48px">
+
+<sc-if value="{{ s1 }}" hint-placeholder-val="{{ true }}">
+<div>
+  <div style="display:flex;align-items:baseline;gap:16px;padding-bottom:12px">
+    <span style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#5B687C">01</span>
+    <span style="font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C">Anfrage — /anfrage</span>
+  </div>
+  <div style="background:#FFFFFF;border:1px solid #E3E7EE">
+    <div style="height:72px;padding:0 24px;border-bottom:1px solid #E3E7EE;display:flex;align-items:center;justify-content:space-between;gap:32px">
+      <div style="display:flex;align-items:center;gap:12px">
+        <div style="width:36px;height:36px;border-radius:50%;border:1px solid #14294A;display:grid;place-items:center;flex:none"><div style="width:28px;height:28px;border-radius:50%;border:1px solid var(--dkgz-accent,#B08A2E);display:grid;place-items:center"><span style="font-size:6.5px;font-weight:700;color:#14294A">DKGZ</span></div></div>
+        <span style="font-size:22px;font-weight:700;letter-spacing:-0.022em;color:#14294A;line-height:1">DKGZ</span>
+        <span style="width:1px;height:24px;background:var(--dkgz-accent,#B08A2E)"></span>
+        <span style="font-size:9px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:#5B687C;line-height:1.5">Deutsche<br>KFZ-Gutachterzentrale</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:20px">
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#14294A;font-variant-numeric:tabular-nums">+49 179 4480169</span>
+        <span style="font-size:13.5px;color:#5B687C">Mo–Fr 08:00–18:00</span>
+      </div>
+    </div>
+
+    <div style="background:#F8F9FB;padding:64px 24px">
+      <div style="max-width:1068px;margin:0 auto;display:grid;grid-template-columns:minmax(0,720px) 300px;gap:48px;align-items:start">
+        <div>
+          <div style="font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:var(--dkgz-accent,#B08A2E)">Kostenlose Anfrage</div>
+          <div style="width:24px;height:2px;background:var(--dkgz-accent,#B08A2E);margin-top:10px"></div>
+          <h1 style="font-size:40px;line-height:1.12;font-weight:700;letter-spacing:-0.024em;color:#14294A;padding:24px 0 12px">Gutachter anfragen</h1>
+          <p style="font-size:17px;line-height:1.65;color:#5B687C;max-width:62ch">Sieben Pflichtangaben. Ihre Kontaktdaten sieht ausschließlich der Sachverständige, der den Auftrag annimmt.</p>
+
+          <div style="background:#FFFFFF;border:1px solid #E3E7EE;border-radius:5px;padding:32px;margin-top:32px">
+            <div style="font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C;padding-bottom:20px;border-bottom:1px solid #E3E7EE">Ihr Anliegen</div>
+            <div style="padding-top:24px;display:flex;flex-direction:column;gap:20px">
+              <div>
+                <label style="display:block;font-size:13.5px;font-weight:500;color:#2E3A4C;padding-bottom:8px">Art des Gutachtens <span style="color:#A32318">*</span></label>
+                <div style="height:40px;padding:0 12px;border:1px solid #CBD2DD;border-radius:3px;font-size:15px;color:#9AA5B4;background:#FFFFFF;display:flex;align-items:center;justify-content:space-between"><span>Bitte wählen</span><span data-lucide="chevron-down" width="16" height="16" style="color:#5B687C;display:block"></span></div>
+              </div>
+              <div style="display:grid;grid-template-columns:200px minmax(0,1fr);gap:16px">
+                <div>
+                  <label style="display:block;font-size:13.5px;font-weight:500;color:#2E3A4C;padding-bottom:8px">Postleitzahl <span style="color:#A32318">*</span></label>
+                  <input type="text" placeholder="z. B. 40589" style="width:100%;height:40px;padding:0 12px;border:1px solid #CBD2DD;border-radius:3px;font-size:15px;color:#2E3A4C;outline:none;font-variant-numeric:tabular-nums">
+                </div>
+                <div>
+                  <label style="display:block;font-size:13.5px;font-weight:500;color:#2E3A4C;padding-bottom:8px">Standort des Fahrzeugs <span style="color:#A32318">*</span></label>
+                  <input type="text" placeholder="Ort, Straße oder Werkstatt" style="width:100%;height:40px;padding:0 12px;border:1px solid #CBD2DD;border-radius:3px;font-size:15px;color:#2E3A4C;outline:none">
+                </div>
+              </div>
+              <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px">
+                <div><label style="display:block;font-size:13.5px;font-weight:500;color:#2E3A4C;padding-bottom:8px">Marke <span style="color:#A32318">*</span></label><input type="text" placeholder="VW" style="width:100%;height:40px;padding:0 12px;border:1px solid #CBD2DD;border-radius:3px;font-size:15px;color:#2E3A4C;outline:none"></div>
+                <div><label style="display:block;font-size:13.5px;font-weight:500;color:#2E3A4C;padding-bottom:8px">Modell <span style="color:#A32318">*</span></label><input type="text" placeholder="Passat B8" style="width:100%;height:40px;padding:0 12px;border:1px solid #CBD2DD;border-radius:3px;font-size:15px;color:#2E3A4C;outline:none"></div>
+                <div><label style="display:block;font-size:13.5px;font-weight:500;color:#2E3A4C;padding-bottom:8px">Baujahr</label><input type="text" placeholder="2019" style="width:100%;height:40px;padding:0 12px;border:1px solid #CBD2DD;border-radius:3px;font-size:15px;color:#2E3A4C;outline:none;font-variant-numeric:tabular-nums"></div>
+                <div><label style="display:block;font-size:13.5px;font-weight:500;color:#2E3A4C;padding-bottom:8px">Kennzeichen</label><input type="text" placeholder="D-AB 1234" style="width:100%;height:40px;padding:0 12px;border:1px solid #CBD2DD;border-radius:3px;font-size:15px;color:#2E3A4C;outline:none"></div>
+              </div>
+            </div>
+
+            <div style="font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C;padding:32px 0 20px;margin-top:12px;border-bottom:1px solid #E3E7EE">Ihre Kontaktdaten</div>
+            <div style="padding-top:24px;display:flex;flex-direction:column;gap:20px">
+              <div><label style="display:block;font-size:13.5px;font-weight:500;color:#2E3A4C;padding-bottom:8px">Vor- und Nachname <span style="color:#A32318">*</span></label><input type="text" placeholder="Martina Reinhardt" style="width:100%;height:40px;padding:0 12px;border:1px solid #CBD2DD;border-radius:3px;font-size:15px;color:#2E3A4C;outline:none"></div>
+              <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px">
+                <div><label style="display:block;font-size:13.5px;font-weight:500;color:#2E3A4C;padding-bottom:8px">Telefon <span style="color:#A32318">*</span></label><input type="text" placeholder="+49 179 0000000" style="width:100%;height:40px;padding:0 12px;border:1px solid #CBD2DD;border-radius:3px;font-size:15px;color:#2E3A4C;outline:none;font-variant-numeric:tabular-nums"></div>
+                <div><label style="display:block;font-size:13.5px;font-weight:500;color:#2E3A4C;padding-bottom:8px">E-Mail <span style="color:#A32318">*</span></label><input type="text" placeholder="name@beispiel.de" style="width:100%;height:40px;padding:0 12px;border:1px solid #CBD2DD;border-radius:3px;font-size:15px;color:#2E3A4C;outline:none"></div>
+              </div>
+            </div>
+
+            <div style="font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C;padding:32px 0 20px;margin-top:12px;border-bottom:1px solid #E3E7EE">Optional</div>
+            <div style="padding-top:24px;display:flex;flex-direction:column;gap:20px">
+              <div>
+                <label style="display:block;font-size:13.5px;font-weight:500;color:#2E3A4C;padding-bottom:8px">Kurze Beschreibung <span style="color:#9AA5B4;font-weight:400">optional</span></label>
+                <div style="width:100%;height:88px;padding:10px 12px;border:1px solid #CBD2DD;border-radius:3px;font-size:15px;color:#9AA5B4;line-height:1.5">Was ist passiert? Zwei bis drei Sätze genügen.</div>
+              </div>
+              <div>
+                <label style="display:block;font-size:13.5px;font-weight:500;color:#2E3A4C;padding-bottom:8px">Fotos <span style="color:#9AA5B4;font-weight:400">optional</span></label>
+                <div style="border:1px dashed #CBD2DD;border-radius:5px;padding:24px;text-align:center;background:#F8F9FB">
+                  <span data-lucide="upload" width="24" height="24" style="color:#5B687C;display:inline-block"></span>
+                  <div style="font-size:13.5px;color:#2E3A4C;padding-top:10px">Dateien hierher ziehen oder <span style="color:#14294A;font-weight:500;text-decoration:underline;text-underline-offset:2px">auswählen</span></div>
+                  <div style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#9AA5B4;padding-top:6px">JPG, PNG · max. 5 Dateien · je 10 MB</div>
+                </div>
+              </div>
+              <div style="max-width:320px">
+                <label style="display:block;font-size:13.5px;font-weight:500;color:#2E3A4C;padding-bottom:8px">Dringlichkeit <span style="color:#9AA5B4;font-weight:400">optional</span></label>
+                <div style="height:40px;padding:0 12px;border:1px solid #CBD2DD;border-radius:3px;font-size:15px;color:#2E3A4C;background:#FFFFFF;display:flex;align-items:center;justify-content:space-between"><span>Innerhalb von zwei Werktagen</span><span data-lucide="chevron-down" width="16" height="16" style="color:#5B687C;display:block"></span></div>
+              </div>
+            </div>
+
+            <button type="button" style="width:100%;height:44px;margin-top:32px;background:#14294A;color:#FFFFFF;border:1px solid #14294A;border-radius:3px;font-size:15px;font-weight:500;cursor:pointer;transition:background 140ms cubic-bezier(0.4,0,0.2,1)" style-hover="background:#27508B;border-color:#27508B">Anfrage absenden</button>
+            <p style="font-size:13.5px;line-height:1.5;color:#5B687C;padding-top:12px">Ihre Daten werden ausschließlich an den Sachverständigen übermittelt, der den Auftrag annimmt. Es entstehen keine Kosten und keine Verpflichtung.</p>
+          </div>
+        </div>
+
+        <div style="position:sticky;top:24px;background:#FFFFFF;border:1px solid #E3E7EE;border-radius:5px;padding:24px">
+          <div style="width:44px;height:44px;border-radius:50%;border:1px solid #14294A;display:grid;place-items:center"><div style="width:34px;height:34px;border-radius:50%;border:1px solid var(--dkgz-accent,#B08A2E);display:grid;place-items:center"><span style="font-size:8px;font-weight:700;color:#14294A">DKGZ</span></div></div>
+          <div style="display:flex;flex-direction:column;gap:16px;padding-top:20px">
+            <div style="display:flex;gap:10px"><span data-lucide="check" width="18" height="18" style="color:#14294A;flex:none;display:block;margin-top:2px"></span><span style="font-size:13.5px;line-height:1.5;color:#2E3A4C">Anfrage und Vermittlung kostenfrei</span></div>
+            <div style="display:flex;gap:10px"><span data-lucide="check" width="18" height="18" style="color:#14294A;flex:none;display:block;margin-top:2px"></span><span style="font-size:13.5px;line-height:1.5;color:#2E3A4C">Keine Registrierung, kein Kundenkonto</span></div>
+            <div style="display:flex;gap:10px"><span data-lucide="check" width="18" height="18" style="color:#14294A;flex:none;display:block;margin-top:2px"></span><span style="font-size:13.5px;line-height:1.5;color:#2E3A4C">Geprüfte Partner in allen PLZ-Gebieten</span></div>
+          </div>
+          <div style="border-top:1px solid #E3E7EE;margin-top:20px;padding-top:16px">
+            <div style="font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C;padding-bottom:8px">Lieber telefonisch?</div>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:15px;color:#14294A;font-variant-numeric:tabular-nums">+49 179 4480169</div>
+            <div style="font-size:13.5px;color:#5B687C">Mo–Fr 08:00–18:00</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</sc-if>
+
+<sc-if value="{{ s2 }}" hint-placeholder-val="{{ true }}">
+<div>
+  <div style="display:flex;align-items:baseline;gap:16px;padding-bottom:12px">
+    <span style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#5B687C">02</span>
+    <span style="font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C">Bestätigung — /anfrage/bestaetigung</span>
+  </div>
+  <div style="background:#FFFFFF;border:1px solid #E3E7EE">
+    <div style="height:72px;padding:0 24px;border-bottom:1px solid #E3E7EE;display:flex;align-items:center;gap:12px">
+      <div style="width:36px;height:36px;border-radius:50%;border:1px solid #14294A;display:grid;place-items:center;flex:none"><div style="width:28px;height:28px;border-radius:50%;border:1px solid var(--dkgz-accent,#B08A2E);display:grid;place-items:center"><span style="font-size:6.5px;font-weight:700;color:#14294A">DKGZ</span></div></div>
+      <span style="font-size:22px;font-weight:700;letter-spacing:-0.022em;color:#14294A;line-height:1">DKGZ</span>
+      <span style="width:1px;height:24px;background:var(--dkgz-accent,#B08A2E)"></span>
+      <span style="font-size:9px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:#5B687C;line-height:1.5">Deutsche<br>KFZ-Gutachterzentrale</span>
+    </div>
+    <div style="padding:96px 24px">
+      <div style="max-width:680px;margin:0 auto">
+        <div style="width:56px;height:56px;border-radius:50%;border:2px solid #14294A;display:grid;place-items:center;color:#14294A"><span data-lucide="check" width="26" height="26" style="display:block"></span></div>
+        <h1 style="font-size:40px;line-height:1.12;font-weight:700;letter-spacing:-0.024em;color:#14294A;padding:32px 0 16px">Ihre Anfrage ist eingegangen.</h1>
+        <p style="font-size:17px;line-height:1.65;color:#5B687C">Wir leiten Ihre Anfrage jetzt an geeignete Sachverständige in Ihrer Region weiter. Sobald ein Partner den Auftrag annimmt, erhält er Ihre Kontaktdaten und meldet sich direkt bei Ihnen.</p>
+
+        <div style="border:1px solid #14294A;border-radius:5px;padding:20px 24px;margin-top:32px;display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap">
+          <div>
+            <div style="font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C">Ihre Vorgangsnummer</div>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:22px;color:#14294A;padding-top:6px;font-variant-numeric:tabular-nums">DKGZ-2026-04817</div>
+          </div>
+          <div style="font-size:13.5px;line-height:1.5;color:#5B687C;max-width:34ch">Bitte halten Sie diese Nummer bei Rückfragen bereit. Sie steht auch in der Bestätigungs-E-Mail.</div>
+        </div>
+
+        <div style="font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C;padding:48px 0 20px">Wie es weitergeht</div>
+        <div style="border-top:1px solid #E3E7EE">
+          <div style="display:grid;grid-template-columns:32px minmax(0,1fr);gap:16px;padding:20px 0;border-bottom:1px solid #E3E7EE">
+            <span style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#9AA5B4;padding-top:2px">01</span>
+            <div><div style="font-size:17px;font-weight:600;color:#14294A">Vermittlung läuft</div><p style="font-size:15px;line-height:1.6;color:#5B687C;padding-top:4px">Ihre Anfrage geht an alle passenden Sachverständigen, deren Einsatzgebiet 40589 abdeckt.</p></div>
+          </div>
+          <div style="display:grid;grid-template-columns:32px minmax(0,1fr);gap:16px;padding:20px 0;border-bottom:1px solid #E3E7EE">
+            <span style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#9AA5B4;padding-top:2px">02</span>
+            <div><div style="font-size:17px;font-weight:600;color:#14294A">Annahme durch einen Partner</div><p style="font-size:15px;line-height:1.6;color:#5B687C;padding-top:4px">Der erste verfügbare Sachverständige übernimmt. Sie erhalten eine E-Mail mit Name und Kontaktdaten.</p></div>
+          </div>
+          <div style="display:grid;grid-template-columns:32px minmax(0,1fr);gap:16px;padding:20px 0;border-bottom:1px solid #E3E7EE">
+            <span style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#9AA5B4;padding-top:2px">03</span>
+            <div><div style="font-size:17px;font-weight:600;color:#14294A">Direkte Terminabstimmung</div><p style="font-size:15px;line-height:1.6;color:#5B687C;padding-top:4px">Alles Weitere klären Sie unmittelbar mit dem Sachverständigen. DKGZ tritt dabei nicht mehr dazwischen.</p></div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:24px;padding-top:32px">
+          <button type="button" style="height:40px;padding:0 18px;background:#FFFFFF;color:#14294A;border:1px solid #14294A;border-radius:3px;font-size:15px;font-weight:500;cursor:pointer">Zur Startseite</button>
+          <span style="font-size:13.5px;color:#5B687C">Rückfragen: <span style="font-family:'IBM Plex Mono',monospace;color:#14294A">+49 179 4480169</span></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</sc-if>
+
+<sc-if value="{{ s3 }}" hint-placeholder-val="{{ true }}">
+<div>
+  <div style="display:flex;align-items:baseline;gap:16px;padding-bottom:12px">
+    <span style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#5B687C">03</span>
+    <span style="font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C">Bewertung — /bewertung/:token</span>
+  </div>
+  <div style="background:#FFFFFF;border:1px solid #E3E7EE;padding:80px 24px">
+    <div style="max-width:720px;margin:0 auto">
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#5B687C;font-variant-numeric:tabular-nums">DKGZ-2026-04817 · Unfallgutachten · Düsseldorf</div>
+      <h1 style="font-size:30px;line-height:1.2;font-weight:600;letter-spacing:-0.018em;color:#14294A;padding:16px 0 12px">Wie zufrieden waren Sie mit dem vermittelten Sachverständigen?</h1>
+      <p style="font-size:15px;line-height:1.6;color:#5B687C;max-width:64ch">1 bedeutet sehr unzufrieden, 10 bedeutet sehr zufrieden. Ihre Bewertung wird nicht öffentlich angezeigt.</p>
+
+      <div style="display:flex;gap:8px;padding-top:32px;flex-wrap:wrap">
+        <button type="button" onClick="{{ p1 }}" style="width:48px;height:48px;border:1px solid #CBD2DD;border-radius:3px;cursor:pointer;font-size:15px;font-weight:500;font-variant-numeric:tabular-nums;transition:border-color 140ms cubic-bezier(0.4,0,0.2,1);background:{{ b1 }};color:{{ c1 }}">1</button>
+        <button type="button" onClick="{{ p2 }}" style="width:48px;height:48px;border:1px solid #CBD2DD;border-radius:3px;cursor:pointer;font-size:15px;font-weight:500;font-variant-numeric:tabular-nums;transition:border-color 140ms cubic-bezier(0.4,0,0.2,1);background:{{ b2 }};color:{{ c2 }}">2</button>
+        <button type="button" onClick="{{ p3 }}" style="width:48px;height:48px;border:1px solid #CBD2DD;border-radius:3px;cursor:pointer;font-size:15px;font-weight:500;font-variant-numeric:tabular-nums;transition:border-color 140ms cubic-bezier(0.4,0,0.2,1);background:{{ b3 }};color:{{ c3 }}">3</button>
+        <button type="button" onClick="{{ p4 }}" style="width:48px;height:48px;border:1px solid #CBD2DD;border-radius:3px;cursor:pointer;font-size:15px;font-weight:500;font-variant-numeric:tabular-nums;transition:border-color 140ms cubic-bezier(0.4,0,0.2,1);background:{{ b4 }};color:{{ c4 }}">4</button>
+        <button type="button" onClick="{{ p5 }}" style="width:48px;height:48px;border:1px solid #CBD2DD;border-radius:3px;cursor:pointer;font-size:15px;font-weight:500;font-variant-numeric:tabular-nums;transition:border-color 140ms cubic-bezier(0.4,0,0.2,1);background:{{ b5 }};color:{{ c5 }}">5</button>
+        <button type="button" onClick="{{ p6 }}" style="width:48px;height:48px;border:1px solid #CBD2DD;border-radius:3px;cursor:pointer;font-size:15px;font-weight:500;font-variant-numeric:tabular-nums;transition:border-color 140ms cubic-bezier(0.4,0,0.2,1);background:{{ b6 }};color:{{ c6 }}">6</button>
+        <button type="button" onClick="{{ p7 }}" style="width:48px;height:48px;border:1px solid #CBD2DD;border-radius:3px;cursor:pointer;font-size:15px;font-weight:500;font-variant-numeric:tabular-nums;transition:border-color 140ms cubic-bezier(0.4,0,0.2,1);background:{{ b7 }};color:{{ c7 }}">7</button>
+        <button type="button" onClick="{{ p8 }}" style="width:48px;height:48px;border:1px solid #CBD2DD;border-radius:3px;cursor:pointer;font-size:15px;font-weight:500;font-variant-numeric:tabular-nums;transition:border-color 140ms cubic-bezier(0.4,0,0.2,1);background:{{ b8 }};color:{{ c8 }}">8</button>
+        <button type="button" onClick="{{ p9 }}" style="width:48px;height:48px;border:1px solid #CBD2DD;border-radius:3px;cursor:pointer;font-size:15px;font-weight:500;font-variant-numeric:tabular-nums;transition:border-color 140ms cubic-bezier(0.4,0,0.2,1);background:{{ b9 }};color:{{ c9 }}">9</button>
+        <button type="button" onClick="{{ p10 }}" style="width:48px;height:48px;border:1px solid #CBD2DD;border-radius:3px;cursor:pointer;font-size:15px;font-weight:500;font-variant-numeric:tabular-nums;transition:border-color 140ms cubic-bezier(0.4,0,0.2,1);background:{{ b10 }};color:{{ c10 }}">10</button>
+      </div>
+      <div style="display:flex;justify-content:space-between;max-width:560px;padding-top:10px">
+        <span style="font-size:13.5px;color:#9AA5B4">Sehr unzufrieden</span>
+        <span style="font-size:13.5px;color:#9AA5B4">Sehr zufrieden</span>
+      </div>
+
+      <div style="padding-top:32px">
+        <label style="display:block;font-size:13.5px;font-weight:500;color:#2E3A4C;padding-bottom:8px">Anmerkung <span style="color:#9AA5B4;font-weight:400">optional</span></label>
+        <div style="width:100%;height:104px;padding:12px;border:1px solid #CBD2DD;border-radius:3px;font-size:15px;color:#9AA5B4;line-height:1.5">Was ist Ihnen aufgefallen?</div>
+      </div>
+      <button type="button" style="height:44px;padding:0 24px;margin-top:24px;background:#14294A;color:#FFFFFF;border:1px solid #14294A;border-radius:3px;font-size:15px;font-weight:500;cursor:pointer;transition:background 140ms cubic-bezier(0.4,0,0.2,1)" style-hover="background:#27508B;border-color:#27508B">Bewertung absenden</button>
+    </div>
+  </div>
+</div>
+</sc-if>
+
+<sc-if value="{{ s4 }}" hint-placeholder-val="{{ true }}">
+<div>
+  <div style="display:flex;align-items:baseline;gap:16px;padding-bottom:12px">
+    <span style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#5B687C">04</span>
+    <span style="font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C">Feedback — interner Folgeschritt bei Bewertung 1–7</span>
+  </div>
+  <div style="background:#FFFFFF;border:1px solid #E3E7EE;padding:80px 24px">
+    <div style="max-width:720px;margin:0 auto">
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#5B687C;font-variant-numeric:tabular-nums">DKGZ-2026-04817 · Bewertung 5 von 10</div>
+      <h1 style="font-size:30px;line-height:1.2;font-weight:600;letter-spacing:-0.018em;color:#14294A;padding:16px 0 12px">Was hätte besser laufen sollen?</h1>
+      <p style="font-size:15px;line-height:1.6;color:#5B687C;max-width:64ch">Diese Angaben sieht ausschließlich die DKGZ-Qualitätssicherung. Sie werden nicht an den Sachverständigen weitergegeben.</p>
+
+      <div style="border:1px solid #E3E7EE;border-radius:5px;padding:32px;margin-top:32px;display:flex;flex-direction:column;gap:20px">
+        <div>
+          <label style="display:block;font-size:13.5px;font-weight:500;color:#2E3A4C;padding-bottom:8px">Woran lag es? <span style="color:#A32318">*</span></label>
+          <div style="height:40px;padding:0 12px;border:1px solid #CBD2DD;border-radius:3px;font-size:15px;color:#2E3A4C;background:#FFFFFF;display:flex;align-items:center;justify-content:space-between"><span>Erreichbarkeit des Sachverständigen</span><span data-lucide="chevron-down" width="16" height="16" style="color:#5B687C;display:block"></span></div>
+          <div style="font-size:13.5px;color:#9AA5B4;padding-top:8px">Weitere Kategorien: Terminfindung · Dauer bis zum Gutachten · Qualität der Unterlagen · Kommunikation · Kosten · Sonstiges</div>
+        </div>
+        <div>
+          <label style="display:block;font-size:13.5px;font-weight:500;color:#2E3A4C;padding-bottom:8px">Beschreibung <span style="color:#9AA5B4;font-weight:400">optional</span></label>
+          <div style="width:100%;height:120px;padding:12px;border:1px solid #CBD2DD;border-radius:3px;font-size:15px;color:#9AA5B4;line-height:1.5">Bitte schildern Sie kurz, was passiert ist.</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <span style="width:16px;height:16px;border:1px solid #14294A;border-radius:3px;background:#14294A;flex:none;display:grid;place-items:center;color:#FFFFFF"><span data-lucide="check" width="11" height="11" style="display:block"></span></span>
+          <span style="font-size:13.5px;color:#2E3A4C">DKGZ darf mich zu diesem Vorgang telefonisch kontaktieren.</span>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:16px;padding-top:24px">
+        <button type="button" style="height:44px;padding:0 24px;background:#14294A;color:#FFFFFF;border:1px solid #14294A;border-radius:3px;font-size:15px;font-weight:500;cursor:pointer;transition:background 140ms cubic-bezier(0.4,0,0.2,1)" style-hover="background:#27508B;border-color:#27508B">Rückmeldung senden</button>
+        <button type="button" style="height:44px;padding:0 4px;background:transparent;color:#14294A;border:none;font-size:15px;font-weight:500;cursor:pointer">Überspringen</button>
+      </div>
+    </div>
+  </div>
+</div>
+</sc-if>
+
+<sc-if value="{{ s5 }}" hint-placeholder-val="{{ true }}">
+<div>
+  <div style="display:flex;align-items:baseline;gap:16px;padding-bottom:12px">
+    <span style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#5B687C">05</span>
+    <span style="font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C">Für Sachverständige — /partner</span>
+  </div>
+  <div style="background:#FFFFFF;border:1px solid #E3E7EE">
+    <div style="background:#0A1628;padding:0">
+      <div style="max-width:1240px;margin:0 auto;padding:0 24px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:64px;align-items:center">
+        <div style="padding:80px 0">
+          <div style="font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:var(--dkgz-accent,#B08A2E)">Partnernetz</div>
+          <div style="width:24px;height:2px;background:var(--dkgz-accent,#B08A2E);margin-top:10px"></div>
+          <h1 style="font-size:40px;line-height:1.12;font-weight:700;letter-spacing:-0.024em;color:#FFFFFF;padding:24px 0 16px">Aufträge aus Ihrer Region.<br>Ohne Akquise.</h1>
+          <p style="font-size:17px;line-height:1.65;color:rgba(255,255,255,0.72);max-width:52ch">Sie legen Einsatzgebiet und Leistungen fest, wir leiten passende Anfragen weiter. Sie entscheiden bei jeder Anfrage neu.</p>
+          <div style="display:flex;align-items:center;gap:16px;padding-top:32px">
+            <button type="button" style="height:44px;padding:0 24px;background:#FFFFFF;color:#14294A;border:1px solid #FFFFFF;border-radius:3px;font-size:15px;font-weight:500;cursor:pointer">Als Partner registrieren</button>
+            <button type="button" style="height:44px;padding:0 20px;background:transparent;color:#FFFFFF;border:1px solid rgba(255,255,255,0.32);border-radius:3px;font-size:15px;font-weight:500;cursor:pointer;transition:border-color 140ms cubic-bezier(0.4,0,0.2,1)" style-hover="border-color:#FFFFFF">Zum Portal anmelden</button>
+          </div>
+        </div>
+        <div style="height:100%;min-height:420px;padding:40px 0">
+          <div style="height:100%;min-height:340px;border:1px solid rgba(255,255,255,0.14);overflow:hidden">
+            <image-slot id="dkgz-partner-hero" shape="rect" fit="cover" placeholder="Sachverständiger bei der Schadenaufnahme, Detailaufnahme Messgerät oder Kamera. Querformat, kühler Grauton, navy-lastige Schatten."></image-slot>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="max-width:1240px;margin:0 auto;padding:80px 24px;display:grid;grid-template-columns:minmax(0,1fr) minmax(280px,400px);gap:48px;align-items:start">
+      <div>
+        <h2 style="font-size:30px;line-height:1.2;font-weight:600;letter-spacing:-0.018em;color:#14294A">Das Provisionsmodell</h2>
+        <p style="font-size:15px;line-height:1.6;color:#5B687C;padding-top:16px;max-width:64ch">Es gibt keine Grundgebühr und keine Kosten pro Anfrage. Die Vermittlungsprovision fällt ausschließlich auf abgeschlossene Aufträge an und wird auf das tatsächlich berechnete Netto-Honorar erhoben.</p>
+        <table style="width:100%;margin-top:32px;border-top:1px solid #E3E7EE;border-bottom:1px solid #E3E7EE">
+          <thead>
+            <tr>
+              <th style="text-align:left;font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C;padding:12px 16px 12px 0;border-bottom:1px solid #E3E7EE">Position</th>
+              <th style="text-align:left;font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C;padding:12px 16px;border-bottom:1px solid #E3E7EE">Regel</th>
+              <th style="text-align:right;font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C;padding:12px 0 12px 16px;border-bottom:1px solid #E3E7EE">Beispiel</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="font-size:13.5px;color:#2E3A4C;padding:14px 16px 14px 0;border-bottom:1px solid #F1F3F7">Auftragswert (netto)</td>
+              <td style="font-size:13.5px;color:#5B687C;padding:14px 16px;border-bottom:1px solid #F1F3F7">Vom Sachverständigen nach Abschluss erfasst</td>
+              <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#2E3A4C;text-align:right;padding:14px 0 14px 16px;border-bottom:1px solid #F1F3F7;font-variant-numeric:tabular-nums;white-space:nowrap">850,00 €</td>
+            </tr>
+            <tr>
+              <td style="font-size:13.5px;color:#2E3A4C;padding:14px 16px 14px 0;border-bottom:1px solid #F1F3F7">Vermittlungsprovision</td>
+              <td style="font-size:13.5px;color:#5B687C;padding:14px 16px;border-bottom:1px solid #F1F3F7">15 % des Netto-Honorars</td>
+              <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#2E3A4C;text-align:right;padding:14px 0 14px 16px;border-bottom:1px solid #F1F3F7;font-variant-numeric:tabular-nums;white-space:nowrap">127,50 €</td>
+            </tr>
+            <tr>
+              <td style="font-size:13.5px;color:#2E3A4C;padding:14px 16px 14px 0;border-bottom:1px solid #F1F3F7">Abgelehnte Anfragen</td>
+              <td style="font-size:13.5px;color:#5B687C;padding:14px 16px;border-bottom:1px solid #F1F3F7">Keine Berechnung, keine Nachteile bei der Verteilung</td>
+              <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#2E3A4C;text-align:right;padding:14px 0 14px 16px;border-bottom:1px solid #F1F3F7;font-variant-numeric:tabular-nums;white-space:nowrap">0,00 €</td>
+            </tr>
+            <tr>
+              <td style="font-size:13.5px;font-weight:500;color:#14294A;padding:14px 16px 14px 0;border-top:2px solid #14294A">Ihr Anteil im Beispiel</td>
+              <td style="font-size:13.5px;color:#5B687C;padding:14px 16px;border-top:2px solid #14294A">Abrechnung monatlich, Sammelrechnung</td>
+              <td style="font-family:'IBM Plex Mono',monospace;font-size:15px;font-weight:500;color:#14294A;text-align:right;padding:14px 0 14px 16px;border-top:2px solid #14294A;font-variant-numeric:tabular-nums;white-space:nowrap">722,50 €</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div style="font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C;padding:48px 0 16px">Voraussetzungen für die Aufnahme</div>
+        <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px 32px">
+          <div style="display:flex;gap:12px;min-width:0"><span data-lucide="check" width="20" height="20" style="color:#14294A;flex:none;display:block;margin-top:2px"></span><span style="font-size:15px;line-height:1.6;color:#2E3A4C;min-width:0;overflow-wrap:break-word;hyphens:auto">Qualifikationsnachweis als Kfz-Sachverständiger</span></div>
+          <div style="display:flex;gap:12px;min-width:0"><span data-lucide="check" width="20" height="20" style="color:#14294A;flex:none;display:block;margin-top:2px"></span><span style="font-size:15px;line-height:1.6;color:#2E3A4C;min-width:0;overflow-wrap:break-word;hyphens:auto">Gewerbeanmeldung und USt-IdNr.</span></div>
+          <div style="display:flex;gap:12px;min-width:0"><span data-lucide="check" width="20" height="20" style="color:#14294A;flex:none;display:block;margin-top:2px"></span><span style="font-size:15px;line-height:1.6;color:#2E3A4C;min-width:0;overflow-wrap:break-word;hyphens:auto">Berufshaftpflichtversicherung</span></div>
+          <div style="display:flex;gap:12px;min-width:0"><span data-lucide="check" width="20" height="20" style="color:#14294A;flex:none;display:block;margin-top:2px"></span><span style="font-size:15px;line-height:1.6;color:#2E3A4C;min-width:0;overflow-wrap:break-word;hyphens:auto">Definiertes Einsatzgebiet nach PLZ</span></div>
+          <div style="display:flex;gap:12px;min-width:0"><span data-lucide="check" width="20" height="20" style="color:#14294A;flex:none;display:block;margin-top:2px"></span><span style="font-size:15px;line-height:1.6;color:#2E3A4C;min-width:0;overflow-wrap:break-word;hyphens:auto">Rückmeldung auf Anfragen innerhalb der Frist</span></div>
+          <div style="display:flex;gap:12px;min-width:0"><span data-lucide="check" width="20" height="20" style="color:#14294A;flex:none;display:block;margin-top:2px"></span><span style="font-size:15px;line-height:1.6;color:#2E3A4C;min-width:0;overflow-wrap:break-word;hyphens:auto">Gutachten und Rechnung im Portal hinterlegen</span></div>
+        </div>
+      </div>
+
+      <div style="position:sticky;top:24px;border:1px solid #14294A;border-radius:5px;padding:24px">
+        <div style="font-size:22px;line-height:1.3;font-weight:600;letter-spacing:-0.012em;color:#14294A">Aufnahme beantragen</div>
+        <p style="font-size:15px;line-height:1.6;color:#5B687C;padding-top:12px">Registrierung in etwa fünf Minuten. Die Freigabe erfolgt nach Prüfung der Nachweise durch DKGZ.</p>
+        <div style="display:flex;flex-direction:column;gap:12px;padding-top:20px">
+          <input type="text" placeholder="Firmenname" style="width:100%;height:40px;padding:0 12px;border:1px solid #CBD2DD;border-radius:3px;font-size:15px;color:#2E3A4C;outline:none">
+          <input type="text" placeholder="E-Mail" style="width:100%;height:40px;padding:0 12px;border:1px solid #CBD2DD;border-radius:3px;font-size:15px;color:#2E3A4C;outline:none">
+          <input type="text" placeholder="PLZ des Bürostandorts" style="width:100%;height:40px;padding:0 12px;border:1px solid #CBD2DD;border-radius:3px;font-size:15px;color:#2E3A4C;outline:none;font-variant-numeric:tabular-nums">
+        </div>
+        <button type="button" style="width:100%;height:44px;margin-top:16px;background:#14294A;color:#FFFFFF;border:1px solid #14294A;border-radius:3px;font-size:15px;font-weight:500;cursor:pointer;transition:background 140ms cubic-bezier(0.4,0,0.2,1)" style-hover="background:#27508B;border-color:#27508B">Registrierung starten</button>
+        <p style="font-size:13.5px;line-height:1.5;color:#5B687C;padding-top:12px">Keine Vertragslaufzeit. Sie können Ihr Profil jederzeit auf „Nicht verfügbar“ setzen.</p>
+      </div>
+    </div>
+  </div>
+</div>
+</sc-if>
+
+<sc-if value="{{ s6 }}" hint-placeholder-val="{{ true }}">
+<div>
+  <div style="display:flex;align-items:baseline;gap:16px;padding-bottom:12px">
+    <span style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#5B687C">06</span>
+    <span style="font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C">Rechtliches — Vorlage für Langtext, hier /impressum</span>
+  </div>
+  <div style="background:#FFFFFF;border:1px solid #E3E7EE;padding:80px 24px">
+    <div style="max-width:1068px;margin:0 auto;display:grid;grid-template-columns:220px minmax(0,1fr);gap:64px;align-items:start">
+      <div style="position:sticky;top:24px">
+        <div style="font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C;padding-bottom:16px">Rechtliches</div>
+        <div style="display:flex;flex-direction:column;gap:10px;border-left:1px solid #E3E7EE">
+          <a href="#" style="font-size:13.5px;color:#14294A;font-weight:500;border:none;border-left:2px solid #14294A;margin-left:-1px;padding:2px 0 2px 14px">Impressum</a>
+          <a href="#" style="font-size:13.5px;color:#5B687C;border:none;padding:2px 0 2px 15px">Datenschutzerklärung</a>
+          <a href="#" style="font-size:13.5px;color:#5B687C;border:none;padding:2px 0 2px 15px">AGB</a>
+          <a href="#" style="font-size:13.5px;color:#5B687C;border:none;padding:2px 0 2px 15px">Vermittlungsbedingungen</a>
+        </div>
+      </div>
+      <div>
+        <h1 style="font-size:40px;line-height:1.12;font-weight:700;letter-spacing:-0.024em;color:#14294A">Impressum</h1>
+        <p style="font-size:13.5px;color:#9AA5B4;padding-top:8px;font-family:'IBM Plex Mono',monospace">Stand: 17.08.2026</p>
+
+        <h2 style="font-size:22px;line-height:1.3;font-weight:600;letter-spacing:-0.012em;color:#14294A;padding:48px 0 12px">Angaben gemäß § 5 DDG</h2>
+        <p style="font-size:15px;line-height:1.75;color:#2E3A4C;max-width:68ch">DKGZ Deutsche KFZ-Gutachterzentrale<br>Musterstraße 00<br>40589 Düsseldorf<br>Deutschland</p>
+
+        <h2 style="font-size:22px;line-height:1.3;font-weight:600;letter-spacing:-0.012em;color:#14294A;padding:32px 0 12px">Vertreten durch</h2>
+        <p style="font-size:15px;line-height:1.75;color:#2E3A4C;max-width:68ch">Geschäftsführung: [Name]</p>
+
+        <h2 style="font-size:22px;line-height:1.3;font-weight:600;letter-spacing:-0.012em;color:#14294A;padding:32px 0 12px">Kontakt</h2>
+        <p style="font-size:15px;line-height:1.75;color:#2E3A4C;max-width:68ch">Telefon: +49 179 4480169<br>E-Mail: info@dkgz.de</p>
+
+        <h2 style="font-size:22px;line-height:1.3;font-weight:600;letter-spacing:-0.012em;color:#14294A;padding:32px 0 12px">Registereintrag und Umsatzsteuer</h2>
+        <p style="font-size:15px;line-height:1.75;color:#2E3A4C;max-width:68ch">Eintragung im Handelsregister, Registergericht und Registernummer werden hier eingesetzt. Umsatzsteuer-Identifikationsnummer gemäß § 27 a Umsatzsteuergesetz: [USt-IdNr.]</p>
+
+        <h2 style="font-size:22px;line-height:1.3;font-weight:600;letter-spacing:-0.012em;color:#14294A;padding:32px 0 12px">Art der Leistung</h2>
+        <p style="font-size:15px;line-height:1.75;color:#2E3A4C;max-width:68ch">DKGZ vermittelt Anfragen von Kundinnen und Kunden an selbstständige Kfz-Sachverständige eines bundesweiten Partnernetzes. DKGZ erstellt selbst keine Gutachten und erbringt keine Sachverständigenleistungen. Der Gutachtenauftrag kommt ausschließlich zwischen der anfragenden Person und dem vermittelten Sachverständigen zustande. Für Inhalt, Richtigkeit und Fristen des Gutachtens ist allein der beauftragte Sachverständige verantwortlich.</p>
+
+        <h2 style="font-size:22px;line-height:1.3;font-weight:600;letter-spacing:-0.012em;color:#14294A;padding:32px 0 12px">Streitbeilegung</h2>
+        <p style="font-size:15px;line-height:1.75;color:#2E3A4C;max-width:68ch">Die Europäische Kommission stellt eine Plattform zur Online-Streitbeilegung bereit. Wir sind nicht verpflichtet und nicht bereit, an einem Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen.</p>
+
+        <h2 style="font-size:22px;line-height:1.3;font-weight:600;letter-spacing:-0.012em;color:#14294A;padding:32px 0 12px">Haftung für Inhalte und Links</h2>
+        <p style="font-size:15px;line-height:1.75;color:#2E3A4C;max-width:68ch">Als Diensteanbieter sind wir für eigene Inhalte auf diesen Seiten nach den allgemeinen Gesetzen verantwortlich. Für Inhalte externer Links ist stets der jeweilige Anbieter der verlinkten Seiten verantwortlich. Bei Bekanntwerden von Rechtsverletzungen entfernen wir derartige Inhalte umgehend.</p>
+
+        <div style="border-top:1px solid #E3E7EE;margin-top:48px;padding-top:16px">
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#9AA5B4">Satzvorgabe: Zeilenlänge 68 Zeichen · Zeilenabstand 1,75 · Überschriften H2 mit 32 px Abstand oben</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</sc-if>
+
+<sc-if value="{{ s7 }}" hint-placeholder-val="{{ true }}">
+<div>
+  <div style="display:flex;align-items:baseline;gap:16px;padding-bottom:12px">
+    <span style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#5B687C">07</span>
+    <span style="font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C">404</span>
+  </div>
+  <div style="background:#FFFFFF;border:1px solid #E3E7EE">
+    <div style="height:72px;padding:0 24px;border-bottom:1px solid #E3E7EE;display:flex;align-items:center;gap:12px">
+      <span style="font-size:22px;font-weight:700;letter-spacing:-0.022em;color:#14294A;line-height:1">DKGZ</span>
+      <span style="width:1px;height:24px;background:var(--dkgz-accent,#B08A2E)"></span>
+      <span style="font-size:9px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:#5B687C;line-height:1.5">Deutsche<br>KFZ-Gutachterzentrale</span>
+    </div>
+    <div style="padding:120px 24px">
+      <div style="max-width:680px;margin:0 auto">
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#9AA5B4">Fehler 404</div>
+        <h1 style="font-size:40px;line-height:1.12;font-weight:700;letter-spacing:-0.024em;color:#14294A;padding:16px 0 16px">Diese Seite existiert nicht.</h1>
+        <p style="font-size:17px;line-height:1.65;color:#5B687C;max-width:60ch">Möglicherweise wurde die Adresse geändert oder falsch eingegeben. Über die Startseite gelangen Sie direkt zur Anfrage.</p>
+        <div style="display:flex;align-items:center;gap:24px;padding-top:32px">
+          <button type="button" style="height:44px;padding:0 24px;background:#14294A;color:#FFFFFF;border:1px solid #14294A;border-radius:3px;font-size:15px;font-weight:500;cursor:pointer;transition:background 140ms cubic-bezier(0.4,0,0.2,1)" style-hover="background:#27508B;border-color:#27508B">Zur Startseite</button>
+          <span style="font-size:13.5px;color:#5B687C">oder telefonisch <span style="font-family:'IBM Plex Mono',monospace;color:#14294A">+49 179 4480169</span></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</sc-if>
+
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{
+  &quot;screen&quot;: {
+    &quot;editor&quot;: &quot;enum&quot;,
+    &quot;default&quot;: &quot;Alle&quot;,
+    &quot;tsType&quot;: &quot;string&quot;,
+    &quot;options&quot;: [&quot;Alle&quot;, &quot;Anfrage&quot;, &quot;Bestätigung&quot;, &quot;Bewertung&quot;, &quot;Feedback&quot;, &quot;Für Sachverständige&quot;, &quot;Rechtliches&quot;, &quot;404&quot;],
+    &quot;section&quot;: &quot;Ansicht&quot;
+  },
+  &quot;accent&quot;: {
+    &quot;editor&quot;: &quot;color&quot;,
+    &quot;default&quot;: &quot;#B08A2E&quot;,
+    &quot;tsType&quot;: &quot;string&quot;,
+    &quot;options&quot;: [&quot;#B08A2E&quot;, &quot;#8C6D22&quot;, &quot;#A28B5B&quot;, &quot;#14294A&quot;],
+    &quot;section&quot;: &quot;Marke&quot;
+  }
+}">
+class Component extends DCLogic {
+  state = { rating: 0 };
+
+  componentDidMount() { this.sync(); }
+  componentDidUpdate() { this.sync(); }
+  componentWillUnmount() { if (this._t) clearTimeout(this._t); }
+
+  sync() {
+    document.documentElement.style.setProperty('--dkgz-accent', this.props.accent || '#B08A2E');
+    this.paintIcons();
+  }
+
+  paintIcons() {
+    if (this._t) clearTimeout(this._t);
+    let tries = 0;
+    const go = () => {
+      if (window.lucide && window.lucide.createIcons) {
+        try {
+          window.lucide.createIcons({ attrs: { width: 20, height: 20, 'stroke-width': 1.5, 'aria-hidden': 'true' } });
+        } catch (e) {}
+        return;
+      }
+      if (tries++ < 80) this._t = setTimeout(go, 100);
+    };
+    go();
+  }
+
+  renderVals() {
+    const screen = this.props.screen || 'Alle';
+    const all = screen === 'Alle';
+    const vals = {
+      s1: all || screen === 'Anfrage',
+      s2: all || screen === 'Bestätigung',
+      s3: all || screen === 'Bewertung',
+      s4: all || screen === 'Feedback',
+      s5: all || screen === 'Für Sachverständige',
+      s6: all || screen === 'Rechtliches',
+      s7: all || screen === '404'
+    };
+    for (let i = 1; i <= 10; i++) {
+      const on = this.state.rating === i;
+      vals['b' + i] = on ? '#14294A' : '#FFFFFF';
+      vals['c' + i] = on ? '#FFFFFF' : '#2E3A4C';
+      vals['p' + i] = () => this.setState({ rating: i });
+    }
+    return vals;
+  }
+}
+</script>
+</body>
+</html>

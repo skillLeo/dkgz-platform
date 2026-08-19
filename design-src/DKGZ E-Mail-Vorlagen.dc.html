@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#F1F3F7;color:#2E3A4C;font-family:'IBM Plex Sans','Helvetica Neue',Helvetica,Arial,sans-serif;font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+h1,h2,h3,h4,p{margin:0}
+a{color:#14294A;text-decoration:none}
+a:hover{color:#27508B}
+table{border-collapse:collapse}
+button{font-family:inherit}
+::selection{background:#E8EDF5}
+</style>
+</helmet>
+
+<div style="background:#F1F3F7;padding-bottom:80px">
+
+<div style="background:#F8F9FB;border-bottom:1px solid #E3E7EE;padding:12px 24px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;position:sticky;top:0;z-index:60">
+  <span style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#9AA5B4;white-space:nowrap">E-Mail · 600 px</span>
+  <div style="display:flex;gap:6px;flex-wrap:wrap">
+    <button type="button" onClick="{{ g1 }}" style="height:26px;padding:0 10px;border:1px solid #CBD2DD;border-radius:3px;font-family:'IBM Plex Mono',monospace;font-size:11.5px;cursor:pointer;white-space:nowrap;background:{{ k1 }};color:{{ f1 }}">01 Anfrage-Bestätigung</button>
+    <button type="button" onClick="{{ g2 }}" style="height:26px;padding:0 10px;border:1px solid #CBD2DD;border-radius:3px;font-family:'IBM Plex Mono',monospace;font-size:11.5px;cursor:pointer;white-space:nowrap;background:{{ k2 }};color:{{ f2 }}">02 Vermittlung an SV</button>
+    <button type="button" onClick="{{ g3 }}" style="height:26px;padding:0 10px;border:1px solid #CBD2DD;border-radius:3px;font-family:'IBM Plex Mono',monospace;font-size:11.5px;cursor:pointer;white-space:nowrap;background:{{ k3 }};color:{{ f3 }}">03 Annahme-Bestätigung</button>
+    <button type="button" onClick="{{ g4 }}" style="height:26px;padding:0 10px;border:1px solid #CBD2DD;border-radius:3px;font-family:'IBM Plex Mono',monospace;font-size:11.5px;cursor:pointer;white-space:nowrap;background:{{ k4 }};color:{{ f4 }}">04 Abschluss</button>
+    <button type="button" onClick="{{ g5 }}" style="height:26px;padding:0 10px;border:1px solid #CBD2DD;border-radius:3px;font-family:'IBM Plex Mono',monospace;font-size:11.5px;cursor:pointer;white-space:nowrap;background:{{ k5 }};color:{{ f5 }}">05 Bewertungsanfrage</button>
+    <button type="button" onClick="{{ g6 }}" style="height:26px;padding:0 10px;border:1px solid #CBD2DD;border-radius:3px;font-family:'IBM Plex Mono',monospace;font-size:11.5px;cursor:pointer;white-space:nowrap;background:{{ k6 }};color:{{ f6 }}">06 Einladung</button>
+    <button type="button" onClick="{{ g0 }}" style="height:26px;padding:0 10px;border:1px solid #CBD2DD;border-radius:3px;font-family:'IBM Plex Mono',monospace;font-size:11.5px;cursor:pointer;white-space:nowrap;background:{{ k0 }};color:{{ f0 }}">Baukasten</button>
+  </div>
+</div>
+
+<div style="padding:32px 24px">
+  <div style="max-width:1240px;margin:0 auto">
+
+    <sc-if value="{{ isKit }}" hint-placeholder-val="{{ false }}">
+      <div>
+        <h2 style="font-size:22px;line-height:1.3;font-weight:600;letter-spacing:-0.012em;color:#14294A">Baukasten</h2>
+        <p style="font-size:15px;line-height:1.6;color:#5B687C;padding-top:8px;max-width:78ch">Alle sechs Vorlagen bestehen aus denselben Bausteinen. Änderungen erfolgen am Baustein, nie an einer einzelnen Vorlage.</p>
+
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:24px;padding-top:32px">
+          <div style="background:#FFFFFF;border:1px solid #E3E7EE;border-radius:5px;padding:20px">
+            <div style="font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C">Kopfband</div>
+            <div style="width:24px;height:2px;background:#B08A2E;margin-top:10px"></div>
+            <div style="background:#0A1628;padding:20px;margin-top:16px">
+              <div style="display:flex;align-items:center;gap:10px">
+                <div style="width:32px;height:32px;border-radius:50%;border:1px solid rgba(255,255,255,0.55);display:grid;place-items:center;flex:none"><div style="width:25px;height:25px;border-radius:50%;border:1px solid #B08A2E"></div></div>
+                <span style="font-size:19px;font-weight:700;letter-spacing:-0.022em;color:#FFFFFF;line-height:1">DKGZ</span>
+                <span style="width:1px;height:20px;background:#B08A2E"></span>
+                <span style="font-size:8px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.72);line-height:1.4">Deutsche<br>KFZ-Gutachterzentrale</span>
+              </div>
+            </div>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;line-height:1.8;color:#9AA5B4;padding-top:12px">navy-900 · 20 px Innenabstand<br>Wortmarke 19 px · Siegel 32 px<br>keine Grafik, kein Hintergrundbild</div>
+          </div>
+
+          <div style="background:#FFFFFF;border:1px solid #E3E7EE;border-radius:5px;padding:20px">
+            <div style="font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C">Datenblock</div>
+            <div style="width:24px;height:2px;background:#B08A2E;margin-top:10px"></div>
+            <table style="width:100%;margin-top:16px;border-top:1px solid #E3E7EE">
+              <tbody>
+                <tr><td style="font-size:13.5px;color:#5B687C;padding:10px 0;border-bottom:1px solid #F1F3F7;width:44%">Referenz</td><td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#2E3A4C;padding:10px 0;border-bottom:1px solid #F1F3F7;font-variant-numeric:tabular-nums">DKGZ-2026-04817</td></tr>
+                <tr><td style="font-size:13.5px;color:#5B687C;padding:10px 0;border-bottom:1px solid #F1F3F7">Art</td><td style="font-size:13.5px;color:#2E3A4C;padding:10px 0;border-bottom:1px solid #F1F3F7">Unfallgutachten</td></tr>
+                <tr><td style="font-size:13.5px;color:#5B687C;padding:10px 0">Honorar</td><td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#2E3A4C;padding:10px 0;font-variant-numeric:tabular-nums">1.640,00 €</td></tr>
+              </tbody>
+            </table>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;line-height:1.8;color:#9AA5B4;padding-top:12px">Zweispaltige Tabelle · Label gray-600<br>Werte gray-800, Zahlen in Mono<br>1-px-Trenner, keine Zebrastreifen</div>
+          </div>
+
+          <div style="background:#FFFFFF;border:1px solid #E3E7EE;border-radius:5px;padding:20px">
+            <div style="font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C">Aktion und Fuß</div>
+            <div style="width:24px;height:2px;background:#B08A2E;margin-top:10px"></div>
+            <div style="padding-top:16px">
+              <span style="display:inline-block;padding:13px 24px;background:#14294A;color:#FFFFFF;border-radius:3px;font-size:15px;font-weight:500">Anfrage ansehen</span>
+              <div style="font-size:12.5px;color:#9AA5B4;padding-top:10px">Fällt der Button aus, steht die Adresse als Klartext darunter.</div>
+              <div style="font-family:'IBM Plex Mono',monospace;font-size:12.5px;color:#27508B;padding-top:4px;overflow-wrap:break-word">portal.dkgz.de/anfrage/04817</div>
+            </div>
+            <div style="background:#F8F9FB;border-top:1px solid #E3E7EE;margin-top:16px;padding:14px 0 0">
+              <div style="font-size:12.5px;line-height:1.6;color:#5B687C">DKGZ Deutsche KFZ-Gutachterzentrale · Musterstraße 00 · 40589 Düsseldorf</div>
+              <div style="font-size:12.5px;color:#5B687C;padding-top:6px"><a href="#" style="color:#14294A">Impressum</a> · <a href="#" style="color:#14294A">Datenschutz</a> · <a href="#" style="color:#14294A">AGB</a></div>
+            </div>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;line-height:1.8;color:#9AA5B4;padding-top:12px">Ein Button je E-Mail · 3 px Radius<br>Rechtszeile in jeder Mail · Pflicht<br>keine Abmeldung bei Vorgangs-Mails</div>
+          </div>
+        </div>
+
+        <div style="border-top:1px solid #E3E7EE;margin-top:32px;padding-top:24px">
+          <div style="font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C">Technische Vorgaben</div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:24px;padding-top:20px">
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;line-height:1.9;color:#5B687C">Breite 600 px, Tabellen-Layout<br>Rand 32 px, mobil 20 px<br>Hintergrund gray-100, Karte weiß</div>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;line-height:1.9;color:#5B687C">Schrift: Arial/Helvetica als Fallback<br>IBM Plex Sans nur wenn geladen<br>Zahlen: Courier New als Mono-Fallback</div>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;line-height:1.9;color:#5B687C">Keine Hintergrundbilder<br>Keine Webfonts als Pflicht<br>Alt-Text auf jedem Bild</div>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;line-height:1.9;color:#5B687C">Betreff max. 60 Zeichen<br>Preheader 40–90 Zeichen<br>Anrede immer „Sie“</div>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isMail }}" hint-placeholder-val="{{ true }}">
+      <div>
+        <div style="display:flex;align-items:baseline;gap:16px;padding-bottom:16px;flex-wrap:wrap">
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#5B687C">{{ num }}</span>
+          <span style="font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C">{{ name }}</span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#9AA5B4">{{ trigger }}</span>
+        </div>
+
+        <div style="display:flex;gap:32px;align-items:flex-start;flex-wrap:wrap">
+
+          <div style="width:600px;flex:none">
+            <div style="background:#FFFFFF;border:1px solid #E3E7EE;border-radius:3px;padding:14px 16px;margin-bottom:16px">
+              <div style="display:grid;grid-template-columns:76px minmax(0,1fr);gap:8px 12px">
+                <span style="font-size:12.5px;color:#9AA5B4">Von</span>
+                <span style="font-size:13.5px;color:#2E3A4C">DKGZ Gutachterzentrale &lt;<span style="font-family:'IBM Plex Mono',monospace;font-size:12.5px">no-reply@dkgz.de</span>&gt;</span>
+                <span style="font-size:12.5px;color:#9AA5B4">An</span>
+                <span style="font-family:'IBM Plex Mono',monospace;font-size:12.5px;color:#2E3A4C">{{ to }}</span>
+                <span style="font-size:12.5px;color:#9AA5B4">Betreff</span>
+                <span style="font-size:15px;font-weight:600;color:#14294A">{{ subject }}</span>
+                <span style="font-size:12.5px;color:#9AA5B4">Vorschau</span>
+                <span style="font-size:13.5px;color:#5B687C">{{ preheader }}</span>
+              </div>
+            </div>
+
+            <div style="background:#F1F3F7;padding:24px">
+              <div style="max-width:600px;margin:0 auto;background:#FFFFFF;border:1px solid #E3E7EE">
+                <div style="background:#0A1628;padding:20px 32px;display:flex;align-items:center;justify-content:space-between;gap:16px">
+                  <div style="display:flex;align-items:center;gap:10px;min-width:0">
+                    <div style="width:32px;height:32px;border-radius:50%;border:1px solid rgba(255,255,255,0.55);display:grid;place-items:center;flex:none"><div style="width:25px;height:25px;border-radius:50%;border:1px solid #B08A2E;display:grid;place-items:center"><span style="font-size:6px;font-weight:700;color:#FFFFFF">DKGZ</span></div></div>
+                    <span style="font-size:19px;font-weight:700;letter-spacing:-0.022em;color:#FFFFFF;line-height:1">DKGZ</span>
+                    <span style="width:1px;height:20px;background:#B08A2E"></span>
+                    <span style="font-size:8px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.72);line-height:1.4">Deutsche<br>KFZ-Gutachterzentrale</span>
+                  </div>
+                  <span style="display:flex;width:32px;height:3px;flex:none"><span style="flex:1;background:#000000"></span><span style="flex:1;background:#DD0000"></span><span style="flex:1;background:#FFCE00"></span></span>
+                </div>
+
+                <div style="padding:32px">
+                  <div style="font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#B08A2E">{{ eyebrow }}</div>
+                  <div style="width:24px;height:2px;background:#B08A2E;margin-top:10px"></div>
+                  <h1 style="font-size:24px;line-height:1.22;font-weight:600;letter-spacing:-0.016em;color:#14294A;padding-top:20px;text-wrap:pretty">{{ headline }}</h1>
+                  <p style="font-size:15px;line-height:1.7;color:#2E3A4C;padding-top:16px">{{ salutation }}</p>
+                  <p style="font-size:15px;line-height:1.7;color:#2E3A4C;padding-top:14px">{{ body1 }}</p>
+                  <sc-if value="{{ hasBody2 }}" hint-placeholder-val="{{ true }}">
+                    <p style="font-size:15px;line-height:1.7;color:#2E3A4C;padding-top:14px">{{ body2 }}</p>
+                  </sc-if>
+
+                  <sc-if value="{{ hasRef }}" hint-placeholder-val="{{ true }}">
+                    <div style="border:1px solid #14294A;border-radius:3px;padding:16px;margin-top:24px">
+                      <div style="font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C">{{ refLabel }}</div>
+                      <div style="font-family:'IBM Plex Mono',monospace;font-size:20px;color:#14294A;padding-top:6px;font-variant-numeric:tabular-nums">{{ refValue }}</div>
+                    </div>
+                  </sc-if>
+
+                  <sc-if value="{{ hasData }}" hint-placeholder-val="{{ true }}">
+                    <div style="padding-top:24px">
+                      <div style="font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C;padding-bottom:12px">{{ dataTitle }}</div>
+                      <table style="width:100%;border-top:1px solid #E3E7EE">
+                        <tbody>
+                          <sc-for list="{{ rows }}" as="row" hint-placeholder-count="4">
+                            <tr>
+                              <td style="font-size:13.5px;line-height:1.5;color:#5B687C;padding:11px 12px 11px 0;border-bottom:1px solid #F1F3F7;width:42%;vertical-align:top">{{ row.k }}</td>
+                              <td style="font-size:13.5px;line-height:1.5;color:#2E3A4C;padding:11px 0;border-bottom:1px solid #F1F3F7;font-family:{{ row.font }};font-variant-numeric:tabular-nums">{{ row.v }}</td>
+                            </tr>
+                          </sc-for>
+                        </tbody>
+                      </table>
+                      <sc-if value="{{ hasTotal }}" hint-placeholder-val="{{ false }}">
+                        <table style="width:100%">
+                          <tbody>
+                            <tr>
+                              <td style="font-size:13.5px;font-weight:500;color:#14294A;padding:12px 12px 12px 0;border-top:2px solid #14294A;width:42%">{{ totalLabel }}</td>
+                              <td style="font-family:'IBM Plex Mono',monospace;font-size:17px;font-weight:500;color:#14294A;padding:12px 0;border-top:2px solid #14294A;font-variant-numeric:tabular-nums;white-space:nowrap">{{ totalValue }}</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </sc-if>
+                    </div>
+                  </sc-if>
+
+                  <sc-if value="{{ hasMask }}" hint-placeholder-val="{{ false }}">
+                    <div style="border:1px solid #E3E7EE;border-radius:3px;background:#F8F9FB;padding:16px;margin-top:20px">
+                      <div style="display:flex;align-items:center;gap:10px">
+                        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#5B687C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex:none" aria-hidden="true"><rect width="18" height="11" x="3" y="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                        <span style="font-size:13.5px;font-weight:500;color:#2E3A4C">Kontaktdaten noch nicht sichtbar</span>
+                      </div>
+                      <p style="font-size:13.5px;line-height:1.6;color:#5B687C;padding-top:8px">Name, Telefon und E-Mail der anfragenden Person werden freigegeben, sobald Sie den Auftrag annehmen.</p>
+                    </div>
+                  </sc-if>
+
+                  <sc-if value="{{ hasQuote }}" hint-placeholder-val="{{ false }}">
+                    <div style="border:1px solid #E3E7EE;border-left:3px solid #14294A;border-radius:3px;background:#F8F9FB;padding:16px 20px;margin-top:20px">
+                      <p style="font-size:15px;line-height:1.7;color:#2E3A4C">{{ quote }}</p>
+                      <div style="font-family:'IBM Plex Mono',monospace;font-size:12.5px;color:#9AA5B4;padding-top:10px">{{ quoteBy }}</div>
+                    </div>
+                  </sc-if>
+
+                  <sc-if value="{{ hasScale }}" hint-placeholder-val="{{ false }}">
+                    <div style="padding-top:24px">
+                      <div style="font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C;padding-bottom:12px">Ihre Bewertung</div>
+                      <div style="display:grid;grid-template-columns:repeat(10,1fr);gap:5px">
+                        <span style="height:44px;border:1px solid #CBD2DD;border-radius:3px;display:grid;place-items:center;font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#2E3A4C">1</span>
+                        <span style="height:44px;border:1px solid #CBD2DD;border-radius:3px;display:grid;place-items:center;font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#2E3A4C">2</span>
+                        <span style="height:44px;border:1px solid #CBD2DD;border-radius:3px;display:grid;place-items:center;font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#2E3A4C">3</span>
+                        <span style="height:44px;border:1px solid #CBD2DD;border-radius:3px;display:grid;place-items:center;font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#2E3A4C">4</span>
+                        <span style="height:44px;border:1px solid #CBD2DD;border-radius:3px;display:grid;place-items:center;font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#2E3A4C">5</span>
+                        <span style="height:44px;border:1px solid #CBD2DD;border-radius:3px;display:grid;place-items:center;font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#2E3A4C">6</span>
+                        <span style="height:44px;border:1px solid #CBD2DD;border-radius:3px;display:grid;place-items:center;font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#2E3A4C">7</span>
+                        <span style="height:44px;border:1px solid #CBD2DD;border-radius:3px;display:grid;place-items:center;font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#2E3A4C">8</span>
+                        <span style="height:44px;border:1px solid #CBD2DD;border-radius:3px;display:grid;place-items:center;font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#2E3A4C">9</span>
+                        <span style="height:44px;border:1px solid #CBD2DD;border-radius:3px;display:grid;place-items:center;font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#2E3A4C">10</span>
+                      </div>
+                      <div style="display:flex;justify-content:space-between;padding-top:8px">
+                        <span style="font-size:12.5px;color:#9AA5B4">Sehr unzufrieden</span>
+                        <span style="font-size:12.5px;color:#9AA5B4">Sehr zufrieden</span>
+                      </div>
+                    </div>
+                  </sc-if>
+
+                  <div style="padding-top:28px">
+                    <a href="#" style="display:inline-block;padding:13px 24px;background:#14294A;color:#FFFFFF;border-radius:3px;font-size:15px;font-weight:500">{{ cta }}</a>
+                    <div style="font-family:'IBM Plex Mono',monospace;font-size:12.5px;color:#27508B;padding-top:12px;overflow-wrap:break-word">{{ ctaUrl }}</div>
+                  </div>
+
+                  <sc-if value="{{ hasNote }}" hint-placeholder-val="{{ true }}">
+                    <p style="font-size:13.5px;line-height:1.6;color:#5B687C;border-top:1px solid #E3E7EE;margin-top:28px;padding-top:16px">{{ note }}</p>
+                  </sc-if>
+
+                  <p style="font-size:15px;line-height:1.7;color:#2E3A4C;padding-top:24px">Mit freundlichen Grüßen<br>Deutsche KFZ-Gutachterzentrale</p>
+                </div>
+
+                <div style="background:#F8F9FB;border-top:1px solid #E3E7EE;padding:20px 32px">
+                  <div style="font-size:12.5px;line-height:1.7;color:#5B687C">DKGZ Deutsche KFZ-Gutachterzentrale · Musterstraße 00 · 40589 Düsseldorf<br>Telefon <span style="font-family:'IBM Plex Mono',monospace;font-variant-numeric:tabular-nums">+49 179 4480169</span> · Mo–Fr 08:00–18:00</div>
+                  <div style="font-size:12.5px;color:#5B687C;padding-top:10px"><a href="#" style="color:#14294A">Impressum</a> · <a href="#" style="color:#14294A">Datenschutzerklärung</a> · <a href="#" style="color:#14294A">AGB</a></div>
+                  <div style="font-size:12.5px;line-height:1.6;color:#9AA5B4;padding-top:10px">{{ footnote }}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div style="width:320px;flex:none">
+            <div style="background:#FFFFFF;border:1px solid #E3E7EE;border-radius:5px;padding:20px">
+              <div style="font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C">Spezifikation</div>
+              <div style="width:24px;height:2px;background:#B08A2E;margin-top:10px"></div>
+              <table style="width:100%;margin-top:16px">
+                <tbody>
+                  <tr><td style="font-size:13.5px;color:#5B687C;padding:9px 12px 9px 0;border-bottom:1px solid #F1F3F7;vertical-align:top">Auslöser</td><td style="font-size:13.5px;color:#2E3A4C;padding:9px 0;border-bottom:1px solid #F1F3F7">{{ specTrigger }}</td></tr>
+                  <tr><td style="font-size:13.5px;color:#5B687C;padding:9px 12px 9px 0;border-bottom:1px solid #F1F3F7;vertical-align:top">Empfänger</td><td style="font-size:13.5px;color:#2E3A4C;padding:9px 0;border-bottom:1px solid #F1F3F7">{{ specTo }}</td></tr>
+                  <tr><td style="font-size:13.5px;color:#5B687C;padding:9px 12px 9px 0;border-bottom:1px solid #F1F3F7;vertical-align:top">Frist</td><td style="font-size:13.5px;color:#2E3A4C;padding:9px 0;border-bottom:1px solid #F1F3F7">{{ specDeadline }}</td></tr>
+                  <tr><td style="font-size:13.5px;color:#5B687C;padding:9px 12px 9px 0;vertical-align:top">Anhang</td><td style="font-size:13.5px;color:#2E3A4C;padding:9px 0">{{ specAttach }}</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div style="background:#FFFFFF;border:1px solid #E3E7EE;border-radius:5px;padding:20px;margin-top:16px">
+              <div style="font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C;padding-bottom:12px">Platzhalter</div>
+              <div style="font-family:'IBM Plex Mono',monospace;font-size:12.5px;line-height:1.9;color:#5B687C;white-space:pre-line">{{ placeholders }}</div>
+            </div>
+
+            <div style="background:#FFFFFF;border:1px solid #E3E7EE;border-radius:5px;padding:20px;margin-top:16px">
+              <div style="font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C;padding-bottom:12px">Mobil 390 px</div>
+              <div style="font-family:'IBM Plex Mono',monospace;font-size:12.5px;line-height:1.9;color:#5B687C">Rand 32 → 20 px<br>Datenblock bleibt zweispaltig<br>Button wird volle Breite, 46 px<br>Kopfband bricht auf zwei Zeilen</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </sc-if>
+
+  </div>
+</div>
+
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{
+  &quot;$preview&quot;: { &quot;width&quot;: 1240, &quot;height&quot;: 1100 }
+}">
+class Component extends DCLogic {
+  state = { mail: 1 };
+
+  data() {
+    const MONO = "'IBM Plex Mono',monospace";
+    const SANS = "inherit";
+    return {
+      1: {
+        num: '01', name: 'Anfrage-Bestätigung', trigger: 'an den Kunden, sofort nach Absenden',
+        to: 'm.reinhardt@web.de', subject: 'Ihre Anfrage ist eingegangen — DKGZ-2026-04817',
+        preheader: 'Wir vermitteln Ihre Anfrage jetzt an geeignete Sachverständige in Ihrer Region.',
+        eyebrow: 'Anfrage eingegangen', headline: 'Ihre Anfrage ist bei uns eingegangen.',
+        salutation: 'Guten Tag Frau Reinhardt,',
+        body1: 'vielen Dank für Ihre Anfrage. Wir leiten sie jetzt an geeignete Sachverständige weiter, deren Einsatzgebiet den Standort Ihres Fahrzeugs abdeckt.',
+        body2: 'Sobald ein Sachverständiger den Auftrag annimmt, erhält er Ihre Kontaktdaten und meldet sich direkt bei Ihnen — in der Regel innerhalb eines Werktages.',
+        refLabel: 'Ihre Vorgangsnummer', refValue: 'DKGZ-2026-04817',
+        dataTitle: 'Ihre Angaben',
+        rows: [
+          { k: 'Art des Gutachtens', v: 'Unfallgutachten', font: SANS },
+          { k: 'Standort des Fahrzeugs', v: 'Düsseldorf-Wersten · 40589', font: SANS },
+          { k: 'Fahrzeug', v: 'VW Passat B8 · 2019', font: SANS },
+          { k: 'Kennzeichen', v: 'D-AB 1234', font: MONO },
+          { k: 'Eingegangen am', v: '17.08.2026 · 08:42', font: MONO }
+        ],
+        cta: 'Status Ihrer Anfrage', ctaUrl: 'dkgz.de/vorgang/04817',
+        note: 'Die Vermittlung ist für Sie kostenfrei. Die Kosten des Gutachtens rechnet der Sachverständige direkt mit Ihnen oder Ihrer Versicherung ab.',
+        footnote: 'Diese E-Mail wurde automatisch zu Ihrer Anfrage versendet. Bitte antworten Sie nicht auf diese Adresse.',
+        specTrigger: 'Formular abgesendet', specTo: 'Anfragende Person', specDeadline: 'keine', specAttach: 'keiner',
+        placeholders: '{{ anrede }} {{ nachname }}\n{{ referenz }}\n{{ gutachtenart }}\n{{ plz }} {{ ort }}\n{{ fahrzeug }} {{ kennzeichen }}\n{{ eingang_datum }}'
+      },
+      2: {
+        num: '02', name: 'Vermittlung an Sachverständigen', trigger: 'an alle passenden Partner, gleichzeitig',
+        to: 'm.reinhardt@kfz-gutachten-d.de', subject: 'Neue Anfrage in Ihrem Gebiet — Unfallgutachten, 40589',
+        preheader: 'Annahme bis heute 18:00 Uhr. Der erste verfügbare Partner übernimmt.',
+        eyebrow: 'Neue Anfrage', headline: 'Neue Anfrage in Ihrem Einsatzgebiet.',
+        salutation: 'Guten Tag Herr Reinhardt,',
+        body1: 'für Ihr Einsatzgebiet liegt eine neue Anfrage vor. Sie können sie im Portal annehmen oder ablehnen — eine Ablehnung wirkt sich nicht auf die weitere Verteilung aus.',
+        body2: 'Die Anfrage wurde gleichzeitig an weitere Partner im Gebiet gesendet. Der erste verfügbare Partner übernimmt den Auftrag.',
+        refLabel: 'Referenz', refValue: 'DKGZ-2026-04821',
+        dataTitle: 'Anfragedaten',
+        rows: [
+          { k: 'Art des Gutachtens', v: 'Unfallgutachten', font: SANS },
+          { k: 'Standort', v: 'Düsseldorf-Wersten · 40589', font: SANS },
+          { k: 'Fahrzeug', v: 'VW Passat B8 · 2019', font: SANS },
+          { k: 'Schadenart', v: 'Heckschaden, fahrbereit', font: SANS },
+          { k: 'Dringlichkeit', v: 'Innerhalb von zwei Werktagen', font: SANS },
+          { k: 'Frist zur Annahme', v: 'heute · 18:00', font: MONO }
+        ],
+        mask: true,
+        cta: 'Anfrage im Portal ansehen', ctaUrl: 'portal.dkgz.de/anfragen/04821',
+        note: 'Nach Ablauf der Frist wird die Anfrage an weitere Partner im Gebiet weitergegeben.',
+        footnote: 'Sie erhalten diese Benachrichtigung, weil Ihr Einsatzgebiet die PLZ 40589 abdeckt. Zustellung im Portal unter Einstellungen anpassbar.',
+        specTrigger: 'Anfrage vermittelt', specTo: 'Alle passenden Partner', specDeadline: '8 Std., konfigurierbar', specAttach: 'keiner',
+        placeholders: '{{ sv_nachname }}\n{{ referenz }}\n{{ gutachtenart }}\n{{ plz }} {{ ort }}\n{{ fahrzeug }}\n{{ schadenart }}\n{{ frist }}'
+      },
+      3: {
+        num: '03', name: 'Annahme-Bestätigung', trigger: 'an den Kunden, bei Annahme',
+        to: 'm.reinhardt@web.de', subject: 'Ihr Sachverständiger steht fest — DKGZ-2026-04817',
+        preheader: 'Kfz-SV-Büro Reinhardt übernimmt Ihren Auftrag und meldet sich direkt bei Ihnen.',
+        eyebrow: 'Auftrag angenommen', headline: 'Ihr Sachverständiger steht fest.',
+        salutation: 'Guten Tag Frau Reinhardt,',
+        body1: 'ein Sachverständiger aus unserem Partnernetz hat Ihren Auftrag übernommen. Er meldet sich in den nächsten Stunden direkt bei Ihnen zur Terminabstimmung.',
+        body2: 'Ab jetzt läuft die Abstimmung unmittelbar zwischen Ihnen und dem Sachverständigen. DKGZ tritt nicht mehr dazwischen.',
+        refLabel: 'Ihre Vorgangsnummer', refValue: 'DKGZ-2026-04817',
+        dataTitle: 'Ihr Sachverständiger',
+        rows: [
+          { k: 'Büro', v: 'Kfz-Sachverständigenbüro Reinhardt', font: SANS },
+          { k: 'Ansprechpartner', v: 'Michael Reinhardt', font: SANS },
+          { k: 'Telefon', v: '+49 211 4470012', font: MONO },
+          { k: 'E-Mail', v: 'm.reinhardt@kfz-gutachten-d.de', font: SANS },
+          { k: 'Angenommen am', v: '17.08.2026 · 09:07', font: MONO }
+        ],
+        cta: 'Vorgang ansehen', ctaUrl: 'dkgz.de/vorgang/04817',
+        note: 'Der Sachverständige erbringt die Begutachtung in eigener Verantwortung. DKGZ hat ausschließlich vermittelt.',
+        footnote: 'Diese E-Mail wurde automatisch zu Ihrem Vorgang versendet. Bitte antworten Sie nicht auf diese Adresse.',
+        specTrigger: 'Partner nimmt an', specTo: 'Anfragende Person', specDeadline: 'keine', specAttach: 'keiner',
+        placeholders: '{{ anrede }} {{ nachname }}\n{{ referenz }}\n{{ sv_firma }}\n{{ sv_name }}\n{{ sv_telefon }} {{ sv_email }}\n{{ annahme_zeit }}'
+      },
+      4: {
+        num: '04', name: 'Abschluss und Unterlagen', trigger: 'an den Kunden, bei Abschluss',
+        to: 'm.reinhardt@web.de', subject: 'Ihr Gutachten liegt vor — DKGZ-2026-04817',
+        preheader: 'Gutachten und Rechnung sind hinterlegt. Der Vorgang ist damit abgeschlossen.',
+        eyebrow: 'Vorgang abgeschlossen', headline: 'Ihr Gutachten liegt vor.',
+        salutation: 'Guten Tag Frau Reinhardt,',
+        body1: 'der Sachverständige hat die Begutachtung abgeschlossen und die Unterlagen hinterlegt. Gutachten und Rechnung finden Sie im Anhang dieser E-Mail.',
+        body2: 'Bei Rückfragen zum Inhalt des Gutachtens wenden Sie sich bitte direkt an den Sachverständigen.',
+        refLabel: 'Ihre Vorgangsnummer', refValue: 'DKGZ-2026-04817',
+        dataTitle: 'Abschluss',
+        rows: [
+          { k: 'Sachverständiger', v: 'Kfz-Sachverständigenbüro Reinhardt', font: SANS },
+          { k: 'Art des Gutachtens', v: 'Unfallgutachten', font: SANS },
+          { k: 'Abgeschlossen am', v: '19.08.2026 · 16:44', font: MONO },
+          { k: 'Gutachten', v: 'Gutachten_DKGZ-2026-04817.pdf · 2,4 MB', font: SANS },
+          { k: 'Rechnung', v: 'Rechnung_04817.pdf · 318 KB', font: SANS },
+          { k: 'Honorar netto', v: '1.640,00 €', font: MONO }
+        ],
+        cta: 'Unterlagen herunterladen', ctaUrl: 'dkgz.de/vorgang/04817/unterlagen',
+        note: 'Die Rechnung stellt der Sachverständige. DKGZ ist nicht Vertragspartner der Begutachtung und stellt Ihnen keine Kosten in Rechnung.',
+        footnote: 'Die Unterlagen bleiben 90 Tage über den Link abrufbar. Bitte speichern Sie sie lokal.',
+        specTrigger: 'Auftrag abgeschlossen', specTo: 'Anfragende Person', specDeadline: 'Link 90 Tage', specAttach: 'Gutachten + Rechnung, PDF',
+        placeholders: '{{ anrede }} {{ nachname }}\n{{ referenz }}\n{{ sv_firma }}\n{{ abschluss_zeit }}\n{{ datei_gutachten }}\n{{ datei_rechnung }}\n{{ honorar }}'
+      },
+      5: {
+        num: '05', name: 'Bewertungsanfrage', trigger: 'an den Kunden, 3 Tage nach Abschluss',
+        to: 'm.reinhardt@web.de', subject: 'Wie zufrieden waren Sie? — DKGZ-2026-04817',
+        preheader: 'Eine Frage, zehn Sekunden. Ihre Bewertung wird nicht öffentlich angezeigt.',
+        eyebrow: 'Ihre Rückmeldung', headline: 'Wie zufrieden waren Sie mit dem vermittelten Sachverständigen?',
+        salutation: 'Guten Tag Frau Reinhardt,',
+        body1: 'Ihr Vorgang ist abgeschlossen. Wir möchten wissen, ob die Vermittlung für Sie funktioniert hat — die Antwort dauert weniger als zehn Sekunden.',
+        body2: 'Ihre Bewertung wird nicht öffentlich angezeigt. Sie hilft uns, den Standard im Partnernetz zu halten.',
+        hasRef: false,
+        dataTitle: 'Ihr Vorgang',
+        rows: [
+          { k: 'Referenz', v: 'DKGZ-2026-04817', font: MONO },
+          { k: 'Art des Gutachtens', v: 'Unfallgutachten', font: SANS },
+          { k: 'Sachverständiger', v: 'Kfz-Sachverständigenbüro Reinhardt', font: SANS },
+          { k: 'Abgeschlossen am', v: '19.08.2026', font: MONO }
+        ],
+        scale: true,
+        cta: 'Bewertung abgeben', ctaUrl: 'dkgz.de/bewertung/a41f9c',
+        note: 'Bei einer Bewertung von 7 oder weniger fragen wir in einem zweiten Schritt nach dem Grund. Diese Angaben sieht ausschließlich die DKGZ-Qualitätssicherung.',
+        footnote: 'Dieser Bewertungslink ist 30 Tage gültig und nur einmal verwendbar. Sie erhalten zu diesem Vorgang keine weitere Erinnerung.',
+        specTrigger: 'Abschluss + 3 Tage', specTo: 'Anfragende Person', specDeadline: 'Link 30 Tage', specAttach: 'keiner',
+        placeholders: '{{ anrede }} {{ nachname }}\n{{ referenz }}\n{{ gutachtenart }}\n{{ sv_firma }}\n{{ abschluss_datum }}\n{{ bewertung_token }}'
+      },
+      6: {
+        num: '06', name: 'Einladung als Partner', trigger: 'an den Sachverständigen, durch Administration',
+        to: 'j.ohlsen@sv-nordwest.de', subject: 'Einladung in das DKGZ-Partnernetz',
+        preheader: 'Richten Sie Ihren Zugang ein. Die Einladung ist 14 Tage gültig.',
+        eyebrow: 'Einladung', headline: 'Sie wurden in das DKGZ-Partnernetz eingeladen.',
+        salutation: 'Guten Tag Herr Ohlsen,',
+        body1: 'die Deutsche KFZ-Gutachterzentrale möchte Sie als Sachverständigen in ihr bundesweites Partnernetz aufnehmen. Richten Sie dazu Ihren Zugang ein und ergänzen Sie Einsatzgebiet und Leistungen.',
+        hasBody2: false,
+        refLabel: 'Ihre Partner-ID', refValue: 'DKGZ-SV-0163',
+        quote: '„Sehr geehrter Herr Ohlsen, wir würden Sie gern als Partner für den Raum Bremen und Oldenburg aufnehmen. Ihre Nachweise liegen uns bereits vor.“',
+        quoteBy: 'K. Ahrens · DKGZ Administration · 14.08.2026',
+        dataTitle: 'Konditionen',
+        rows: [
+          { k: 'Vermittlungsprovision', v: '15 % auf abgeschlossene Aufträge', font: SANS },
+          { k: 'Grundgebühr', v: 'keine', font: SANS },
+          { k: 'Kosten pro Anfrage', v: 'keine', font: SANS },
+          { k: 'Vertragslaufzeit', v: 'keine', font: SANS },
+          { k: 'Abrechnung', v: 'monatlich, Sammelrechnung', font: SANS }
+        ],
+        cta: 'Zugang einrichten', ctaUrl: 'portal.dkgz.de/einladung/7f2a91c4',
+        note: 'Diese Einladung ist 14 Tage gültig, bis zum 28.08.2026. Danach fordern Sie eine neue Einladung bei der Administration an.',
+        footnote: 'Sie erhalten diese E-Mail, weil die DKGZ-Administration Sie als Partner eingeladen hat. Wenn Sie kein Interesse haben, ignorieren Sie diese Nachricht.',
+        specTrigger: 'Admin lädt ein', specTo: 'Eingeladener Sachverständiger', specDeadline: 'Einladung 14 Tage', specAttach: 'keiner',
+        placeholders: '{{ anrede }} {{ nachname }}\n{{ partner_id }}\n{{ admin_nachricht }}\n{{ admin_name }} {{ admin_datum }}\n{{ provisionssatz }}\n{{ einladung_token }}\n{{ ablauf_datum }}'
+      }
+    };
+  }
+
+  renderVals() {
+    const s = this.state.mail;
+    const vals = {
+      isKit: s === 0, isMail: s !== 0,
+      g0: () => this.setState({ mail: 0 }),
+      k0: s === 0 ? '#14294A' : '#FFFFFF', f0: s === 0 ? '#FFFFFF' : '#5B687C'
+    };
+    for (let i = 1; i <= 6; i++) {
+      vals['g' + i] = () => this.setState({ mail: i });
+      vals['k' + i] = s === i ? '#14294A' : '#FFFFFF';
+      vals['f' + i] = s === i ? '#FFFFFF' : '#5B687C';
+    }
+    if (s === 0) return vals;
+
+    const d = this.data()[s];
+    return Object.assign(vals, {
+      num: d.num, name: d.name, trigger: d.trigger,
+      to: d.to, subject: d.subject, preheader: d.preheader,
+      eyebrow: d.eyebrow, headline: d.headline, salutation: d.salutation,
+      body1: d.body1, body2: d.body2 || '', hasBody2: d.hasBody2 !== false && !!d.body2,
+      hasRef: d.hasRef !== false && !!d.refValue, refLabel: d.refLabel || '', refValue: d.refValue || '',
+      hasData: !!d.rows, dataTitle: d.dataTitle || '', rows: d.rows || [],
+      hasTotal: !!d.totalValue, totalLabel: d.totalLabel || '', totalValue: d.totalValue || '',
+      hasMask: !!d.mask,
+      hasQuote: !!d.quote, quote: d.quote || '', quoteBy: d.quoteBy || '',
+      hasScale: !!d.scale,
+      cta: d.cta, ctaUrl: d.ctaUrl,
+      hasNote: !!d.note, note: d.note || '',
+      footnote: d.footnote,
+      specTrigger: d.specTrigger, specTo: d.specTo, specDeadline: d.specDeadline, specAttach: d.specAttach,
+      placeholders: d.placeholders
+    });
+  }
+}
+</script>
+</body>
+</html>

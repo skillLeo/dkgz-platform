@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<script src="https://unpkg.com/lucide@0.417.0/dist/umd/lucide.min.js"></script>
+<script src="./image-slot.js"></script>
+<style>
+:root{--dkgz-accent:#B08A2E}
+*{box-sizing:border-box}
+body{margin:0;background:#F1F3F7;color:#2E3A4C;font-family:'IBM Plex Sans','Helvetica Neue',Helvetica,Arial,sans-serif;font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+h1,h2,h3,h4,p{margin:0}
+a{color:#14294A;text-decoration:none;border-bottom:1px solid transparent}
+a:hover{color:#27508B}
+table{border-collapse:collapse}
+input,button{font-family:inherit}
+::selection{background:#E8EDF5}
+@keyframes dkgz-enter{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+</style>
+</helmet>
+
+<div style="background:#FFFFFF">
+
+<sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ true }}">
+<div style="background:#FFFFFF">
+
+  <div style="background:#0A1628;height:28px;display:flex;align-items:center">
+    <div style="max-width:1240px;margin:0 auto;padding:0 24px;width:100%;display:flex;align-items:center;justify-content:space-between;gap:24px">
+      <span style="font-size:12px;color:#CBD2DD;letter-spacing:0.01em">Bundesweites Netz geprüfter Kfz-Sachverständiger</span>
+      <div style="display:flex;align-items:center;gap:20px">
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#FFFFFF;font-variant-numeric:tabular-nums">+49 179 4480169</span>
+        <span style="width:1px;height:12px;background:rgba(255,255,255,0.22)"></span>
+        <span style="font-size:12px;color:#CBD2DD">Mo–Fr 08:00–18:00</span>
+        <sc-if value="{{ flagCue }}" hint-placeholder-val="{{ true }}">
+          <span style="display:flex;width:40px;height:3px;margin-left:4px"><span style="flex:1;background:#000000"></span><span style="flex:1;background:#DD0000"></span><span style="flex:1;background:#FFCE00"></span></span>
+        </sc-if>
+      </div>
+    </div>
+  </div>
+
+  <div style="background:#FFFFFF;border-bottom:1px solid #E3E7EE;position:sticky;top:0;z-index:20">
+    <div style="max-width:1240px;margin:0 auto;padding:0 24px;height:72px;display:flex;align-items:center;justify-content:space-between;gap:32px">
+      <div style="display:flex;align-items:center;gap:14px">
+        <div style="width:40px;height:40px;border-radius:50%;border:1px solid #14294A;display:grid;place-items:center;flex:none">
+          <div style="width:31px;height:31px;border-radius:50%;border:1px solid var(--dkgz-accent,#B08A2E);display:grid;place-items:center"><span style="font-size:7px;font-weight:700;letter-spacing:0.04em;color:#14294A">DKGZ</span></div>
+        </div>
+        <span style="font-size:24px;font-weight:700;letter-spacing:-0.022em;color:#14294A;line-height:1">DKGZ</span>
+        <span style="width:1px;height:26px;background:var(--dkgz-accent,#B08A2E)"></span>
+        <span style="font-size:9.5px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:#5B687C;line-height:1.5">Deutsche<br>KFZ-Gutachterzentrale</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:28px">
+        <a href="#leistungen" style="height:72px;display:inline-flex;align-items:center;white-space:nowrap;font-size:15px;font-weight:500;color:#2E3A4C;border-bottom:2px solid transparent;transition:border-color 140ms cubic-bezier(0.4,0,0.2,1),color 140ms cubic-bezier(0.4,0,0.2,1)" style-hover="border-bottom-color:#B08A2E;color:#14294A">Leistungen</a>
+        <a href="#ablauf" style="height:72px;display:inline-flex;align-items:center;white-space:nowrap;font-size:15px;font-weight:500;color:#2E3A4C;border-bottom:2px solid transparent;transition:border-color 140ms cubic-bezier(0.4,0,0.2,1),color 140ms cubic-bezier(0.4,0,0.2,1)" style-hover="border-bottom-color:#B08A2E;color:#14294A">Ablauf</a>
+        <a href="#sachverstaendige" style="height:72px;display:inline-flex;align-items:center;white-space:nowrap;font-size:15px;font-weight:500;color:#2E3A4C;border-bottom:2px solid transparent;transition:border-color 140ms cubic-bezier(0.4,0,0.2,1),color 140ms cubic-bezier(0.4,0,0.2,1)" style-hover="border-bottom-color:#B08A2E;color:#14294A">Für Sachverständige</a>
+        <a href="#ueber" style="height:72px;display:inline-flex;align-items:center;white-space:nowrap;font-size:15px;font-weight:500;color:#2E3A4C;border-bottom:2px solid transparent;transition:border-color 140ms cubic-bezier(0.4,0,0.2,1),color 140ms cubic-bezier(0.4,0,0.2,1)" style-hover="border-bottom-color:#B08A2E;color:#14294A">Über DKGZ</a>
+        <a href="#kontakt" style="height:72px;display:inline-flex;align-items:center;white-space:nowrap;font-size:15px;font-weight:500;color:#2E3A4C;border-bottom:2px solid transparent;transition:border-color 140ms cubic-bezier(0.4,0,0.2,1),color 140ms cubic-bezier(0.4,0,0.2,1)" style-hover="border-bottom-color:#B08A2E;color:#14294A">Kontakt</a>
+        <button type="button" style="height:40px;padding:0 18px;background:#14294A;color:#FFFFFF;border:1px solid #14294A;border-radius:3px;font-size:15px;font-weight:500;cursor:pointer;transition:background 140ms cubic-bezier(0.4,0,0.2,1);white-space:nowrap" style-hover="background:#27508B;border-color:#27508B">Anfrage starten</button>
+      </div>
+    </div>
+  </div>
+
+  <div style="animation:dkgz-enter 420ms cubic-bezier(0.4,0,0.2,1) both">
+    <div style="max-width:1240px;margin:0 auto;padding:96px 24px;display:grid;grid-template-columns:minmax(0,58fr) minmax(0,42fr);gap:64px;align-items:start">
+      <div>
+        <div style="font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:var(--dkgz-accent,#B08A2E)">Deutsche Kfz-Gutachterzentrale</div>
+        <div style="width:24px;height:2px;background:var(--dkgz-accent,#B08A2E);margin-top:10px"></div>
+        <h1 style="font-size:52px;line-height:1.06;font-weight:700;letter-spacing:-0.028em;color:#14294A;padding:32px 0 24px">Kfz-Gutachter finden.<br>Bundesweit koordiniert.<br>Ohne Umwege.</h1>
+        <p style="font-size:17px;line-height:1.65;color:#5B687C;max-width:62ch">Sie stellen eine Anfrage. Wir vermitteln sie automatisch an einen qualifizierten Sachverständigen in Ihrer Region. Kein Vergleichen, kein Warten auf mehrere Angebote.</p>
+
+        <div style="margin-top:40px;border:1px solid #CBD2DD;border-radius:5px;padding:20px;max-width:520px;background:#FFFFFF">
+          <label style="display:block;font-size:15px;font-weight:500;color:#2E3A4C;padding-bottom:8px">Ihre Postleitzahl</label>
+          <div style="display:flex;gap:12px">
+            <input type="text" placeholder="z. B. 40589" style="flex:1;min-width:0;height:48px;padding:0 14px;border:1px solid #CBD2DD;border-radius:3px;font-size:17px;color:#2E3A4C;background:#FFFFFF;outline:none;font-variant-numeric:tabular-nums">
+            <button type="button" style="height:48px;padding:0 22px;background:#14294A;color:#FFFFFF;border:1px solid #14294A;border-radius:3px;font-size:15px;font-weight:500;cursor:pointer;white-space:nowrap;transition:background 140ms cubic-bezier(0.4,0,0.2,1)" style-hover="background:#27508B;border-color:#27508B">Gutachter anfragen</button>
+          </div>
+        </div>
+        <div style="font-size:13.5px;color:#9AA5B4;padding-top:12px">Kostenlos und unverbindlich · Keine Registrierung erforderlich</div>
+      </div>
+
+      <div style="position:relative;padding-left:24px;padding-bottom:24px">
+        <div style="border:1px solid #E3E7EE;border-radius:5px;overflow:hidden;height:560px">
+          <image-slot id="dkgz-hero-sv" shape="rect" fit="cover" placeholder="Kfz-Sachverständiger dokumentiert einen Fahrzeugschaden — Klemmbrett oder Tablet, deutsche Werkstatt oder Außenaufnahme, kühl abgestimmt, unposiert. Hochformat 4:5."></image-slot>
+        </div>
+        <div style="position:absolute;left:0;bottom:0;background:#FFFFFF;border:1px solid #E3E7EE;border-radius:5px;box-shadow:0 1px 2px rgba(10,22,40,0.05);padding:16px 20px;display:flex;align-items:center;gap:14px">
+          <div style="width:44px;height:44px;border-radius:50%;border:1px solid #14294A;display:grid;place-items:center;flex:none">
+            <div style="width:34px;height:34px;border-radius:50%;border:1px solid var(--dkgz-accent,#B08A2E);display:grid;place-items:center"><span style="font-size:8px;font-weight:700;letter-spacing:0.04em;color:#14294A">DKGZ</span></div>
+          </div>
+          <div>
+            <div style="font-size:15px;font-weight:600;color:#14294A;line-height:1.4">Geprüfte Partner</div>
+            <div style="font-size:13.5px;color:#5B687C;line-height:1.4">Nach bundesweit einheitlichem Standard</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="background:#F8F9FB;border-top:1px solid #E3E7EE;border-bottom:1px solid #E3E7EE">
+    <div style="max-width:1240px;margin:0 auto;padding:32px 24px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr))">
+      <div style="padding-right:32px">
+        <div style="font-size:22px;line-height:1.3;font-weight:600;letter-spacing:-0.012em;color:#14294A;font-variant-numeric:tabular-nums">Bundesweit</div>
+        <div style="font-size:13.5px;color:#5B687C;padding-top:4px">Alle PLZ-Gebiete abgedeckt</div>
+      </div>
+      <div style="padding:0 32px;border-left:1px solid #E3E7EE">
+        <div style="font-size:22px;line-height:1.3;font-weight:600;letter-spacing:-0.012em;color:#14294A;font-variant-numeric:tabular-nums"><span data-countup="24">24</span> Std.</div>
+        <div style="font-size:13.5px;color:#5B687C;padding-top:4px">Durchschnittliche Rückmeldung</div>
+      </div>
+      <div style="padding:0 32px;border-left:1px solid #E3E7EE">
+        <div style="font-size:22px;line-height:1.3;font-weight:600;letter-spacing:-0.012em;color:#14294A;font-variant-numeric:tabular-nums">0 €</div>
+        <div style="font-size:13.5px;color:#5B687C;padding-top:4px">Kosten für die Vermittlung</div>
+      </div>
+      <div style="padding:0 0 0 32px;border-left:1px solid #E3E7EE">
+        <div style="font-size:22px;line-height:1.3;font-weight:600;letter-spacing:-0.012em;color:#14294A;font-variant-numeric:tabular-nums">1 Anfrage</div>
+        <div style="font-size:13.5px;color:#5B687C;padding-top:4px">Statt zehn Einzelanfragen</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="ablauf" style="background:#FFFFFF">
+    <div style="max-width:1240px;margin:0 auto;padding:96px 24px">
+      <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:48px;flex-wrap:wrap;padding-bottom:56px">
+        <h2 style="font-size:30px;line-height:1.2;font-weight:600;letter-spacing:-0.018em;color:#14294A">So funktioniert es</h2>
+        <p style="font-size:15px;line-height:1.6;color:#5B687C;max-width:52ch">Vier Schritte, keine Zwischenstellen. Die Koordination läuft im Hintergrund — Sie haben genau einen Ansprechpartner.</p>
+      </div>
+      <div style="border-top:1px solid #E3E7EE">
+        <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:32px">
+          <div>
+            <div style="width:28px;height:28px;border-radius:50%;background:#14294A;color:#FFFFFF;display:grid;place-items:center;font-family:'IBM Plex Mono',monospace;font-size:11.5px;font-weight:500;transform:translateY(-14px)">01</div>
+            <div style="font-size:17px;line-height:1.4;font-weight:600;color:#14294A;padding-top:10px">Anfrage stellen</div>
+            <p style="font-size:15px;line-height:1.6;color:#5B687C;padding-top:8px">Ein kurzes Formular, weniger als zwei Minuten.</p>
+          </div>
+          <div>
+            <div style="width:28px;height:28px;border-radius:50%;background:#14294A;color:#FFFFFF;display:grid;place-items:center;font-family:'IBM Plex Mono',monospace;font-size:11.5px;font-weight:500;transform:translateY(-14px)">02</div>
+            <div style="font-size:17px;line-height:1.4;font-weight:600;color:#14294A;padding-top:10px">Automatische Vermittlung</div>
+            <p style="font-size:15px;line-height:1.6;color:#5B687C;padding-top:8px">Ihre Anfrage geht sofort an passende Sachverständige in Ihrer Region.</p>
+          </div>
+          <div>
+            <div style="width:28px;height:28px;border-radius:50%;background:#14294A;color:#FFFFFF;display:grid;place-items:center;font-family:'IBM Plex Mono',monospace;font-size:11.5px;font-weight:500;transform:translateY(-14px)">03</div>
+            <div style="font-size:17px;line-height:1.4;font-weight:600;color:#14294A;padding-top:10px">Sachverständiger übernimmt</div>
+            <p style="font-size:15px;line-height:1.6;color:#5B687C;padding-top:8px">Der erste verfügbare Partner nimmt den Auftrag an. Alle anderen sind damit informiert.</p>
+          </div>
+          <div>
+            <div style="width:28px;height:28px;border-radius:50%;background:#14294A;color:#FFFFFF;display:grid;place-items:center;font-family:'IBM Plex Mono',monospace;font-size:11.5px;font-weight:500;transform:translateY(-14px)">04</div>
+            <div style="font-size:17px;line-height:1.4;font-weight:600;color:#14294A;padding-top:10px">Direkter Kontakt</div>
+            <p style="font-size:15px;line-height:1.6;color:#5B687C;padding-top:8px">Der Sachverständige meldet sich direkt bei Ihnen.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="leistungen" style="background:#FFFFFF;border-top:1px solid #E3E7EE">
+    <div style="max-width:1240px;margin:0 auto;padding:96px 24px;display:grid;grid-template-columns:380px minmax(0,1fr);gap:64px;align-items:start">
+      <div style="position:sticky;top:104px">
+        <h2 style="font-size:30px;line-height:1.2;font-weight:600;letter-spacing:-0.018em;color:#14294A">Leistungen</h2>
+        <p style="font-size:15px;line-height:1.6;color:#5B687C;padding-top:16px">Wir vermitteln für alle gängigen Gutachtenarten. Welche Leistung Sie benötigen, geben Sie in der Anfrage an — die Zuordnung übernimmt DKGZ.</p>
+        <button type="button" style="height:40px;padding:0 18px;margin-top:24px;background:#FFFFFF;color:#14294A;border:1px solid #14294A;border-radius:3px;font-size:15px;font-weight:500;cursor:pointer;transition:background 140ms cubic-bezier(0.4,0,0.2,1)" style-hover="background:#E8EDF5">Alle Leistungen ansehen</button>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px">
+        <div style="border:1px solid #E3E7EE;border-radius:5px;padding:16px;display:flex;gap:14px;transition:border-color 140ms cubic-bezier(0.4,0,0.2,1);cursor:pointer" style-hover="border-color:#14294A">
+          <span data-lucide="car" width="20" height="20" style="color:#14294A;flex:none;display:block;margin-top:2px"></span>
+          <div><div style="font-size:17px;line-height:1.4;font-weight:600;color:#14294A">Unfallgutachten</div><div style="font-size:13.5px;line-height:1.5;color:#5B687C;padding-top:4px">Schadenhöhe, Wertminderung und Ausfalldauer nach einem Verkehrsunfall.</div></div>
+        </div>
+        <div style="border:1px solid #E3E7EE;border-radius:5px;padding:16px;display:flex;gap:14px;transition:border-color 140ms cubic-bezier(0.4,0,0.2,1);cursor:pointer" style-hover="border-color:#14294A">
+          <span data-lucide="shield-check" width="20" height="20" style="color:#14294A;flex:none;display:block;margin-top:2px"></span>
+          <div><div style="font-size:17px;line-height:1.4;font-weight:600;color:#14294A">Haftpflichtgutachten</div><div style="font-size:13.5px;line-height:1.5;color:#5B687C;padding-top:4px">Unabhängige Feststellung gegenüber der Versicherung des Verursachers.</div></div>
+        </div>
+        <div style="border:1px solid #E3E7EE;border-radius:5px;padding:16px;display:flex;gap:14px;transition:border-color 140ms cubic-bezier(0.4,0,0.2,1);cursor:pointer" style-hover="border-color:#14294A">
+          <span data-lucide="shield" width="20" height="20" style="color:#14294A;flex:none;display:block;margin-top:2px"></span>
+          <div><div style="font-size:17px;line-height:1.4;font-weight:600;color:#14294A">Kaskogutachten</div><div style="font-size:13.5px;line-height:1.5;color:#5B687C;padding-top:4px">Schadenaufnahme nach Vorgaben der eigenen Kaskoversicherung.</div></div>
+        </div>
+        <div style="border:1px solid #E3E7EE;border-radius:5px;padding:16px;display:flex;gap:14px;transition:border-color 140ms cubic-bezier(0.4,0,0.2,1);cursor:pointer" style-hover="border-color:#14294A">
+          <span data-lucide="wrench" width="20" height="20" style="color:#14294A;flex:none;display:block;margin-top:2px"></span>
+          <div><div style="font-size:17px;line-height:1.4;font-weight:600;color:#14294A">Fahrzeugschadengutachten</div><div style="font-size:13.5px;line-height:1.5;color:#5B687C;padding-top:4px">Technische Bewertung von Schäden ohne Unfallbeteiligung Dritter.</div></div>
+        </div>
+        <div style="border:1px solid #E3E7EE;border-radius:5px;padding:16px;display:flex;gap:14px;transition:border-color 140ms cubic-bezier(0.4,0,0.2,1);cursor:pointer" style-hover="border-color:#14294A">
+          <span data-lucide="euro" width="20" height="20" style="color:#14294A;flex:none;display:block;margin-top:2px"></span>
+          <div><div style="font-size:17px;line-height:1.4;font-weight:600;color:#14294A">Wertgutachten</div><div style="font-size:13.5px;line-height:1.5;color:#5B687C;padding-top:4px">Belastbare Wertermittlung für Verkauf, Erbfall oder Finanzierung.</div></div>
+        </div>
+        <div style="border:1px solid #E3E7EE;border-radius:5px;padding:16px;display:flex;gap:14px;transition:border-color 140ms cubic-bezier(0.4,0,0.2,1);cursor:pointer" style-hover="border-color:#14294A">
+          <span data-lucide="history" width="20" height="20" style="color:#14294A;flex:none;display:block;margin-top:2px"></span>
+          <div><div style="font-size:17px;line-height:1.4;font-weight:600;color:#14294A">Oldtimergutachten</div><div style="font-size:13.5px;line-height:1.5;color:#5B687C;padding-top:4px">Zustandsnoten und Marktwert für Fahrzeuge mit historischem Wert.</div></div>
+        </div>
+        <div style="border:1px solid #E3E7EE;border-radius:5px;padding:16px;display:flex;gap:14px;transition:border-color 140ms cubic-bezier(0.4,0,0.2,1);cursor:pointer" style-hover="border-color:#14294A">
+          <span data-lucide="clipboard-check" width="20" height="20" style="color:#14294A;flex:none;display:block;margin-top:2px"></span>
+          <div><div style="font-size:17px;line-height:1.4;font-weight:600;color:#14294A">Gebrauchtwagen-Check</div><div style="font-size:13.5px;line-height:1.5;color:#5B687C;padding-top:4px">Technische Prüfung vor dem Kauf, mit schriftlichem Befund.</div></div>
+        </div>
+        <div style="border:1px solid #E3E7EE;border-radius:5px;padding:16px;display:flex;gap:14px;transition:border-color 140ms cubic-bezier(0.4,0,0.2,1);cursor:pointer" style-hover="border-color:#14294A">
+          <span data-lucide="camera" width="20" height="20" style="color:#14294A;flex:none;display:block;margin-top:2px"></span>
+          <div><div style="font-size:17px;line-height:1.4;font-weight:600;color:#14294A">Beweissicherung</div><div style="font-size:13.5px;line-height:1.5;color:#5B687C;padding-top:4px">Dokumentation des Fahrzeugzustands für spätere Auseinandersetzungen.</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="ueber" style="background:#0A1628;position:relative;overflow:hidden">
+    <div style="position:absolute;right:96px;top:96px;width:180px;height:180px;border-radius:50%;border:1px solid rgba(255,255,255,0.14);display:grid;place-items:center;pointer-events:none">
+      <div style="width:140px;height:140px;border-radius:50%;border:1px solid rgba(176,138,46,0.30);display:grid;place-items:center"><span style="font-size:26px;font-weight:700;letter-spacing:0.04em;color:rgba(255,255,255,0.10)">DKGZ</span></div>
+    </div>
+    <div style="max-width:1240px;margin:0 auto;padding:96px 24px;position:relative">
+      <h2 style="font-size:30px;line-height:1.2;font-weight:600;letter-spacing:-0.018em;color:#FFFFFF;max-width:22ch">Eine zentrale Stelle, kein Vergleichsportal</h2>
+      <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:48px;padding-top:64px;max-width:1000px">
+        <div>
+          <div style="width:24px;height:2px;background:var(--dkgz-accent,#B08A2E)"></div>
+          <div style="font-size:17px;line-height:1.4;font-weight:600;color:#FFFFFF;padding-top:16px">Ein Ansprechpartner</div>
+          <p style="font-size:15px;line-height:1.65;color:rgba(255,255,255,0.72);padding-top:8px">Sie stellen eine Anfrage an DKGZ und nicht an zehn Büros. Die Verteilung an geeignete Sachverständige übernimmt die Zentrale.</p>
+        </div>
+        <div>
+          <div style="width:24px;height:2px;background:var(--dkgz-accent,#B08A2E)"></div>
+          <div style="font-size:17px;line-height:1.4;font-weight:600;color:#FFFFFF;padding-top:16px">Keine Angebotsvergleiche</div>
+          <p style="font-size:15px;line-height:1.65;color:rgba(255,255,255,0.72);padding-top:8px">Es gibt keine Ausschreibung und keinen Preiswettbewerb. Der erste verfügbare Partner mit passender Qualifikation übernimmt.</p>
+        </div>
+        <div>
+          <div style="width:24px;height:2px;background:var(--dkgz-accent,#B08A2E)"></div>
+          <div style="font-size:17px;line-height:1.4;font-weight:600;color:#FFFFFF;padding-top:16px">Einheitlicher Standard</div>
+          <p style="font-size:15px;line-height:1.65;color:rgba(255,255,255,0.72);padding-top:8px">Alle Partner werden vor der Aufnahme geprüft und arbeiten nach denselben Anforderungen — in jedem PLZ-Gebiet gleich.</p>
+        </div>
+      </div>
+      <p style="font-size:13.5px;line-height:1.6;color:rgba(255,255,255,0.45);padding-top:48px;max-width:78ch;border-top:1px solid rgba(255,255,255,0.12);margin-top:48px">DKGZ vermittelt Sachverständige und erstellt selbst keine Gutachten. Die Begutachtung erbringt der vermittelte Sachverständige in eigener Verantwortung.</p>
+    </div>
+  </div>
+
+  <div id="sachverstaendige" style="background:#F8F9FB;border-bottom:1px solid #E3E7EE">
+    <div style="max-width:1240px;margin:0 auto;padding:96px 24px;display:grid;grid-template-columns:minmax(0,1fr) 420px;gap:64px;align-items:center">
+      <div>
+        <h2 style="font-size:30px;line-height:1.2;font-weight:600;letter-spacing:-0.018em;color:#14294A">Sie sind Kfz-Sachverständiger?</h2>
+        <div style="display:flex;flex-direction:column;gap:14px;padding-top:24px">
+          <div style="display:flex;align-items:flex-start;gap:12px"><span data-lucide="check" width="20" height="20" style="color:#14294A;flex:none;display:block;margin-top:2px"></span><span style="font-size:15px;line-height:1.6;color:#2E3A4C">Einsatzgebiet und Leistungen legen Sie selbst fest.</span></div>
+          <div style="display:flex;align-items:flex-start;gap:12px"><span data-lucide="check" width="20" height="20" style="color:#14294A;flex:none;display:block;margin-top:2px"></span><span style="font-size:15px;line-height:1.6;color:#2E3A4C">Passende Anfragen erhalten Sie im Portal und per E-Mail.</span></div>
+          <div style="display:flex;align-items:flex-start;gap:12px"><span data-lucide="check" width="20" height="20" style="color:#14294A;flex:none;display:block;margin-top:2px"></span><span style="font-size:15px;line-height:1.6;color:#2E3A4C">Jede Anfrage können Sie annehmen oder ablehnen — ohne Begründung.</span></div>
+        </div>
+      </div>
+      <div style="background:#FFFFFF;border:1px solid #E3E7EE;border-radius:5px;padding:24px">
+        <div style="font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C">Partnernetz</div>
+        <p style="font-size:15px;line-height:1.6;color:#2E3A4C;padding-top:12px">Die Vermittlungsprovision beträgt 15 % und wird ausschließlich auf abgeschlossene Aufträge berechnet. Keine Grundgebühr, keine Kosten für abgelehnte Anfragen.</p>
+        <button type="button" style="height:40px;padding:0 18px;margin-top:20px;background:#FFFFFF;color:#14294A;border:1px solid #14294A;border-radius:3px;font-size:15px;font-weight:500;cursor:pointer;transition:background 140ms cubic-bezier(0.4,0,0.2,1)" style-hover="background:#E8EDF5">Partner werden</button>
+      </div>
+    </div>
+  </div>
+
+  <div style="background:#FFFFFF">
+    <div style="max-width:1240px;margin:0 auto;padding:96px 24px;display:grid;grid-template-columns:380px minmax(0,1fr);gap:64px;align-items:start">
+      <div>
+        <h2 style="font-size:30px;line-height:1.2;font-weight:600;letter-spacing:-0.018em;color:#14294A">Häufige Fragen</h2>
+        <p style="font-size:15px;line-height:1.6;color:#5B687C;padding-top:16px">Weitere Fragen beantworten wir telefonisch, Mo–Fr von 08:00 bis 18:00 Uhr.</p>
+        <div style="display:flex;align-items:center;gap:10px;padding-top:16px">
+          <span data-lucide="phone" width="18" height="18" style="color:#14294A;flex:none;display:block"></span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:15px;color:#14294A;font-variant-numeric:tabular-nums">+49 179 4480169</span>
+        </div>
+      </div>
+      <div style="border-top:1px solid #E3E7EE">
+        <div style="border-bottom:1px solid #E3E7EE">
+          <button type="button" onClick="{{ t0 }}" style="width:100%;background:transparent;border:none;padding:20px 0;display:flex;align-items:center;justify-content:space-between;gap:24px;cursor:pointer;text-align:left">
+            <span style="font-size:17px;line-height:1.4;font-weight:600;color:#14294A">Was ist DKGZ?</span>
+            <span style="flex:none;display:block;transition:transform 180ms cubic-bezier(0.4,0,0.2,1);transform:rotate({{ r0 }})"><span data-lucide="chevron-down" width="20" height="20" style="color:#5B687C;display:block"></span></span>
+          </button>
+          <sc-if value="{{ o0 }}" hint-placeholder-val="{{ true }}"><p style="font-size:15px;line-height:1.65;color:#5B687C;padding:0 0 20px;max-width:68ch">DKGZ ist eine bundesweite Vermittlungsstelle für Kfz-Sachverständige. Wir nehmen Ihre Anfrage auf und leiten sie an qualifizierte Sachverständige weiter, deren Einsatzgebiet den Standort Ihres Fahrzeugs abdeckt.</p></sc-if>
+        </div>
+        <div style="border-bottom:1px solid #E3E7EE">
+          <button type="button" onClick="{{ t1 }}" style="width:100%;background:transparent;border:none;padding:20px 0;display:flex;align-items:center;justify-content:space-between;gap:24px;cursor:pointer;text-align:left">
+            <span style="font-size:17px;line-height:1.4;font-weight:600;color:#14294A">Ist die Anfrage kostenlos?</span>
+            <span style="flex:none;display:block;transition:transform 180ms cubic-bezier(0.4,0,0.2,1);transform:rotate({{ r1 }})"><span data-lucide="chevron-down" width="20" height="20" style="color:#5B687C;display:block"></span></span>
+          </button>
+          <sc-if value="{{ o1 }}" hint-placeholder-val="{{ false }}"><p style="font-size:15px;line-height:1.65;color:#5B687C;padding:0 0 20px;max-width:68ch">Ja. Anfrage und Vermittlung sind für Sie kostenfrei. Die Kosten eines anschließend beauftragten Gutachtens rechnet der Sachverständige direkt mit Ihnen oder der Versicherung ab.</p></sc-if>
+        </div>
+        <div style="border-bottom:1px solid #E3E7EE">
+          <button type="button" onClick="{{ t2 }}" style="width:100%;background:transparent;border:none;padding:20px 0;display:flex;align-items:center;justify-content:space-between;gap:24px;cursor:pointer;text-align:left">
+            <span style="font-size:17px;line-height:1.4;font-weight:600;color:#14294A">Erstellt DKGZ die Gutachten selbst?</span>
+            <span style="flex:none;display:block;transition:transform 180ms cubic-bezier(0.4,0,0.2,1);transform:rotate({{ r2 }})"><span data-lucide="chevron-down" width="20" height="20" style="color:#5B687C;display:block"></span></span>
+          </button>
+          <sc-if value="{{ o2 }}" hint-placeholder-val="{{ false }}"><p style="font-size:15px;line-height:1.65;color:#5B687C;padding:0 0 20px;max-width:68ch">Nein. Die Begutachtung erbringt ausschließlich der vermittelte Sachverständige in eigener Verantwortung. DKGZ koordiniert die Vermittlung.</p></sc-if>
+        </div>
+        <div style="border-bottom:1px solid #E3E7EE">
+          <button type="button" onClick="{{ t3 }}" style="width:100%;background:transparent;border:none;padding:20px 0;display:flex;align-items:center;justify-content:space-between;gap:24px;cursor:pointer;text-align:left">
+            <span style="font-size:17px;line-height:1.4;font-weight:600;color:#14294A">Muss ich ein Konto anlegen?</span>
+            <span style="flex:none;display:block;transition:transform 180ms cubic-bezier(0.4,0,0.2,1);transform:rotate({{ r3 }})"><span data-lucide="chevron-down" width="20" height="20" style="color:#5B687C;display:block"></span></span>
+          </button>
+          <sc-if value="{{ o3 }}" hint-placeholder-val="{{ false }}"><p style="font-size:15px;line-height:1.65;color:#5B687C;padding:0 0 20px;max-width:68ch">Nein. Es gibt keine Registrierung, kein Passwort und kein Kundenkonto. Sie erhalten eine Vorgangsnummer und werden per E-Mail informiert.</p></sc-if>
+        </div>
+        <div style="border-bottom:1px solid #E3E7EE">
+          <button type="button" onClick="{{ t4 }}" style="width:100%;background:transparent;border:none;padding:20px 0;display:flex;align-items:center;justify-content:space-between;gap:24px;cursor:pointer;text-align:left">
+            <span style="font-size:17px;line-height:1.4;font-weight:600;color:#14294A">Welche Gutachten werden vermittelt?</span>
+            <span style="flex:none;display:block;transition:transform 180ms cubic-bezier(0.4,0,0.2,1);transform:rotate({{ r4 }})"><span data-lucide="chevron-down" width="20" height="20" style="color:#5B687C;display:block"></span></span>
+          </button>
+          <sc-if value="{{ o4 }}" hint-placeholder-val="{{ false }}"><p style="font-size:15px;line-height:1.65;color:#5B687C;padding:0 0 20px;max-width:68ch">Unfall-, Haftpflicht-, Kasko- und Fahrzeugschadengutachten, Wertgutachten, Oldtimergutachten, Gebrauchtwagen-Checks und Beweissicherungen. Weitere Leistungen auf Anfrage.</p></sc-if>
+        </div>
+        <div style="border-bottom:1px solid #E3E7EE">
+          <button type="button" onClick="{{ t5 }}" style="width:100%;background:transparent;border:none;padding:20px 0;display:flex;align-items:center;justify-content:space-between;gap:24px;cursor:pointer;text-align:left">
+            <span style="font-size:17px;line-height:1.4;font-weight:600;color:#14294A">Wie schnell meldet sich ein Sachverständiger?</span>
+            <span style="flex:none;display:block;transition:transform 180ms cubic-bezier(0.4,0,0.2,1);transform:rotate({{ r5 }})"><span data-lucide="chevron-down" width="20" height="20" style="color:#5B687C;display:block"></span></span>
+          </button>
+          <sc-if value="{{ o5 }}" hint-placeholder-val="{{ false }}"><p style="font-size:15px;line-height:1.65;color:#5B687C;padding:0 0 20px;max-width:68ch">Sobald ein Partner die Anfrage annimmt, erhält er Ihre Kontaktdaten und meldet sich direkt bei Ihnen. In der Regel geschieht das innerhalb eines Werktages.</p></sc-if>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="kontakt" style="background:#0A1628">
+    <div style="max-width:1240px;margin:0 auto;padding:64px 24px">
+      <div style="display:grid;grid-template-columns:minmax(0,1.6fr) repeat(3,minmax(0,1fr));gap:48px">
+        <div>
+          <div style="display:flex;align-items:center;gap:12px">
+            <span style="font-size:22px;font-weight:700;letter-spacing:-0.022em;color:#FFFFFF;line-height:1">DKGZ</span>
+            <span style="width:1px;height:24px;background:var(--dkgz-accent,#B08A2E)"></span>
+            <span style="font-size:9.5px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:rgba(255,255,255,0.72);line-height:1.5">Deutsche<br>KFZ-Gutachterzentrale</span>
+          </div>
+          <p style="font-size:13.5px;line-height:1.65;color:rgba(255,255,255,0.60);padding-top:20px;max-width:44ch">Bundesweite Vermittlung von Kfz-Sachverständigen. Eine Anfrage, ein Ansprechpartner, geprüfte Partner in allen PLZ-Gebieten.</p>
+          <div style="display:flex;align-items:center;gap:20px;padding-top:20px">
+            <span style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#FFFFFF;font-variant-numeric:tabular-nums">+49 179 4480169</span>
+            <span style="width:1px;height:12px;background:rgba(255,255,255,0.22)"></span>
+            <span style="font-size:13.5px;color:rgba(255,255,255,0.60)">Mo–Fr 08:00–18:00</span>
+          </div>
+        </div>
+        <div>
+          <div style="font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:rgba(255,255,255,0.45);padding-bottom:16px">Leistungen</div>
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <a href="#leistungen" style="font-size:13.5px;color:rgba(255,255,255,0.72);border:none;transition:color 140ms cubic-bezier(0.4,0,0.2,1)" style-hover="color:#FFFFFF">Unfallgutachten</a>
+            <a href="#leistungen" style="font-size:13.5px;color:rgba(255,255,255,0.72);border:none;transition:color 140ms cubic-bezier(0.4,0,0.2,1)" style-hover="color:#FFFFFF">Haftpflichtgutachten</a>
+            <a href="#leistungen" style="font-size:13.5px;color:rgba(255,255,255,0.72);border:none;transition:color 140ms cubic-bezier(0.4,0,0.2,1)" style-hover="color:#FFFFFF">Wertgutachten</a>
+            <a href="#leistungen" style="font-size:13.5px;color:rgba(255,255,255,0.72);border:none;transition:color 140ms cubic-bezier(0.4,0,0.2,1)" style-hover="color:#FFFFFF">Oldtimergutachten</a>
+            <a href="#leistungen" style="font-size:13.5px;color:rgba(255,255,255,0.72);border:none;transition:color 140ms cubic-bezier(0.4,0,0.2,1)" style-hover="color:#FFFFFF">Alle Leistungen</a>
+          </div>
+        </div>
+        <div>
+          <div style="font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:rgba(255,255,255,0.45);padding-bottom:16px">Unternehmen</div>
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <a href="#ueber" style="font-size:13.5px;color:rgba(255,255,255,0.72);border:none;transition:color 140ms cubic-bezier(0.4,0,0.2,1)" style-hover="color:#FFFFFF">Über DKGZ</a>
+            <a href="#ablauf" style="font-size:13.5px;color:rgba(255,255,255,0.72);border:none;transition:color 140ms cubic-bezier(0.4,0,0.2,1)" style-hover="color:#FFFFFF">Ablauf</a>
+            <a href="#sachverstaendige" style="font-size:13.5px;color:rgba(255,255,255,0.72);border:none;transition:color 140ms cubic-bezier(0.4,0,0.2,1)" style-hover="color:#FFFFFF">Für Sachverständige</a>
+            <a href="#kontakt" style="font-size:13.5px;color:rgba(255,255,255,0.72);border:none;transition:color 140ms cubic-bezier(0.4,0,0.2,1)" style-hover="color:#FFFFFF">Partner-Portal</a>
+            <a href="#kontakt" style="font-size:13.5px;color:rgba(255,255,255,0.72);border:none;transition:color 140ms cubic-bezier(0.4,0,0.2,1)" style-hover="color:#FFFFFF">Kontakt</a>
+          </div>
+        </div>
+        <div>
+          <div style="font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:rgba(255,255,255,0.45);padding-bottom:16px">Rechtliches</div>
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <a href="#kontakt" style="font-size:13.5px;color:rgba(255,255,255,0.72);border:none;transition:color 140ms cubic-bezier(0.4,0,0.2,1)" style-hover="color:#FFFFFF">Impressum</a>
+            <a href="#kontakt" style="font-size:13.5px;color:rgba(255,255,255,0.72);border:none;transition:color 140ms cubic-bezier(0.4,0,0.2,1)" style-hover="color:#FFFFFF">Datenschutzerklärung</a>
+            <a href="#kontakt" style="font-size:13.5px;color:rgba(255,255,255,0.72);border:none;transition:color 140ms cubic-bezier(0.4,0,0.2,1)" style-hover="color:#FFFFFF">AGB</a>
+            <a href="#kontakt" style="font-size:13.5px;color:rgba(255,255,255,0.72);border:none;transition:color 140ms cubic-bezier(0.4,0,0.2,1)" style-hover="color:#FFFFFF">Vermittlungsbedingungen</a>
+          </div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap;border-top:1px solid rgba(255,255,255,0.12);margin-top:48px;padding-top:24px">
+        <span style="font-size:13.5px;color:rgba(255,255,255,0.45)">© 2026 DKGZ Deutsche KFZ-Gutachterzentrale</span>
+        <span style="font-size:13.5px;color:rgba(255,255,255,0.45);max-width:64ch">DKGZ ist eine Vermittlungsstelle. Das Gutachten erstellt der vermittelte Sachverständige.</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+</sc-if>
+
+<sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}">
+<div style="background:#F1F3F7;padding:32px 24px 64px;display:flex;justify-content:center">
+  <div style="width:390px">
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;padding-bottom:12px">
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#9AA5B4">Mobil · 390 px</span>
+      <button type="button" onClick="{{ toggleMenu }}" style="height:28px;padding:0 10px;background:#FFFFFF;color:#14294A;border:1px solid #CBD2DD;border-radius:3px;font-size:11.5px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;cursor:pointer">Menü umschalten</button>
+    </div>
+    <div style="background:#FFFFFF;border:1px solid #E3E7EE;position:relative;overflow:hidden">
+
+      <div style="background:#0A1628;padding:8px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px">
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#FFFFFF;font-variant-numeric:tabular-nums">+49 179 4480169</span>
+        <div style="display:flex;align-items:center;gap:10px">
+          <span style="font-size:11.5px;color:#CBD2DD">Mo–Fr 08–18 Uhr</span>
+          <sc-if value="{{ flagCue }}" hint-placeholder-val="{{ true }}">
+            <span style="display:flex;width:32px;height:3px"><span style="flex:1;background:#000000"></span><span style="flex:1;background:#DD0000"></span><span style="flex:1;background:#FFCE00"></span></span>
+          </sc-if>
+        </div>
+      </div>
+
+      <div style="height:64px;padding:0 20px;border-bottom:1px solid #E3E7EE;display:flex;align-items:center;justify-content:space-between;gap:16px">
+        <div style="display:flex;align-items:center;gap:10px">
+          <div style="width:32px;height:32px;border-radius:50%;border:1px solid #14294A;display:grid;place-items:center;flex:none">
+            <div style="width:25px;height:25px;border-radius:50%;border:1px solid var(--dkgz-accent,#B08A2E);display:grid;place-items:center"><span style="font-size:6px;font-weight:700;color:#14294A">DKGZ</span></div>
+          </div>
+          <span style="font-size:20px;font-weight:700;letter-spacing:-0.022em;color:#14294A;line-height:1">DKGZ</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:16px">
+          <span data-lucide="phone" width="22" height="22" style="color:#14294A;display:block"></span>
+          <button type="button" onClick="{{ toggleMenu }}" style="width:44px;height:44px;background:transparent;border:none;display:grid;place-items:center;cursor:pointer;color:#14294A"><span data-lucide="menu" width="24" height="24" style="display:block"></span></button>
+        </div>
+      </div>
+
+      <div style="padding:40px 20px 56px">
+        <div style="font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:var(--dkgz-accent,#B08A2E)">Deutsche Kfz-Gutachterzentrale</div>
+        <div style="width:24px;height:2px;background:var(--dkgz-accent,#B08A2E);margin-top:10px"></div>
+        <h1 style="font-size:34px;line-height:1.1;font-weight:700;letter-spacing:-0.026em;color:#14294A;padding:24px 0 16px">Kfz-Gutachter finden. Bundesweit koordiniert.</h1>
+        <p style="font-size:15px;line-height:1.6;color:#5B687C">Sie stellen eine Anfrage. Wir vermitteln sie automatisch an einen qualifizierten Sachverständigen in Ihrer Region.</p>
+        <div style="margin-top:24px;border:1px solid #CBD2DD;border-radius:5px;padding:16px">
+          <label style="display:block;font-size:15px;font-weight:500;color:#2E3A4C;padding-bottom:8px">Ihre Postleitzahl</label>
+          <input type="text" placeholder="z. B. 40589" style="width:100%;height:48px;padding:0 14px;border:1px solid #CBD2DD;border-radius:3px;font-size:17px;color:#2E3A4C;background:#FFFFFF;outline:none;font-variant-numeric:tabular-nums">
+          <button type="button" style="width:100%;height:48px;margin-top:12px;background:#14294A;color:#FFFFFF;border:1px solid #14294A;border-radius:3px;font-size:15px;font-weight:500;cursor:pointer">Gutachter anfragen</button>
+        </div>
+        <div style="font-size:13.5px;color:#9AA5B4;padding-top:12px">Kostenlos · Keine Registrierung erforderlich</div>
+        <div style="position:relative;margin-top:32px;padding-bottom:24px">
+          <div style="border:1px solid #E3E7EE;border-radius:5px;overflow:hidden;height:280px">
+            <image-slot id="dkgz-hero-sv-mobil" shape="rect" fit="cover" placeholder="Gleiches Motiv wie Desktop, Querformat 3:2"></image-slot>
+          </div>
+          <div style="position:absolute;left:12px;bottom:0;background:#FFFFFF;border:1px solid #E3E7EE;border-radius:5px;box-shadow:0 1px 2px rgba(10,22,40,0.05);padding:10px 14px;display:flex;align-items:center;gap:10px">
+            <div style="width:32px;height:32px;border-radius:50%;border:1px solid #14294A;display:grid;place-items:center;flex:none"><div style="width:25px;height:25px;border-radius:50%;border:1px solid var(--dkgz-accent,#B08A2E)"></div></div>
+            <div><div style="font-size:13.5px;font-weight:600;color:#14294A;line-height:1.3">Geprüfte Partner</div><div style="font-size:11.5px;color:#5B687C;line-height:1.3">Bundesweit einheitlicher Standard</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div style="background:#F8F9FB;border-top:1px solid #E3E7EE;border-bottom:1px solid #E3E7EE;padding:8px 20px">
+        <div style="display:flex;align-items:baseline;justify-content:space-between;gap:16px;padding:12px 0;border-bottom:1px solid #E3E7EE">
+          <span style="font-size:17px;font-weight:600;color:#14294A">Bundesweit</span><span style="font-size:13.5px;color:#5B687C">Alle PLZ-Gebiete abgedeckt</span>
+        </div>
+        <div style="display:flex;align-items:baseline;justify-content:space-between;gap:16px;padding:12px 0;border-bottom:1px solid #E3E7EE">
+          <span style="font-size:17px;font-weight:600;color:#14294A;font-variant-numeric:tabular-nums">24 Std.</span><span style="font-size:13.5px;color:#5B687C">Durchschnittliche Rückmeldung</span>
+        </div>
+        <div style="display:flex;align-items:baseline;justify-content:space-between;gap:16px;padding:12px 0;border-bottom:1px solid #E3E7EE">
+          <span style="font-size:17px;font-weight:600;color:#14294A;font-variant-numeric:tabular-nums">0 €</span><span style="font-size:13.5px;color:#5B687C">Kosten für die Vermittlung</span>
+        </div>
+        <div style="display:flex;align-items:baseline;justify-content:space-between;gap:16px;padding:12px 0">
+          <span style="font-size:17px;font-weight:600;color:#14294A;font-variant-numeric:tabular-nums">1 Anfrage</span><span style="font-size:13.5px;color:#5B687C">Statt zehn Einzelanfragen</span>
+        </div>
+      </div>
+
+      <div style="padding:56px 20px">
+        <h2 style="font-size:24px;line-height:1.2;font-weight:600;letter-spacing:-0.018em;color:#14294A">So funktioniert es</h2>
+        <div style="display:flex;flex-direction:column;padding-top:24px">
+          <div style="display:grid;grid-template-columns:28px minmax(0,1fr);gap:16px">
+            <div style="display:flex;flex-direction:column;align-items:center"><span style="width:28px;height:28px;border-radius:50%;background:#14294A;color:#FFFFFF;display:grid;place-items:center;font-family:'IBM Plex Mono',monospace;font-size:11.5px;flex:none">01</span><span style="width:1px;flex:1;background:#E3E7EE"></span></div>
+            <div style="padding-bottom:24px"><div style="font-size:17px;font-weight:600;color:#14294A">Anfrage stellen</div><p style="font-size:15px;line-height:1.6;color:#5B687C;padding-top:4px">Ein kurzes Formular, weniger als zwei Minuten.</p></div>
+          </div>
+          <div style="display:grid;grid-template-columns:28px minmax(0,1fr);gap:16px">
+            <div style="display:flex;flex-direction:column;align-items:center"><span style="width:28px;height:28px;border-radius:50%;background:#14294A;color:#FFFFFF;display:grid;place-items:center;font-family:'IBM Plex Mono',monospace;font-size:11.5px;flex:none">02</span><span style="width:1px;flex:1;background:#E3E7EE"></span></div>
+            <div style="padding-bottom:24px"><div style="font-size:17px;font-weight:600;color:#14294A">Automatische Vermittlung</div><p style="font-size:15px;line-height:1.6;color:#5B687C;padding-top:4px">Ihre Anfrage geht sofort an passende Sachverständige in Ihrer Region.</p></div>
+          </div>
+          <div style="display:grid;grid-template-columns:28px minmax(0,1fr);gap:16px">
+            <div style="display:flex;flex-direction:column;align-items:center"><span style="width:28px;height:28px;border-radius:50%;background:#14294A;color:#FFFFFF;display:grid;place-items:center;font-family:'IBM Plex Mono',monospace;font-size:11.5px;flex:none">03</span><span style="width:1px;flex:1;background:#E3E7EE"></span></div>
+            <div style="padding-bottom:24px"><div style="font-size:17px;font-weight:600;color:#14294A">Sachverständiger übernimmt</div><p style="font-size:15px;line-height:1.6;color:#5B687C;padding-top:4px">Der erste verfügbare Partner nimmt den Auftrag an.</p></div>
+          </div>
+          <div style="display:grid;grid-template-columns:28px minmax(0,1fr);gap:16px">
+            <div style="display:flex;flex-direction:column;align-items:center"><span style="width:28px;height:28px;border-radius:50%;background:#14294A;color:#FFFFFF;display:grid;place-items:center;font-family:'IBM Plex Mono',monospace;font-size:11.5px;flex:none">04</span></div>
+            <div><div style="font-size:17px;font-weight:600;color:#14294A">Direkter Kontakt</div><p style="font-size:15px;line-height:1.6;color:#5B687C;padding-top:4px">Der Sachverständige meldet sich direkt bei Ihnen.</p></div>
+          </div>
+        </div>
+      </div>
+
+      <div style="padding:0 20px 56px">
+        <h2 style="font-size:24px;line-height:1.2;font-weight:600;letter-spacing:-0.018em;color:#14294A">Leistungen</h2>
+        <div style="display:flex;flex-direction:column;gap:12px;padding-top:20px">
+          <div style="border:1px solid #E3E7EE;border-radius:5px;padding:14px;display:flex;gap:12px"><span data-lucide="car" width="20" height="20" style="color:#14294A;flex:none;display:block;margin-top:2px"></span><div><div style="font-size:15px;font-weight:600;color:#14294A">Unfallgutachten</div><div style="font-size:13.5px;color:#5B687C">Nach einem Verkehrsunfall</div></div></div>
+          <div style="border:1px solid #E3E7EE;border-radius:5px;padding:14px;display:flex;gap:12px"><span data-lucide="shield-check" width="20" height="20" style="color:#14294A;flex:none;display:block;margin-top:2px"></span><div><div style="font-size:15px;font-weight:600;color:#14294A">Haftpflichtgutachten</div><div style="font-size:13.5px;color:#5B687C">Gegenüber der Versicherung des Verursachers</div></div></div>
+          <div style="border:1px solid #E3E7EE;border-radius:5px;padding:14px;display:flex;gap:12px"><span data-lucide="wrench" width="20" height="20" style="color:#14294A;flex:none;display:block;margin-top:2px"></span><div><div style="font-size:15px;font-weight:600;color:#14294A">Fahrzeugschadengutachten</div><div style="font-size:13.5px;color:#5B687C">Technische Bewertung von Schäden</div></div></div>
+          <div style="border:1px solid #E3E7EE;border-radius:5px;padding:14px;display:flex;gap:12px"><span data-lucide="euro" width="20" height="20" style="color:#14294A;flex:none;display:block;margin-top:2px"></span><div><div style="font-size:15px;font-weight:600;color:#14294A">Wertgutachten</div><div style="font-size:13.5px;color:#5B687C">Wertermittlung für Verkauf oder Erbfall</div></div></div>
+        </div>
+        <button type="button" style="width:100%;height:44px;margin-top:16px;background:#FFFFFF;color:#14294A;border:1px solid #14294A;border-radius:3px;font-size:15px;font-weight:500;cursor:pointer">Alle Leistungen ansehen</button>
+      </div>
+
+      <div style="background:#0A1628;padding:56px 20px">
+        <h2 style="font-size:24px;line-height:1.2;font-weight:600;letter-spacing:-0.018em;color:#FFFFFF">Eine zentrale Stelle, kein Vergleichsportal</h2>
+        <div style="display:flex;flex-direction:column;gap:32px;padding-top:32px">
+          <div><div style="width:24px;height:2px;background:var(--dkgz-accent,#B08A2E)"></div><div style="font-size:17px;font-weight:600;color:#FFFFFF;padding-top:12px">Ein Ansprechpartner</div><p style="font-size:15px;line-height:1.6;color:rgba(255,255,255,0.72);padding-top:6px">Eine Anfrage an DKGZ statt zehn Anfragen an einzelne Büros.</p></div>
+          <div><div style="width:24px;height:2px;background:var(--dkgz-accent,#B08A2E)"></div><div style="font-size:17px;font-weight:600;color:#FFFFFF;padding-top:12px">Keine Angebotsvergleiche</div><p style="font-size:15px;line-height:1.6;color:rgba(255,255,255,0.72);padding-top:6px">Kein Preiswettbewerb, keine Ausschreibung.</p></div>
+          <div><div style="width:24px;height:2px;background:var(--dkgz-accent,#B08A2E)"></div><div style="font-size:17px;font-weight:600;color:#FFFFFF;padding-top:12px">Einheitlicher Standard</div><p style="font-size:15px;line-height:1.6;color:rgba(255,255,255,0.72);padding-top:6px">Alle Partner werden vor der Aufnahme geprüft.</p></div>
+        </div>
+      </div>
+
+      <div style="background:#F8F9FB;border-top:1px solid #E3E7EE;padding:56px 20px">
+        <h2 style="font-size:24px;line-height:1.2;font-weight:600;letter-spacing:-0.018em;color:#14294A">Sie sind Kfz-Sachverständiger?</h2>
+        <div style="display:flex;flex-direction:column;gap:12px;padding-top:20px">
+          <div style="display:flex;align-items:flex-start;gap:10px"><span data-lucide="check" width="20" height="20" style="color:#14294A;flex:none;display:block;margin-top:2px"></span><span style="font-size:15px;line-height:1.6;color:#2E3A4C">Einsatzgebiet und Leistungen legen Sie selbst fest.</span></div>
+          <div style="display:flex;align-items:flex-start;gap:10px"><span data-lucide="check" width="20" height="20" style="color:#14294A;flex:none;display:block;margin-top:2px"></span><span style="font-size:15px;line-height:1.6;color:#2E3A4C">Passende Anfragen im Portal und per E-Mail.</span></div>
+          <div style="display:flex;align-items:flex-start;gap:10px"><span data-lucide="check" width="20" height="20" style="color:#14294A;flex:none;display:block;margin-top:2px"></span><span style="font-size:15px;line-height:1.6;color:#2E3A4C">15 % Provision, nur auf abgeschlossene Aufträge.</span></div>
+        </div>
+        <button type="button" style="width:100%;height:44px;margin-top:20px;background:#FFFFFF;color:#14294A;border:1px solid #14294A;border-radius:3px;font-size:15px;font-weight:500;cursor:pointer">Partner werden</button>
+      </div>
+
+      <div style="padding:56px 20px">
+        <h2 style="font-size:24px;line-height:1.2;font-weight:600;letter-spacing:-0.018em;color:#14294A;padding-bottom:8px">Häufige Fragen</h2>
+        <div style="border-top:1px solid #E3E7EE">
+          <div style="border-bottom:1px solid #E3E7EE">
+            <button type="button" onClick="{{ t0 }}" style="width:100%;background:transparent;border:none;padding:16px 0;display:flex;align-items:center;justify-content:space-between;gap:16px;cursor:pointer;text-align:left"><span style="font-size:15px;font-weight:600;color:#14294A">Was ist DKGZ?</span><span style="flex:none;display:block;transition:transform 180ms cubic-bezier(0.4,0,0.2,1);transform:rotate({{ r0 }})"><span data-lucide="chevron-down" width="20" height="20" style="color:#5B687C;display:block"></span></span></button>
+            <sc-if value="{{ o0 }}" hint-placeholder-val="{{ true }}"><p style="font-size:15px;line-height:1.6;color:#5B687C;padding:0 0 16px">DKGZ ist eine bundesweite Vermittlungsstelle für Kfz-Sachverständige.</p></sc-if>
+          </div>
+          <div style="border-bottom:1px solid #E3E7EE">
+            <button type="button" onClick="{{ t1 }}" style="width:100%;background:transparent;border:none;padding:16px 0;display:flex;align-items:center;justify-content:space-between;gap:16px;cursor:pointer;text-align:left"><span style="font-size:15px;font-weight:600;color:#14294A">Ist die Anfrage kostenlos?</span><span style="flex:none;display:block;transition:transform 180ms cubic-bezier(0.4,0,0.2,1);transform:rotate({{ r1 }})"><span data-lucide="chevron-down" width="20" height="20" style="color:#5B687C;display:block"></span></span></button>
+            <sc-if value="{{ o1 }}" hint-placeholder-val="{{ false }}"><p style="font-size:15px;line-height:1.6;color:#5B687C;padding:0 0 16px">Ja. Anfrage und Vermittlung sind für Sie kostenfrei.</p></sc-if>
+          </div>
+          <div style="border-bottom:1px solid #E3E7EE">
+            <button type="button" onClick="{{ t2 }}" style="width:100%;background:transparent;border:none;padding:16px 0;display:flex;align-items:center;justify-content:space-between;gap:16px;cursor:pointer;text-align:left"><span style="font-size:15px;font-weight:600;color:#14294A">Erstellt DKGZ die Gutachten selbst?</span><span style="flex:none;display:block;transition:transform 180ms cubic-bezier(0.4,0,0.2,1);transform:rotate({{ r2 }})"><span data-lucide="chevron-down" width="20" height="20" style="color:#5B687C;display:block"></span></span></button>
+            <sc-if value="{{ o2 }}" hint-placeholder-val="{{ false }}"><p style="font-size:15px;line-height:1.6;color:#5B687C;padding:0 0 16px">Nein. Die Begutachtung erbringt der vermittelte Sachverständige.</p></sc-if>
+          </div>
+          <div style="border-bottom:1px solid #E3E7EE">
+            <button type="button" onClick="{{ t3 }}" style="width:100%;background:transparent;border:none;padding:16px 0;display:flex;align-items:center;justify-content:space-between;gap:16px;cursor:pointer;text-align:left"><span style="font-size:15px;font-weight:600;color:#14294A">Muss ich ein Konto anlegen?</span><span style="flex:none;display:block;transition:transform 180ms cubic-bezier(0.4,0,0.2,1);transform:rotate({{ r3 }})"><span data-lucide="chevron-down" width="20" height="20" style="color:#5B687C;display:block"></span></span></button>
+            <sc-if value="{{ o3 }}" hint-placeholder-val="{{ false }}"><p style="font-size:15px;line-height:1.6;color:#5B687C;padding:0 0 16px">Nein. Keine Registrierung, kein Passwort, kein Kundenkonto.</p></sc-if>
+          </div>
+        </div>
+      </div>
+
+      <div style="background:#0A1628;padding:40px 20px">
+        <div style="display:flex;align-items:center;gap:10px">
+          <span style="font-size:20px;font-weight:700;letter-spacing:-0.022em;color:#FFFFFF;line-height:1">DKGZ</span>
+          <span style="width:1px;height:22px;background:var(--dkgz-accent,#B08A2E)"></span>
+          <span style="font-size:9px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:rgba(255,255,255,0.72);line-height:1.5">Deutsche<br>KFZ-Gutachterzentrale</span>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;padding-top:32px">
+          <div>
+            <div style="font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:rgba(255,255,255,0.45);padding-bottom:12px">Kunden</div>
+            <div style="display:flex;flex-direction:column;gap:8px">
+              <a href="#leistungen" style="font-size:13.5px;color:rgba(255,255,255,0.72);border:none">Leistungen</a>
+              <a href="#ablauf" style="font-size:13.5px;color:rgba(255,255,255,0.72);border:none">Ablauf</a>
+              <a href="#kontakt" style="font-size:13.5px;color:rgba(255,255,255,0.72);border:none">Kontakt</a>
+            </div>
+          </div>
+          <div>
+            <div style="font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:rgba(255,255,255,0.45);padding-bottom:12px">Rechtliches</div>
+            <div style="display:flex;flex-direction:column;gap:8px">
+              <a href="#kontakt" style="font-size:13.5px;color:rgba(255,255,255,0.72);border:none">Impressum</a>
+              <a href="#kontakt" style="font-size:13.5px;color:rgba(255,255,255,0.72);border:none">Datenschutz</a>
+              <a href="#kontakt" style="font-size:13.5px;color:rgba(255,255,255,0.72);border:none">AGB</a>
+            </div>
+          </div>
+        </div>
+        <div style="border-top:1px solid rgba(255,255,255,0.12);margin-top:32px;padding-top:16px">
+          <span style="font-size:11.5px;color:rgba(255,255,255,0.45)">© 2026 DKGZ · Vermittlungsstelle, keine eigene Begutachtung</span>
+        </div>
+      </div>
+
+      <sc-if value="{{ menuOpen }}" hint-placeholder-val="{{ false }}">
+        <div style="position:absolute;inset:0;background:#0A1628;z-index:30;padding:20px;display:flex;flex-direction:column">
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;height:44px">
+            <span style="font-size:20px;font-weight:700;letter-spacing:-0.022em;color:#FFFFFF;line-height:1">DKGZ</span>
+            <button type="button" onClick="{{ toggleMenu }}" style="width:44px;height:44px;background:transparent;border:none;display:grid;place-items:center;cursor:pointer;color:#FFFFFF"><span data-lucide="x" width="24" height="24" style="display:block"></span></button>
+          </div>
+          <div style="display:flex;flex-direction:column;padding-top:32px">
+            <a href="#leistungen" onClick="{{ toggleMenu }}" style="font-size:22px;font-weight:600;letter-spacing:-0.012em;color:#FFFFFF;border-bottom:1px solid rgba(255,255,255,0.12);padding:18px 0">Leistungen</a>
+            <a href="#ablauf" onClick="{{ toggleMenu }}" style="font-size:22px;font-weight:600;letter-spacing:-0.012em;color:#FFFFFF;border-bottom:1px solid rgba(255,255,255,0.12);padding:18px 0">Ablauf</a>
+            <a href="#sachverstaendige" onClick="{{ toggleMenu }}" style="font-size:22px;font-weight:600;letter-spacing:-0.012em;color:#FFFFFF;border-bottom:1px solid rgba(255,255,255,0.12);padding:18px 0">Für Sachverständige</a>
+            <a href="#ueber" onClick="{{ toggleMenu }}" style="font-size:22px;font-weight:600;letter-spacing:-0.012em;color:#FFFFFF;border-bottom:1px solid rgba(255,255,255,0.12);padding:18px 0">Über DKGZ</a>
+            <a href="#kontakt" onClick="{{ toggleMenu }}" style="font-size:22px;font-weight:600;letter-spacing:-0.012em;color:#FFFFFF;border-bottom:1px solid rgba(255,255,255,0.12);padding:18px 0">Kontakt</a>
+          </div>
+          <div style="margin-top:auto">
+            <button type="button" style="width:100%;height:48px;background:#FFFFFF;color:#14294A;border:1px solid #FFFFFF;border-radius:3px;font-size:15px;font-weight:500;cursor:pointer">Anfrage starten</button>
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;padding-top:20px">
+              <span style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#FFFFFF;font-variant-numeric:tabular-nums">+49 179 4480169</span>
+              <span style="font-size:13.5px;color:rgba(255,255,255,0.60)">Mo–Fr 08:00–18:00</span>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+
+    </div>
+  </div>
+</div>
+</sc-if>
+
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{
+  &quot;view&quot;: {
+    &quot;editor&quot;: &quot;enum&quot;,
+    &quot;default&quot;: &quot;Desktop&quot;,
+    &quot;tsType&quot;: &quot;string&quot;,
+    &quot;options&quot;: [&quot;Desktop&quot;, &quot;Mobil&quot;],
+    &quot;section&quot;: &quot;Ansicht&quot;
+  },
+  &quot;accent&quot;: {
+    &quot;editor&quot;: &quot;color&quot;,
+    &quot;default&quot;: &quot;#B08A2E&quot;,
+    &quot;tsType&quot;: &quot;string&quot;,
+    &quot;options&quot;: [&quot;#B08A2E&quot;, &quot;#8C6D22&quot;, &quot;#A28B5B&quot;, &quot;#14294A&quot;],
+    &quot;section&quot;: &quot;Marke&quot;
+  },
+  &quot;flagCue&quot;: {
+    &quot;editor&quot;: &quot;boolean&quot;,
+    &quot;default&quot;: true,
+    &quot;tsType&quot;: &quot;boolean&quot;,
+    &quot;section&quot;: &quot;Marke&quot;
+  }
+}">
+class Component extends DCLogic {
+  state = { open: 0, menuOpen: false };
+
+  componentDidMount() {
+    this.sync();
+    this.countUp();
+  }
+  componentDidUpdate() { this.sync(); }
+  componentWillUnmount() { if (this._t) clearTimeout(this._t); }
+
+  sync() {
+    document.documentElement.style.setProperty('--dkgz-accent', this.props.accent || '#B08A2E');
+    this.paintIcons();
+  }
+
+  paintIcons() {
+    if (this._t) clearTimeout(this._t);
+    let tries = 0;
+    const go = () => {
+      if (window.lucide && window.lucide.createIcons) {
+        try {
+          window.lucide.createIcons({ attrs: { width: 20, height: 20, 'stroke-width': 1.5, 'aria-hidden': 'true' } });
+        } catch (e) {}
+        return;
+      }
+      if (tries++ < 80) this._t = setTimeout(go, 100);
+    };
+    go();
+  }
+
+  countUp() {
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    if (document.hidden) {
+      // rAF is frozen in a hidden tab — leave the final figure in place and try again when visible.
+      if (!this._visHooked) {
+        this._visHooked = true;
+        document.addEventListener('visibilitychange', () => { if (!document.hidden) this.countUp(); }, { once: true });
+      }
+      return;
+    }
+    document.querySelectorAll('[data-countup]').forEach(el => {
+      const target = parseInt(el.getAttribute('data-countup'), 10);
+      if (!target || el.dataset.counted === '1') return;
+      el.dataset.counted = '1';
+      const start = performance.now();
+      const step = now => {
+        const p = Math.min((now - start) / 900, 1);
+        const eased = 1 - Math.pow(1 - p, 3);
+        el.textContent = String(p < 1 ? Math.round(target * eased) : target);
+        if (p < 1) requestAnimationFrame(step);
+      };
+      el.textContent = '0';
+      requestAnimationFrame(step);
+    });
+  }
+
+  toggle(i) {
+    this.setState(s => ({ open: s.open === i ? -1 : i }));
+  }
+
+  renderVals() {
+    const view = this.props.view || 'Desktop';
+    const open = this.state.open;
+    const vals = {
+      isDesktop: view === 'Desktop',
+      isMobile: view === 'Mobil',
+      flagCue: this.props.flagCue !== false,
+      menuOpen: this.state.menuOpen,
+      toggleMenu: () => this.setState(s => ({ menuOpen: !s.menuOpen }))
+    };
+    for (let i = 0; i < 6; i++) {
+      vals['o' + i] = open === i;
+      vals['r' + i] = open === i ? '180deg' : '0deg';
+      vals['t' + i] = () => this.toggle(i);
+    }
+    return vals;
+  }
+}
+</script>
+</body>
+</html>

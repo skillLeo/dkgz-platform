@@ -1,0 +1,1210 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<script src="https://unpkg.com/lucide@0.417.0/dist/umd/lucide.min.js"></script>
+<style>
+:root{--dkgz-accent:#B08A2E}
+*{box-sizing:border-box}
+body{margin:0;background:#FFFFFF;color:#2E3A4C;font-family:'IBM Plex Sans','Helvetica Neue',Helvetica,Arial,sans-serif;font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+h1,h2,h3,h4,p{margin:0}
+a{color:#14294A;text-decoration:none;border-bottom:1px solid #CBD2DD}
+a:hover{color:#27508B;border-color:#27508B}
+table{border-collapse:collapse}
+input,select,textarea,button{font-family:inherit}
+::selection{background:#E8EDF5}
+@keyframes dkgz-enter{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+@keyframes dkgz-spin{to{transform:rotate(360deg)}}
+</style>
+</helmet>
+
+<div style="background:#FFFFFF;padding-bottom:0">
+
+<section id="abschnitt-00" style="animation:dkgz-enter 420ms cubic-bezier(0.4,0,0.2,1) both">
+  <div style="max-width:1240px;margin:0 auto;padding:64px 24px 96px;display:grid;grid-template-columns:72px minmax(0,1fr);gap:32px">
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#9AA5B4;padding-top:6px">00</div>
+    <div>
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:48px;flex-wrap:wrap;padding-bottom:32px;border-bottom:1px solid #E3E7EE">
+        <div style="display:flex;align-items:center;gap:20px">
+          <div style="width:44px;height:44px;border-radius:50%;border:1px solid #14294A;display:grid;place-items:center;flex:none">
+            <div style="width:34px;height:34px;border-radius:50%;border:1px solid var(--dkgz-accent,#B08A2E);display:grid;place-items:center">
+              <span style="font-size:8px;font-weight:700;letter-spacing:0.04em;color:#14294A">DKGZ</span>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;gap:14px">
+            <span style="font-size:28px;font-weight:700;letter-spacing:-0.022em;color:#14294A;line-height:1">DKGZ</span>
+            <span style="width:1px;height:30px;background:var(--dkgz-accent,#B08A2E)"></span>
+            <span style="font-size:10px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:#5B687C;line-height:1.5">Deutsche<br>KFZ-Gutachterzentrale</span>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:12px">
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#5B687C">Design Foundations · Version 1.0 · August 2026</span>
+          <sc-if value="{{ flagCue }}" hint-placeholder-val="{{ true }}">
+            <span style="display:flex;width:40px;height:3px"><span style="flex:1;background:#000000"></span><span style="flex:1;background:#DD0000"></span><span style="flex:1;background:#FFCE00"></span></span>
+          </sc-if>
+        </div>
+      </div>
+
+      <h1 style="font-size:52px;line-height:1.06;font-weight:700;letter-spacing:-0.028em;color:#14294A;max-width:19ch;padding:48px 0 24px;text-wrap:pretty">Ein verbindliches Gestaltungssystem für alle DKGZ-Oberflächen.</h1>
+      <p style="font-size:17px;line-height:1.65;color:#5B687C;max-width:68ch">Dieses Dokument legt Farbe, Typografie, Raster, Geometrie, Komponenten und Bewegung fest. Es gilt für die öffentliche Website, das Sachverständigen-Portal und die Administration. Jede Oberfläche wird ausschließlich aus den hier definierten Werten gebaut — abweichende Farben, Radien oder Schriftgrößen sind nicht vorgesehen.</p>
+
+      <div style="padding-top:48px">
+        <div style="font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C">Seriös · Strukturiert · Institutionell · Bundesweit · Vertrauenswürdig</div>
+        <div style="width:24px;height:2px;background:var(--dkgz-accent,#B08A2E);margin-top:10px"></div>
+      </div>
+
+      <div style="margin-top:64px;border:1px solid #E3E7EE;padding:24px">
+        <div style="font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C;padding-bottom:16px">Inhalt</div>
+        <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px 32px">
+          <a href="#abschnitt-01" style="border:none;display:flex;gap:12px;font-size:15px;color:#2E3A4C" style-hover="color:#27508B"><span style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#9AA5B4;padding-top:3px">01</span>Farbe</a>
+          <a href="#abschnitt-02" style="border:none;display:flex;gap:12px;font-size:15px;color:#2E3A4C" style-hover="color:#27508B"><span style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#9AA5B4;padding-top:3px">02</span>Typografie</a>
+          <a href="#abschnitt-03" style="border:none;display:flex;gap:12px;font-size:15px;color:#2E3A4C" style-hover="color:#27508B"><span style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#9AA5B4;padding-top:3px">03</span>Raster &amp; Abstände</a>
+          <a href="#abschnitt-04" style="border:none;display:flex;gap:12px;font-size:15px;color:#2E3A4C" style-hover="color:#27508B"><span style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#9AA5B4;padding-top:3px">04</span>Geometrie &amp; Tiefe</a>
+          <a href="#abschnitt-05" style="border:none;display:flex;gap:12px;font-size:15px;color:#2E3A4C" style-hover="color:#27508B"><span style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#9AA5B4;padding-top:3px">05</span>Buttons</a>
+          <a href="#abschnitt-06" style="border:none;display:flex;gap:12px;font-size:15px;color:#2E3A4C" style-hover="color:#27508B"><span style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#9AA5B4;padding-top:3px">06</span>Formularelemente</a>
+          <a href="#abschnitt-07" style="border:none;display:flex;gap:12px;font-size:15px;color:#2E3A4C" style-hover="color:#27508B"><span style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#9AA5B4;padding-top:3px">07</span>Tabellen</a>
+          <a href="#abschnitt-08" style="border:none;display:flex;gap:12px;font-size:15px;color:#2E3A4C" style-hover="color:#27508B"><span style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#9AA5B4;padding-top:3px">08</span>Statussystem</a>
+          <a href="#abschnitt-09" style="border:none;display:flex;gap:12px;font-size:15px;color:#2E3A4C" style-hover="color:#27508B"><span style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#9AA5B4;padding-top:3px">09</span>Ikonografie</a>
+          <a href="#abschnitt-10" style="border:none;display:flex;gap:12px;font-size:15px;color:#2E3A4C" style-hover="color:#27508B"><span style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#9AA5B4;padding-top:3px">10</span>Bewegung</a>
+          <a href="#abschnitt-11" style="border:none;display:flex;gap:12px;font-size:15px;color:#2E3A4C" style-hover="color:#27508B"><span style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#9AA5B4;padding-top:3px">11</span>Logo-Anwendung</a>
+          <a href="#abschnitt-12" style="border:none;display:flex;gap:12px;font-size:15px;color:#2E3A4C" style-hover="color:#27508B"><span style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#9AA5B4;padding-top:3px">12</span>Grundsätze</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="abschnitt-01" style="border-top:1px solid #E3E7EE">
+  <div style="max-width:1240px;margin:0 auto;padding:96px 24px;display:grid;grid-template-columns:72px minmax(0,1fr);gap:32px">
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#9AA5B4;padding-top:10px">01</div>
+    <div>
+      <h2 style="font-size:30px;line-height:1.2;font-weight:600;letter-spacing:-0.018em;color:#14294A">Farbe</h2>
+      <p style="font-size:17px;line-height:1.65;color:#5B687C;max-width:68ch;padding-top:16px">Navy trägt die Marke, kühle Graustufen tragen die Struktur. Es gibt genau einen Akzent. Verläufe, Leuchteffekte und zusätzliche Buntfarben sind ausgeschlossen.</p>
+
+      <div style="font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C;padding:48px 0 16px">Navy — Primärfarbe</div>
+      <div style="display:flex;gap:12px;flex-wrap:wrap">
+        <div style="width:96px">
+          <div style="height:96px;background:#0A1628"></div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;line-height:1.5;color:#5B687C;padding-top:8px">navy-900<br><span style="color:#9AA5B4">#0A1628</span></div>
+        </div>
+        <div style="width:96px">
+          <div style="height:96px;background:#0E1E36"></div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;line-height:1.5;color:#5B687C;padding-top:8px">navy-800<br><span style="color:#9AA5B4">#0E1E36</span></div>
+        </div>
+        <div style="width:96px">
+          <div style="height:96px;background:#14294A"></div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;line-height:1.5;color:#5B687C;padding-top:8px">navy-700<br><span style="color:#9AA5B4">#14294A</span></div>
+          <div style="font-size:11.5px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:#14294A;padding-top:6px">Primär</div>
+        </div>
+        <div style="width:96px">
+          <div style="height:96px;background:#1C3A66"></div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;line-height:1.5;color:#5B687C;padding-top:8px">navy-600<br><span style="color:#9AA5B4">#1C3A66</span></div>
+        </div>
+        <div style="width:96px">
+          <div style="height:96px;background:#27508B"></div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;line-height:1.5;color:#5B687C;padding-top:8px">navy-500<br><span style="color:#9AA5B4">#27508B</span></div>
+          <div style="font-size:11.5px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:#5B687C;padding-top:6px">Hover</div>
+        </div>
+        <div style="width:96px">
+          <div style="height:96px;background:#E8EDF5"></div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;line-height:1.5;color:#5B687C;padding-top:8px">navy-100<br><span style="color:#9AA5B4">#E8EDF5</span></div>
+        </div>
+      </div>
+
+      <div style="font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C;padding:48px 0 16px">Neutral — Struktur</div>
+      <div style="display:flex;gap:12px;flex-wrap:wrap">
+        <div style="width:96px">
+          <div style="height:96px;background:#F8F9FB;border:1px solid #E3E7EE"></div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;line-height:1.5;color:#5B687C;padding-top:8px">gray-50<br><span style="color:#9AA5B4">#F8F9FB</span></div>
+        </div>
+        <div style="width:96px">
+          <div style="height:96px;background:#F1F3F7;border:1px solid #E3E7EE"></div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;line-height:1.5;color:#5B687C;padding-top:8px">gray-100<br><span style="color:#9AA5B4">#F1F3F7</span></div>
+        </div>
+        <div style="width:96px">
+          <div style="height:96px;background:#E3E7EE"></div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;line-height:1.5;color:#5B687C;padding-top:8px">gray-200<br><span style="color:#9AA5B4">#E3E7EE</span></div>
+        </div>
+        <div style="width:96px">
+          <div style="height:96px;background:#CBD2DD"></div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;line-height:1.5;color:#5B687C;padding-top:8px">gray-300<br><span style="color:#9AA5B4">#CBD2DD</span></div>
+        </div>
+        <div style="width:96px">
+          <div style="height:96px;background:#9AA5B4"></div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;line-height:1.5;color:#5B687C;padding-top:8px">gray-400<br><span style="color:#9AA5B4">#9AA5B4</span></div>
+        </div>
+        <div style="width:96px">
+          <div style="height:96px;background:#5B687C"></div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;line-height:1.5;color:#5B687C;padding-top:8px">gray-600<br><span style="color:#9AA5B4">#5B687C</span></div>
+        </div>
+        <div style="width:96px">
+          <div style="height:96px;background:#2E3A4C"></div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;line-height:1.5;color:#5B687C;padding-top:8px">gray-800<br><span style="color:#9AA5B4">#2E3A4C</span></div>
+          <div style="font-size:11.5px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:#5B687C;padding-top:6px">Fließtext</div>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.4fr);gap:48px;align-items:start;margin-top:64px;padding:32px;border:1px solid #E3E7EE;background:#F8F9FB">
+        <div>
+          <div style="font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C">Akzent — einmalig</div>
+          <div style="width:24px;height:2px;background:var(--dkgz-accent,#B08A2E);margin-top:10px"></div>
+          <div style="height:120px;background:var(--dkgz-accent,#B08A2E);margin-top:24px"></div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;line-height:1.5;color:#5B687C;padding-top:12px">accent<br><span style="color:#9AA5B4">#B08A2E</span></div>
+        </div>
+        <div>
+          <p style="font-size:15px;line-height:1.6;color:#2E3A4C;max-width:60ch">Das Messing-Gold zitiert das Siegel der Wortmarke. Es belegt unter 3 % jeder Fläche und erscheint ausschließlich als Autoritätshinweis.</p>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;padding-top:24px">
+            <div>
+              <div style="font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#1B6E48">Verwendung</div>
+              <ul style="margin:12px 0 0;padding-left:18px;font-size:13.5px;line-height:1.7;color:#5B687C">
+                <li>Haarlinie unter Abschnittslabels (24 px)</li>
+                <li>Aktive Navigations-Unterstreichung (2 px)</li>
+                <li>Siegelring der Wortmarke</li>
+                <li>Trennstrich im Logo-Lockup</li>
+              </ul>
+            </div>
+            <div>
+              <div style="font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#A32318">Nicht zulässig</div>
+              <ul style="margin:12px 0 0;padding-left:18px;font-size:13.5px;line-height:1.7;color:#5B687C">
+                <li>Buttons oder Button-Rahmen</li>
+                <li>Flächenfüllung, Bänder, Karten</li>
+                <li>Verläufe, Schatten, Leuchteffekte</li>
+                <li>Text über 15 px</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:48px;align-items:start;padding-top:64px">
+        <div>
+          <div style="font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C;padding-bottom:20px">Statusfarben im Produkt</div>
+          <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:24px">
+            <div>
+              <div style="display:flex;align-items:center;gap:8px"><span style="width:6px;height:6px;border-radius:50%;background:#1B6E48;flex:none"></span><span style="font-size:13.5px;color:#2E3A4C">Abgeschlossen</span></div>
+              <div style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#9AA5B4;padding-top:8px;padding-left:14px">success · #1B6E48</div>
+            </div>
+            <div>
+              <div style="display:flex;align-items:center;gap:8px"><span style="width:6px;height:6px;border-radius:50%;background:#9C6F15;flex:none"></span><span style="font-size:13.5px;color:#2E3A4C">Wartend</span></div>
+              <div style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#9AA5B4;padding-top:8px;padding-left:14px">warning · #9C6F15</div>
+            </div>
+            <div>
+              <div style="display:flex;align-items:center;gap:8px"><span style="width:6px;height:6px;border-radius:50%;background:#A32318;flex:none"></span><span style="font-size:13.5px;color:#2E3A4C">Abgelehnt</span></div>
+              <div style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#9AA5B4;padding-top:8px;padding-left:14px">danger · #A32318</div>
+            </div>
+            <div>
+              <div style="display:flex;align-items:center;gap:8px"><span style="width:6px;height:6px;border-radius:50%;background:#14294A;flex:none"></span><span style="font-size:13.5px;color:#2E3A4C">Neu</span></div>
+              <div style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#9AA5B4;padding-top:8px;padding-left:14px">info · #14294A</div>
+            </div>
+          </div>
+        </div>
+        <div style="border-left:1px solid #E3E7EE;padding-left:32px">
+          <div style="font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C;padding-bottom:20px">Nationalitätshinweis</div>
+          <span style="display:flex;width:40px;height:3px"><span style="flex:1;background:#000000"></span><span style="flex:1;background:#DD0000"></span><span style="flex:1;background:#FFCE00"></span></span>
+          <p style="font-size:13.5px;line-height:1.6;color:#5B687C;padding-top:16px">40 × 3 px, maximal einmal pro Seite — in der Servicezeile oder im Fußbereich. Keine Dekoration, keine Vergrößerung, keine Flagge als Bildmotiv.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="abschnitt-02" style="border-top:1px solid #E3E7EE">
+  <div style="max-width:1240px;margin:0 auto;padding:96px 24px;display:grid;grid-template-columns:72px minmax(0,1fr);gap:32px">
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#9AA5B4;padding-top:10px">02</div>
+    <div>
+      <h2 style="font-size:30px;line-height:1.2;font-weight:600;letter-spacing:-0.018em;color:#14294A">Typografie</h2>
+      <p style="font-size:17px;line-height:1.65;color:#5B687C;max-width:68ch;padding-top:16px">IBM Plex Sans für Oberfläche und Überschriften, IBM Plex Mono für Referenznummern, Zeitstempel und Beträge. Überschriften laufen negativ, Kapitälchen-Labels positiv. Zahlenspalten immer mit Tabellenziffern.</p>
+
+      <div style="padding-top:48px">
+        <div style="display:grid;grid-template-columns:minmax(0,1fr) 240px;gap:32px;align-items:baseline;padding:24px 0;border-top:1px solid #E3E7EE">
+          <div style="font-size:52px;line-height:1.06;font-weight:700;letter-spacing:-0.028em;color:#14294A">Bundesweit koordiniert</div>
+          <sc-if value="{{ showSpecs }}" hint-placeholder-val="{{ true }}"><div style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;line-height:1.7;color:#9AA5B4">Display<br>52 / 1.06 / 700 / −0.028em</div></sc-if>
+        </div>
+        <div style="display:grid;grid-template-columns:minmax(0,1fr) 240px;gap:32px;align-items:baseline;padding:24px 0;border-top:1px solid #E3E7EE">
+          <div style="font-size:40px;line-height:1.12;font-weight:700;letter-spacing:-0.024em;color:#14294A">Kfz-Gutachter finden</div>
+          <sc-if value="{{ showSpecs }}" hint-placeholder-val="{{ true }}"><div style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;line-height:1.7;color:#9AA5B4">H1<br>40 / 1.12 / 700 / −0.024em</div></sc-if>
+        </div>
+        <div style="display:grid;grid-template-columns:minmax(0,1fr) 240px;gap:32px;align-items:baseline;padding:24px 0;border-top:1px solid #E3E7EE">
+          <div style="font-size:30px;line-height:1.2;font-weight:600;letter-spacing:-0.018em;color:#14294A">So funktioniert die Vermittlung</div>
+          <sc-if value="{{ showSpecs }}" hint-placeholder-val="{{ true }}"><div style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;line-height:1.7;color:#9AA5B4">H2<br>30 / 1.20 / 600 / −0.018em</div></sc-if>
+        </div>
+        <div style="display:grid;grid-template-columns:minmax(0,1fr) 240px;gap:32px;align-items:baseline;padding:24px 0;border-top:1px solid #E3E7EE">
+          <div style="font-size:22px;line-height:1.3;font-weight:600;letter-spacing:-0.012em;color:#14294A">Provision diesen Monat</div>
+          <sc-if value="{{ showSpecs }}" hint-placeholder-val="{{ true }}"><div style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;line-height:1.7;color:#9AA5B4">H3<br>22 / 1.30 / 600 / −0.012em</div></sc-if>
+        </div>
+        <div style="display:grid;grid-template-columns:minmax(0,1fr) 240px;gap:32px;align-items:baseline;padding:24px 0;border-top:1px solid #E3E7EE">
+          <div style="font-size:17px;line-height:1.4;font-weight:600;color:#14294A">Haftpflichtgutachten</div>
+          <sc-if value="{{ showSpecs }}" hint-placeholder-val="{{ true }}"><div style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;line-height:1.7;color:#9AA5B4">H4<br>17 / 1.40 / 600 / 0</div></sc-if>
+        </div>
+        <div style="display:grid;grid-template-columns:minmax(0,1fr) 240px;gap:32px;align-items:baseline;padding:24px 0;border-top:1px solid #E3E7EE">
+          <div style="font-size:17px;line-height:1.65;color:#5B687C;max-width:62ch">Sie stellen eine Anfrage. Wir vermitteln sie an einen qualifizierten Sachverständigen in Ihrer Region.</div>
+          <sc-if value="{{ showSpecs }}" hint-placeholder-val="{{ true }}"><div style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;line-height:1.7;color:#9AA5B4">Body-L<br>17 / 1.65 / 400 · max 68 Zeichen</div></sc-if>
+        </div>
+        <div style="display:grid;grid-template-columns:minmax(0,1fr) 240px;gap:32px;align-items:baseline;padding:24px 0;border-top:1px solid #E3E7EE">
+          <div style="font-size:15px;line-height:1.6;color:#2E3A4C;max-width:68ch">Die Anfrage wird ausschließlich an Sachverständige weitergeleitet, deren Einsatzgebiet die Postleitzahl des Fahrzeugstandorts abdeckt. Kontaktdaten werden erst nach Annahme des Auftrags freigegeben.</div>
+          <sc-if value="{{ showSpecs }}" hint-placeholder-val="{{ true }}"><div style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;line-height:1.7;color:#9AA5B4">Body<br>15 / 1.60 / 400</div></sc-if>
+        </div>
+        <div style="display:grid;grid-template-columns:minmax(0,1fr) 240px;gap:32px;align-items:baseline;padding:24px 0;border-top:1px solid #E3E7EE">
+          <div style="font-size:13.5px;line-height:1.5;color:#5B687C">Kostenlos und unverbindlich · Keine Registrierung erforderlich</div>
+          <sc-if value="{{ showSpecs }}" hint-placeholder-val="{{ true }}"><div style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;line-height:1.7;color:#9AA5B4">Small<br>13.5 / 1.50 / 400</div></sc-if>
+        </div>
+        <div style="display:grid;grid-template-columns:minmax(0,1fr) 240px;gap:32px;align-items:baseline;padding:24px 0;border-top:1px solid #E3E7EE">
+          <div>
+            <div style="font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C">Für Sachverständige</div>
+            <div style="width:24px;height:2px;background:var(--dkgz-accent,#B08A2E);margin-top:10px"></div>
+          </div>
+          <sc-if value="{{ showSpecs }}" hint-placeholder-val="{{ true }}"><div style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;line-height:1.7;color:#9AA5B4">Label<br>11.5 / 1.20 / 600 / +0.09em<br>+ 24 px Messing-Linie</div></sc-if>
+        </div>
+        <div style="display:grid;grid-template-columns:minmax(0,1fr) 240px;gap:32px;align-items:baseline;padding:24px 0;border-top:1px solid #E3E7EE;border-bottom:1px solid #E3E7EE">
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;line-height:1.4;color:#2E3A4C;font-variant-numeric:tabular-nums">DKGZ-2026-04817 · 17.08.2026 · 08:42 · 1.275,00 €</div>
+          <sc-if value="{{ showSpecs }}" hint-placeholder-val="{{ true }}"><div style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;line-height:1.7;color:#9AA5B4">Mono<br>13.5 / 1.40 / 400 · tabular-nums</div></sc-if>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:32px;padding-top:48px">
+        <div style="border:1px solid #E3E7EE;padding:24px">
+          <div style="font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#A32318">Proportional — falsch in Tabellen</div>
+          <table style="width:100%;margin-top:20px">
+            <tbody>
+              <tr><td style="font-size:13.5px;color:#5B687C;padding:6px 0;border-bottom:1px solid #F1F3F7">Haftpflichtgutachten</td><td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#2E3A4C;text-align:right;padding:6px 0;border-bottom:1px solid #F1F3F7">1.275,00 €</td></tr>
+              <tr><td style="font-size:13.5px;color:#5B687C;padding:6px 0;border-bottom:1px solid #F1F3F7">Wertgutachten</td><td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#2E3A4C;text-align:right;padding:6px 0;border-bottom:1px solid #F1F3F7">420,00 €</td></tr>
+              <tr><td style="font-size:13.5px;color:#5B687C;padding:6px 0">Oldtimergutachten</td><td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#2E3A4C;text-align:right;padding:6px 0">2.150,00 €</td></tr>
+            </tbody>
+          </table>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#9AA5B4;padding-top:16px">font-variant-numeric: normal</div>
+        </div>
+        <div style="border:1px solid #14294A;padding:24px">
+          <div style="font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#1B6E48">Tabellenziffern — verbindlich</div>
+          <table style="width:100%;margin-top:20px">
+            <tbody>
+              <tr><td style="font-size:13.5px;color:#5B687C;padding:6px 0;border-bottom:1px solid #F1F3F7">Haftpflichtgutachten</td><td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#2E3A4C;text-align:right;padding:6px 0;border-bottom:1px solid #F1F3F7;font-variant-numeric:tabular-nums">1.275,00 €</td></tr>
+              <tr><td style="font-size:13.5px;color:#5B687C;padding:6px 0;border-bottom:1px solid #F1F3F7">Wertgutachten</td><td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#2E3A4C;text-align:right;padding:6px 0;border-bottom:1px solid #F1F3F7;font-variant-numeric:tabular-nums">420,00 €</td></tr>
+              <tr><td style="font-size:13.5px;color:#5B687C;padding:6px 0">Oldtimergutachten</td><td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#2E3A4C;text-align:right;padding:6px 0;font-variant-numeric:tabular-nums">2.150,00 €</td></tr>
+            </tbody>
+          </table>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#9AA5B4;padding-top:16px">font-variant-numeric: tabular-nums</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="abschnitt-03" style="border-top:1px solid #E3E7EE">
+  <div style="max-width:1240px;margin:0 auto;padding:96px 24px;display:grid;grid-template-columns:72px minmax(0,1fr);gap:32px">
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#9AA5B4;padding-top:10px">03</div>
+    <div>
+      <h2 style="font-size:30px;line-height:1.2;font-weight:600;letter-spacing:-0.018em;color:#14294A">Raster &amp; Abstände</h2>
+      <p style="font-size:17px;line-height:1.65;color:#5B687C;max-width:68ch;padding-top:16px">Alle Abstände sind Vielfache von 4 px aus einer festen Skala. Zwischenwerte gibt es nicht. Abschnitte atmen im Wechsel: dichte Blöcke stehen neben offenen.</p>
+
+      <div style="display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:48px;align-items:start;padding-top:48px">
+        <div>
+          <div style="font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C;padding-bottom:20px">Abstandsskala</div>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <div style="display:flex;align-items:center;gap:16px"><span style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#9AA5B4;width:32px;text-align:right;font-variant-numeric:tabular-nums">4</span><span style="height:8px;width:4px;background:#14294A"></span></div>
+            <div style="display:flex;align-items:center;gap:16px"><span style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#9AA5B4;width:32px;text-align:right;font-variant-numeric:tabular-nums">8</span><span style="height:8px;width:8px;background:#14294A"></span></div>
+            <div style="display:flex;align-items:center;gap:16px"><span style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#9AA5B4;width:32px;text-align:right;font-variant-numeric:tabular-nums">12</span><span style="height:8px;width:12px;background:#14294A"></span></div>
+            <div style="display:flex;align-items:center;gap:16px"><span style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#9AA5B4;width:32px;text-align:right;font-variant-numeric:tabular-nums">16</span><span style="height:8px;width:16px;background:#14294A"></span></div>
+            <div style="display:flex;align-items:center;gap:16px"><span style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#9AA5B4;width:32px;text-align:right;font-variant-numeric:tabular-nums">24</span><span style="height:8px;width:24px;background:#14294A"></span></div>
+            <div style="display:flex;align-items:center;gap:16px"><span style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#9AA5B4;width:32px;text-align:right;font-variant-numeric:tabular-nums">32</span><span style="height:8px;width:32px;background:#14294A"></span></div>
+            <div style="display:flex;align-items:center;gap:16px"><span style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#9AA5B4;width:32px;text-align:right;font-variant-numeric:tabular-nums">48</span><span style="height:8px;width:48px;background:#14294A"></span></div>
+            <div style="display:flex;align-items:center;gap:16px"><span style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#9AA5B4;width:32px;text-align:right;font-variant-numeric:tabular-nums">64</span><span style="height:8px;width:64px;background:#14294A"></span></div>
+            <div style="display:flex;align-items:center;gap:16px"><span style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#9AA5B4;width:32px;text-align:right;font-variant-numeric:tabular-nums">96</span><span style="height:8px;width:96px;background:#14294A"></span></div>
+            <div style="display:flex;align-items:center;gap:16px"><span style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#9AA5B4;width:32px;text-align:right;font-variant-numeric:tabular-nums">128</span><span style="height:8px;width:128px;background:#14294A"></span></div>
+          </div>
+        </div>
+        <div style="border-left:1px solid #E3E7EE;padding-left:32px">
+          <div style="font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C;padding-bottom:20px">Anwendung</div>
+          <table style="width:100%">
+            <tbody>
+              <tr><td style="font-size:13.5px;color:#5B687C;padding:8px 0;border-bottom:1px solid #F1F3F7">Abschnitt vertikal, Desktop</td><td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#2E3A4C;text-align:right;padding:8px 0;border-bottom:1px solid #F1F3F7;font-variant-numeric:tabular-nums">96</td></tr>
+              <tr><td style="font-size:13.5px;color:#5B687C;padding:8px 0;border-bottom:1px solid #F1F3F7">Abschnitt vertikal, Mobil</td><td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#2E3A4C;text-align:right;padding:8px 0;border-bottom:1px solid #F1F3F7;font-variant-numeric:tabular-nums">56</td></tr>
+              <tr><td style="font-size:13.5px;color:#5B687C;padding:8px 0;border-bottom:1px solid #F1F3F7">Panel-Innenabstand</td><td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#2E3A4C;text-align:right;padding:8px 0;border-bottom:1px solid #F1F3F7;font-variant-numeric:tabular-nums">20 / 24</td></tr>
+              <tr><td style="font-size:13.5px;color:#5B687C;padding:8px 0;border-bottom:1px solid #F1F3F7">Tabellenzelle vertikal</td><td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#2E3A4C;text-align:right;padding:8px 0;border-bottom:1px solid #F1F3F7;font-variant-numeric:tabular-nums">12</td></tr>
+              <tr><td style="font-size:13.5px;color:#5B687C;padding:8px 0">Label zu Feld</td><td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#2E3A4C;text-align:right;padding:8px 0;font-variant-numeric:tabular-nums">8</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div style="padding-top:64px">
+        <div style="display:flex;align-items:baseline;justify-content:space-between;padding-bottom:16px">
+          <div style="font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C">12-Spalten-Raster</div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#9AA5B4;font-variant-numeric:tabular-nums">Container 1240 px · Rand 24 px · Steg 24 px · Spalte 77,33 px</div>
+        </div>
+        <div style="border:1px solid #E3E7EE;background:#F8F9FB;padding:24px">
+          <div style="display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:24px">
+            <div style="height:120px;background:#E8EDF5;border-top:2px solid #14294A"></div>
+            <div style="height:120px;background:#E8EDF5;border-top:2px solid #14294A"></div>
+            <div style="height:120px;background:#E8EDF5;border-top:2px solid #14294A"></div>
+            <div style="height:120px;background:#E8EDF5;border-top:2px solid #14294A"></div>
+            <div style="height:120px;background:#E8EDF5;border-top:2px solid #14294A"></div>
+            <div style="height:120px;background:#E8EDF5;border-top:2px solid #14294A"></div>
+            <div style="height:120px;background:#E8EDF5;border-top:2px solid #14294A"></div>
+            <div style="height:120px;background:#E8EDF5;border-top:2px solid #14294A"></div>
+            <div style="height:120px;background:#E8EDF5;border-top:2px solid #14294A"></div>
+            <div style="height:120px;background:#E8EDF5;border-top:2px solid #14294A"></div>
+            <div style="height:120px;background:#E8EDF5;border-top:2px solid #14294A"></div>
+            <div style="height:120px;background:#E8EDF5;border-top:2px solid #14294A"></div>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:24px;padding-top:8px">
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#9AA5B4;text-align:center">1</div>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#9AA5B4;text-align:center">2</div>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#9AA5B4;text-align:center">3</div>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#9AA5B4;text-align:center">4</div>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#9AA5B4;text-align:center">5</div>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#9AA5B4;text-align:center">6</div>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#9AA5B4;text-align:center">7</div>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#9AA5B4;text-align:center">8</div>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#9AA5B4;text-align:center">9</div>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#9AA5B4;text-align:center">10</div>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#9AA5B4;text-align:center">11</div>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#9AA5B4;text-align:center">12</div>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:32px;padding-top:24px">
+          <div style="font-size:13.5px;line-height:1.6;color:#5B687C"><span style="color:#2E3A4C;font-weight:500">Öffentliche Seiten</span><br>Hero 7 / 5, Leistungen 4 / 8, Fußbereich 3 / 3 / 3 / 3.</div>
+          <div style="font-size:13.5px;line-height:1.6;color:#5B687C"><span style="color:#2E3A4C;font-weight:500">Portal</span><br>Seitenleiste 240 px fix, Inhalt fluid, Detailspalte 4 Spalten, sticky.</div>
+          <div style="font-size:13.5px;line-height:1.6;color:#5B687C"><span style="color:#2E3A4C;font-weight:500">Mobil</span><br>Einspaltig unter 768 px, Rand 20 px, Steg entfällt.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="abschnitt-04" style="border-top:1px solid #E3E7EE">
+  <div style="max-width:1240px;margin:0 auto;padding:96px 24px;display:grid;grid-template-columns:72px minmax(0,1fr);gap:32px">
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#9AA5B4;padding-top:10px">04</div>
+    <div>
+      <h2 style="font-size:30px;line-height:1.2;font-weight:600;letter-spacing:-0.018em;color:#14294A">Geometrie &amp; Tiefe</h2>
+      <p style="font-size:17px;line-height:1.65;color:#5B687C;max-width:68ch;padding-top:16px">Kanten statt Kissen. Radien bleiben unter 6 px, Trennung entsteht über Haarlinien, nicht über Schatten. Schatten kommen nur dort vor, wo etwas tatsächlich über der Seite liegt.</p>
+
+      <div style="font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C;padding:48px 0 20px">Radien</div>
+      <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:24px">
+        <div>
+          <div style="border:1px solid #E3E7EE;padding:24px;display:grid;place-items:center;height:132px">
+            <button type="button" style="height:40px;padding:0 20px;background:#14294A;color:#FFFFFF;border:1px solid #14294A;border-radius:3px;font-size:15px;font-weight:500;cursor:pointer">Annehmen</button>
+          </div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;line-height:1.6;color:#5B687C;padding-top:12px">3 px<br><span style="color:#9AA5B4">Buttons, Inputs, Selects, Chips</span></div>
+        </div>
+        <div>
+          <div style="border:1px solid #E3E7EE;padding:24px;display:grid;place-items:center;height:132px">
+            <div style="width:100%;height:84px;background:#FFFFFF;border:1px solid #CBD2DD;border-radius:5px"></div>
+          </div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;line-height:1.6;color:#5B687C;padding-top:12px">5 px<br><span style="color:#9AA5B4">Karten, Panels, Modale</span></div>
+        </div>
+        <div>
+          <div style="border:1px solid #E3E7EE;padding:24px;display:grid;place-items:center;height:132px">
+            <table style="width:100%">
+              <tbody>
+                <tr><td style="height:28px;background:#F1F3F7;border:1px solid #E3E7EE"></td><td style="height:28px;background:#FFFFFF;border:1px solid #E3E7EE"></td></tr>
+                <tr><td style="height:28px;background:#FFFFFF;border:1px solid #E3E7EE"></td><td style="height:28px;background:#FFFFFF;border:1px solid #E3E7EE"></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;line-height:1.6;color:#5B687C;padding-top:12px">0 px<br><span style="color:#9AA5B4">Tabellen, Zellen, Bänder</span></div>
+        </div>
+        <div>
+          <div style="border:1px solid #E3E7EE;padding:24px;display:flex;align-items:center;justify-content:center;gap:16px;height:132px">
+            <span style="width:32px;height:32px;border-radius:50%;background:#E8EDF5;color:#14294A;display:grid;place-items:center;font-size:11.5px;font-weight:600">MR</span>
+            <span style="width:6px;height:6px;border-radius:50%;background:#1B6E48"></span>
+          </div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;line-height:1.6;color:#5B687C;padding-top:12px">50 %<br><span style="color:#9AA5B4">Avatare, Statuspunkte</span></div>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:48px;padding-top:64px;align-items:start">
+        <div>
+          <div style="font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C;padding-bottom:20px">Schatten</div>
+          <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:32px;background:#F8F9FB;border:1px solid #E3E7EE;padding:32px">
+            <div>
+              <div style="height:96px;background:#FFFFFF;border:1px solid #E3E7EE;border-radius:5px;box-shadow:0 1px 2px rgba(10,22,40,0.05)"></div>
+              <div style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;line-height:1.6;color:#5B687C;padding-top:12px">card<br><span style="color:#9AA5B4">0 1px 2px / 0.05</span></div>
+            </div>
+            <div>
+              <div style="height:96px;background:#FFFFFF;border:1px solid #E3E7EE;border-radius:5px;box-shadow:0 4px 12px rgba(10,22,40,0.10)"></div>
+              <div style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;line-height:1.6;color:#5B687C;padding-top:12px">dropdown<br><span style="color:#9AA5B4">0 4px 12px / 0.10</span></div>
+            </div>
+            <div>
+              <div style="height:96px;background:#FFFFFF;border:1px solid #E3E7EE;border-radius:5px;box-shadow:0 16px 48px rgba(10,22,40,0.16)"></div>
+              <div style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;line-height:1.6;color:#5B687C;padding-top:12px">modal<br><span style="color:#9AA5B4">0 16px 48px / 0.16</span></div>
+            </div>
+          </div>
+          <p style="font-size:13.5px;line-height:1.6;color:#5B687C;padding-top:16px;max-width:68ch">Buttons tragen im Ruhezustand keinen Schatten. Farbige Schatten und Leuchteffekte sind ausgeschlossen.</p>
+        </div>
+        <div>
+          <div style="font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C;padding-bottom:20px">Linien</div>
+          <div style="display:flex;flex-direction:column;gap:20px">
+            <div>
+              <div style="height:1px;background:#E3E7EE"></div>
+              <div style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#9AA5B4;padding-top:8px">1 px #E3E7EE — Haarlinie, Trenner</div>
+            </div>
+            <div>
+              <div style="height:1px;background:#CBD2DD"></div>
+              <div style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#9AA5B4;padding-top:8px">1 px #CBD2DD — Feldrahmen</div>
+            </div>
+            <div>
+              <div style="height:1px;background:#14294A"></div>
+              <div style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#9AA5B4;padding-top:8px">1 px #14294A — Betonung, Auswahl</div>
+            </div>
+            <div>
+              <div style="height:2px;background:#14294A;width:120px"></div>
+              <div style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#9AA5B4;padding-top:8px">2 px #14294A — nur Summenzeile, Marker</div>
+            </div>
+            <div>
+              <div style="height:2px;background:var(--dkgz-accent,#B08A2E);width:24px"></div>
+              <div style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#9AA5B4;padding-top:8px">2 × 24 px Messing — Abschnittslabel</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="abschnitt-05" style="border-top:1px solid #E3E7EE">
+  <div style="max-width:1240px;margin:0 auto;padding:96px 24px;display:grid;grid-template-columns:72px minmax(0,1fr);gap:32px">
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#9AA5B4;padding-top:10px">05</div>
+    <div>
+      <h2 style="font-size:30px;line-height:1.2;font-weight:600;letter-spacing:-0.018em;color:#14294A">Buttons</h2>
+      <p style="font-size:17px;line-height:1.65;color:#5B687C;max-width:68ch;padding-top:16px">Vier Varianten, sechs Zustände, zwei Größen. Primär ist immer gefüllt navy-700, ohne Schatten, ohne Verlauf. Pro Bildschirm gibt es genau eine primäre Handlung.</p>
+
+      <div style="display:grid;grid-template-columns:120px repeat(6,minmax(0,1fr));gap:12px;padding-top:48px;align-items:center">
+        <div></div>
+        <div style="font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C">Default</div>
+        <div style="font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C">Hover</div>
+        <div style="font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C">Active</div>
+        <div style="font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C">Focus</div>
+        <div style="font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C">Inaktiv</div>
+        <div style="font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C">Lädt</div>
+
+        <div style="font-size:13.5px;font-weight:500;color:#2E3A4C;border-top:1px solid #E3E7EE;padding-top:20px;height:100%">Primär</div>
+        <div style="border-top:1px solid #E3E7EE;padding-top:20px"><button type="button" style="height:40px;padding:0 18px;background:#14294A;color:#FFFFFF;border:1px solid #14294A;border-radius:3px;font-size:15px;font-weight:500;cursor:pointer;transition:background 140ms cubic-bezier(0.4,0,0.2,1),transform 140ms cubic-bezier(0.4,0,0.2,1);white-space:nowrap" style-hover="background:#27508B;border-color:#27508B" style-active="background:#0E1E36;transform:translateY(1px)">Annehmen</button></div>
+        <div style="border-top:1px solid #E3E7EE;padding-top:20px"><button type="button" style="height:40px;padding:0 18px;background:#27508B;color:#FFFFFF;border:1px solid #27508B;border-radius:3px;font-size:15px;font-weight:500;cursor:pointer;white-space:nowrap">Annehmen</button></div>
+        <div style="border-top:1px solid #E3E7EE;padding-top:20px"><button type="button" style="height:40px;padding:0 18px;background:#0E1E36;color:#FFFFFF;border:1px solid #0E1E36;border-radius:3px;font-size:15px;font-weight:500;cursor:pointer;transform:translateY(1px);white-space:nowrap">Annehmen</button></div>
+        <div style="border-top:1px solid #E3E7EE;padding-top:20px"><button type="button" style="height:40px;padding:0 18px;background:#14294A;color:#FFFFFF;border:1px solid #14294A;border-radius:3px;font-size:15px;font-weight:500;cursor:pointer;outline:2px solid #27508B;outline-offset:2px;white-space:nowrap">Annehmen</button></div>
+        <div style="border-top:1px solid #E3E7EE;padding-top:20px"><button type="button" disabled="disabled" style="height:40px;padding:0 18px;background:#E3E7EE;color:#9AA5B4;border:1px solid #E3E7EE;border-radius:3px;font-size:15px;font-weight:500;cursor:not-allowed;white-space:nowrap">Annehmen</button></div>
+        <div style="border-top:1px solid #E3E7EE;padding-top:20px"><button type="button" style="height:40px;padding:0 18px;background:#14294A;color:#FFFFFF;border:1px solid #14294A;border-radius:3px;font-size:15px;font-weight:500;cursor:progress;display:inline-flex;align-items:center;gap:8px;white-space:nowrap"><span style="width:13px;height:13px;border:1.5px solid rgba(255,255,255,0.35);border-top-color:#FFFFFF;border-radius:50%;animation:dkgz-spin 700ms linear infinite;flex:none"></span>Sendet</button></div>
+
+        <div style="font-size:13.5px;font-weight:500;color:#2E3A4C;border-top:1px solid #E3E7EE;padding-top:20px;height:100%">Sekundär</div>
+        <div style="border-top:1px solid #E3E7EE;padding-top:20px"><button type="button" style="height:40px;padding:0 18px;background:#FFFFFF;color:#14294A;border:1px solid #14294A;border-radius:3px;font-size:15px;font-weight:500;cursor:pointer;transition:background 140ms cubic-bezier(0.4,0,0.2,1);white-space:nowrap" style-hover="background:#E8EDF5" style-active="background:#E8EDF5;transform:translateY(1px)">Abbrechen</button></div>
+        <div style="border-top:1px solid #E3E7EE;padding-top:20px"><button type="button" style="height:40px;padding:0 18px;background:#E8EDF5;color:#14294A;border:1px solid #14294A;border-radius:3px;font-size:15px;font-weight:500;cursor:pointer;white-space:nowrap">Abbrechen</button></div>
+        <div style="border-top:1px solid #E3E7EE;padding-top:20px"><button type="button" style="height:40px;padding:0 18px;background:#E8EDF5;color:#0E1E36;border:1px solid #0E1E36;border-radius:3px;font-size:15px;font-weight:500;cursor:pointer;transform:translateY(1px);white-space:nowrap">Abbrechen</button></div>
+        <div style="border-top:1px solid #E3E7EE;padding-top:20px"><button type="button" style="height:40px;padding:0 18px;background:#FFFFFF;color:#14294A;border:1px solid #14294A;border-radius:3px;font-size:15px;font-weight:500;cursor:pointer;outline:2px solid #27508B;outline-offset:2px;white-space:nowrap">Abbrechen</button></div>
+        <div style="border-top:1px solid #E3E7EE;padding-top:20px"><button type="button" disabled="disabled" style="height:40px;padding:0 18px;background:#FFFFFF;color:#9AA5B4;border:1px solid #CBD2DD;border-radius:3px;font-size:15px;font-weight:500;cursor:not-allowed;white-space:nowrap">Abbrechen</button></div>
+        <div style="border-top:1px solid #E3E7EE;padding-top:20px"><button type="button" style="height:40px;padding:0 18px;background:#FFFFFF;color:#14294A;border:1px solid #14294A;border-radius:3px;font-size:15px;font-weight:500;cursor:progress;display:inline-flex;align-items:center;gap:8px;white-space:nowrap"><span style="width:13px;height:13px;border:1.5px solid #CBD2DD;border-top-color:#14294A;border-radius:50%;animation:dkgz-spin 700ms linear infinite;flex:none"></span>Prüft</button></div>
+
+        <div style="font-size:13.5px;font-weight:500;color:#2E3A4C;border-top:1px solid #E3E7EE;padding-top:20px;height:100%">Tertiär</div>
+        <div style="border-top:1px solid #E3E7EE;padding-top:20px"><button type="button" style="height:40px;padding:0 4px;background:transparent;color:#14294A;border:1px solid transparent;border-radius:3px;font-size:15px;font-weight:500;cursor:pointer;transition:color 140ms cubic-bezier(0.4,0,0.2,1);white-space:nowrap" style-hover="color:#27508B;text-decoration:underline;text-underline-offset:3px">Details</button></div>
+        <div style="border-top:1px solid #E3E7EE;padding-top:20px"><button type="button" style="height:40px;padding:0 4px;background:transparent;color:#27508B;border:1px solid transparent;border-radius:3px;font-size:15px;font-weight:500;cursor:pointer;text-decoration:underline;text-underline-offset:3px;white-space:nowrap">Details</button></div>
+        <div style="border-top:1px solid #E3E7EE;padding-top:20px"><button type="button" style="height:40px;padding:0 4px;background:transparent;color:#0E1E36;border:1px solid transparent;border-radius:3px;font-size:15px;font-weight:500;cursor:pointer;text-decoration:underline;text-underline-offset:3px;transform:translateY(1px);white-space:nowrap">Details</button></div>
+        <div style="border-top:1px solid #E3E7EE;padding-top:20px"><button type="button" style="height:40px;padding:0 4px;background:transparent;color:#14294A;border:1px solid transparent;border-radius:3px;font-size:15px;font-weight:500;cursor:pointer;outline:2px solid #27508B;outline-offset:2px;white-space:nowrap">Details</button></div>
+        <div style="border-top:1px solid #E3E7EE;padding-top:20px"><button type="button" disabled="disabled" style="height:40px;padding:0 4px;background:transparent;color:#9AA5B4;border:1px solid transparent;border-radius:3px;font-size:15px;font-weight:500;cursor:not-allowed;white-space:nowrap">Details</button></div>
+        <div style="border-top:1px solid #E3E7EE;padding-top:20px"><span style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#9AA5B4">nicht vorgesehen</span></div>
+
+        <div style="font-size:13.5px;font-weight:500;color:#2E3A4C;border-top:1px solid #E3E7EE;padding-top:20px;height:100%">Destruktiv</div>
+        <div style="border-top:1px solid #E3E7EE;padding-top:20px"><button type="button" style="height:40px;padding:0 18px;background:#FFFFFF;color:#A32318;border:1px solid #A32318;border-radius:3px;font-size:15px;font-weight:500;cursor:pointer;transition:background 140ms cubic-bezier(0.4,0,0.2,1),color 140ms cubic-bezier(0.4,0,0.2,1);white-space:nowrap" style-hover="background:#A32318;color:#FFFFFF" style-active="background:#8A1D14;color:#FFFFFF;transform:translateY(1px)">Ablehnen</button></div>
+        <div style="border-top:1px solid #E3E7EE;padding-top:20px"><button type="button" style="height:40px;padding:0 18px;background:#A32318;color:#FFFFFF;border:1px solid #A32318;border-radius:3px;font-size:15px;font-weight:500;cursor:pointer;white-space:nowrap">Ablehnen</button></div>
+        <div style="border-top:1px solid #E3E7EE;padding-top:20px"><button type="button" style="height:40px;padding:0 18px;background:#8A1D14;color:#FFFFFF;border:1px solid #8A1D14;border-radius:3px;font-size:15px;font-weight:500;cursor:pointer;transform:translateY(1px);white-space:nowrap">Ablehnen</button></div>
+        <div style="border-top:1px solid #E3E7EE;padding-top:20px"><button type="button" style="height:40px;padding:0 18px;background:#FFFFFF;color:#A32318;border:1px solid #A32318;border-radius:3px;font-size:15px;font-weight:500;cursor:pointer;outline:2px solid #27508B;outline-offset:2px;white-space:nowrap">Ablehnen</button></div>
+        <div style="border-top:1px solid #E3E7EE;padding-top:20px"><button type="button" disabled="disabled" style="height:40px;padding:0 18px;background:#FFFFFF;color:#9AA5B4;border:1px solid #CBD2DD;border-radius:3px;font-size:15px;font-weight:500;cursor:not-allowed;white-space:nowrap">Ablehnen</button></div>
+        <div style="border-top:1px solid #E3E7EE;padding-top:20px"><button type="button" style="height:40px;padding:0 18px;background:#FFFFFF;color:#A32318;border:1px solid #A32318;border-radius:3px;font-size:15px;font-weight:500;cursor:progress;display:inline-flex;align-items:center;gap:8px;white-space:nowrap"><span style="width:13px;height:13px;border:1.5px solid rgba(163,35,24,0.30);border-top-color:#A32318;border-radius:50%;animation:dkgz-spin 700ms linear infinite;flex:none"></span>Storniert</button></div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:48px;padding-top:64px;align-items:start">
+        <div>
+          <div style="font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C;padding-bottom:20px">Größen &amp; echte Beschriftungen</div>
+          <div style="display:flex;align-items:flex-end;gap:24px;flex-wrap:wrap;border:1px solid #E3E7EE;padding:24px">
+            <div style="display:flex;flex-direction:column;gap:10px">
+              <button type="button" style="height:44px;padding:0 24px;background:#14294A;color:#FFFFFF;border:1px solid #14294A;border-radius:3px;font-size:15px;font-weight:500;cursor:pointer;transition:background 140ms cubic-bezier(0.4,0,0.2,1);white-space:nowrap" style-hover="background:#27508B;border-color:#27508B">Anfrage starten</button>
+              <span style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#9AA5B4">44 px · Haupt-CTA</span>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:10px">
+              <button type="button" style="height:40px;padding:0 18px;background:#14294A;color:#FFFFFF;border:1px solid #14294A;border-radius:3px;font-size:15px;font-weight:500;cursor:pointer;transition:background 140ms cubic-bezier(0.4,0,0.2,1);white-space:nowrap" style-hover="background:#27508B;border-color:#27508B">Auftrag annehmen</button>
+              <span style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#9AA5B4">40 px · Standard</span>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:10px">
+              <button type="button" style="height:40px;padding:0 18px;background:#FFFFFF;color:#14294A;border:1px solid #14294A;border-radius:3px;font-size:15px;font-weight:500;cursor:pointer;transition:background 140ms cubic-bezier(0.4,0,0.2,1);white-space:nowrap" style-hover="background:#E8EDF5">Partner werden</button>
+              <span style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#9AA5B4">40 px · sekundär</span>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:10px">
+              <button type="button" style="height:32px;padding:0 12px;background:#FFFFFF;color:#14294A;border:1px solid #CBD2DD;border-radius:3px;font-size:13.5px;font-weight:500;cursor:pointer;transition:border-color 140ms cubic-bezier(0.4,0,0.2,1);white-space:nowrap" style-hover="border-color:#14294A">Exportieren</button>
+              <span style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#9AA5B4">32 px · Tabellenleiste</span>
+            </div>
+          </div>
+        </div>
+        <div style="border-left:1px solid #E3E7EE;padding-left:32px">
+          <div style="font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C;padding-bottom:20px">Regeln</div>
+          <ul style="margin:0;padding-left:18px;font-size:13.5px;line-height:1.8;color:#5B687C">
+            <li>Keine Höhe über 44 px.</li>
+            <li>Kein Schatten im Ruhezustand.</li>
+            <li>Kein Icon links im Primärbutton, außer Upload und Download.</li>
+            <li>Beschriftung ist ein Verb im Infinitiv, kein Ausruf.</li>
+            <li>Fokusring nie entfernen.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="abschnitt-06" style="border-top:1px solid #E3E7EE">
+  <div style="max-width:1240px;margin:0 auto;padding:96px 24px;display:grid;grid-template-columns:72px minmax(0,1fr);gap:32px">
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#9AA5B4;padding-top:10px">06</div>
+    <div>
+      <h2 style="font-size:30px;line-height:1.2;font-weight:600;letter-spacing:-0.018em;color:#14294A">Formularelemente</h2>
+      <p style="font-size:17px;line-height:1.65;color:#5B687C;max-width:68ch;padding-top:16px">Labels stehen über dem Feld, 13,5 px, Gewicht 500. Platzhalter ersetzen niemals ein Label. Pflichtfelder sind markiert, freiwillige Felder tragen den Zusatz „optional“ in gray-400.</p>
+
+      <div style="display:grid;grid-template-columns:100px repeat(5,minmax(0,1fr));gap:16px;padding-top:48px;align-items:end">
+        <div></div>
+        <div style="font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C">Default</div>
+        <div style="font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C">Focus</div>
+        <div style="font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C">Gefüllt</div>
+        <div style="font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C">Fehler</div>
+        <div style="font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C">Inaktiv</div>
+
+        <div style="font-size:13.5px;font-weight:500;color:#2E3A4C;border-top:1px solid #E3E7EE;padding-top:20px;height:100%">Textfeld</div>
+        <div style="border-top:1px solid #E3E7EE;padding-top:20px"><input type="text" placeholder="z. B. 40589" style="width:100%;height:40px;padding:0 12px;border:1px solid #CBD2DD;border-radius:3px;font-size:15px;color:#2E3A4C;background:#FFFFFF;outline:none"></div>
+        <div style="border-top:1px solid #E3E7EE;padding-top:20px"><input type="text" placeholder="z. B. 40589" style="width:100%;height:40px;padding:0 12px;border:1px solid #14294A;border-radius:3px;font-size:15px;color:#2E3A4C;background:#FFFFFF;outline:2px solid #27508B;outline-offset:2px"></div>
+        <div style="border-top:1px solid #E3E7EE;padding-top:20px"><input type="text" value="40589" style="width:100%;height:40px;padding:0 12px;border:1px solid #CBD2DD;border-radius:3px;font-size:15px;color:#2E3A4C;background:#FFFFFF;outline:none;font-variant-numeric:tabular-nums"></div>
+        <div style="border-top:1px solid #E3E7EE;padding-top:20px"><input type="text" value="405" style="width:100%;height:40px;padding:0 12px;border:1px solid #A32318;border-radius:3px;font-size:15px;color:#2E3A4C;background:#FFFFFF;outline:none;font-variant-numeric:tabular-nums"></div>
+        <div style="border-top:1px solid #E3E7EE;padding-top:20px"><input type="text" value="40589" disabled="disabled" style="width:100%;height:40px;padding:0 12px;border:1px solid #E3E7EE;border-radius:3px;font-size:15px;color:#9AA5B4;background:#F8F9FB;outline:none"></div>
+
+        <div style="font-size:13.5px;font-weight:500;color:#2E3A4C;border-top:1px solid #E3E7EE;padding-top:20px;height:100%">Auswahl</div>
+        <div style="border-top:1px solid #E3E7EE;padding-top:20px;position:relative"><div style="width:100%;height:40px;padding:0 12px;border:1px solid #CBD2DD;border-radius:3px;font-size:15px;color:#9AA5B4;background:#FFFFFF;display:flex;align-items:center;justify-content:space-between;gap:8px"><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Bitte wählen</span><span data-lucide="chevron-down" width="16" height="16" style="color:#5B687C;flex:none;display:block"></span></div></div>
+        <div style="border-top:1px solid #E3E7EE;padding-top:20px"><div style="width:100%;height:40px;padding:0 12px;border:1px solid #14294A;border-radius:3px;font-size:15px;color:#2E3A4C;background:#FFFFFF;display:flex;align-items:center;justify-content:space-between;gap:8px;outline:2px solid #27508B;outline-offset:2px"><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Bitte wählen</span><span data-lucide="chevron-down" width="16" height="16" style="color:#14294A;flex:none;display:block"></span></div></div>
+        <div style="border-top:1px solid #E3E7EE;padding-top:20px"><div style="width:100%;height:40px;padding:0 12px;border:1px solid #CBD2DD;border-radius:3px;font-size:15px;color:#2E3A4C;background:#FFFFFF;display:flex;align-items:center;justify-content:space-between;gap:8px"><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Unfallgutachten</span><span data-lucide="chevron-down" width="16" height="16" style="color:#5B687C;flex:none;display:block"></span></div></div>
+        <div style="border-top:1px solid #E3E7EE;padding-top:20px"><div style="width:100%;height:40px;padding:0 12px;border:1px solid #A32318;border-radius:3px;font-size:15px;color:#9AA5B4;background:#FFFFFF;display:flex;align-items:center;justify-content:space-between;gap:8px"><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Bitte wählen</span><span data-lucide="chevron-down" width="16" height="16" style="color:#A32318;flex:none;display:block"></span></div></div>
+        <div style="border-top:1px solid #E3E7EE;padding-top:20px"><div style="width:100%;height:40px;padding:0 12px;border:1px solid #E3E7EE;border-radius:3px;font-size:15px;color:#9AA5B4;background:#F8F9FB;display:flex;align-items:center;justify-content:space-between;gap:8px"><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Unfallgutachten</span><span data-lucide="chevron-down" width="16" height="16" style="color:#CBD2DD;flex:none;display:block"></span></div></div>
+
+        <div style="font-size:13.5px;font-weight:500;color:#2E3A4C;border-top:1px solid #E3E7EE;padding-top:20px;height:100%">Datum</div>
+        <div style="border-top:1px solid #E3E7EE;padding-top:20px"><div style="width:100%;height:40px;padding:0 12px;border:1px solid #CBD2DD;border-radius:3px;font-size:15px;color:#9AA5B4;background:#FFFFFF;display:flex;align-items:center;justify-content:space-between;gap:8px"><span style="font-family:'IBM Plex Mono',monospace;font-size:13.5px">TT.MM.JJJJ</span><span data-lucide="calendar" width="16" height="16" style="color:#5B687C;flex:none;display:block"></span></div></div>
+        <div style="border-top:1px solid #E3E7EE;padding-top:20px"><div style="width:100%;height:40px;padding:0 12px;border:1px solid #14294A;border-radius:3px;font-size:15px;color:#2E3A4C;background:#FFFFFF;display:flex;align-items:center;justify-content:space-between;gap:8px;outline:2px solid #27508B;outline-offset:2px"><span style="font-family:'IBM Plex Mono',monospace;font-size:13.5px">TT.MM.JJJJ</span><span data-lucide="calendar" width="16" height="16" style="color:#14294A;flex:none;display:block"></span></div></div>
+        <div style="border-top:1px solid #E3E7EE;padding-top:20px"><div style="width:100%;height:40px;padding:0 12px;border:1px solid #CBD2DD;border-radius:3px;font-size:15px;color:#2E3A4C;background:#FFFFFF;display:flex;align-items:center;justify-content:space-between;gap:8px"><span style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;font-variant-numeric:tabular-nums">21.08.2026</span><span data-lucide="calendar" width="16" height="16" style="color:#5B687C;flex:none;display:block"></span></div></div>
+        <div style="border-top:1px solid #E3E7EE;padding-top:20px"><div style="width:100%;height:40px;padding:0 12px;border:1px solid #A32318;border-radius:3px;font-size:15px;color:#2E3A4C;background:#FFFFFF;display:flex;align-items:center;justify-content:space-between;gap:8px"><span style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;font-variant-numeric:tabular-nums">31.02.2026</span><span data-lucide="calendar" width="16" height="16" style="color:#A32318;flex:none;display:block"></span></div></div>
+        <div style="border-top:1px solid #E3E7EE;padding-top:20px"><div style="width:100%;height:40px;padding:0 12px;border:1px solid #E3E7EE;border-radius:3px;font-size:15px;color:#9AA5B4;background:#F8F9FB;display:flex;align-items:center;justify-content:space-between;gap:8px"><span style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;font-variant-numeric:tabular-nums">21.08.2026</span><span data-lucide="calendar" width="16" height="16" style="color:#CBD2DD;flex:none;display:block"></span></div></div>
+
+        <div style="font-size:13.5px;font-weight:500;color:#2E3A4C;border-top:1px solid #E3E7EE;padding-top:20px;height:100%">Textbereich</div>
+        <div style="border-top:1px solid #E3E7EE;padding-top:20px"><div style="width:100%;height:76px;padding:10px 12px;border:1px solid #CBD2DD;border-radius:3px;font-size:15px;color:#9AA5B4;background:#FFFFFF;line-height:1.5">Kurze Beschreibung</div></div>
+        <div style="border-top:1px solid #E3E7EE;padding-top:20px"><div style="width:100%;height:76px;padding:10px 12px;border:1px solid #14294A;border-radius:3px;font-size:15px;color:#2E3A4C;background:#FFFFFF;outline:2px solid #27508B;outline-offset:2px;line-height:1.5">Heckschaden</div></div>
+        <div style="border-top:1px solid #E3E7EE;padding-top:20px"><div style="width:100%;height:76px;padding:10px 12px;border:1px solid #CBD2DD;border-radius:3px;font-size:13.5px;color:#2E3A4C;background:#FFFFFF;line-height:1.5;overflow:hidden">Auffahrunfall auf der A 46, Heckschaden, Fahrzeug fahrbereit.</div></div>
+        <div style="border-top:1px solid #E3E7EE;padding-top:20px"><div style="width:100%;height:76px;padding:10px 12px;border:1px solid #A32318;border-radius:3px;font-size:13.5px;color:#2E3A4C;background:#FFFFFF;line-height:1.5;overflow:hidden">Text überschreitet 500 Zeichen …</div></div>
+        <div style="border-top:1px solid #E3E7EE;padding-top:20px"><div style="width:100%;height:76px;padding:10px 12px;border:1px solid #E3E7EE;border-radius:3px;font-size:13.5px;color:#9AA5B4;background:#F8F9FB;line-height:1.5">Nach Abschluss nicht mehr änderbar.</div></div>
+
+        <div style="font-size:13.5px;font-weight:500;color:#2E3A4C;border-top:1px solid #E3E7EE;padding-top:20px;height:100%">Checkbox</div>
+        <div style="border-top:1px solid #E3E7EE;padding-top:20px;display:flex;align-items:center;gap:10px"><span style="width:16px;height:16px;border:1px solid #CBD2DD;border-radius:3px;background:#FFFFFF;flex:none"></span><span style="font-size:13.5px;color:#2E3A4C">Wertgutachten</span></div>
+        <div style="border-top:1px solid #E3E7EE;padding-top:20px;display:flex;align-items:center;gap:10px"><span style="width:16px;height:16px;border:1px solid #14294A;border-radius:3px;background:#FFFFFF;flex:none;outline:2px solid #27508B;outline-offset:2px"></span><span style="font-size:13.5px;color:#2E3A4C">Wertgutachten</span></div>
+        <div style="border-top:1px solid #E3E7EE;padding-top:20px;display:flex;align-items:center;gap:10px"><span style="width:16px;height:16px;border:1px solid #14294A;border-radius:3px;background:#14294A;flex:none;display:grid;place-items:center;color:#FFFFFF"><span data-lucide="check" width="11" height="11" style="display:block"></span></span><span style="font-size:13.5px;color:#2E3A4C">Wertgutachten</span></div>
+        <div style="border-top:1px solid #E3E7EE;padding-top:20px;display:flex;align-items:center;gap:10px"><span style="width:16px;height:16px;border:1px solid #A32318;border-radius:3px;background:#FFFFFF;flex:none"></span><span style="font-size:13.5px;color:#A32318">AGB bestätigen</span></div>
+        <div style="border-top:1px solid #E3E7EE;padding-top:20px;display:flex;align-items:center;gap:10px"><span style="width:16px;height:16px;border:1px solid #E3E7EE;border-radius:3px;background:#F1F3F7;flex:none"></span><span style="font-size:13.5px;color:#9AA5B4">Wertgutachten</span></div>
+
+        <div style="font-size:13.5px;font-weight:500;color:#2E3A4C;border-top:1px solid #E3E7EE;padding-top:20px;height:100%">Radio</div>
+        <div style="border-top:1px solid #E3E7EE;padding-top:20px;display:flex;align-items:center;gap:10px"><span style="width:16px;height:16px;border:1px solid #CBD2DD;border-radius:50%;background:#FFFFFF;flex:none"></span><span style="font-size:13.5px;color:#2E3A4C">Privatperson</span></div>
+        <div style="border-top:1px solid #E3E7EE;padding-top:20px;display:flex;align-items:center;gap:10px"><span style="width:16px;height:16px;border:1px solid #14294A;border-radius:50%;background:#FFFFFF;flex:none;outline:2px solid #27508B;outline-offset:2px"></span><span style="font-size:13.5px;color:#2E3A4C">Privatperson</span></div>
+        <div style="border-top:1px solid #E3E7EE;padding-top:20px;display:flex;align-items:center;gap:10px"><span style="width:16px;height:16px;border:1px solid #14294A;border-radius:50%;background:#FFFFFF;flex:none;display:grid;place-items:center"><span style="width:8px;height:8px;border-radius:50%;background:#14294A"></span></span><span style="font-size:13.5px;color:#2E3A4C">Gewerblich</span></div>
+        <div style="border-top:1px solid #E3E7EE;padding-top:20px;display:flex;align-items:center;gap:10px"><span style="width:16px;height:16px;border:1px solid #A32318;border-radius:50%;background:#FFFFFF;flex:none"></span><span style="font-size:13.5px;color:#A32318">Auswahl fehlt</span></div>
+        <div style="border-top:1px solid #E3E7EE;padding-top:20px;display:flex;align-items:center;gap:10px"><span style="width:16px;height:16px;border:1px solid #E3E7EE;border-radius:50%;background:#F1F3F7;flex:none"></span><span style="font-size:13.5px;color:#9AA5B4">Gewerblich</span></div>
+
+        <div style="font-size:13.5px;font-weight:500;color:#2E3A4C;border-top:1px solid #E3E7EE;padding-top:20px;height:100%">Schalter</div>
+        <div style="border-top:1px solid #E3E7EE;padding-top:20px;display:flex;align-items:center;gap:10px"><span style="width:36px;height:20px;border-radius:10px;background:#CBD2DD;flex:none;display:flex;align-items:center;padding:2px"><span style="width:16px;height:16px;border-radius:50%;background:#FFFFFF"></span></span><span style="font-size:13.5px;color:#5B687C">Nicht verfügbar</span></div>
+        <div style="border-top:1px solid #E3E7EE;padding-top:20px;display:flex;align-items:center;gap:10px"><span style="width:36px;height:20px;border-radius:10px;background:#CBD2DD;flex:none;display:flex;align-items:center;padding:2px;outline:2px solid #27508B;outline-offset:2px"><span style="width:16px;height:16px;border-radius:50%;background:#FFFFFF"></span></span><span style="font-size:13.5px;color:#5B687C">Nicht verfügbar</span></div>
+        <div style="border-top:1px solid #E3E7EE;padding-top:20px;display:flex;align-items:center;gap:10px"><span style="width:36px;height:20px;border-radius:10px;background:#14294A;flex:none;display:flex;align-items:center;justify-content:flex-end;padding:2px"><span style="width:16px;height:16px;border-radius:50%;background:#FFFFFF"></span></span><span style="font-size:13.5px;color:#2E3A4C">Verfügbar</span></div>
+        <div style="border-top:1px solid #E3E7EE;padding-top:20px"><span style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#9AA5B4">kein Fehlerzustand</span></div>
+        <div style="border-top:1px solid #E3E7EE;padding-top:20px;display:flex;align-items:center;gap:10px"><span style="width:36px;height:20px;border-radius:10px;background:#E3E7EE;flex:none;display:flex;align-items:center;padding:2px"><span style="width:16px;height:16px;border-radius:50%;background:#F8F9FB"></span></span><span style="font-size:13.5px;color:#9AA5B4">Gesperrt</span></div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px;padding-top:64px">
+        <div>
+          <div style="font-size:13.5px;font-weight:500;color:#2E3A4C;padding-bottom:8px">Fotos <span style="color:#9AA5B4;font-weight:400">optional</span></div>
+          <div style="border:1px dashed #CBD2DD;border-radius:5px;padding:24px;text-align:center;background:#F8F9FB">
+            <span data-lucide="upload" width="24" height="24" style="color:#5B687C;display:inline-block"></span>
+            <div style="font-size:13.5px;color:#2E3A4C;padding-top:10px">Dateien hierher ziehen oder <span style="color:#14294A;font-weight:500;text-decoration:underline;text-underline-offset:2px">auswählen</span></div>
+            <div style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#9AA5B4;padding-top:6px">JPG, PNG, PDF · max. 5 Dateien · je 10 MB</div>
+          </div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#9AA5B4;padding-top:10px">Leer</div>
+        </div>
+        <div>
+          <div style="font-size:13.5px;font-weight:500;color:#2E3A4C;padding-bottom:8px">Gutachten</div>
+          <div style="border:1px solid #E3E7EE;border-radius:5px;background:#FFFFFF">
+            <div style="display:flex;align-items:center;gap:12px;padding:14px 16px;border-bottom:1px solid #F1F3F7">
+              <span data-lucide="file-text" width="20" height="20" style="color:#14294A;flex:none;display:block"></span>
+              <div style="min-width:0;flex:1">
+                <div style="font-size:13.5px;color:#2E3A4C;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Gutachten_DKGZ-2026-04817.pdf</div>
+                <div style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#9AA5B4;font-variant-numeric:tabular-nums">2,4 MB · 17.08.2026 · 09:12</div>
+              </div>
+              <span data-lucide="download" width="18" height="18" style="color:#5B687C;flex:none;display:block"></span>
+            </div>
+            <div style="display:flex;align-items:center;gap:12px;padding:14px 16px">
+              <span data-lucide="file-text" width="20" height="20" style="color:#14294A;flex:none;display:block"></span>
+              <div style="min-width:0;flex:1">
+                <div style="font-size:13.5px;color:#2E3A4C;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Rechnung_04817.pdf</div>
+                <div style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#9AA5B4;font-variant-numeric:tabular-nums">318 KB · 17.08.2026 · 09:14</div>
+              </div>
+              <span data-lucide="download" width="18" height="18" style="color:#5B687C;flex:none;display:block"></span>
+            </div>
+          </div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#9AA5B4;padding-top:10px">Gefüllt</div>
+        </div>
+        <div>
+          <div style="font-size:13.5px;font-weight:500;color:#2E3A4C;padding-bottom:8px">Postleitzahl <span style="color:#A32318">*</span></div>
+          <input type="text" value="405" style="width:100%;height:40px;padding:0 12px;border:1px solid #A32318;border-radius:3px;font-size:15px;color:#2E3A4C;background:#FFFFFF;outline:none;font-variant-numeric:tabular-nums">
+          <div style="display:flex;align-items:flex-start;gap:8px;padding-top:8px">
+            <span data-lucide="alert-circle" width="16" height="16" style="color:#A32318;flex:none;display:block;margin-top:2px"></span>
+            <span style="font-size:13.5px;line-height:1.5;color:#A32318">Bitte geben Sie eine gültige deutsche Postleitzahl mit fünf Ziffern ein.</span>
+          </div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#9AA5B4;padding-top:10px">Vollständiger Fehlerzustand</div>
+        </div>
+      </div>
+
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap;margin-top:48px;border:1px solid #14294A;border-radius:5px;padding:20px 24px">
+        <div>
+          <div style="font-size:17px;line-height:1.4;font-weight:600;color:#14294A">Verfügbarkeit im Portal</div>
+          <p style="font-size:13.5px;line-height:1.5;color:#5B687C;padding-top:4px">Dauerhaft in der Kopfzeile sichtbar. Bei „Nicht verfügbar“ werden keine neuen Anfragen zugestellt.</p>
+        </div>
+        <div style="display:flex;align-items:center;gap:24px">
+          <div style="display:flex;align-items:center;gap:10px"><span style="width:36px;height:20px;border-radius:10px;background:#14294A;flex:none;display:flex;align-items:center;justify-content:flex-end;padding:2px"><span style="width:16px;height:16px;border-radius:50%;background:#FFFFFF"></span></span><span style="font-size:13.5px;font-weight:500;color:#2E3A4C">Verfügbar</span></div>
+          <span style="width:1px;height:24px;background:#E3E7EE"></span>
+          <div style="display:flex;align-items:center;gap:10px"><span style="width:36px;height:20px;border-radius:10px;background:#CBD2DD;flex:none;display:flex;align-items:center;padding:2px"><span style="width:16px;height:16px;border-radius:50%;background:#FFFFFF"></span></span><span style="font-size:13.5px;color:#5B687C">Nicht verfügbar</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="abschnitt-07" style="border-top:1px solid #E3E7EE">
+  <div style="max-width:1240px;margin:0 auto;padding:96px 24px;display:grid;grid-template-columns:72px minmax(0,1fr);gap:32px">
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#9AA5B4;padding-top:10px">07</div>
+    <div>
+      <h2 style="font-size:30px;line-height:1.2;font-weight:600;letter-spacing:-0.018em;color:#14294A">Tabellen</h2>
+      <p style="font-size:17px;line-height:1.65;color:#5B687C;max-width:68ch;padding-top:16px">Weiße Zeilen, 1 px Trennlinien, kein Zebra. Kopfzeilen in 11,5 px Kapitälchen gray-600. Geldbeträge rechtsbündig mit Tabellenziffern, Referenznummern in Mono.</p>
+
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:48px 0 16px">
+        <div style="display:flex;align-items:center;gap:12px">
+          <div style="height:32px;padding:0 10px;border:1px solid #CBD2DD;border-radius:3px;display:flex;align-items:center;gap:8px;background:#FFFFFF">
+            <span data-lucide="search" width="16" height="16" style="color:#9AA5B4;flex:none;display:block"></span>
+            <span style="font-size:13.5px;color:#9AA5B4">Referenz oder Ort</span>
+          </div>
+          <div style="height:32px;padding:0 10px;border:1px solid #CBD2DD;border-radius:3px;display:flex;align-items:center;gap:8px;background:#FFFFFF">
+            <span data-lucide="filter" width="16" height="16" style="color:#5B687C;flex:none;display:block"></span>
+            <span style="font-size:13.5px;color:#2E3A4C">Status: Alle</span>
+            <span data-lucide="chevron-down" width="14" height="14" style="color:#5B687C;flex:none;display:block"></span>
+          </div>
+          <div style="height:32px;padding:0 10px;border:1px solid #CBD2DD;border-radius:3px;display:flex;align-items:center;gap:8px;background:#FFFFFF">
+            <span style="font-size:13.5px;color:#2E3A4C">August 2026</span>
+            <span data-lucide="chevron-down" width="14" height="14" style="color:#5B687C;flex:none;display:block"></span>
+          </div>
+        </div>
+        <button type="button" style="height:32px;padding:0 12px;background:#FFFFFF;color:#14294A;border:1px solid #CBD2DD;border-radius:3px;font-size:13.5px;font-weight:500;cursor:pointer;display:inline-flex;align-items:center;gap:8px;transition:border-color 140ms cubic-bezier(0.4,0,0.2,1)" style-hover="border-color:#14294A"><span data-lucide="download" width="16" height="16" style="display:block"></span>CSV exportieren</button>
+      </div>
+
+      <div style="overflow-x:auto">
+      <table style="width:100%;min-width:940px;border-top:1px solid #E3E7EE;border-bottom:1px solid #E3E7EE">
+        <thead>
+          <tr>
+            <th style="text-align:left;font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C;padding:12px 16px 12px 0;border-bottom:1px solid #E3E7EE;white-space:nowrap">Referenz</th>
+            <th style="text-align:left;font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C;padding:12px 16px;border-bottom:1px solid #E3E7EE;white-space:nowrap">Ort / PLZ</th>
+            <th style="text-align:left;font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C;padding:12px 16px;border-bottom:1px solid #E3E7EE;white-space:nowrap">Art des Gutachtens</th>
+            <th style="text-align:left;font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C;padding:12px 16px;border-bottom:1px solid #E3E7EE;white-space:nowrap">Datum</th>
+            <th style="text-align:left;font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C;padding:12px 16px;border-bottom:1px solid #E3E7EE;white-space:nowrap">Status</th>
+            <th style="text-align:right;font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C;padding:12px 16px;border-bottom:1px solid #E3E7EE;white-space:nowrap">Honorar</th>
+            <th style="text-align:right;font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C;padding:12px 0 12px 16px;border-bottom:1px solid #E3E7EE;white-space:nowrap">Provision 15 %</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="background:#E8EDF5;box-shadow:inset 2px 0 0 #14294A">
+            <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#14294A;padding:12px 16px 12px 12px;border-bottom:1px solid #E3E7EE;white-space:nowrap;font-variant-numeric:tabular-nums">DKGZ-2026-04817</td>
+            <td style="font-size:13.5px;color:#2E3A4C;padding:12px 16px;border-bottom:1px solid #E3E7EE;white-space:nowrap">Düsseldorf · 40589</td>
+            <td style="font-size:13.5px;color:#2E3A4C;padding:12px 16px;border-bottom:1px solid #E3E7EE">Unfallgutachten</td>
+            <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#5B687C;padding:12px 16px;border-bottom:1px solid #E3E7EE;white-space:nowrap;font-variant-numeric:tabular-nums">17.08.2026</td>
+            <td style="padding:12px 16px;border-bottom:1px solid #E3E7EE;white-space:nowrap"><span style="display:inline-flex;align-items:center;gap:8px"><span style="width:6px;height:6px;border-radius:50%;background:#1B6E48"></span><span style="font-size:13.5px;color:#2E3A4C">Angenommen</span></span></td>
+            <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#2E3A4C;text-align:right;padding:12px 16px;border-bottom:1px solid #E3E7EE;white-space:nowrap;font-variant-numeric:tabular-nums">1.275,00 €</td>
+            <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#2E3A4C;text-align:right;padding:12px 0 12px 16px;border-bottom:1px solid #E3E7EE;white-space:nowrap;font-variant-numeric:tabular-nums">191,25 €</td>
+          </tr>
+          <tr style="transition:background 120ms cubic-bezier(0.4,0,0.2,1)" style-hover="background:#F8F9FB">
+            <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#14294A;padding:12px 16px 12px 0;border-bottom:1px solid #E3E7EE;white-space:nowrap;font-variant-numeric:tabular-nums">DKGZ-2026-04816</td>
+            <td style="font-size:13.5px;color:#2E3A4C;padding:12px 16px;border-bottom:1px solid #E3E7EE;white-space:nowrap">Köln · 50667</td>
+            <td style="font-size:13.5px;color:#2E3A4C;padding:12px 16px;border-bottom:1px solid #E3E7EE">Haftpflichtgutachten</td>
+            <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#5B687C;padding:12px 16px;border-bottom:1px solid #E3E7EE;white-space:nowrap;font-variant-numeric:tabular-nums">17.08.2026</td>
+            <td style="padding:12px 16px;border-bottom:1px solid #E3E7EE;white-space:nowrap"><span style="display:inline-flex;align-items:center;gap:8px"><span style="width:6px;height:6px;border-radius:50%;background:#14294A"></span><span style="font-size:13.5px;color:#2E3A4C">Vermittelt</span></span></td>
+            <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#2E3A4C;text-align:right;padding:12px 16px;border-bottom:1px solid #E3E7EE;white-space:nowrap;font-variant-numeric:tabular-nums">850,00 €</td>
+            <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#2E3A4C;text-align:right;padding:12px 0 12px 16px;border-bottom:1px solid #E3E7EE;white-space:nowrap;font-variant-numeric:tabular-nums">127,50 €</td>
+          </tr>
+          <tr style="background:#F8F9FB;transition:background 120ms cubic-bezier(0.4,0,0.2,1)">
+            <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#14294A;padding:12px 16px 12px 0;border-bottom:1px solid #E3E7EE;white-space:nowrap;font-variant-numeric:tabular-nums">DKGZ-2026-04812</td>
+            <td style="font-size:13.5px;color:#2E3A4C;padding:12px 16px;border-bottom:1px solid #E3E7EE;white-space:nowrap">Essen · 45127</td>
+            <td style="font-size:13.5px;color:#2E3A4C;padding:12px 16px;border-bottom:1px solid #E3E7EE">Wertgutachten</td>
+            <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#5B687C;padding:12px 16px;border-bottom:1px solid #E3E7EE;white-space:nowrap;font-variant-numeric:tabular-nums">16.08.2026</td>
+            <td style="padding:12px 16px;border-bottom:1px solid #E3E7EE;white-space:nowrap"><span style="display:inline-flex;align-items:center;gap:8px"><span style="width:6px;height:6px;border-radius:50%;background:#9C6F15"></span><span style="font-size:13.5px;color:#2E3A4C">In Bearbeitung</span></span></td>
+            <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#2E3A4C;text-align:right;padding:12px 16px;border-bottom:1px solid #E3E7EE;white-space:nowrap;font-variant-numeric:tabular-nums">420,00 €</td>
+            <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#2E3A4C;text-align:right;padding:12px 0 12px 16px;border-bottom:1px solid #E3E7EE;white-space:nowrap;font-variant-numeric:tabular-nums">63,00 €</td>
+          </tr>
+          <tr style="transition:background 120ms cubic-bezier(0.4,0,0.2,1)" style-hover="background:#F8F9FB">
+            <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#14294A;padding:12px 16px 12px 0;border-bottom:1px solid #E3E7EE;white-space:nowrap;font-variant-numeric:tabular-nums">DKGZ-2026-04809</td>
+            <td style="font-size:13.5px;color:#2E3A4C;padding:12px 16px;border-bottom:1px solid #E3E7EE;white-space:nowrap">Berlin · 10117</td>
+            <td style="font-size:13.5px;color:#2E3A4C;padding:12px 16px;border-bottom:1px solid #E3E7EE">Fahrzeugschadengutachten</td>
+            <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#5B687C;padding:12px 16px;border-bottom:1px solid #E3E7EE;white-space:nowrap;font-variant-numeric:tabular-nums">16.08.2026</td>
+            <td style="padding:12px 16px;border-bottom:1px solid #E3E7EE;white-space:nowrap"><span style="display:inline-flex;align-items:center;gap:8px"><span style="width:6px;height:6px;border-radius:50%;background:#1B6E48"></span><span style="font-size:13.5px;color:#2E3A4C">Abgeschlossen</span></span></td>
+            <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#2E3A4C;text-align:right;padding:12px 16px;border-bottom:1px solid #E3E7EE;white-space:nowrap;font-variant-numeric:tabular-nums">1.640,00 €</td>
+            <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#2E3A4C;text-align:right;padding:12px 0 12px 16px;border-bottom:1px solid #E3E7EE;white-space:nowrap;font-variant-numeric:tabular-nums">246,00 €</td>
+          </tr>
+          <tr style="transition:background 120ms cubic-bezier(0.4,0,0.2,1)" style-hover="background:#F8F9FB">
+            <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#14294A;padding:12px 16px 12px 0;border-bottom:1px solid #E3E7EE;white-space:nowrap;font-variant-numeric:tabular-nums">DKGZ-2026-04803</td>
+            <td style="font-size:13.5px;color:#2E3A4C;padding:12px 16px;border-bottom:1px solid #E3E7EE;white-space:nowrap">Hamburg · 20095</td>
+            <td style="font-size:13.5px;color:#2E3A4C;padding:12px 16px;border-bottom:1px solid #E3E7EE">Oldtimergutachten</td>
+            <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#5B687C;padding:12px 16px;border-bottom:1px solid #E3E7EE;white-space:nowrap;font-variant-numeric:tabular-nums">15.08.2026</td>
+            <td style="padding:12px 16px;border-bottom:1px solid #E3E7EE;white-space:nowrap"><span style="display:inline-flex;align-items:center;gap:8px"><span style="width:6px;height:6px;border-radius:50%;background:#14294A"></span><span style="font-size:13.5px;color:#2E3A4C">Neu</span></span></td>
+            <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#2E3A4C;text-align:right;padding:12px 16px;border-bottom:1px solid #E3E7EE;white-space:nowrap;font-variant-numeric:tabular-nums">2.150,00 €</td>
+            <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#2E3A4C;text-align:right;padding:12px 0 12px 16px;border-bottom:1px solid #E3E7EE;white-space:nowrap;font-variant-numeric:tabular-nums">322,50 €</td>
+          </tr>
+          <tr style="transition:background 120ms cubic-bezier(0.4,0,0.2,1)" style-hover="background:#F8F9FB">
+            <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#14294A;padding:12px 16px 12px 0;border-bottom:1px solid #E3E7EE;white-space:nowrap;font-variant-numeric:tabular-nums">DKGZ-2026-04798</td>
+            <td style="font-size:13.5px;color:#2E3A4C;padding:12px 16px;border-bottom:1px solid #E3E7EE;white-space:nowrap">München · 80331</td>
+            <td style="font-size:13.5px;color:#2E3A4C;padding:12px 16px;border-bottom:1px solid #E3E7EE">Kaskogutachten</td>
+            <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#5B687C;padding:12px 16px;border-bottom:1px solid #E3E7EE;white-space:nowrap;font-variant-numeric:tabular-nums">15.08.2026</td>
+            <td style="padding:12px 16px;border-bottom:1px solid #E3E7EE;white-space:nowrap"><span style="display:inline-flex;align-items:center;gap:8px"><span style="width:6px;height:6px;border-radius:50%;background:#A32318"></span><span style="font-size:13.5px;color:#2E3A4C">Abgelehnt</span></span></td>
+            <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#2E3A4C;text-align:right;padding:12px 16px;border-bottom:1px solid #E3E7EE;white-space:nowrap;font-variant-numeric:tabular-nums">735,00 €</td>
+            <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#9AA5B4;text-align:right;padding:12px 0 12px 16px;border-bottom:1px solid #E3E7EE;white-space:nowrap;font-variant-numeric:tabular-nums">—</td>
+          </tr>
+          <tr style="transition:background 120ms cubic-bezier(0.4,0,0.2,1)" style-hover="background:#F8F9FB">
+            <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#14294A;padding:12px 16px 12px 0;border-bottom:1px solid #E3E7EE;white-space:nowrap;font-variant-numeric:tabular-nums">DKGZ-2026-04791</td>
+            <td style="font-size:13.5px;color:#2E3A4C;padding:12px 16px;border-bottom:1px solid #E3E7EE;white-space:nowrap">Stuttgart · 70173</td>
+            <td style="font-size:13.5px;color:#2E3A4C;padding:12px 16px;border-bottom:1px solid #E3E7EE">Gebrauchtwagen-Check</td>
+            <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#5B687C;padding:12px 16px;border-bottom:1px solid #E3E7EE;white-space:nowrap;font-variant-numeric:tabular-nums">14.08.2026</td>
+            <td style="padding:12px 16px;border-bottom:1px solid #E3E7EE;white-space:nowrap"><span style="display:inline-flex;align-items:center;gap:8px"><span style="width:6px;height:6px;border-radius:50%;background:#1B6E48"></span><span style="font-size:13.5px;color:#2E3A4C">Abgeschlossen</span></span></td>
+            <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#2E3A4C;text-align:right;padding:12px 16px;border-bottom:1px solid #E3E7EE;white-space:nowrap;font-variant-numeric:tabular-nums">290,00 €</td>
+            <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#2E3A4C;text-align:right;padding:12px 0 12px 16px;border-bottom:1px solid #E3E7EE;white-space:nowrap;font-variant-numeric:tabular-nums">43,50 €</td>
+          </tr>
+          <tr style="transition:background 120ms cubic-bezier(0.4,0,0.2,1)" style-hover="background:#F8F9FB">
+            <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#14294A;padding:12px 16px 12px 0;white-space:nowrap;font-variant-numeric:tabular-nums">DKGZ-2026-04785</td>
+            <td style="font-size:13.5px;color:#2E3A4C;padding:12px 16px;white-space:nowrap">Dortmund · 44135</td>
+            <td style="font-size:13.5px;color:#2E3A4C;padding:12px 16px">Beweissicherung</td>
+            <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#5B687C;padding:12px 16px;white-space:nowrap;font-variant-numeric:tabular-nums">14.08.2026</td>
+            <td style="padding:12px 16px;white-space:nowrap"><span style="display:inline-flex;align-items:center;gap:8px"><span style="width:6px;height:6px;border-radius:50%;background:#A32318"></span><span style="font-size:13.5px;color:#2E3A4C">Storniert</span></span></td>
+            <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#2E3A4C;text-align:right;padding:12px 16px;white-space:nowrap;font-variant-numeric:tabular-nums">480,00 €</td>
+            <td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#9AA5B4;text-align:right;padding:12px 0 12px 16px;white-space:nowrap;font-variant-numeric:tabular-nums">—</td>
+          </tr>
+        </tbody>
+      </table>
+      </div>
+
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;padding-top:16px">
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#5B687C;font-variant-numeric:tabular-nums">1–8 von 126 Aufträgen</span>
+        <div style="display:flex;align-items:center;gap:4px">
+          <button type="button" style="width:32px;height:32px;background:#FFFFFF;border:1px solid #CBD2DD;border-radius:3px;display:grid;place-items:center;cursor:pointer;color:#5B687C;transition:border-color 140ms cubic-bezier(0.4,0,0.2,1)" style-hover="border-color:#14294A;color:#14294A"><span data-lucide="chevron-left" width="16" height="16" style="display:block"></span></button>
+          <button type="button" style="min-width:32px;height:32px;padding:0 8px;background:#14294A;color:#FFFFFF;border:1px solid #14294A;border-radius:3px;font-size:13.5px;font-weight:500;cursor:pointer;font-variant-numeric:tabular-nums">1</button>
+          <button type="button" style="min-width:32px;height:32px;padding:0 8px;background:#FFFFFF;color:#2E3A4C;border:1px solid #CBD2DD;border-radius:3px;font-size:13.5px;cursor:pointer;font-variant-numeric:tabular-nums;transition:border-color 140ms cubic-bezier(0.4,0,0.2,1)" style-hover="border-color:#14294A">2</button>
+          <button type="button" style="min-width:32px;height:32px;padding:0 8px;background:#FFFFFF;color:#2E3A4C;border:1px solid #CBD2DD;border-radius:3px;font-size:13.5px;cursor:pointer;font-variant-numeric:tabular-nums;transition:border-color 140ms cubic-bezier(0.4,0,0.2,1)" style-hover="border-color:#14294A">3</button>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#9AA5B4;padding:0 4px">…</span>
+          <button type="button" style="min-width:32px;height:32px;padding:0 8px;background:#FFFFFF;color:#2E3A4C;border:1px solid #CBD2DD;border-radius:3px;font-size:13.5px;cursor:pointer;font-variant-numeric:tabular-nums;transition:border-color 140ms cubic-bezier(0.4,0,0.2,1)" style-hover="border-color:#14294A">16</button>
+          <button type="button" style="width:32px;height:32px;background:#FFFFFF;border:1px solid #CBD2DD;border-radius:3px;display:grid;place-items:center;cursor:pointer;color:#5B687C;transition:border-color 140ms cubic-bezier(0.4,0,0.2,1)" style-hover="border-color:#14294A;color:#14294A"><span data-lucide="chevron-right" width="16" height="16" style="display:block"></span></button>
+        </div>
+      </div>
+
+      <sc-if value="{{ showSpecs }}" hint-placeholder-val="{{ true }}">
+        <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:24px;margin-top:32px;border-top:1px solid #E3E7EE;padding-top:24px">
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;line-height:1.7;color:#9AA5B4">Zeile 1 — ausgewählt<br>#E8EDF5 + 2 px navy links</div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;line-height:1.7;color:#9AA5B4">Zeile 3 — Hover<br>#F8F9FB, 120 ms</div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;line-height:1.7;color:#9AA5B4">Zellhöhe 45 px<br>12 px vertikal, 16 px horizontal</div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;line-height:1.7;color:#9AA5B4">Ohne Provision: Gedankenstrich<br>nie 0,00 €</div>
+        </div>
+      </sc-if>
+
+      <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px;padding-top:48px">
+        <div style="border:1px solid #E3E7EE;border-radius:5px;padding:32px 24px">
+          <div style="font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C;padding-bottom:16px">Leerzustand</div>
+          <div style="font-size:17px;line-height:1.4;font-weight:600;color:#14294A">Keine Anfragen in diesem Zeitraum</div>
+          <p style="font-size:13.5px;line-height:1.6;color:#5B687C;padding-top:8px">Erweitern Sie den Zeitraum oder prüfen Sie Ihr Einsatzgebiet.</p>
+          <button type="button" style="height:32px;padding:0 12px;margin-top:16px;background:#FFFFFF;color:#14294A;border:1px solid #14294A;border-radius:3px;font-size:13.5px;font-weight:500;cursor:pointer">Einsatzgebiet prüfen</button>
+        </div>
+        <div style="border:1px solid #E3E7EE;border-radius:5px;padding:32px 24px">
+          <div style="font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C;padding-bottom:16px">Ladezustand</div>
+          <div style="display:flex;flex-direction:column;gap:12px">
+            <div style="height:12px;background:#F1F3F7;width:100%"></div>
+            <div style="height:12px;background:#F1F3F7;width:86%"></div>
+            <div style="height:12px;background:#F1F3F7;width:92%"></div>
+            <div style="height:12px;background:#F1F3F7;width:64%"></div>
+          </div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#9AA5B4;padding-top:16px">Skeleton, kein Spinner in Tabellen</div>
+        </div>
+        <div style="border:1px solid #A32318;border-radius:5px;padding:32px 24px">
+          <div style="font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#A32318;padding-bottom:16px">Fehlerzustand</div>
+          <div style="font-size:17px;line-height:1.4;font-weight:600;color:#14294A">Aufträge konnten nicht geladen werden</div>
+          <p style="font-size:13.5px;line-height:1.6;color:#5B687C;padding-top:8px">Die Verbindung wurde unterbrochen. Ihre Daten sind unverändert gespeichert.</p>
+          <button type="button" style="height:32px;padding:0 12px;margin-top:16px;background:#14294A;color:#FFFFFF;border:1px solid #14294A;border-radius:3px;font-size:13.5px;font-weight:500;cursor:pointer">Erneut laden</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="abschnitt-08" style="border-top:1px solid #E3E7EE">
+  <div style="max-width:1240px;margin:0 auto;padding:96px 24px;display:grid;grid-template-columns:72px minmax(0,1fr);gap:32px">
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#9AA5B4;padding-top:10px">08</div>
+    <div>
+      <h2 style="font-size:30px;line-height:1.2;font-weight:600;letter-spacing:-0.018em;color:#14294A">Statussystem</h2>
+      <p style="font-size:17px;line-height:1.65;color:#5B687C;max-width:68ch;padding-top:16px">Status erscheint als 6 px Punkt plus Text — niemals als gefüllte Pille, niemals farbiger Zeilenhintergrund. Jeder Status hat genau eine Bedeutung im gesamten System.</p>
+
+      <table style="width:100%;margin-top:48px;border-top:1px solid #E3E7EE">
+        <thead>
+          <tr>
+            <th style="text-align:left;font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C;padding:12px 16px 12px 0;border-bottom:1px solid #E3E7EE">Status</th>
+            <th style="text-align:left;font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C;padding:12px 16px;border-bottom:1px solid #E3E7EE">Bedeutung</th>
+            <th style="text-align:left;font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C;padding:12px 16px;border-bottom:1px solid #E3E7EE">Sichtbar für</th>
+            <th style="text-align:left;font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C;padding:12px 0 12px 16px;border-bottom:1px solid #E3E7EE">Token</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="padding:12px 16px 12px 0;border-bottom:1px solid #F1F3F7;white-space:nowrap"><span style="display:inline-flex;align-items:center;gap:8px"><span style="width:6px;height:6px;border-radius:50%;background:#14294A"></span><span style="font-size:13.5px;color:#2E3A4C">Neu</span></span></td>
+            <td style="font-size:13.5px;color:#5B687C;padding:12px 16px;border-bottom:1px solid #F1F3F7">Anfrage eingegangen, noch nicht verteilt</td>
+            <td style="font-size:13.5px;color:#5B687C;padding:12px 16px;border-bottom:1px solid #F1F3F7">Administration</td>
+            <td style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#9AA5B4;padding:12px 0 12px 16px;border-bottom:1px solid #F1F3F7">info · #14294A</td>
+          </tr>
+          <tr>
+            <td style="padding:12px 16px 12px 0;border-bottom:1px solid #F1F3F7;white-space:nowrap"><span style="display:inline-flex;align-items:center;gap:8px"><span style="width:6px;height:6px;border-radius:50%;background:#9C6F15"></span><span style="font-size:13.5px;color:#2E3A4C">Vermittelt</span></span></td>
+            <td style="font-size:13.5px;color:#5B687C;padding:12px 16px;border-bottom:1px solid #F1F3F7">An passende Sachverständige weitergeleitet, Annahme offen</td>
+            <td style="font-size:13.5px;color:#5B687C;padding:12px 16px;border-bottom:1px solid #F1F3F7">Administration, Sachverständige</td>
+            <td style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#9AA5B4;padding:12px 0 12px 16px;border-bottom:1px solid #F1F3F7">warning · #9C6F15</td>
+          </tr>
+          <tr>
+            <td style="padding:12px 16px 12px 0;border-bottom:1px solid #F1F3F7;white-space:nowrap"><span style="display:inline-flex;align-items:center;gap:8px"><span style="width:6px;height:6px;border-radius:50%;background:#1B6E48"></span><span style="font-size:13.5px;color:#2E3A4C">Angenommen</span></span></td>
+            <td style="font-size:13.5px;color:#5B687C;padding:12px 16px;border-bottom:1px solid #F1F3F7">Ein Sachverständiger hat den Auftrag übernommen</td>
+            <td style="font-size:13.5px;color:#5B687C;padding:12px 16px;border-bottom:1px solid #F1F3F7">Alle Beteiligten</td>
+            <td style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#9AA5B4;padding:12px 0 12px 16px;border-bottom:1px solid #F1F3F7">success · #1B6E48</td>
+          </tr>
+          <tr>
+            <td style="padding:12px 16px 12px 0;border-bottom:1px solid #F1F3F7;white-space:nowrap"><span style="display:inline-flex;align-items:center;gap:8px"><span style="width:6px;height:6px;border-radius:50%;background:#9C6F15"></span><span style="font-size:13.5px;color:#2E3A4C">In Bearbeitung</span></span></td>
+            <td style="font-size:13.5px;color:#5B687C;padding:12px 16px;border-bottom:1px solid #F1F3F7">Begutachtung läuft, Unterlagen noch nicht vollständig</td>
+            <td style="font-size:13.5px;color:#5B687C;padding:12px 16px;border-bottom:1px solid #F1F3F7">Alle Beteiligten</td>
+            <td style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#9AA5B4;padding:12px 0 12px 16px;border-bottom:1px solid #F1F3F7">warning · #9C6F15</td>
+          </tr>
+          <tr>
+            <td style="padding:12px 16px 12px 0;border-bottom:1px solid #F1F3F7;white-space:nowrap"><span style="display:inline-flex;align-items:center;gap:8px"><span style="width:6px;height:6px;border-radius:50%;background:#1B6E48"></span><span style="font-size:13.5px;color:#2E3A4C">Abgeschlossen</span></span></td>
+            <td style="font-size:13.5px;color:#5B687C;padding:12px 16px;border-bottom:1px solid #F1F3F7">Gutachten und Rechnung hinterlegt, Honorar erfasst</td>
+            <td style="font-size:13.5px;color:#5B687C;padding:12px 16px;border-bottom:1px solid #F1F3F7">Alle Beteiligten</td>
+            <td style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#9AA5B4;padding:12px 0 12px 16px;border-bottom:1px solid #F1F3F7">success · #1B6E48</td>
+          </tr>
+          <tr>
+            <td style="padding:12px 16px 12px 0;border-bottom:1px solid #F1F3F7;white-space:nowrap"><span style="display:inline-flex;align-items:center;gap:8px"><span style="width:6px;height:6px;border-radius:50%;background:#A32318"></span><span style="font-size:13.5px;color:#2E3A4C">Abgelehnt</span></span></td>
+            <td style="font-size:13.5px;color:#5B687C;padding:12px 16px;border-bottom:1px solid #F1F3F7">Sachverständiger hat die Anfrage nicht übernommen</td>
+            <td style="font-size:13.5px;color:#5B687C;padding:12px 16px;border-bottom:1px solid #F1F3F7">Administration, Sachverständiger</td>
+            <td style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#9AA5B4;padding:12px 0 12px 16px;border-bottom:1px solid #F1F3F7">danger · #A32318</td>
+          </tr>
+          <tr>
+            <td style="padding:12px 16px 12px 0;white-space:nowrap"><span style="display:inline-flex;align-items:center;gap:8px"><span style="width:6px;height:6px;border-radius:50%;background:#A32318"></span><span style="font-size:13.5px;color:#2E3A4C">Storniert</span></span></td>
+            <td style="font-size:13.5px;color:#5B687C;padding:12px 16px">Vom Kunden oder von DKGZ zurückgezogen</td>
+            <td style="font-size:13.5px;color:#5B687C;padding:12px 16px">Alle Beteiligten</td>
+            <td style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#9AA5B4;padding:12px 0 12px 16px">danger · #A32318</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:32px;padding-top:48px">
+        <div style="border:1px solid #E3E7EE;border-radius:5px;padding:24px">
+          <div style="font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C;padding-bottom:20px">Statusverlauf im Auftrag</div>
+          <div style="display:flex;flex-direction:column;gap:0">
+            <div style="display:grid;grid-template-columns:20px minmax(0,1fr);gap:16px">
+              <div style="display:flex;flex-direction:column;align-items:center"><span style="width:10px;height:10px;border-radius:50%;background:#14294A;margin-top:5px"></span><span style="width:1px;flex:1;background:#E3E7EE;min-height:36px"></span></div>
+              <div style="padding-bottom:20px"><div style="font-size:13.5px;font-weight:500;color:#2E3A4C">Anfrage vermittelt</div><div style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#9AA5B4;font-variant-numeric:tabular-nums">17.08.2026 · 08:42</div></div>
+            </div>
+            <div style="display:grid;grid-template-columns:20px minmax(0,1fr);gap:16px">
+              <div style="display:flex;flex-direction:column;align-items:center"><span style="width:10px;height:10px;border-radius:50%;background:#14294A;margin-top:5px"></span><span style="width:1px;flex:1;background:#E3E7EE;min-height:36px"></span></div>
+              <div style="padding-bottom:20px"><div style="font-size:13.5px;font-weight:500;color:#2E3A4C">Auftrag angenommen</div><div style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#9AA5B4;font-variant-numeric:tabular-nums">17.08.2026 · 09:07 · M. Reinhardt</div></div>
+            </div>
+            <div style="display:grid;grid-template-columns:20px minmax(0,1fr);gap:16px">
+              <div style="display:flex;flex-direction:column;align-items:center"><span style="width:10px;height:10px;border-radius:50%;border:1px solid #CBD2DD;background:#FFFFFF;margin-top:5px"></span><span style="width:1px;flex:1;background:#E3E7EE;min-height:36px"></span></div>
+              <div style="padding-bottom:20px"><div style="font-size:13.5px;color:#9AA5B4">Unterlagen hochgeladen</div><div style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#CBD2DD">offen</div></div>
+            </div>
+            <div style="display:grid;grid-template-columns:20px minmax(0,1fr);gap:16px">
+              <div style="display:flex;flex-direction:column;align-items:center"><span style="width:10px;height:10px;border-radius:50%;border:1px solid #CBD2DD;background:#FFFFFF;margin-top:5px"></span></div>
+              <div><div style="font-size:13.5px;color:#9AA5B4">Auftrag abgeschlossen</div><div style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#CBD2DD">offen</div></div>
+            </div>
+          </div>
+        </div>
+        <div style="border:1px solid #E3E7EE;border-radius:5px;padding:24px">
+          <div style="font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#A32318;padding-bottom:20px">Nicht zulässig</div>
+          <div style="display:flex;flex-direction:column;gap:20px">
+            <div style="display:flex;align-items:center;gap:16px">
+              <span style="height:26px;padding:0 14px;border-radius:13px;background:#1B6E48;color:#FFFFFF;font-size:12px;font-weight:600;display:inline-flex;align-items:center;opacity:0.5">ANGENOMMEN</span>
+              <span style="font-size:13.5px;color:#5B687C">Gefüllte Pille mit Vollfarbe</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:16px">
+              <span style="height:26px;padding:0 10px;background:#E8F7EE;color:#1B6E48;border:1px solid #1B6E48;border-radius:3px;font-size:12px;display:inline-flex;align-items:center;opacity:0.5">angenommen</span>
+              <span style="font-size:13.5px;color:#5B687C">Getönte Statusflächen außerhalb der Palette</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:16px">
+              <span style="width:110px;height:26px;background:#E8F7EE;opacity:0.5;display:block"></span>
+              <span style="font-size:13.5px;color:#5B687C">Farbiger Zeilenhintergrund als Statuscodierung</span>
+            </div>
+            <p style="font-size:13.5px;line-height:1.6;color:#5B687C;border-top:1px solid #F1F3F7;padding-top:16px;margin:0">Farbe allein trägt nie die Information. Der Text steht immer daneben — auch aus Gründen der Barrierefreiheit.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="abschnitt-09" style="border-top:1px solid #E3E7EE">
+  <div style="max-width:1240px;margin:0 auto;padding:96px 24px;display:grid;grid-template-columns:72px minmax(0,1fr);gap:32px">
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#9AA5B4;padding-top:10px">09</div>
+    <div>
+      <h2 style="font-size:30px;line-height:1.2;font-weight:600;letter-spacing:-0.018em;color:#14294A">Ikonografie</h2>
+      <p style="font-size:17px;line-height:1.65;color:#5B687C;max-width:68ch;padding-top:16px">Linienicons, Strichstärke 1,5 px, 20 px in der Oberfläche und 24 px in Kopfzeilen. Einfarbig in gray-600 oder navy-700. Keine farbigen Kreise, keine Duotone-Varianten, keine Emoji.</p>
+
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:24px 12px;padding-top:48px">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center"><span data-lucide="file-text" width="24" height="24" style="color:#14294A;display:block"></span><span style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;line-height:1.4;color:#9AA5B4">Dokument</span></div>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center"><span data-lucide="car" width="24" height="24" style="color:#14294A;display:block"></span><span style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;line-height:1.4;color:#9AA5B4">Fahrzeug</span></div>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center"><span data-lucide="map-pin" width="24" height="24" style="color:#14294A;display:block"></span><span style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;line-height:1.4;color:#9AA5B4">Standort</span></div>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center"><span data-lucide="upload" width="24" height="24" style="color:#14294A;display:block"></span><span style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;line-height:1.4;color:#9AA5B4">Upload</span></div>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center"><span data-lucide="check" width="24" height="24" style="color:#14294A;display:block"></span><span style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;line-height:1.4;color:#9AA5B4">Bestätigt</span></div>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center"><span data-lucide="x" width="24" height="24" style="color:#14294A;display:block"></span><span style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;line-height:1.4;color:#9AA5B4">Ablehnen</span></div>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center"><span data-lucide="clock" width="24" height="24" style="color:#14294A;display:block"></span><span style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;line-height:1.4;color:#9AA5B4">Frist</span></div>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center"><span data-lucide="euro" width="24" height="24" style="color:#14294A;display:block"></span><span style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;line-height:1.4;color:#9AA5B4">Honorar</span></div>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center"><span data-lucide="user" width="24" height="24" style="color:#14294A;display:block"></span><span style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;line-height:1.4;color:#9AA5B4">Person</span></div>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center"><span data-lucide="shield-check" width="24" height="24" style="color:#14294A;display:block"></span><span style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;line-height:1.4;color:#9AA5B4">Geprüft</span></div>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center"><span data-lucide="phone" width="24" height="24" style="color:#14294A;display:block"></span><span style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;line-height:1.4;color:#9AA5B4">Telefon</span></div>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center"><span data-lucide="mail" width="24" height="24" style="color:#14294A;display:block"></span><span style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;line-height:1.4;color:#9AA5B4">E-Mail</span></div>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center"><span data-lucide="filter" width="24" height="24" style="color:#14294A;display:block"></span><span style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;line-height:1.4;color:#9AA5B4">Filter</span></div>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center"><span data-lucide="search" width="24" height="24" style="color:#14294A;display:block"></span><span style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;line-height:1.4;color:#9AA5B4">Suche</span></div>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center"><span data-lucide="download" width="24" height="24" style="color:#14294A;display:block"></span><span style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;line-height:1.4;color:#9AA5B4">Download</span></div>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center"><span data-lucide="square-pen" width="24" height="24" style="color:#14294A;display:block"></span><span style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;line-height:1.4;color:#9AA5B4">Bearbeiten</span></div>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center"><span data-lucide="settings" width="24" height="24" style="color:#14294A;display:block"></span><span style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;line-height:1.4;color:#9AA5B4">Einstellungen</span></div>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center"><span data-lucide="bar-chart-3" width="24" height="24" style="color:#14294A;display:block"></span><span style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;line-height:1.4;color:#9AA5B4">Statistik</span></div>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center"><span data-lucide="bell" width="24" height="24" style="color:#14294A;display:block"></span><span style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;line-height:1.4;color:#9AA5B4">Hinweis</span></div>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center"><span data-lucide="log-out" width="24" height="24" style="color:#14294A;display:block"></span><span style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;line-height:1.4;color:#9AA5B4">Abmelden</span></div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:32px;margin-top:48px;border-top:1px solid #E3E7EE;padding-top:32px">
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;line-height:1.8;color:#9AA5B4">Set: Lucide · 1.5 px<br>Größen: 16 / 20 / 24 px<br>Farben: #5B687C, #14294A</div>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;line-height:1.8;color:#9AA5B4">Optische Korrektur:<br>Icons in Buttons 1 px nach oben<br>ausgleichen, nicht mathematisch zentrieren</div>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;line-height:1.8;color:#9AA5B4">Nicht verwendet:<br>gefüllte Icons, Duotone, 3D,<br>Icon in farbigem Kreis, Emoji</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="abschnitt-10" style="border-top:1px solid #E3E7EE">
+  <div style="max-width:1240px;margin:0 auto;padding:96px 24px;display:grid;grid-template-columns:72px minmax(0,1fr);gap:32px">
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#9AA5B4;padding-top:10px">10</div>
+    <div>
+      <h2 style="font-size:30px;line-height:1.2;font-weight:600;letter-spacing:-0.018em;color:#14294A">Bewegung</h2>
+      <p style="font-size:17px;line-height:1.65;color:#5B687C;max-width:68ch;padding-top:16px">Bewegung bestätigt eine Handlung. Sie erzählt nichts, sie führt nichts vor. Nichts läuft länger als 450 ms, nichts wiederholt sich außer Ladeindikatoren.</p>
+
+      <div style="display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:48px;padding-top:48px;align-items:start">
+        <div style="border:1px solid #E3E7EE;border-radius:5px">
+          <div style="font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C;padding:20px 24px;border-bottom:1px solid #E3E7EE">Verwendet</div>
+          <table style="width:100%">
+            <tbody>
+              <tr><td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#2E3A4C;padding:12px 24px;border-bottom:1px solid #F1F3F7">Hover / Focus</td><td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#5B687C;text-align:right;padding:12px 24px;border-bottom:1px solid #F1F3F7;font-variant-numeric:tabular-nums">140 ms · cubic-bezier(.4,0,.2,1)</td></tr>
+              <tr><td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#2E3A4C;padding:12px 24px;border-bottom:1px solid #F1F3F7">Tabellenzeile Hover</td><td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#5B687C;text-align:right;padding:12px 24px;border-bottom:1px solid #F1F3F7;font-variant-numeric:tabular-nums">120 ms · Hintergrund</td></tr>
+              <tr><td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#2E3A4C;padding:12px 24px;border-bottom:1px solid #F1F3F7">Akkordeon, Dropdown</td><td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#5B687C;text-align:right;padding:12px 24px;border-bottom:1px solid #F1F3F7;font-variant-numeric:tabular-nums">180 ms · Höhe + Chevron</td></tr>
+              <tr><td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#2E3A4C;padding:12px 24px;border-bottom:1px solid #F1F3F7">Hero-Eintritt, einmalig</td><td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#5B687C;text-align:right;padding:12px 24px;border-bottom:1px solid #F1F3F7;font-variant-numeric:tabular-nums">420 ms · Opazität + 12 px Y</td></tr>
+              <tr><td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#2E3A4C;padding:12px 24px;border-bottom:1px solid #F1F3F7">Kennzahlen zählen auf</td><td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#5B687C;text-align:right;padding:12px 24px;border-bottom:1px solid #F1F3F7;font-variant-numeric:tabular-nums">900 ms · einmal, nur Startseite</td></tr>
+              <tr><td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#2E3A4C;padding:12px 24px;border-bottom:1px solid #F1F3F7">Buttondruck</td><td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#5B687C;text-align:right;padding:12px 24px;border-bottom:1px solid #F1F3F7;font-variant-numeric:tabular-nums">translateY(1px)</td></tr>
+              <tr><td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#2E3A4C;padding:12px 24px">Skeleton beim Laden</td><td style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;color:#5B687C;text-align:right;padding:12px 24px;font-variant-numeric:tabular-nums">1200 ms · Schimmer</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div style="border:1px solid #E3E7EE;border-radius:5px;background:#F8F9FB;height:100%">
+          <div style="font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#A32318;padding:20px 24px;border-bottom:1px solid #E3E7EE">Nicht verwendet</div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:13.5px;line-height:2;color:#5B687C;padding:16px 24px 24px">Scroll-Jacking<br>Parallax<br>Fade-up bei jedem Element<br>Gestaffelte Karteneinblendung<br>Laufschriften<br>Automatische Karussells<br>Schreibmaschineneffekt<br>Animierte Verlaufsflächen<br>Schwebende Formen<br>Hover-Neigung<br>Alles über 450 ms</div>
+        </div>
+      </div>
+
+      <div style="display:flex;align-items:center;gap:32px;flex-wrap:wrap;margin-top:32px;border:1px solid #E3E7EE;border-radius:5px;padding:24px">
+        <span style="font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C">Zum Prüfen</span>
+        <button type="button" style="height:40px;padding:0 18px;background:#14294A;color:#FFFFFF;border:1px solid #14294A;border-radius:3px;font-size:15px;font-weight:500;cursor:pointer;transition:background 140ms cubic-bezier(0.4,0,0.2,1),transform 140ms cubic-bezier(0.4,0,0.2,1)" style-hover="background:#27508B;border-color:#27508B" style-active="background:#0E1E36;transform:translateY(1px)">Zeigen Sie darauf</button>
+        <div style="border:1px solid #CBD2DD;border-radius:5px;padding:12px 16px;font-size:13.5px;color:#2E3A4C;transition:border-color 140ms cubic-bezier(0.4,0,0.2,1)" style-hover="border-color:#14294A">Karte mit Rahmenwechsel — kein Anheben, kein Schatten</div>
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#9AA5B4">prefers-reduced-motion: alle Übergänge auf 0 ms</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="abschnitt-11" style="border-top:1px solid #E3E7EE">
+  <div style="max-width:1240px;margin:0 auto;padding:96px 24px;display:grid;grid-template-columns:72px minmax(0,1fr);gap:32px">
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#9AA5B4;padding-top:10px">11</div>
+    <div>
+      <h2 style="font-size:30px;line-height:1.2;font-weight:600;letter-spacing:-0.018em;color:#14294A">Logo-Anwendung</h2>
+      <p style="font-size:17px;line-height:1.65;color:#5B687C;max-width:68ch;padding-top:16px">Das Lockup besteht aus Siegel, Wortmarke, Trennlinie und Beschreibung. Es wird nie neu gesetzt, nie verzerrt und nie umgefärbt. Die endgültige Logodatei wird als SVG eingesetzt; hier steht der Aufbau als Platzhalter.</p>
+
+      <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:32px;padding-top:48px">
+        <div>
+          <div style="font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C;padding-bottom:16px">Schutzraum</div>
+          <div style="border:1px solid #E3E7EE;padding:32px;background:#FFFFFF">
+            <div style="border:1px dashed #CBD2DD;padding:24px;display:inline-block">
+              <div style="display:flex;align-items:center;gap:20px">
+                <div style="width:44px;height:44px;border-radius:50%;border:1px solid #14294A;display:grid;place-items:center;flex:none">
+                  <div style="width:34px;height:34px;border-radius:50%;border:1px solid var(--dkgz-accent,#B08A2E);display:grid;place-items:center"><span style="font-size:8px;font-weight:700;letter-spacing:0.04em;color:#14294A">DKGZ</span></div>
+                </div>
+                <div style="display:flex;align-items:center;gap:14px">
+                  <span style="font-size:28px;font-weight:700;letter-spacing:-0.022em;color:#14294A;line-height:1">DKGZ</span>
+                  <span style="width:1px;height:30px;background:var(--dkgz-accent,#B08A2E)"></span>
+                  <span style="font-size:10px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:#5B687C;line-height:1.5">Deutsche<br>KFZ-Gutachterzentrale</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;line-height:1.7;color:#9AA5B4;padding-top:12px">Schutzraum = 24 px allseitig, entspricht der halben Siegelhöhe.<br>Mindesthöhe digital 32 px · Print 10 mm.</div>
+        </div>
+        <div>
+          <div style="font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#5B687C;padding-bottom:16px">Platzierung</div>
+          <div style="display:grid;grid-template-columns:1fr;gap:16px">
+            <div style="border:1px solid #E3E7EE;background:#FFFFFF;padding:24px;display:flex;align-items:center;justify-content:space-between;gap:24px">
+              <div style="display:flex;align-items:center;gap:14px">
+                <span style="font-size:22px;font-weight:700;letter-spacing:-0.022em;color:#14294A;line-height:1">DKGZ</span>
+                <span style="width:1px;height:24px;background:var(--dkgz-accent,#B08A2E)"></span>
+                <span style="font-size:9px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:#5B687C;line-height:1.5">Deutsche<br>KFZ-Gutachterzentrale</span>
+              </div>
+              <span style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:#9AA5B4">Kopfzeile · 40 px Höhe</span>
+            </div>
+            <div style="border:1px solid #0A1628;background:#0A1628;padding:24px;display:flex;align-items:center;justify-content:space-between;gap:24px">
+              <div style="display:flex;align-items:center;gap:14px">
+                <span style="font-size:22px;font-weight:700;letter-spacing:-0.022em;color:#FFFFFF;line-height:1">DKGZ</span>
+                <span style="width:1px;height:24px;background:var(--dkgz-accent,#B08A2E)"></span>
+                <span style="font-size:9px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:rgba(255,255,255,0.72);line-height:1.5">Deutsche<br>KFZ-Gutachterzentrale</span>
+              </div>
+              <span style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:rgba(255,255,255,0.45)">Fußbereich · navy-900</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:#A32318;padding:48px 0 16px">Nicht zulässig</div>
+      <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px">
+        <div>
+          <div style="border:1px solid #E3E7EE;padding:24px;height:112px;display:grid;place-items:center;background:linear-gradient(to top right,transparent 49.6%,#A32318 49.6%,#A32318 50.4%,transparent 50.4%)">
+            <span style="font-size:26px;font-weight:700;letter-spacing:-0.022em;color:#14294A;line-height:1;transform:scaleX(1.45);display:inline-block">DKGZ</span>
+          </div>
+          <div style="font-size:13.5px;color:#5B687C;padding-top:10px">Verzerrt oder ungleichmäßig skaliert</div>
+        </div>
+        <div>
+          <div style="border:1px solid #E3E7EE;padding:24px;height:112px;display:grid;place-items:center;background:linear-gradient(to top right,transparent 49.6%,#A32318 49.6%,#A32318 50.4%,transparent 50.4%),#27508B">
+            <span style="font-size:26px;font-weight:700;letter-spacing:-0.022em;color:#14294A;line-height:1">DKGZ</span>
+          </div>
+          <div style="font-size:13.5px;color:#5B687C;padding-top:10px">Navy auf Navy, zu geringer Kontrast</div>
+        </div>
+        <div>
+          <div style="border:1px solid #E3E7EE;padding:24px;height:112px;display:grid;place-items:center;background:linear-gradient(to top right,transparent 49.6%,#A32318 49.6%,#A32318 50.4%,transparent 50.4%)">
+            <span style="font-size:26px;font-weight:700;letter-spacing:-0.022em;color:var(--dkgz-accent,#B08A2E);line-height:1">DKGZ</span>
+          </div>
+          <div style="font-size:13.5px;color:#5B687C;padding-top:10px">Wortmarke im Akzentton umgefärbt</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="abschnitt-12" style="border-top:1px solid #E3E7EE;background:#0A1628">
+  <div style="max-width:1240px;margin:0 auto;padding:96px 24px;display:grid;grid-template-columns:72px minmax(0,1fr);gap:32px">
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:rgba(255,255,255,0.35);padding-top:10px">12</div>
+    <div>
+      <h2 style="font-size:30px;line-height:1.2;font-weight:600;letter-spacing:-0.018em;color:#FFFFFF">Grundsätze</h2>
+      <p style="font-size:17px;line-height:1.65;color:rgba(255,255,255,0.72);max-width:68ch;padding-top:16px">Fünf Entscheidungen, aus denen sich alles Übrige ableitet. Wenn eine Gestaltungsfrage offen ist, entscheidet dieser Abschnitt.</p>
+
+      <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:48px 32px;padding-top:64px">
+        <div>
+          <div style="width:24px;height:2px;background:var(--dkgz-accent,#B08A2E)"></div>
+          <div style="font-size:17px;line-height:1.4;font-weight:600;color:#FFFFFF;padding-top:16px">Kanten statt Kissen</div>
+          <p style="font-size:15px;line-height:1.6;color:rgba(255,255,255,0.72);padding-top:8px">Struktur entsteht durch Linien und Abstand. Wo eine Haarlinie genügt, kommt keine Karte, kein Schatten und kein Radius zum Einsatz.</p>
+        </div>
+        <div>
+          <div style="width:24px;height:2px;background:var(--dkgz-accent,#B08A2E)"></div>
+          <div style="font-size:17px;line-height:1.4;font-weight:600;color:#FFFFFF;padding-top:16px">Inhalt vor Effekt</div>
+          <p style="font-size:15px;line-height:1.6;color:rgba(255,255,255,0.72);padding-top:8px">Dichte, echte Daten sind das Gestaltungsmittel. Kein Abschnitt existiert, um eine Fläche zu füllen.</p>
+        </div>
+        <div>
+          <div style="width:24px;height:2px;background:var(--dkgz-accent,#B08A2E)"></div>
+          <div style="font-size:17px;line-height:1.4;font-weight:600;color:#FFFFFF;padding-top:16px">Eine Farbe trägt</div>
+          <p style="font-size:15px;line-height:1.6;color:rgba(255,255,255,0.72);padding-top:8px">Navy führt, Grau strukturiert, Messing weist hin. Weitere Buntfarben treten ausschließlich als Status auf.</p>
+        </div>
+        <div>
+          <div style="width:24px;height:2px;background:var(--dkgz-accent,#B08A2E)"></div>
+          <div style="font-size:17px;line-height:1.4;font-weight:600;color:#FFFFFF;padding-top:16px">Zahlen sind Fakten</div>
+          <p style="font-size:15px;line-height:1.6;color:rgba(255,255,255,0.72);padding-top:8px">Beträge, Fristen und Referenzen erscheinen in Mono mit Tabellenziffern. Es wird keine Kennzahl gezeigt, die nicht belegbar ist.</p>
+        </div>
+        <div>
+          <div style="width:24px;height:2px;background:var(--dkgz-accent,#B08A2E)"></div>
+          <div style="font-size:17px;line-height:1.4;font-weight:600;color:#FFFFFF;padding-top:16px">Sprache ist förmlich</div>
+          <p style="font-size:15px;line-height:1.6;color:rgba(255,255,255,0.72);padding-top:8px">Durchgehend „Sie“. Beschriftungen benennen die Handlung, nicht die Stimmung. Keine Ausrufezeichen, keine Werbesprache.</p>
+        </div>
+        <div>
+          <div style="width:24px;height:2px;background:var(--dkgz-accent,#B08A2E)"></div>
+          <div style="font-size:17px;line-height:1.4;font-weight:600;color:#FFFFFF;padding-top:16px">Zeitlos vor modisch</div>
+          <p style="font-size:15px;line-height:1.6;color:rgba(255,255,255,0.72);padding-top:8px">Wenn eine Entscheidung in fünf Jahren datiert wirkt, wird sie nicht getroffen.</p>
+        </div>
+      </div>
+
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap;margin-top:64px;border-top:1px solid rgba(255,255,255,0.12);padding-top:24px">
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:rgba(255,255,255,0.45)">DKGZ · Design Foundations · Version 1.0 · Stand 17.08.2026</span>
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:rgba(255,255,255,0.45)">Offene Punkte: Logodatei · Leistungsliste · Bildmaterial</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{
+  &quot;accent&quot;: {
+    &quot;editor&quot;: &quot;color&quot;,
+    &quot;default&quot;: &quot;#B08A2E&quot;,
+    &quot;tsType&quot;: &quot;string&quot;,
+    &quot;options&quot;: [&quot;#B08A2E&quot;, &quot;#8C6D22&quot;, &quot;#A28B5B&quot;, &quot;#14294A&quot;],
+    &quot;section&quot;: &quot;Marke&quot;
+  },
+  &quot;flagCue&quot;: {
+    &quot;editor&quot;: &quot;boolean&quot;,
+    &quot;default&quot;: true,
+    &quot;tsType&quot;: &quot;boolean&quot;,
+    &quot;section&quot;: &quot;Marke&quot;
+  },
+  &quot;showSpecs&quot;: {
+    &quot;editor&quot;: &quot;boolean&quot;,
+    &quot;default&quot;: true,
+    &quot;tsType&quot;: &quot;boolean&quot;,
+    &quot;section&quot;: &quot;Dokumentation&quot;
+  }
+}">
+class Component extends DCLogic {
+  componentDidMount() { this.sync(); }
+  componentDidUpdate() { this.sync(); }
+  componentWillUnmount() { if (this._t) clearTimeout(this._t); }
+  sync() {
+    const accent = this.props.accent || '#B08A2E';
+    document.documentElement.style.setProperty('--dkgz-accent', accent);
+    this.paintIcons();
+  }
+  paintIcons() {
+    if (this._t) clearTimeout(this._t);
+    let tries = 0;
+    const go = () => {
+      if (window.lucide && window.lucide.createIcons) {
+        try {
+          window.lucide.createIcons({ attrs: { width: 20, height: 20, 'stroke-width': 1.5, 'aria-hidden': 'true' } });
+        } catch (e) {}
+        return;
+      }
+      if (tries++ < 80) this._t = setTimeout(go, 100);
+    };
+    go();
+  }
+  renderVals() {
+    return {
+      showSpecs: this.props.showSpecs !== false,
+      flagCue: this.props.flagCue !== false
+    };
+  }
+}
+</script>
+</body>
+</html>

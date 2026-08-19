@@ -1,0 +1,185 @@
+/* DKGZ — Deutsche KFZ-Gutachterzentrale
+ * Every value here is extracted from design-src/DKGZ Design Foundations.dc.html.
+ * Fonts are self-hosted via @fontsource: German courts have held that loading
+ * fonts from Google's CDN unlawfully transmits visitor IP addresses (GDPR).
+ * There must be zero requests to fonts.googleapis.com / fonts.gstatic.com.
+ */
+@import 'tailwindcss';
+
+@import '@fontsource/ibm-plex-sans/400.css';
+@import '@fontsource/ibm-plex-sans/500.css';
+@import '@fontsource/ibm-plex-sans/600.css';
+@import '@fontsource/ibm-plex-sans/700.css';
+@import '@fontsource/ibm-plex-mono/400.css';
+@import '@fontsource/ibm-plex-mono/500.css';
+
+@source '../js/**/*.vue';
+@source '../js/**/*.js';
+@source '../views/**/*.blade.php';
+
+@theme {
+  /* ---- Colour · Foundations 01 "Farbe" ------------------------------- */
+  --color-navy-900: #0A1628;
+  --color-navy-800: #0E1E36;
+  --color-navy-700: #14294A;
+  --color-navy-600: #1C3A66;
+  --color-navy-500: #27508B;
+  --color-navy-100: #E8EDF5;
+
+  --color-gray-50:  #F8F9FB;
+  --color-gray-100: #F1F3F7;
+  --color-gray-200: #E3E7EE;
+  --color-gray-300: #CBD2DD;
+  --color-gray-400: #9AA5B4;
+  --color-gray-600: #5B687C;
+  --color-gray-800: #2E3A4C;
+
+  /* Gold. Admin-overridable at runtime through --dkgz-accent. */
+  --color-accent:      #B08A2E;
+  --color-accent-dark: #8C6D22;
+  --color-accent-mute: #A28B5B;
+
+  --color-danger:     #A32318;
+  --color-danger-900: #8A1D14;
+  --color-success:    #1B6E48;
+  --color-success-50: #E8F7EE;
+  --color-warning:    #9C6F15;
+
+  --color-flag-black: #000000;
+  --color-flag-red:   #DD0000;
+  --color-flag-gold:  #FFCE00;
+
+  /* ---- Type · Foundations 02 "Typografie" ---------------------------- */
+  --font-sans: 'IBM Plex Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --font-mono: 'IBM Plex Mono', 'Courier New', monospace;
+
+  --text-display:  52px;
+  --text-display--line-height: 1.08;
+  --text-display--letter-spacing: -0.028em;
+  --text-h1:       40px;
+  --text-h1--line-height: 1.12;
+  --text-h1--letter-spacing: -0.024em;
+  --text-h2:       30px;
+  --text-h2--line-height: 1.2;
+  --text-h2--letter-spacing: -0.018em;
+  --text-h3:       22px;
+  --text-h3--line-height: 1.3;
+  --text-h3--letter-spacing: -0.012em;
+  --text-h4:       20px;
+  --text-h4--line-height: 1.3;
+  --text-h4--letter-spacing: -0.012em;
+  --text-mail-h1:  24px;
+  --text-mail-h1--line-height: 1.22;
+  --text-mail-h1--letter-spacing: -0.016em;
+  --text-wordmark: 26px;
+  --text-wordmark--line-height: 1;
+  --text-wordmark--letter-spacing: -0.022em;
+  --text-lead:     17px;
+  --text-lead--line-height: 1.65;
+  --text-base:     15px;
+  --text-base--line-height: 1.6;
+  --text-sm:       13.5px;
+  --text-sm--line-height: 1.5;
+  --text-xs:       12.5px;
+  --text-xs--line-height: 1.5;
+  --text-eyebrow:  11.5px;
+  --text-eyebrow--line-height: 1.4;
+  --text-eyebrow--letter-spacing: 0.09em;
+  --text-tab:      11px;   /* mobile bottom-tab label only — see DECISIONS.md */
+  --text-tab--line-height: 1.2;
+  --text-seal:     9px;
+  --text-seal--letter-spacing: 0.14em;
+
+  /* ---- Geometry · Foundations 04 "Geometrie & Tiefe" ----------------- */
+  --radius-xs:   2px;
+  --radius-sm:   3px;   /* default: buttons, inputs, code cells */
+  --radius-card: 5px;   /* cards, panels */
+
+  --shadow-1: 0 1px 2px rgba(10, 22, 40, 0.05);
+  --shadow-2: 0 4px 12px rgba(10, 22, 40, 0.10);
+  --shadow-3: 0 16px 48px rgba(10, 22, 40, 0.16);
+
+  /* ---- Control sizing ------------------------------------------------ */
+  --spacing-control:    46px;  /* auth + portal field/button height */
+  --spacing-control-sm: 40px;  /* compact public form */
+  --spacing-cta:        44px;  /* primary public CTA, min touch target */
+  --spacing-tabbar:     64px;
+  --spacing-appbar:     56px;
+
+  --container-shell: 1240px;
+  --container-form:  420px;
+
+  /* ---- Motion · Foundations 10 "Bewegung" ---------------------------- */
+  --ease-dkgz: cubic-bezier(0.4, 0, 0.2, 1);
+  --duration-focus:      120ms;
+  --duration-hover:      140ms;
+  --duration-meter:      160ms;
+  --duration-disclosure: 180ms;
+  --duration-step:       200ms;
+  --duration-sheet:      240ms;
+  --duration-rise:       360ms;
+  --duration-hero:       420ms;
+}
+
+/* Runtime-themeable accent: the admin panel writes --dkgz-accent onto :root,
+ * so changing the brand colour rethemes the site with no rebuild. */
+:root {
+  --dkgz-accent: var(--color-accent);
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    margin: 0;
+    background: var(--color-white);
+    color: var(--color-gray-800);
+    font-family: var(--font-sans);
+    font-size: var(--text-base);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  h1, h2, h3, h4, p { margin: 0; }
+
+  ::selection { background: var(--color-navy-100); }
+
+  /* Every numeric column and every figure aligns on the decimal. */
+  table, .tabular, [data-numeric] {
+    font-variant-numeric: tabular-nums;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-navy-500);
+    outline-offset: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+@layer utilities {
+  /* Foundations: the 24×2px gold rule that sits under every eyebrow. */
+  .rule-accent {
+    width: 24px;
+    height: 2px;
+    background: var(--dkgz-accent);
+  }
+
+  .measure      { max-width: 68ch; }
+  .measure-lead { max-width: 62ch; }
+}
+
+/* Foundations 10 "Bewegung" — the only animations in the system. */
+@keyframes dkgz-enter { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+@keyframes dkgz-rise  { from { opacity: 0; transform: translateY(8px);  } to { opacity: 1; transform: none; } }
+@keyframes dkgz-spin  { to { transform: rotate(360deg); } }
+@keyframes dkgz-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.55; } }
