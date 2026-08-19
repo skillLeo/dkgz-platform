@@ -77,7 +77,7 @@ const submit = () => form.post('/anfrage', { forceFormData: true })
 
     <PublicLayout :sticky-cta="false">
         <div class="bg-gray-50">
-            <div class="mx-auto grid w-full max-w-[1068px] grid-cols-1 gap-12 px-4 py-16 md:px-6 lg:grid-cols-[minmax(0,720px)_300px] lg:items-start">
+            <div class="mx-auto grid w-full max-w-(--container-wide) grid-cols-1 gap-12 px-4 py-16 md:px-6 lg:grid-cols-[minmax(0,720px)_300px] lg:items-start">
                 <div class="min-w-0">
                     <SectionLabel :text="t('kopf', 'eyebrow', 'Kostenlose Anfrage')" />
                     <h1 class="pt-6 text-h1 font-bold text-navy-700">{{ t('kopf', 'ueberschrift', 'Gutachter anfragen') }}</h1>

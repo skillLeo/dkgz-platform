@@ -13,7 +13,7 @@ const t = (section, field, fallback = '') => props.content?.[section]?.[field] ?
     <Head title="Vielen Dank" />
 
     <PublicLayout :sticky-cta="false">
-        <div class="mx-auto w-full max-w-[680px] px-4 py-24 md:px-6">
+        <div class="mx-auto w-full max-w-(--container-prose) px-4 py-24 md:px-6">
             <div class="grid h-14 w-14 place-items-center rounded-full border-2 border-navy-700 text-navy-700">
                 <Check :size="26" :stroke-width="1.5" aria-hidden="true" />
             </div>

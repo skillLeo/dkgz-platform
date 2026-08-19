@@ -43,7 +43,7 @@ const isActive = (tab) => {
                         <component :is="tab.icon" :size="24" :stroke-width="1.5" aria-hidden="true" />
                         <span
                             v-if="tab.badge"
-                            class="absolute -right-2 -top-1 grid h-4 min-w-4 place-items-center rounded-full bg-navy-700 px-1 font-mono text-[10px] tabular-nums text-white"
+                            class="absolute -right-2 -top-1 grid h-4 min-w-4 place-items-center rounded-full bg-navy-700 px-1 font-mono text-badge tabular-nums text-white"
                         >{{ tab.badge > 99 ? '99+' : tab.badge }}</span>
                     </span>
                     <span class="text-tab">{{ tab.label }}</span>

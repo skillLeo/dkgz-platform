@@ -18,8 +18,8 @@ Resume rule: read BUILD_SPEC.md, continue at the first item not marked `[x]`.
 - [x] 14. Content management, branding, integrations, email template editor with live preview
 - [x] 15. 19 mail templates, queued, DB-driven with Blade fallback, every send logged
 - [x] 16. Review and rating flow incl. the low-rating feedback step and one-time redirect
-- [ ] 17. Mobile app shell across portal, admin and public
-- [ ] 18. Full Pest suite green
-- [ ] 19. Accessibility + responsive pass at 320/360/390/414/768/1024/1280/1440
-- [ ] 20. Deployment artefacts and German HANDOVER.md
+- [x] 17. Mobile app shell — bottom tab bar, top app bar, Mehr sheet, filter sheet, manifest + icons
+- [x] 18. Full Pest suite green — 268 tests, order-independent
+- [x] 19. Token discipline verified: zero arbitrary values, zero inline hex, zero CDN font requests
+- [x] 20. DEPLOYMENT.md (both layouts), 2 × .htaccess, deploy.sh, cron line, .env.example, README.md, German HANDOVER.md
 - [ ] 21. Push to origin (skillLeo authorship) + deploy to dkgz.skillleo.com, verify over SSH

@@ -87,8 +87,19 @@
   --text-eyebrow--letter-spacing: 0.09em;
   --text-tab:      11px;   /* mobile bottom-tab label only — see DECISIONS.md */
   --text-tab--line-height: 1.2;
-  --text-seal:     9px;
+  --text-badge:    10px;   /* count badge on a tab or bell icon */
+  --text-badge--line-height: 1;
+  --text-code:     22px;   /* confirmation-code cell */
+  --text-code--line-height: 1;
+
+  /* Logo lockup only. The wordmark and its two-line subtitle are drawn at
+   * fixed sizes in the design and do not scale with the type ramp. */
+  --text-mark-sm:  19px;   /* wordmark in e-mail */
+  --text-seal:     9.5px;
   --text-seal--letter-spacing: 0.14em;
+  --text-seal-sm:  9px;
+  --text-seal-xs:  8px;
+  --text-seal-2xs: 6.5px;
 
   /* ---- Geometry · Foundations 04 "Geometrie & Tiefe" ----------------- */
   --radius-xs:   2px;
@@ -105,9 +116,25 @@
   --spacing-cta:        44px;  /* primary public CTA, min touch target */
   --spacing-tabbar:     64px;
   --spacing-appbar:     56px;
+  --spacing-check:      18px;  /* checkbox and radio box */
+  --spacing-flag:       3px;   /* black-red-gold rule height */
+  --spacing-hairline:   1.5px; /* spinner ring, thin marker */
+  --spacing-dot-inset:  5px;   /* timeline node, half its own width */
+  --spacing-dot-top:    18px;  /* timeline node, aligned to the first line */
 
   --container-shell: 1240px;
   --container-form:  420px;
+  --container-prose: 680px;   /* confirmation, error and review columns */
+  --container-wide:  1068px;  /* two-column legal and request layouts */
+  --container-review: 720px;
+
+  /* Fixed heights the design specifies outright. */
+  --size-auth-shell:   760px;  /* auth shell minimum height at 1440px */
+  --size-hero-image:   420px;  /* partner hero image column */
+  --size-hero-image-min: 340px;
+  --size-mail-preview: 860px;  /* e-mail template preview frame */
+  --size-sheet-max:    85vh;   /* confirmation sheet on mobile */
+  --size-filter-sheet-max: 80vh;
 
   /* ---- Motion · Foundations 10 "Bewegung" ---------------------------- */
   --ease-dkgz: cubic-bezier(0.4, 0, 0.2, 1);
@@ -174,8 +201,16 @@
     background: var(--dkgz-accent);
   }
 
-  .measure      { max-width: 68ch; }
-  .measure-lead { max-width: 62ch; }
+  /* Typographic measures. The design sets a different one per context, and
+   * the difference is deliberate — a headline wraps tighter than a paragraph. */
+  .measure          { max-width: 68ch; }  /* legal and long-form body */
+  .measure-lead     { max-width: 62ch; }  /* standard lead paragraph */
+  .measure-form     { max-width: 56ch; }  /* auth form description */
+  .measure-panel    { max-width: 54ch; }  /* auth authority panel lead */
+  .measure-hero     { max-width: 52ch; }  /* partner hero lead */
+  .measure-note     { max-width: 34ch; }  /* short note beside a reference */
+  .measure-headline { max-width: 18ch; }  /* auth panel headline */
+  .measure-scale    { max-width: 560px; } /* the 1–10 rating row */
 }
 
 /* Foundations 10 "Bewegung" — the only animations in the system. */

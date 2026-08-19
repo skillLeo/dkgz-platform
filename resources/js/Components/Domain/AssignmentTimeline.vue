@@ -23,7 +23,7 @@ const actorLabel = (type) => ({
 <template>
     <ol v-if="events.length" class="border-l border-gray-200">
         <li v-for="(event, index) in events" :key="index" class="relative py-3 pl-6">
-            <span class="absolute -left-[5px] top-[18px] grid h-2.5 w-2.5 place-items-center rounded-full bg-navy-700" aria-hidden="true" />
+            <span class="absolute -left-(--spacing-dot-inset) top-(--spacing-dot-top) grid h-2.5 w-2.5 place-items-center rounded-full bg-navy-700" aria-hidden="true" />
             <div class="flex flex-wrap items-baseline justify-between gap-3">
                 <span class="text-base text-gray-800">{{ event.label ?? event.to_status }}</span>
                 <span class="font-mono text-xs tabular-nums text-gray-400">{{ dateTime(event.created_at) }}</span>

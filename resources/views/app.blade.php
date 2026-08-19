@@ -9,9 +9,12 @@
 
     <title inertia>{{ config('app.name', 'DKGZ Deutsche KFZ-Gutachterzentrale') }}</title>
 
-    <link rel="icon" href="{{ $faviconUrl ?? '/favicon.ico' }}" sizes="any">
+    <link rel="icon" href="{{ $faviconUrl ?? '/icons/icon-192.png' }}" sizes="any">
     <link rel="apple-touch-icon" href="/apple-touch-icon.png">
     <link rel="manifest" href="/site.webmanifest">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="DKGZ">
 
     {{-- Admin-configured brand colours, injected as custom properties so a
          colour change in the admin rethemes the site without a rebuild. --}}

@@ -107,7 +107,7 @@ const activeCount = () =>
                 @click="sheetOpen = false"
             />
             <div
-                class="relative max-h-[80vh] overflow-y-auto rounded-t-card bg-white pb-[env(safe-area-inset-bottom)]"
+                class="relative max-h-(--size-filter-sheet-max) overflow-y-auto rounded-t-card bg-white pb-[env(safe-area-inset-bottom)]"
                 style="animation: dkgz-rise 240ms cubic-bezier(0.4,0,0.2,1) both"
                 role="dialog"
                 aria-modal="true"

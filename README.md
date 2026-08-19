@@ -1,58 +1,122 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# DKGZ — Deutsche KFZ-Gutachterzentrale
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A nationwide German vehicle-assessor referral platform. A customer submits one
+short form with no account; the system matches the request to assessors whose
+service area covers that postal code and who are currently available; the first
+to accept takes the assignment and it closes for everyone else. Contact details
+stay hidden until acceptance. The assessor works the job outside the platform,
+uploads the report and the invoice they issued, marks it complete and enters the
+fee actually charged. DKGZ records a referral commission on that fee.
 
-## About Laravel
+**No money moves through this system.** There is no payment gateway, no wallet
+and no payout — the commission is a record, not a transaction.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Laravel · Inertia 2 · Vue 3 · Tailwind 4 · MySQL, built for shared hosting.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+---
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Local setup
 
-## Learning Laravel
-
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
-
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
-
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
-
-## Agentic Development
-
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+Requires PHP 8.3+, Composer and Node 20+.
 
 ```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+composer install
+npm install
+cp .env.example .env
+php artisan key:generate
+php artisan migrate --seed        # production data + demo records
+npm run build                     # or: npm run dev
+php artisan serve
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+`migrate --seed` runs `ProductionSeeder` and then `DemoSeeder`. The demo seeder
+refuses to run when `APP_ENV=production`.
 
-## Contributing
+### Seeders
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+| Seeder | What it writes |
+|---|---|
+| `ProductionSeeder` | roles, 44 permissions, all settings with German defaults, 8 service types, the German postal-code table, 19 mail templates, every content block with the copy from the design, 4 legal pages, 10 FAQs, one super-admin |
+| `DemoSeeder` | 25 assessors across real German cities, 60 requests in mixed states, 30 assignments, 20 commissions across all four statuses, reviews and invitations |
 
-## Code of Conduct
+```bash
+php artisan db:seed --class=ProductionSeeder --force   # live installs
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### Signing in locally
 
-## Security Vulnerabilities
+After `migrate --seed` the console prints a generated super-admin password for
+`admin@dkgz.de`. Demo accounts all use `Gutachten2026!`:
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+| Account | Role |
+|---|---|
+| `admin@dkgz.test` | admin |
+| `vermittlung@dkgz.test` | manager |
+| `support@dkgz.test` | support |
+| `redaktion@dkgz.test` | content_editor |
+| `sv1@dkgz.test` … `sv25@dkgz.test` | assessor |
 
-## License
+Staff sign in at `/admin/anmelden`, partners at `/anmelden`.
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+---
+
+## Tests
+
+```bash
+php artisan test          # or: ./vendor/bin/pest
+./vendor/bin/pint         # formatting
+```
+
+The suite covers, among other things:
+
+- **first-accept-wins under concurrency** — two simultaneous accepts must
+  produce exactly one assignment, guarded by a pessimistic row lock and, behind
+  it, a unique index
+- the matching rule in isolation: approved **and** available **and** the user
+  active **and** in-area **and** offering that service, nothing else
+- customer contact data absent from the payload before acceptance and present
+  after, asserted against the raw response rather than only the props
+- documents unreachable without authorisation
+- commission arithmetic across a spread of fees, and rate snapshotting — editing
+  the rate must never rewrite a historical record
+- every admin route hit by every role, asserting 200 or 403
+- German money, date and phone formatting identical in PHP and JavaScript, by
+  running the Vue composable under Node against the same fixtures
+
+---
+
+## Layout
+
+```
+app/
+├── Actions/          MatchRequestAction, AcceptAssignmentAction, CompleteAssignmentAction
+├── Support/          Settings, Content, Branding, Formatter, Mailer, SafeStorage, Permissions
+├── Policies/         one per model; routes are gated by permission, never by role
+resources/js/
+├── Layouts/          Public, Auth, Portal, Admin
+├── Pages/            Public/ Auth/ Portal/ Admin/
+├── Components/       Base/ Data/ Feedback/ Layout/ Domain/
+└── Composables/      useGermanFormat, usePermissions, usePolling, useConfirm, …
+design-src/           the imported design project, kept as the reference
+```
+
+`DESIGN_TOKENS.md` holds every colour, size and duration, extracted from
+`design-src/DKGZ Design Foundations.dc.html`. No component uses an arbitrary
+value.
+
+---
+
+## Notes that matter
+
+- **Fonts are self-hosted.** German courts have held that pulling fonts from
+  Google's CDN unlawfully transmits visitor IP addresses, so IBM Plex ships from
+  `@fontsource` and the build contains zero requests to any Google domain.
+- **Money is integer cents everywhere**, cast through `MoneyCast`. Never a float.
+- **The commission rate is never hardcoded.** It is read from
+  `settings.business.commission_rate` and snapshotted onto each commission row.
+- **Almost everything is admin-editable** without a deploy: page copy, legal
+  pages, FAQs, logos, every colour token, SMTP credentials, all mail templates,
+  service types and the business rules.
+
+See `DEPLOYMENT.md` for the server, `HANDOVER.md` for the client-facing guide,
+`BUILD_SPEC.md` for the binding rules and `DECISIONS.md` for judgement calls.

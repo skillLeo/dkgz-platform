@@ -82,7 +82,7 @@ watch(() => props.modelValue, (value) => {
                 :disabled="disabled"
                 :aria-label="`Zeichen ${index + 1} von ${length}`"
                 :aria-invalid="error ? 'true' : undefined"
-                class="h-14 w-13 rounded-sm border text-center font-mono text-[22px] tabular-nums text-gray-800 outline-none transition-colors duration-(--duration-focus) ease-(--ease-dkgz)"
+                class="h-14 w-13 rounded-sm border text-center font-mono text-code tabular-nums text-gray-800 outline-none transition-colors duration-(--duration-focus) ease-(--ease-dkgz)"
                 :class="error
                     ? 'border-danger bg-danger/3'
                     : 'border-gray-300 bg-white focus:border-navy-700 focus:outline-2 focus:outline-navy-500 focus:outline-offset-2'"

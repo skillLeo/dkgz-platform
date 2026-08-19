@@ -28,7 +28,7 @@ const logout = useForm({})
                 <Bell :size="20" :stroke-width="1.5" aria-hidden="true" />
                 <span
                     v-if="notificationCount"
-                    class="absolute right-1 top-1 grid h-4 min-w-4 place-items-center rounded-full bg-navy-700 px-1 font-mono text-[10px] tabular-nums text-white"
+                    class="absolute right-1 top-1 grid h-4 min-w-4 place-items-center rounded-full bg-navy-700 px-1 font-mono text-badge tabular-nums text-white"
                 >{{ notificationCount > 99 ? '99+' : notificationCount }}</span>
             </Link>
 

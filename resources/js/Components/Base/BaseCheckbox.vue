@@ -19,7 +19,7 @@ const fieldId = computed(() => props.id ?? uid)
 <template>
     <div>
         <div class="flex gap-3">
-            <span class="relative mt-0.5 flex h-[18px] w-[18px] shrink-0">
+            <span class="relative mt-0.5 flex h-(--spacing-check) w-(--spacing-check) shrink-0">
                 <input
                     :id="fieldId"
                     type="checkbox"
@@ -30,7 +30,7 @@ const fieldId = computed(() => props.id ?? uid)
                     @change="emit('update:modelValue', $event.target.checked)"
                 >
                 <span
-                    class="pointer-events-none grid h-[18px] w-[18px] place-items-center rounded-sm border transition-colors duration-(--duration-hover) ease-(--ease-dkgz) peer-focus-visible:outline-2 peer-focus-visible:outline-navy-500 peer-focus-visible:outline-offset-2"
+                    class="pointer-events-none grid h-(--spacing-check) w-(--spacing-check) place-items-center rounded-sm border transition-colors duration-(--duration-hover) ease-(--ease-dkgz) peer-focus-visible:outline-2 peer-focus-visible:outline-navy-500 peer-focus-visible:outline-offset-2"
                     :class="modelValue
                         ? 'border-navy-700 bg-navy-700 text-white'
                         : error ? 'border-danger bg-white' : 'border-gray-300 bg-white'"

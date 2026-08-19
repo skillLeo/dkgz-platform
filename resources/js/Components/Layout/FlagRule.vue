@@ -9,7 +9,7 @@ defineProps({
 </script>
 
 <template>
-    <span class="flex h-[3px]" :style="{ width: `${width}px` }" aria-hidden="true">
+    <span class="flex h-(--spacing-flag)" :style="{ width: `${width}px` }" aria-hidden="true">
         <span class="flex-1 bg-flag-black" />
         <span class="flex-1 bg-flag-red" />
         <span class="flex-1 bg-flag-gold" />

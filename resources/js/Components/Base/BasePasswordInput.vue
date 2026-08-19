@@ -93,7 +93,7 @@ const onKey = (event) => {
                 <span
                     v-for="segment in 4"
                     :key="segment"
-                    class="h-[3px] flex-1 transition-colors duration-(--duration-meter) ease-(--ease-dkgz)"
+                    class="h-(--spacing-flag) flex-1 transition-colors duration-(--duration-meter) ease-(--ease-dkgz)"
                     :class="segment <= score ? level.bar : 'bg-gray-200'"
                 />
             </span>

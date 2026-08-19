@@ -17,7 +17,7 @@ const { date } = useGermanFormat()
     </Head>
 
     <PublicLayout :sticky-cta="false">
-        <div class="mx-auto grid w-full max-w-[1068px] grid-cols-1 gap-16 px-4 py-20 md:px-6 lg:grid-cols-[220px_minmax(0,1fr)] lg:items-start">
+        <div class="mx-auto grid w-full max-w-(--container-wide) grid-cols-1 gap-16 px-4 py-20 md:px-6 lg:grid-cols-[220px_minmax(0,1fr)] lg:items-start">
             <nav aria-label="Rechtliche Seiten" class="lg:sticky lg:top-24">
                 <p class="pb-4 text-eyebrow font-semibold uppercase tracking-[0.09em] text-gray-600">Rechtliches</p>
                 <ul class="flex flex-col gap-2.5 border-l border-gray-200">

@@ -48,7 +48,7 @@ const steps = computed(() => [
                 class="relative flex items-start gap-3 py-3 pl-6"
             >
                 <span
-                    class="absolute -left-[5px] top-4 grid h-2.5 w-2.5 place-items-center rounded-full"
+                    class="absolute -left-(--spacing-dot-inset) top-4 grid h-2.5 w-2.5 place-items-center rounded-full"
                     :class="step.done ? 'bg-navy-700' : step.active ? 'bg-accent' : 'bg-gray-300'"
                     :style="step.active ? 'animation: dkgz-pulse 2s ease-in-out infinite' : undefined"
                     aria-hidden="true"

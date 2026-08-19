@@ -33,14 +33,14 @@ const requirements = ['punkt_1', 'punkt_2', 'punkt_3', 'punkt_4', 'punkt_5', 'pu
                 <div class="py-16 md:py-20">
                     <SectionLabel :text="t('hero', 'eyebrow', 'Partnernetz')" />
                     <h1 class="pt-6 text-h1 font-bold text-white">{{ t('hero', 'ueberschrift') }}</h1>
-                    <p class="max-w-[52ch] pt-4 text-lead leading-relaxed text-white/72">{{ t('hero', 'text') }}</p>
+                    <p class="measure-hero pt-4 text-lead leading-relaxed text-white/72">{{ t('hero', 'text') }}</p>
                     <div class="flex flex-wrap items-center gap-4 pt-8">
                         <BaseButton v-if="registrationOpen" href="/registrieren" variant="inverted" size="cta">{{ t('hero', 'cta_primaer') }}</BaseButton>
                         <BaseButton href="/anmelden" variant="outlineInverted" size="cta">{{ t('hero', 'cta_sekundaer') }}</BaseButton>
                     </div>
                 </div>
-                <div class="hidden min-h-[420px] items-center py-10 lg:flex">
-                    <div class="h-full min-h-[340px] w-full border border-white/14">
+                <div class="hidden min-h-(--size-hero-image) items-center py-10 lg:flex">
+                    <div class="h-full min-h-(--size-hero-image-min) w-full border border-white/14">
                         <img v-if="t('hero', 'bild')" :src="t('hero', 'bild')" alt="Sachverständiger bei der Schadenaufnahme" class="h-full w-full object-cover">
                     </div>
                 </div>

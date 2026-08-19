@@ -35,7 +35,7 @@ const isAdmin = computed(() => props.variant === 'admin')
 
 <template>
     <div class="min-h-screen bg-gray-100">
-        <div class="mx-auto grid min-h-screen w-full grid-cols-1 bg-white md:min-h-[760px] md:grid-cols-[minmax(340px,46fr)_minmax(360px,54fr)]">
+        <div class="mx-auto grid min-h-screen w-full grid-cols-1 bg-white md:min-h-(--size-auth-shell) md:grid-cols-[minmax(340px,46fr)_minmax(360px,54fr)]">
             <!-- Authority panel -->
             <div class="relative flex min-w-0 flex-col overflow-hidden bg-navy-900 p-6 md:p-16">
                 <div
@@ -43,7 +43,7 @@ const isAdmin = computed(() => props.variant === 'admin')
                     aria-hidden="true"
                 >
                     <div class="grid h-23 w-23 place-items-center rounded-full border border-white/7">
-                        <span class="text-[17px] font-bold tracking-[0.06em] text-white/7">DKGZ</span>
+                        <span class="text-lead font-bold tracking-[0.06em] text-white/7">DKGZ</span>
                     </div>
                 </div>
 
@@ -52,8 +52,8 @@ const isAdmin = computed(() => props.variant === 'admin')
                 </div>
 
                 <div class="relative pt-12 md:pt-24">
-                    <h2 class="max-w-[18ch] text-h4 font-semibold text-white md:text-h2">{{ panelTitle }}</h2>
-                    <p v-if="panelText" class="max-w-[54ch] pt-5 text-lead leading-relaxed text-white/62">{{ panelText }}</p>
+                    <h2 class="measure-headline text-h4 font-semibold text-white md:text-h2">{{ panelTitle }}</h2>
+                    <p v-if="panelText" class="measure-panel pt-5 text-lead leading-relaxed text-white/62">{{ panelText }}</p>
                 </div>
 
                 <div v-if="!isAdmin" class="relative hidden pt-20 md:block">
@@ -105,7 +105,7 @@ const isAdmin = computed(() => props.variant === 'admin')
                 <div class="w-full max-w-(--container-form)">
                     <SectionLabel :text="eyebrow" :tone="isAdmin ? 'muted' : 'accent'" />
                     <h1 class="pt-6 text-h4 font-semibold text-navy-700 md:text-h2">{{ title }}</h1>
-                    <p v-if="description" class="max-w-[56ch] pt-2 text-base leading-normal text-gray-600">{{ description }}</p>
+                    <p v-if="description" class="measure-form pt-2 text-base leading-normal text-gray-600">{{ description }}</p>
 
                     <div class="pt-8">
                         <slot />

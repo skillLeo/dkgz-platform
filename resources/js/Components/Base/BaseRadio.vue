@@ -32,7 +32,7 @@ const normalised = computed(() =>
                 :key="option.value"
                 class="flex cursor-pointer gap-3"
             >
-                <span class="relative mt-0.5 flex h-[18px] w-[18px] shrink-0">
+                <span class="relative mt-0.5 flex h-(--spacing-check) w-(--spacing-check) shrink-0">
                     <input
                         type="radio"
                         :name="name"
@@ -42,7 +42,7 @@ const normalised = computed(() =>
                         @change="emit('update:modelValue', option.value)"
                     >
                     <span
-                        class="pointer-events-none grid h-[18px] w-[18px] place-items-center rounded-full border transition-colors duration-(--duration-hover) ease-(--ease-dkgz) peer-focus-visible:outline-2 peer-focus-visible:outline-navy-500 peer-focus-visible:outline-offset-2"
+                        class="pointer-events-none grid h-(--spacing-check) w-(--spacing-check) place-items-center rounded-full border transition-colors duration-(--duration-hover) ease-(--ease-dkgz) peer-focus-visible:outline-2 peer-focus-visible:outline-navy-500 peer-focus-visible:outline-offset-2"
                         :class="modelValue === option.value ? 'border-navy-700' : 'border-gray-300'"
                         aria-hidden="true"
                     >

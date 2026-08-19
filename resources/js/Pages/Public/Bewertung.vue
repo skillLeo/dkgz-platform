@@ -40,7 +40,7 @@ const categories = [
     <Head title="Bewertung" />
 
     <PublicLayout :sticky-cta="false">
-        <div class="mx-auto w-full max-w-[720px] px-4 py-20 md:px-6">
+        <div class="mx-auto w-full max-w-(--container-review) px-4 py-20 md:px-6">
             <p class="font-mono text-sm tabular-nums text-gray-600">
                 {{ context.reference }}<template v-if="context.service_type"> · {{ context.service_type }}</template><template v-if="context.city"> · {{ context.city }}</template>
             </p>
@@ -65,7 +65,7 @@ const categories = [
                             @click="rating.rating = n"
                         >{{ n }}</button>
                     </div>
-                    <div class="flex max-w-[560px] justify-between pt-2.5">
+                    <div class="flex measure-scale justify-between pt-2.5">
                         <span class="text-sm text-gray-400">{{ t('skala', 'min_label', 'Sehr unzufrieden') }}</span>
                         <span class="text-sm text-gray-400">{{ t('skala', 'max_label', 'Sehr zufrieden') }}</span>
                     </div>

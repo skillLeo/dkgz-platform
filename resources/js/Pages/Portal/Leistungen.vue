@@ -40,7 +40,7 @@ const toggle = (id) => {
                 >
                     <input type="checkbox" :checked="form.service_type_ids.includes(type.id)" class="sr-only" @change="toggle(type.id)">
                     <span
-                        class="mt-0.5 grid h-[18px] w-[18px] shrink-0 place-items-center rounded-sm border"
+                        class="mt-0.5 grid h-(--spacing-check) w-(--spacing-check) shrink-0 place-items-center rounded-sm border"
                         :class="form.service_type_ids.includes(type.id) ? 'border-navy-700 bg-navy-700 text-white' : 'border-gray-300'"
                         aria-hidden="true"
                     >

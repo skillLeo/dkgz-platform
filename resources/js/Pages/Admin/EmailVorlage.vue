@@ -120,7 +120,7 @@ const insert = (variable) => {
                         :key="previewKey"
                         :src="previewUrl"
                         title="Vorschau der E-Mail"
-                        class="h-[860px] w-full border-0 bg-gray-100"
+                        class="h-(--size-mail-preview) w-full border-0 bg-gray-100"
                     />
                 </div>
             </div>

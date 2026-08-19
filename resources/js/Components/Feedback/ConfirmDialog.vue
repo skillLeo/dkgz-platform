@@ -52,7 +52,7 @@ const onKeydown = (event) => {
                 :aria-labelledby="'bestaetigung-titel'"
                 class="relative w-full bg-white outline-none"
                 :class="isMobile
-                    ? 'max-h-[85vh] overflow-y-auto rounded-t-card pb-[env(safe-area-inset-bottom)]'
+                    ? 'max-h-(--size-sheet-max) overflow-y-auto rounded-t-card pb-[env(safe-area-inset-bottom)]'
                     : 'max-w-lg rounded-card shadow-(--shadow-3)'"
                 :style="isMobile
                     ? 'animation: dkgz-rise 240ms cubic-bezier(0.4,0,0.2,1) both'

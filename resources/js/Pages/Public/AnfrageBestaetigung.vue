@@ -18,7 +18,7 @@ const t = (section, field, fallback = '') => props.content?.[section]?.[field] ?
     <Head title="Anfrage eingegangen" />
 
     <PublicLayout :sticky-cta="false">
-        <div class="mx-auto w-full max-w-[680px] px-4 py-20 md:px-6 md:py-24">
+        <div class="mx-auto w-full max-w-(--container-prose) px-4 py-20 md:px-6 md:py-24">
             <div class="grid h-14 w-14 place-items-center rounded-full border-2 border-navy-700 text-navy-700">
                 <Check :size="26" :stroke-width="1.5" aria-hidden="true" />
             </div>
@@ -31,7 +31,7 @@ const t = (section, field, fallback = '') => props.content?.[section]?.[field] ?
                     <p class="text-eyebrow font-semibold uppercase tracking-[0.09em] text-gray-600">{{ t('referenz', 'label', 'Ihre Vorgangsnummer') }}</p>
                     <p class="pt-1.5 font-mono text-h3 tabular-nums text-navy-700">{{ request.reference }}</p>
                 </div>
-                <p class="max-w-[34ch] text-sm leading-normal text-gray-600">{{ t('referenz', 'hinweis') }}</p>
+                <p class="measure-note text-sm leading-normal text-gray-600">{{ t('referenz', 'hinweis') }}</p>
             </div>
 
             <p class="pt-12 text-eyebrow font-semibold uppercase tracking-[0.09em] text-gray-600">{{ t('ablauf', 'ueberschrift', 'Wie es weitergeht') }}</p>

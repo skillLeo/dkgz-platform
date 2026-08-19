@@ -32,7 +32,7 @@ const body = computed(() => section.value.text ?? '')
     <Head :title="`Fehler ${status}`" />
 
     <PublicLayout :sticky-cta="false">
-        <div class="mx-auto w-full max-w-[680px] px-4 py-24 md:px-6 md:py-32">
+        <div class="mx-auto w-full max-w-(--container-prose) px-4 py-24 md:px-6 md:py-32">
             <p class="font-mono text-sm tabular-nums text-gray-400">Fehler {{ status }}</p>
             <h1 class="pt-4 text-h1 font-bold text-navy-700">{{ heading }}</h1>
             <p class="measure-lead pt-4 text-lead leading-relaxed text-gray-600">{{ body }}</p>

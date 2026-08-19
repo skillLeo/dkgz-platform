@@ -47,7 +47,7 @@ const isActive = (item) => {
                             </span>
                             <span
                                 v-if="item.badge"
-                                class="shrink-0 rounded-xs bg-navy-700 px-1.5 font-mono text-[11px] tabular-nums text-white"
+                                class="shrink-0 rounded-xs bg-navy-700 px-1.5 font-mono text-tab tabular-nums text-white"
                             >{{ item.badge }}</span>
                         </Link>
                     </li>

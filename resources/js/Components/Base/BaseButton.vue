@@ -59,7 +59,7 @@ const classes = computed(() => [
     >
         <span
             v-if="loading"
-            class="h-4 w-4 shrink-0 rounded-full border-[1.5px] border-white/35 border-t-white"
+            class="h-4 w-4 shrink-0 rounded-full border-(length:--spacing-hairline) border-white/35 border-t-white"
             style="animation: dkgz-spin 700ms linear infinite"
             aria-hidden="true"
         />
