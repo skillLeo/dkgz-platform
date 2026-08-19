@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Actions\MatchRequestAction;
 use App\Actions\StoreRequestImagesAction;
 use App\Http\Requests\StoreServiceRequestRequest;
+use App\Jobs\NotifyRequestSubmittedJob;
 use App\Models\ServiceRequest;
 use App\Models\ServiceType;
 use App\Support\Content;
@@ -62,6 +63,8 @@ class RequestController extends Controller
         if (Settings::bool('features.image_uploads', true) && $request->hasFile('images')) {
             $storeImages->execute($serviceRequest, $request->file('images'));
         }
+
+        NotifyRequestSubmittedJob::dispatch($serviceRequest->id);
 
         $match->execute($serviceRequest);
 

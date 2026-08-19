@@ -3,6 +3,7 @@
 namespace App\Actions;
 
 use App\Exceptions\RequestAlreadyAssignedException;
+use App\Jobs\NotifyAssignmentAcceptedJob;
 use App\Models\Assessor;
 use App\Models\Assignment;
 use App\Models\RequestMatch;
@@ -31,7 +32,7 @@ class AcceptAssignmentAction
     public function execute(ServiceRequest $request, Assessor $assessor): Assignment
     {
         try {
-            return DB::transaction(function () use ($request, $assessor) {
+            $assignment = DB::transaction(function () use ($request, $assessor) {
                 $locked = ServiceRequest::whereKey($request->id)
                     ->lockForUpdate()
                     ->firstOrFail();
@@ -78,6 +79,12 @@ class AcceptAssignmentAction
 
                 return $assignment;
             });
+
+            // Dispatched outside the transaction so a queue write can never
+            // roll the assignment back.
+            NotifyAssignmentAcceptedJob::dispatch($assignment->id);
+
+            return $assignment;
         } catch (QueryException $e) {
             // Second line of defence: the unique index fired.
             if ($this->isUniqueViolation($e)) {

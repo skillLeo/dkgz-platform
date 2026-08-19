@@ -1,0 +1,111 @@
+<?php
+
+namespace App\Mail;
+
+use App\Models\EmailTemplate;
+use App\Support\Settings;
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Mail\Mailable;
+use Illuminate\Mail\Mailables\Address;
+use Illuminate\Mail\Mailables\Attachment;
+use Illuminate\Mail\Mailables\Content;
+use Illuminate\Mail\Mailables\Envelope;
+use Illuminate\Queue\SerializesModels;
+
+/**
+ * Every transactional e-mail in the product.
+ *
+ * The subject and body come from the email_templates table so the client can
+ * edit them without a deploy; if a template is missing or switched off, the
+ * seeded Blade fallback for that key renders instead. The 600px table shell,
+ * the navy header band and the legal footer are the layout's job — the Baukasten
+ * section of the design is explicit that changes belong to the building block,
+ * never to a single template.
+ */
+class TemplateMail extends Mailable implements ShouldQueue
+{
+    use Queueable, SerializesModels;
+
+    public int $tries = 3;
+
+    /** @var array<int, int> */
+    public array $backoff = [60, 300, 900];
+
+    public function __construct(
+        public string $templateKey,
+        public array $data = [],
+        public array $attachmentPaths = [],
+    ) {}
+
+    public function envelope(): Envelope
+    {
+        $template = $this->template();
+
+        $subject = $template !== null
+            ? $template->renderSubject($this->data)
+            : ($this->data['subject'] ?? 'Nachricht der DKGZ');
+
+        return new Envelope(
+            from: new Address(
+                Settings::get('email.from_address', config('mail.from.address')),
+                Settings::get('email.from_name', config('mail.from.name')),
+            ),
+            replyTo: filled(Settings::get('email.reply_to'))
+                ? [new Address(Settings::get('email.reply_to'))]
+                : [],
+            subject: $subject,
+        );
+    }
+
+    public function content(): Content
+    {
+        $template = $this->template();
+
+        return new Content(
+            view: 'emails.layout',
+            text: 'emails.plain',
+            with: [
+                'templateKey' => $this->templateKey,
+                'bodyHtml' => $template?->renderBody($this->data),
+                'preheader' => $template?->preheader_de ?? ($this->data['preheader'] ?? ''),
+                'eyebrow' => $this->data['eyebrow'] ?? $template?->name_de,
+                'headline' => $this->data['headline'] ?? null,
+                'salutation' => $this->data['salutation'] ?? null,
+                'rows' => $this->data['rows'] ?? [],
+                'dataTitle' => $this->data['dataTitle'] ?? null,
+                'reference' => $this->data['referenz'] ?? null,
+                'referenceLabel' => $this->data['refLabel'] ?? 'Ihre Vorgangsnummer',
+                'maskNotice' => (bool) ($this->data['mask'] ?? false),
+                'quote' => $this->data['quote'] ?? null,
+                'quoteBy' => $this->data['quoteBy'] ?? null,
+                'showScale' => (bool) ($this->data['scale'] ?? false),
+                'cta' => $this->data['cta'] ?? null,
+                'ctaUrl' => $this->data['cta_url'] ?? null,
+                'note' => $this->data['note'] ?? null,
+                'footnote' => $this->data['footnote'] ?? Settings::get('email.footer_text'),
+                'vars' => $this->data,
+            ],
+        );
+    }
+
+    public function attachments(): array
+    {
+        return collect($this->attachmentPaths)
+            ->map(fn (string $path) => Attachment::fromStorageDisk('private', $path))
+            ->all();
+    }
+
+    private function template(): ?EmailTemplate
+    {
+        static $cache = [];
+
+        if (! array_key_exists($this->templateKey, $cache)) {
+            $cache[$this->templateKey] = EmailTemplate::where('key', $this->templateKey)
+                ->where('is_active', true)
+                ->first();
+        }
+
+        return $cache[$this->templateKey];
+    }
+}

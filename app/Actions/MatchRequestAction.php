@@ -2,6 +2,8 @@
 
 namespace App\Actions;
 
+use App\Jobs\NotifyMatchedAssessorsJob;
+use App\Jobs\NotifyNoAssessorsFoundJob;
 use App\Models\Assessor;
 use App\Models\RequestMatch;
 use App\Models\ServiceRequest;
@@ -32,6 +34,8 @@ class MatchRequestAction
                 'matched_count' => 0,
             ]);
 
+            NotifyNoAssessorsFoundJob::dispatch($request->id);
+
             return 0;
         }
 
@@ -58,6 +62,8 @@ class MatchRequestAction
                 'matched_count' => count($rows),
             ]);
         });
+
+        NotifyMatchedAssessorsJob::dispatch($request->id);
 
         return $assessorIds->count();
     }

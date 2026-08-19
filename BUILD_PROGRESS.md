@@ -13,7 +13,7 @@ Resume rule: read BUILD_SPEC.md, continue at the first item not marked `[x]`.
 - [ ]  9. Public site: homepage first, then all remaining public pages
 - [x] 10. Matching engine + first-accept-wins + concurrency test (16 tests, all green)
 - [ ] 11. Assessor portal, every screen
-- [ ] 12. Assignment workspace, uploads, completion, commission calculation
+- [x] 12. Assignment workspace, uploads, completion, commission — 28 commission tests, 9 privacy/document tests
 - [ ] 13. Admin panel, every screen including the matching trail
 - [ ] 14. Content management, branding, integrations, email template editor
 - [ ] 15. All 18 emails, queued, logged
