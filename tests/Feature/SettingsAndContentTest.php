@@ -66,8 +66,8 @@ describe('content blocks', function () {
         $page = Content::page('startseite');
 
         expect($page)->toHaveKey('hero')
-            ->and($page['hero'])->toHaveKey('ueberschrift')
-            ->and($page['hero']['ueberschrift'])->toBe('Kfz-Sachverständigen in Ihrer Nähe finden');
+            ->and($page['hero'])->toHaveKey('zeile_1')
+            ->and($page['hero']['zeile_1'])->toBe('Kfz-Gutachter finden.');
     });
 
     it('resolves a dotted key', function () {
@@ -79,7 +79,7 @@ describe('content blocks', function () {
     });
 
     it('busts its cache when a block is edited', function () {
-        expect(Content::get('startseite.hero.cta'))->toBe('Gutachter finden');
+        expect(Content::get('startseite.hero.cta'))->toBe('Gutachter anfragen');
 
         ContentBlock::where('page_key', 'startseite')
             ->where('section_key', 'hero')

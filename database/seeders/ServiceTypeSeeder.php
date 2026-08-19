@@ -9,53 +9,55 @@ class ServiceTypeSeeder extends Seeder
 {
     public function run(): void
     {
+        // Names, descriptions and icons are verbatim from the services grid in
+        // "DKGZ Homepage.dc.html".
         $types = [
+            [
+                'slug' => 'unfallgutachten',
+                'name_de' => 'Unfallgutachten',
+                'description_de' => 'Schadenhöhe, Wertminderung und Ausfalldauer nach einem Verkehrsunfall.',
+                'icon' => 'car',
+            ],
             [
                 'slug' => 'haftpflichtgutachten',
                 'name_de' => 'Haftpflichtgutachten',
-                'description_de' => 'Schadengutachten nach einem unverschuldeten Unfall. Die Kosten trägt in der Regel die gegnerische Haftpflichtversicherung.',
-                'icon' => 'file-text',
+                'description_de' => 'Unabhängige Feststellung gegenüber der Versicherung des Verursachers.',
+                'icon' => 'shield-check',
             ],
             [
                 'slug' => 'kaskogutachten',
                 'name_de' => 'Kaskogutachten',
-                'description_de' => 'Schadenermittlung für die eigene Teil- oder Vollkaskoversicherung, etwa nach Hagel, Wild- oder Glasschaden.',
+                'description_de' => 'Schadenaufnahme nach Vorgaben der eigenen Kaskoversicherung.',
                 'icon' => 'shield',
             ],
             [
-                'slug' => 'unfallgutachten',
-                'name_de' => 'Unfallgutachten',
-                'description_de' => 'Vollständige Dokumentation von Schadenhöhe, Wertminderung und Wiederbeschaffungswert nach einem Verkehrsunfall.',
-                'icon' => 'car',
+                'slug' => 'fahrzeugschadengutachten',
+                'name_de' => 'Fahrzeugschadengutachten',
+                'description_de' => 'Technische Bewertung von Schäden ohne Unfallbeteiligung Dritter.',
+                'icon' => 'wrench',
             ],
             [
                 'slug' => 'wertgutachten',
                 'name_de' => 'Wertgutachten',
-                'description_de' => 'Ermittlung des aktuellen Marktwerts eines Fahrzeugs, etwa für Verkauf, Erbschaft oder Auseinandersetzung.',
+                'description_de' => 'Belastbare Wertermittlung für Verkauf, Erbfall oder Finanzierung.',
                 'icon' => 'euro',
             ],
             [
                 'slug' => 'oldtimergutachten',
                 'name_de' => 'Oldtimergutachten',
-                'description_de' => 'Zustands- und Wertgutachten für Klassiker, einschließlich Bewertung nach Zustandsnoten und H-Kennzeichen-Eignung.',
-                'icon' => 'award',
+                'description_de' => 'Zustandsnoten und Marktwert für Fahrzeuge mit historischem Wert.',
+                'icon' => 'history',
             ],
             [
                 'slug' => 'gebrauchtwagen-check',
                 'name_de' => 'Gebrauchtwagen-Check',
-                'description_de' => 'Technische Prüfung vor dem Kauf, mit Bericht zu Zustand, Vorschäden und erkennbaren Mängeln.',
-                'icon' => 'search-check',
-            ],
-            [
-                'slug' => 'reparaturbestaetigung',
-                'name_de' => 'Reparaturbestätigung',
-                'description_de' => 'Nachweis der fachgerechten Instandsetzung gegenüber der Versicherung, häufig bei fiktiver Abrechnung.',
-                'icon' => 'wrench',
+                'description_de' => 'Technische Prüfung vor dem Kauf, mit schriftlichem Befund.',
+                'icon' => 'clipboard-check',
             ],
             [
                 'slug' => 'beweissicherung',
                 'name_de' => 'Beweissicherung',
-                'description_de' => 'Gerichtsfeste Dokumentation eines Fahrzeugzustands, etwa bei Streit über Mängel oder Rückgabe.',
+                'description_de' => 'Dokumentation des Fahrzeugzustands für spätere Auseinandersetzungen.',
                 'icon' => 'camera',
             ],
         ];

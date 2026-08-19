@@ -20,7 +20,7 @@ class PublicController extends Controller
         return Inertia::render('Public/Startseite', [
             'content' => Content::page('startseite'),
             'serviceTypes' => $this->activeServiceTypes(),
-            'faqs' => Faq::published()->ordered()->limit(6)->get(['id', 'question_de', 'answer_de']),
+            'faqs' => Faq::published()->ordered()->get(['id', 'question_de', 'answer_de']),
         ]);
     }
 

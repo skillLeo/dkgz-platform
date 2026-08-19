@@ -52,73 +52,77 @@ class ContentBlockSeeder extends Seeder
         );
     }
 
-    /** @return list<array<string, string>> */
+    /**
+     * Copy taken verbatim from "DKGZ Homepage.dc.html". Section keys follow the
+     * anchors the design uses, so the admin editor lists them in the order a
+     * visitor reads them.
+     *
+     * @return list<array<string, string>>
+     */
     private function homepage(): array
     {
         return [
             ['page_key' => 'startseite', 'section_key' => 'meldeband', 'field_key' => 'text', 'value' => 'Bundesweites Netz geprüfter Kfz-Sachverständiger', 'label_de' => 'Meldeband über dem Kopfbereich'],
 
-            ['page_key' => 'startseite', 'section_key' => 'hero', 'field_key' => 'eyebrow', 'value' => 'Kostenlose Vermittlung', 'label_de' => 'Hero · Übertitel'],
-            ['page_key' => 'startseite', 'section_key' => 'hero', 'field_key' => 'ueberschrift', 'value' => 'Kfz-Sachverständigen in Ihrer Nähe finden', 'label_de' => 'Hero · Überschrift'],
-            ['page_key' => 'startseite', 'section_key' => 'hero', 'field_key' => 'text', 'type' => 'richtext', 'value' => 'Wir vermitteln Ihre Anfrage schnell an einen passenden Kfz-Sachverständigen aus unserem bundesweiten Partnernetz.', 'label_de' => 'Hero · Fließtext'],
-            ['page_key' => 'startseite', 'section_key' => 'hero', 'field_key' => 'plz_label', 'value' => 'Postleitzahl oder Ort', 'label_de' => 'Hero · Beschriftung des PLZ-Felds'],
-            ['page_key' => 'startseite', 'section_key' => 'hero', 'field_key' => 'cta', 'value' => 'Gutachter finden', 'label_de' => 'Hero · Schaltfläche'],
-            ['page_key' => 'startseite', 'section_key' => 'hero', 'field_key' => 'vorteil_1', 'value' => 'Anfrage kostenfrei', 'label_de' => 'Hero · Vorteil 1'],
-            ['page_key' => 'startseite', 'section_key' => 'hero', 'field_key' => 'vorteil_2', 'value' => 'Bundesweites Netz', 'label_de' => 'Hero · Vorteil 2'],
-            ['page_key' => 'startseite', 'section_key' => 'hero', 'field_key' => 'vorteil_3', 'value' => 'Schnelle Vermittlung', 'label_de' => 'Hero · Vorteil 3'],
+            ['page_key' => 'startseite', 'section_key' => 'hero', 'field_key' => 'eyebrow', 'value' => 'Deutsche Kfz-Gutachterzentrale', 'label_de' => 'Hero · Übertitel'],
+            ['page_key' => 'startseite', 'section_key' => 'hero', 'field_key' => 'zeile_1', 'value' => 'Kfz-Gutachter finden.', 'label_de' => 'Hero · Überschrift, Zeile 1'],
+            ['page_key' => 'startseite', 'section_key' => 'hero', 'field_key' => 'zeile_2', 'value' => 'Bundesweit koordiniert.', 'label_de' => 'Hero · Überschrift, Zeile 2'],
+            ['page_key' => 'startseite', 'section_key' => 'hero', 'field_key' => 'zeile_3', 'value' => 'Ohne Umwege.', 'label_de' => 'Hero · Überschrift, Zeile 3'],
+            ['page_key' => 'startseite', 'section_key' => 'hero', 'field_key' => 'text', 'type' => 'richtext', 'value' => 'Sie stellen eine Anfrage. Wir vermitteln sie automatisch an einen qualifizierten Sachverständigen in Ihrer Region. Kein Vergleichen, kein Warten auf mehrere Angebote.', 'label_de' => 'Hero · Fließtext'],
+            ['page_key' => 'startseite', 'section_key' => 'hero', 'field_key' => 'plz_label', 'value' => 'Ihre Postleitzahl', 'label_de' => 'Hero · Beschriftung des PLZ-Felds'],
+            ['page_key' => 'startseite', 'section_key' => 'hero', 'field_key' => 'plz_platzhalter', 'value' => 'z. B. 40589', 'label_de' => 'Hero · Platzhalter im PLZ-Feld'],
+            ['page_key' => 'startseite', 'section_key' => 'hero', 'field_key' => 'cta', 'value' => 'Gutachter anfragen', 'label_de' => 'Hero · Schaltfläche'],
+            ['page_key' => 'startseite', 'section_key' => 'hero', 'field_key' => 'hinweis', 'value' => 'Kostenlos und unverbindlich · Keine Registrierung erforderlich', 'label_de' => 'Hero · Hinweis unter dem Feld'],
             ['page_key' => 'startseite', 'section_key' => 'hero', 'field_key' => 'bild', 'type' => 'image', 'value' => '', 'label_de' => 'Hero · Bild'],
+            ['page_key' => 'startseite', 'section_key' => 'hero', 'field_key' => 'siegel_titel', 'value' => 'Geprüfte Partner', 'label_de' => 'Hero · Siegel, Überschrift'],
+            ['page_key' => 'startseite', 'section_key' => 'hero', 'field_key' => 'siegel_text', 'value' => 'Nach bundesweit einheitlichem Standard', 'label_de' => 'Hero · Siegel, Zusatz'],
 
-            ['page_key' => 'startseite', 'section_key' => 'leistungen', 'field_key' => 'ueberschrift', 'value' => 'Welches Gutachten benötigen Sie?', 'label_de' => 'Leistungen · Überschrift'],
-            ['page_key' => 'startseite', 'section_key' => 'leistungen', 'field_key' => 'text', 'value' => 'Die häufigsten Anlässe. Weitere Leistungen finden Sie in der Übersicht.', 'label_de' => 'Leistungen · Fließtext'],
+            ['page_key' => 'startseite', 'section_key' => 'kennzahlen', 'field_key' => 'wert_1', 'value' => 'Bundesweit', 'label_de' => 'Kennzahl 1 · Wert'],
+            ['page_key' => 'startseite', 'section_key' => 'kennzahlen', 'field_key' => 'text_1', 'value' => 'Alle PLZ-Gebiete abgedeckt', 'label_de' => 'Kennzahl 1 · Beschriftung'],
+            ['page_key' => 'startseite', 'section_key' => 'kennzahlen', 'field_key' => 'wert_2', 'value' => '24 Std.', 'label_de' => 'Kennzahl 2 · Wert'],
+            ['page_key' => 'startseite', 'section_key' => 'kennzahlen', 'field_key' => 'text_2', 'value' => 'Durchschnittliche Rückmeldung', 'label_de' => 'Kennzahl 2 · Beschriftung'],
+            ['page_key' => 'startseite', 'section_key' => 'kennzahlen', 'field_key' => 'wert_3', 'value' => '0 €', 'label_de' => 'Kennzahl 3 · Wert'],
+            ['page_key' => 'startseite', 'section_key' => 'kennzahlen', 'field_key' => 'text_3', 'value' => 'Kosten für die Vermittlung', 'label_de' => 'Kennzahl 3 · Beschriftung'],
+            ['page_key' => 'startseite', 'section_key' => 'kennzahlen', 'field_key' => 'wert_4', 'value' => '1 Anfrage', 'label_de' => 'Kennzahl 4 · Wert'],
+            ['page_key' => 'startseite', 'section_key' => 'kennzahlen', 'field_key' => 'text_4', 'value' => 'Statt zehn Einzelanfragen', 'label_de' => 'Kennzahl 4 · Beschriftung'],
+
+            ['page_key' => 'startseite', 'section_key' => 'ablauf', 'field_key' => 'ueberschrift', 'value' => 'So funktioniert es', 'label_de' => 'Ablauf · Überschrift'],
+            ['page_key' => 'startseite', 'section_key' => 'ablauf', 'field_key' => 'text', 'value' => 'Vier Schritte, keine Zwischenstellen. Die Koordination läuft im Hintergrund — Sie haben genau einen Ansprechpartner.', 'label_de' => 'Ablauf · Fließtext'],
+            ['page_key' => 'startseite', 'section_key' => 'ablauf', 'field_key' => 'schritt_1_titel', 'value' => 'Anfrage stellen', 'label_de' => 'Ablauf · Schritt 1 Titel'],
+            ['page_key' => 'startseite', 'section_key' => 'ablauf', 'field_key' => 'schritt_1_text', 'value' => 'Ein kurzes Formular, weniger als zwei Minuten.', 'label_de' => 'Ablauf · Schritt 1 Text'],
+            ['page_key' => 'startseite', 'section_key' => 'ablauf', 'field_key' => 'schritt_2_titel', 'value' => 'Automatische Vermittlung', 'label_de' => 'Ablauf · Schritt 2 Titel'],
+            ['page_key' => 'startseite', 'section_key' => 'ablauf', 'field_key' => 'schritt_2_text', 'value' => 'Ihre Anfrage geht sofort an passende Sachverständige in Ihrer Region.', 'label_de' => 'Ablauf · Schritt 2 Text'],
+            ['page_key' => 'startseite', 'section_key' => 'ablauf', 'field_key' => 'schritt_3_titel', 'value' => 'Sachverständiger übernimmt', 'label_de' => 'Ablauf · Schritt 3 Titel'],
+            ['page_key' => 'startseite', 'section_key' => 'ablauf', 'field_key' => 'schritt_3_text', 'value' => 'Der erste verfügbare Partner nimmt den Auftrag an. Alle anderen sind damit informiert.', 'label_de' => 'Ablauf · Schritt 3 Text'],
+            ['page_key' => 'startseite', 'section_key' => 'ablauf', 'field_key' => 'schritt_4_titel', 'value' => 'Direkter Kontakt', 'label_de' => 'Ablauf · Schritt 4 Titel'],
+            ['page_key' => 'startseite', 'section_key' => 'ablauf', 'field_key' => 'schritt_4_text', 'value' => 'Der Sachverständige meldet sich direkt bei Ihnen.', 'label_de' => 'Ablauf · Schritt 4 Text'],
+
+            ['page_key' => 'startseite', 'section_key' => 'leistungen', 'field_key' => 'ueberschrift', 'value' => 'Leistungen', 'label_de' => 'Leistungen · Überschrift'],
+            ['page_key' => 'startseite', 'section_key' => 'leistungen', 'field_key' => 'text', 'value' => 'Wir vermitteln für alle gängigen Gutachtenarten. Welche Leistung Sie benötigen, geben Sie in der Anfrage an — die Zuordnung übernimmt DKGZ.', 'label_de' => 'Leistungen · Fließtext'],
             ['page_key' => 'startseite', 'section_key' => 'leistungen', 'field_key' => 'cta', 'value' => 'Alle Leistungen ansehen', 'label_de' => 'Leistungen · Schaltfläche'],
 
-            ['page_key' => 'startseite', 'section_key' => 'ablauf', 'field_key' => 'ueberschrift', 'value' => 'So einfach ist die Vermittlung', 'label_de' => 'Ablauf · Überschrift'],
-            ['page_key' => 'startseite', 'section_key' => 'ablauf', 'field_key' => 'schritt_1_titel', 'value' => 'Kostenlose Anfrage stellen', 'label_de' => 'Ablauf · Schritt 1 Titel'],
-            ['page_key' => 'startseite', 'section_key' => 'ablauf', 'field_key' => 'schritt_1_text', 'value' => 'Sie nennen uns Ihr Anliegen, den Standort des Fahrzeugs und Ihre Kontaktdaten.', 'label_de' => 'Ablauf · Schritt 1 Text'],
-            ['page_key' => 'startseite', 'section_key' => 'ablauf', 'field_key' => 'schritt_2_titel', 'value' => 'Passenden Sachverständigen vermitteln', 'label_de' => 'Ablauf · Schritt 2 Titel'],
-            ['page_key' => 'startseite', 'section_key' => 'ablauf', 'field_key' => 'schritt_2_text', 'value' => 'Die Anfrage geht automatisch an geeignete Sachverständige in Ihrer Region.', 'label_de' => 'Ablauf · Schritt 2 Text'],
-            ['page_key' => 'startseite', 'section_key' => 'ablauf', 'field_key' => 'schritt_3_titel', 'value' => 'Sachverständiger nimmt an', 'label_de' => 'Ablauf · Schritt 3 Titel'],
-            ['page_key' => 'startseite', 'section_key' => 'ablauf', 'field_key' => 'schritt_3_text', 'value' => 'Ein verfügbarer Sachverständiger übernimmt den Auftrag und meldet sich direkt bei Ihnen.', 'label_de' => 'Ablauf · Schritt 3 Text'],
-            ['page_key' => 'startseite', 'section_key' => 'ablauf', 'field_key' => 'cta', 'value' => 'Jetzt Gutachter anfragen', 'label_de' => 'Ablauf · Schaltfläche'],
-            ['page_key' => 'startseite', 'section_key' => 'ablauf', 'field_key' => 'hinweis', 'value' => 'Kostenlose Anfrage · Kein Kundenkonto · Kein Warten auf Angebote', 'label_de' => 'Ablauf · Hinweiszeile'],
-
-            ['page_key' => 'startseite', 'section_key' => 'unfall', 'field_key' => 'ueberschrift', 'value' => 'Unfall gehabt?', 'label_de' => 'Unfall · Überschrift'],
-            ['page_key' => 'startseite', 'section_key' => 'unfall', 'field_key' => 'text', 'value' => 'Wir vermitteln Ihnen schnell einen passenden Kfz-Sachverständigen in Ihrer Region.', 'label_de' => 'Unfall · Fließtext'],
-            ['page_key' => 'startseite', 'section_key' => 'unfall', 'field_key' => 'cta', 'value' => 'Unfallgutachter finden', 'label_de' => 'Unfall · Schaltfläche'],
-            ['page_key' => 'startseite', 'section_key' => 'unfall', 'field_key' => 'hinweis', 'value' => 'Die Anfrage und die Vermittlung über DKGZ sind für Sie kostenfrei.', 'label_de' => 'Unfall · Hinweis'],
-
-            ['page_key' => 'startseite', 'section_key' => 'gebiete', 'field_key' => 'ueberschrift', 'value' => 'Bundesweites Netz. Regionale Vermittlung.', 'label_de' => 'Einsatzgebiete · Überschrift'],
-            ['page_key' => 'startseite', 'section_key' => 'gebiete', 'field_key' => 'text', 'value' => 'Unsere Partner decken Einsatzgebiete in ganz Deutschland ab. Geben Sie Ihre Postleitzahl ein, und wir vermitteln in Ihrer Region.', 'label_de' => 'Einsatzgebiete · Fließtext'],
-
-            ['page_key' => 'startseite', 'section_key' => 'warum', 'field_key' => 'ueberschrift', 'value' => 'Eine zentrale Stelle für die Gutachtersuche', 'label_de' => 'Warum DKGZ · Überschrift'],
-            ['page_key' => 'startseite', 'section_key' => 'warum', 'field_key' => 'punkt_1_titel', 'value' => 'Kostenlose Anfrage', 'label_de' => 'Warum · Punkt 1 Titel'],
-            ['page_key' => 'startseite', 'section_key' => 'warum', 'field_key' => 'punkt_1_text', 'value' => 'Die Anfrage und die Vermittlung sind für Sie kostenfrei.', 'label_de' => 'Warum · Punkt 1 Text'],
-            ['page_key' => 'startseite', 'section_key' => 'warum', 'field_key' => 'punkt_2_titel', 'value' => 'Zentrale Vermittlung', 'label_de' => 'Warum · Punkt 2 Titel'],
-            ['page_key' => 'startseite', 'section_key' => 'warum', 'field_key' => 'punkt_2_text', 'value' => 'Eine Anfrage statt vieler einzelner Anrufe bei Sachverständigen.', 'label_de' => 'Warum · Punkt 2 Text'],
-            ['page_key' => 'startseite', 'section_key' => 'warum', 'field_key' => 'punkt_3_titel', 'value' => 'Regionales Netz', 'label_de' => 'Warum · Punkt 3 Titel'],
-            ['page_key' => 'startseite', 'section_key' => 'warum', 'field_key' => 'punkt_3_text', 'value' => 'Anfragen werden nach dem Standort des Fahrzeugs vermittelt.', 'label_de' => 'Warum · Punkt 3 Text'],
-            ['page_key' => 'startseite', 'section_key' => 'warum', 'field_key' => 'punkt_4_titel', 'value' => 'Verschiedene Leistungen', 'label_de' => 'Warum · Punkt 4 Titel'],
-            ['page_key' => 'startseite', 'section_key' => 'warum', 'field_key' => 'punkt_4_text', 'value' => 'Von Unfallgutachten bis zur Fahrzeugbewertung.', 'label_de' => 'Warum · Punkt 4 Text'],
-            ['page_key' => 'startseite', 'section_key' => 'warum', 'field_key' => 'punkt_5_titel', 'value' => 'Keine Registrierung', 'label_de' => 'Warum · Punkt 5 Titel'],
-            ['page_key' => 'startseite', 'section_key' => 'warum', 'field_key' => 'punkt_5_text', 'value' => 'Für eine Anfrage benötigen Sie kein Kundenkonto.', 'label_de' => 'Warum · Punkt 5 Text'],
-            ['page_key' => 'startseite', 'section_key' => 'warum', 'field_key' => 'punkt_6_titel', 'value' => 'Direkter Kontakt', 'label_de' => 'Warum · Punkt 6 Titel'],
-            ['page_key' => 'startseite', 'section_key' => 'warum', 'field_key' => 'punkt_6_text', 'value' => 'Nach der Vermittlung klärt der Sachverständige alles Weitere direkt mit Ihnen.', 'label_de' => 'Warum · Punkt 6 Text'],
-
-            ['page_key' => 'startseite', 'section_key' => 'vertrauen', 'field_key' => 'ueberschrift', 'value' => 'Bundesweites Partnernetz', 'label_de' => 'Vertrauen · Überschrift'],
-            ['page_key' => 'startseite', 'section_key' => 'vertrauen', 'field_key' => 'text', 'value' => 'Unser Partnernetz wächst kontinuierlich. Sachverständige mit nachgewiesener Qualifikation decken Einsatzgebiete in ganz Deutschland ab.', 'label_de' => 'Vertrauen · Fließtext'],
+            ['page_key' => 'startseite', 'section_key' => 'ueber', 'field_key' => 'ueberschrift', 'value' => 'Eine zentrale Stelle, kein Vergleichsportal', 'label_de' => 'Über DKGZ · Überschrift'],
+            ['page_key' => 'startseite', 'section_key' => 'ueber', 'field_key' => 'punkt_1_titel', 'value' => 'Ein Ansprechpartner', 'label_de' => 'Über · Punkt 1 Titel'],
+            ['page_key' => 'startseite', 'section_key' => 'ueber', 'field_key' => 'punkt_1_text', 'value' => 'Sie stellen eine Anfrage an DKGZ und nicht an zehn Büros. Die Verteilung an geeignete Sachverständige übernimmt die Zentrale.', 'label_de' => 'Über · Punkt 1 Text'],
+            ['page_key' => 'startseite', 'section_key' => 'ueber', 'field_key' => 'punkt_2_titel', 'value' => 'Keine Angebotsvergleiche', 'label_de' => 'Über · Punkt 2 Titel'],
+            ['page_key' => 'startseite', 'section_key' => 'ueber', 'field_key' => 'punkt_2_text', 'value' => 'Es gibt keine Ausschreibung und keinen Preiswettbewerb. Der erste verfügbare Partner mit passender Qualifikation übernimmt.', 'label_de' => 'Über · Punkt 2 Text'],
+            ['page_key' => 'startseite', 'section_key' => 'ueber', 'field_key' => 'punkt_3_titel', 'value' => 'Einheitlicher Standard', 'label_de' => 'Über · Punkt 3 Titel'],
+            ['page_key' => 'startseite', 'section_key' => 'ueber', 'field_key' => 'punkt_3_text', 'value' => 'Alle Partner werden vor der Aufnahme geprüft und arbeiten nach denselben Anforderungen — in jedem PLZ-Gebiet gleich.', 'label_de' => 'Über · Punkt 3 Text'],
+            ['page_key' => 'startseite', 'section_key' => 'ueber', 'field_key' => 'hinweis', 'value' => 'DKGZ vermittelt Sachverständige und erstellt selbst keine Gutachten. Die Begutachtung erbringt der vermittelte Sachverständige in eigener Verantwortung.', 'label_de' => 'Über · Rechtshinweis'],
 
             ['page_key' => 'startseite', 'section_key' => 'partner', 'field_key' => 'ueberschrift', 'value' => 'Sie sind Kfz-Sachverständiger?', 'label_de' => 'Für Partner · Überschrift'],
-            ['page_key' => 'startseite', 'section_key' => 'partner', 'field_key' => 'text', 'value' => 'Werden Sie Teil des DKGZ-Partnernetzes und erhalten Sie passende Anfragen aus Ihrem Einsatzgebiet.', 'label_de' => 'Für Partner · Fließtext'],
+            ['page_key' => 'startseite', 'section_key' => 'partner', 'field_key' => 'punkt_1', 'value' => 'Einsatzgebiet und Leistungen legen Sie selbst fest.', 'label_de' => 'Für Partner · Punkt 1'],
+            ['page_key' => 'startseite', 'section_key' => 'partner', 'field_key' => 'punkt_2', 'value' => 'Passende Anfragen erhalten Sie im Portal und per E-Mail.', 'label_de' => 'Für Partner · Punkt 2'],
+            ['page_key' => 'startseite', 'section_key' => 'partner', 'field_key' => 'punkt_3', 'value' => 'Jede Anfrage können Sie annehmen oder ablehnen — ohne Begründung.', 'label_de' => 'Für Partner · Punkt 3'],
+            ['page_key' => 'startseite', 'section_key' => 'partner', 'field_key' => 'karte_eyebrow', 'value' => 'Partnernetz', 'label_de' => 'Für Partner · Karte Übertitel'],
+            ['page_key' => 'startseite', 'section_key' => 'partner', 'field_key' => 'karte_text', 'value' => 'Die Vermittlungsprovision beträgt 15 % und wird ausschließlich auf abgeschlossene Aufträge berechnet. Keine Grundgebühr, keine Kosten für abgelehnte Anfragen.', 'label_de' => 'Für Partner · Karte Text'],
             ['page_key' => 'startseite', 'section_key' => 'partner', 'field_key' => 'cta', 'value' => 'Partner werden', 'label_de' => 'Für Partner · Schaltfläche'],
 
             ['page_key' => 'startseite', 'section_key' => 'faq', 'field_key' => 'ueberschrift', 'value' => 'Häufige Fragen', 'label_de' => 'FAQ · Überschrift'],
+            ['page_key' => 'startseite', 'section_key' => 'faq', 'field_key' => 'text', 'value' => 'Weitere Fragen beantworten wir telefonisch, Mo–Fr von 08:00 bis 18:00 Uhr.', 'label_de' => 'FAQ · Fließtext'],
 
-            ['page_key' => 'startseite', 'section_key' => 'abschluss', 'field_key' => 'ueberschrift', 'value' => 'Kostenlos einen Kfz-Sachverständigen anfragen', 'label_de' => 'Abschluss-CTA · Überschrift'],
-            ['page_key' => 'startseite', 'section_key' => 'abschluss', 'field_key' => 'text', 'value' => 'Nennen Sie uns Ihren Standort und Ihr Anliegen. Wir leiten Ihre Anfrage an einen passenden Sachverständigen aus unserem Netz weiter.', 'label_de' => 'Abschluss-CTA · Fließtext'],
-            ['page_key' => 'startseite', 'section_key' => 'abschluss', 'field_key' => 'cta', 'value' => 'Gutachter finden', 'label_de' => 'Abschluss-CTA · Schaltfläche'],
-            ['page_key' => 'startseite', 'section_key' => 'abschluss', 'field_key' => 'hinweis', 'value' => 'Kostenlose Anfrage · Kein Kundenkonto erforderlich', 'label_de' => 'Abschluss-CTA · Hinweis'],
-
-            ['page_key' => 'startseite', 'section_key' => 'fuss', 'field_key' => 'beschreibung', 'value' => 'DKGZ vermittelt Anfragen an selbstständige Kfz-Sachverständige. Die Begutachtung erbringt der jeweils vermittelte Sachverständige.', 'label_de' => 'Fußbereich · Beschreibung'],
+            ['page_key' => 'startseite', 'section_key' => 'fuss', 'field_key' => 'beschreibung', 'value' => 'Bundesweite Vermittlung von Kfz-Sachverständigen. Eine Anfrage, ein Ansprechpartner, geprüfte Partner in allen PLZ-Gebieten.', 'label_de' => 'Fußbereich · Beschreibung'],
+            ['page_key' => 'startseite', 'section_key' => 'fuss', 'field_key' => 'rechtshinweis', 'value' => 'DKGZ ist eine Vermittlungsstelle. Das Gutachten erstellt der vermittelte Sachverständige.', 'label_de' => 'Fußbereich · Rechtshinweis'],
         ];
     }
 

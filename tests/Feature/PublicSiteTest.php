@@ -62,10 +62,19 @@ describe('public pages', function () {
         $this->get('/agb')->assertNotFound();
     });
 
-    it('serves the seeded German copy rather than placeholder text', function () {
-        $this->get('/')->assertInertia(
-            fn ($page) => $page->where('content.hero.ueberschrift', 'Kfz-Sachverständigen in Ihrer Nähe finden')
-        );
+    it('serves the copy from the design rather than placeholder text', function () {
+        $this->get('/')->assertInertia(fn ($page) => $page
+            ->where('content.hero.eyebrow', 'Deutsche Kfz-Gutachterzentrale')
+            ->where('content.hero.zeile_1', 'Kfz-Gutachter finden.')
+            ->where('content.hero.zeile_2', 'Bundesweit koordiniert.')
+            ->where('content.hero.zeile_3', 'Ohne Umwege.')
+            ->where('content.hero.cta', 'Gutachter anfragen'));
+    });
+
+    it('shows all eight services and all six questions on the homepage', function () {
+        $this->get('/')->assertInertia(fn ($page) => $page
+            ->has('serviceTypes', 8)
+            ->has('faqs', 6));
     });
 });
 

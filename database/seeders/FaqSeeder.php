@@ -23,17 +23,14 @@ class FaqSeeder extends Seeder
     /** @return list<array<string, string>> */
     private function entries(): array
     {
+        // The six questions on the homepage, verbatim from "DKGZ Homepage.dc.html".
         return [
-            ['category' => 'Allgemein', 'question_de' => 'Was ist DKGZ?', 'answer_de' => 'DKGZ ist eine Vermittlungsplattform für Kfz-Sachverständige. Wir leiten Ihre Anfrage an geeignete Sachverständige aus unserem bundesweiten Partnernetz weiter.'],
-            ['category' => 'Kosten', 'question_de' => 'Ist die Anfrage kostenfrei?', 'answer_de' => 'Ja. Die Anfrage und die Vermittlung über DKGZ sind für Sie kostenfrei. Die Kosten des Gutachtens rechnet der Sachverständige direkt mit Ihnen oder Ihrer Versicherung ab.'],
-            ['category' => 'Allgemein', 'question_de' => 'Erstellt DKGZ die Gutachten selbst?', 'answer_de' => 'Nein. Die Begutachtung erbringt der jeweils vermittelte Sachverständige in eigener Verantwortung. DKGZ vermittelt ausschließlich.'],
-            ['category' => 'Allgemein', 'question_de' => 'Muss ich mich registrieren?', 'answer_de' => 'Nein. Für eine Anfrage benötigen Sie kein Kundenkonto und kein Passwort.'],
-            ['category' => 'Leistungen', 'question_de' => 'Welche Gutachten können vermittelt werden?', 'answer_de' => 'Unter anderem Haftpflicht- und Kaskogutachten, Unfall- und Wertgutachten, Oldtimergutachten, Gebrauchtwagen-Checks, Reparaturbestätigungen und Beweissicherungen.'],
-            ['category' => 'Ablauf', 'question_de' => 'Wie schnell meldet sich ein Sachverständiger?', 'answer_de' => 'Sobald ein Partner den Auftrag annimmt, erhält er Ihre Kontaktdaten und meldet sich direkt bei Ihnen — in der Regel innerhalb eines Werktages.'],
-            ['category' => 'Datenschutz', 'question_de' => 'Wer sieht meine Kontaktdaten?', 'answer_de' => 'Ausschließlich der Sachverständige, der den Auftrag annimmt. Bis zur Annahme sehen die angefragten Partner nur Art des Gutachtens, Postleitzahl, Ort und Fahrzeugdaten.'],
-            ['category' => 'Ablauf', 'question_de' => 'Erhalte ich mehrere Angebote zum Vergleich?', 'answer_de' => 'Nein. DKGZ ist kein Vergleichsportal. Der erste verfügbare Sachverständige übernimmt den Auftrag, damit Sie nicht auf Angebote warten müssen.'],
-            ['category' => 'Ablauf', 'question_de' => 'Was passiert, wenn kein Sachverständiger verfügbar ist?', 'answer_de' => 'Ihre Anfrage geht dann an unsere Vermittlung, die sich persönlich um einen passenden Partner in Ihrer Region kümmert und sich bei Ihnen meldet.'],
-            ['category' => 'Partner', 'question_de' => 'Wie werde ich Partner im Netz?', 'answer_de' => 'Über die Registrierung für Sachverständige. Nach Prüfung Ihrer Nachweise geben wir Ihren Zugang frei. Es gibt keine Grundgebühr und keine Vertragslaufzeit.'],
+            ['category' => 'Allgemein', 'question_de' => 'Was ist DKGZ?', 'answer_de' => 'DKGZ ist eine bundesweite Vermittlungsstelle für Kfz-Sachverständige. Wir nehmen Ihre Anfrage auf und leiten sie an qualifizierte Sachverständige weiter, deren Einsatzgebiet den Standort Ihres Fahrzeugs abdeckt.'],
+            ['category' => 'Kosten', 'question_de' => 'Ist die Anfrage kostenlos?', 'answer_de' => 'Ja. Anfrage und Vermittlung sind für Sie kostenfrei. Die Kosten eines anschließend beauftragten Gutachtens rechnet der Sachverständige direkt mit Ihnen oder der Versicherung ab.'],
+            ['category' => 'Allgemein', 'question_de' => 'Erstellt DKGZ die Gutachten selbst?', 'answer_de' => 'Nein. Die Begutachtung erbringt ausschließlich der vermittelte Sachverständige in eigener Verantwortung. DKGZ koordiniert die Vermittlung.'],
+            ['category' => 'Allgemein', 'question_de' => 'Muss ich ein Konto anlegen?', 'answer_de' => 'Nein. Es gibt keine Registrierung, kein Passwort und kein Kundenkonto. Sie erhalten eine Vorgangsnummer und werden per E-Mail informiert.'],
+            ['category' => 'Leistungen', 'question_de' => 'Welche Gutachten werden vermittelt?', 'answer_de' => 'Unfall-, Haftpflicht-, Kasko- und Fahrzeugschadengutachten, Wertgutachten, Oldtimergutachten, Gebrauchtwagen-Checks und Beweissicherungen. Weitere Leistungen auf Anfrage.'],
+            ['category' => 'Ablauf', 'question_de' => 'Wie schnell meldet sich ein Sachverständiger?', 'answer_de' => 'Sobald ein Partner die Anfrage annimmt, erhält er Ihre Kontaktdaten und meldet sich direkt bei Ihnen. In der Regel geschieht das innerhalb eines Werktages.'],
         ];
     }
 }
