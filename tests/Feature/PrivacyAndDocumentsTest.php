@@ -41,7 +41,9 @@ describe('customer contact data', function () {
             'service_type_id' => $this->type->id,
             'reference' => ServiceRequest::nextReference(),
             'customer_name' => 'Martina Reinhardt',
-            'customer_phone' => '+49 179 4480169',
+            // Deliberately not the company's own number, so the assertion below
+            // cannot be satisfied or defeated by the shared contact settings.
+            'customer_phone' => '+49 211 9911223',
             'customer_email' => 'm.reinhardt@web.test',
         ]);
 
@@ -57,7 +59,7 @@ describe('customer contact data', function () {
         // And provably not anywhere in the raw payload either.
         $response->assertDontSee('Martina Reinhardt')
             ->assertDontSee('m.reinhardt@web.test')
-            ->assertDontSee('4480169');
+            ->assertDontSee('9911223');
     });
 
     it('is present once that assessor holds the assignment', function () {
