@@ -5,12 +5,16 @@ use App\Http\Middleware\EnsureMaintenanceMode;
 use App\Http\Middleware\HandleInertiaRequests;
 use App\Http\Middleware\SecurityHeaders;
 use App\Http\Middleware\SetLocale;
+use App\Support\Content;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Middleware\AddLinkHeadersForPreloadedAssets;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Inertia\Inertia;
+use Symfony\Component\HttpFoundation\Response;
+use Throwable;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -45,4 +49,21 @@ return Application::configure(basePath: dirname(__DIR__))
         $exceptions->shouldRenderJsonWhen(
             fn (Request $request) => $request->is('api/*') || $request->expectsJson(),
         );
+
+        // Error pages render in the design language rather than the framework's
+        // default, with copy the admin can edit like any other page text.
+        $exceptions->respond(function (Response $response, Throwable $exception, Request $request) {
+            if ($request->expectsJson() || app()->environment('local', 'testing')) {
+                return $response;
+            }
+
+            if (! in_array($response->getStatusCode(), [404, 419, 500, 503], true)) {
+                return $response;
+            }
+
+            return Inertia::render('Fehler/Fehlerseite', [
+                'status' => $response->getStatusCode(),
+                'content' => Content::page('fehler'),
+            ])->toResponse($request)->setStatusCode($response->getStatusCode());
+        });
     })->create();
