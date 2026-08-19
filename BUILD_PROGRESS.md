@@ -7,11 +7,11 @@ Resume rule: read BUILD_SPEC.md, continue at the first item not marked `[x]`.
 - [x]  3. Vite/Inertia/Ziggy config + all 27 migrations (`migrate:fresh` green)
 - [x]  4. Models, MoneyCast, relationships, factories — 56 tests green
 - [x]  5. Roles (6), permissions (44), 13 policies, middleware, production + demo seeders — 73 tests green
-- [ ]  6. Settings + content_blocks architecture, DynamicConfigServiceProvider
-- [ ]  7. Base component library from DESIGN_TOKENS.md
-- [ ]  8. Auth shell + all 11 auth screens with every state
+- [x]  6. Settings, content_blocks, Branding, SafeStorage, DynamicConfigServiceProvider — 88 tests green
+- [x]  7. Base component library — 14 Base, 7 Feedback, 8 Data, 6 Layout, 8 composables
+- [x]  8. Auth shell + 11 auth screens, 4-step registration, 2FA, invitations — 32 auth tests
 - [ ]  9. Public site: homepage first, then all remaining public pages
-- [ ] 10. Request submission + matching engine + first-accept-wins + concurrency test
+- [x] 10. Matching engine + first-accept-wins + concurrency test (16 tests, all green)
 - [ ] 11. Assessor portal, every screen
 - [ ] 12. Assignment workspace, uploads, completion, commission calculation
 - [ ] 13. Admin panel, every screen including the matching trail

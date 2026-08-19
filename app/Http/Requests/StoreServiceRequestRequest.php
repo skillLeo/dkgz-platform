@@ -1,0 +1,107 @@
+<?php
+
+namespace App\Http\Requests;
+
+use App\Rules\ExistingPostalCode;
+use App\Rules\GermanLicencePlate;
+use App\Rules\VehicleIdentificationNumber;
+use App\Support\Settings;
+use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
+use Illuminate\Validation\Validator;
+
+class StoreServiceRequestRequest extends FormRequest
+{
+    public function authorize(): bool
+    {
+        // The public form is open by design — a customer needs no account.
+        // Abuse is handled by the throttle, the honeypot and the timing check.
+        return true;
+    }
+
+    public function rules(): array
+    {
+        $maxImages = Settings::int('business.max_images_per_request', 5);
+        $maxKb = Settings::int('business.max_upload_mb', 10) * 1024;
+
+        return [
+            'service_type_id' => ['required', 'integer', Rule::exists('service_types', 'id')->where('is_active', true)],
+            'postal_code' => ['required', new ExistingPostalCode],
+            'city' => ['required', 'string', 'max:120'],
+            'customer_name' => ['required', 'string', 'max:160'],
+            'customer_phone' => ['required', 'string', 'max:40'],
+            'customer_email' => ['required', 'string', 'email', 'max:255'],
+            'vehicle_make' => ['required', 'string', 'max:80'],
+            'vehicle_model' => ['required', 'string', 'max:80'],
+            'vehicle_year' => ['nullable', 'integer', 'min:1900', 'max:'.(now()->year + 1)],
+            'vehicle_plate' => ['nullable', new GermanLicencePlate],
+            'vehicle_vin' => ['nullable', new VehicleIdentificationNumber],
+            'description' => ['nullable', 'string', 'max:2000'],
+            'preferred_date' => ['nullable', 'date', 'after_or_equal:today'],
+            'urgency' => ['nullable', Rule::in(['normal', 'soon', 'urgent'])],
+            'consent' => ['accepted'],
+
+            'images' => ['nullable', 'array', "max:{$maxImages}"],
+            'images.*' => ['file', 'mimes:jpg,jpeg,png,webp', "max:{$maxKb}"],
+
+            // Honeypot: a real person never fills this in.
+            'website' => ['nullable', 'size:0'],
+            'rendered_at' => ['nullable', 'numeric'],
+        ];
+    }
+
+    /**
+     * A submission that arrives within three seconds of the form rendering was
+     * not typed by a human. No third-party captcha — that would send visitor
+     * data to a third party, which is exactly what the GDPR brief rules out.
+     */
+    public function after(): array
+    {
+        return [
+            function (Validator $validator) {
+                if ($this->filled('website')) {
+                    $validator->errors()->add('website', 'Diese Anfrage konnte nicht verarbeitet werden.');
+                }
+
+                $renderedAt = (float) $this->input('rendered_at', 0);
+
+                if ($renderedAt > 0 && (microtime(true) * 1000 - $renderedAt) < 3000) {
+                    $validator->errors()->add(
+                        'customer_name',
+                        'Bitte nehmen Sie sich einen Moment Zeit und senden Sie das Formular erneut ab.'
+                    );
+                }
+            },
+        ];
+    }
+
+    public function attributes(): array
+    {
+        return [
+            'service_type_id' => 'die Art des Gutachtens',
+            'postal_code' => 'die Postleitzahl',
+            'city' => 'der Standort des Fahrzeugs',
+            'customer_name' => 'Ihr Name',
+            'customer_phone' => 'Ihre Telefonnummer',
+            'customer_email' => 'Ihre E-Mail-Adresse',
+            'vehicle_make' => 'die Marke',
+            'vehicle_model' => 'das Modell',
+            'vehicle_year' => 'das Baujahr',
+            'vehicle_plate' => 'das Kennzeichen',
+            'vehicle_vin' => 'die Fahrgestellnummer',
+            'description' => 'die Beschreibung',
+            'preferred_date' => 'der Wunschtermin',
+            'images' => 'die Fotos',
+            'consent' => 'der Einwilligung',
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'consent.accepted' => 'Ohne Ihre Einwilligung können wir die Anfrage nicht vermitteln.',
+            'images.max' => 'Bitte laden Sie höchstens :max Fotos hoch.',
+            'images.*.mimes' => 'Fotos müssen im Format JPG, PNG oder WebP vorliegen.',
+        ];
+    }
+}
