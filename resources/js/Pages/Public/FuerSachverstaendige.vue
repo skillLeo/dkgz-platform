@@ -6,6 +6,7 @@ import SectionLabel from '../../Components/Layout/SectionLabel.vue'
 import BaseInput from '../../Components/Base/BaseInput.vue'
 import BaseButton from '../../Components/Base/BaseButton.vue'
 import MoneyValue from '../../Components/Data/MoneyValue.vue'
+import ImageSlot from '../../Components/Layout/ImageSlot.vue'
 import { useGermanFormat } from '../../Composables/useGermanFormat.js'
 
 const props = defineProps({

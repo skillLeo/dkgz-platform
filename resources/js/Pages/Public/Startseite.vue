@@ -6,6 +6,7 @@ import {
 } from 'lucide-vue-next'
 import PublicLayout from '../../Layouts/PublicLayout.vue'
 import BaseButton from '../../Components/Base/BaseButton.vue'
+import ImageSlot from '../../Components/Layout/ImageSlot.vue'
 
 /**
  * Built from "DKGZ Homepage.dc.html", section for section: hero on a 58/42
@@ -107,13 +108,12 @@ const telHref = computed(() => `tel:${String(page.props.app?.phone ?? '').replac
 
                 <!-- Image column with the overlapping seal card -->
                 <div class="relative hidden pb-6 pl-6 lg:block">
-                    <div class="h-140 overflow-hidden rounded-card border border-gray-200 bg-gray-50">
-                        <img
-                            v-if="t('hero', 'bild')"
+                    <div class="h-140 overflow-hidden rounded-card border border-gray-200">
+                        <ImageSlot
                             :src="t('hero', 'bild')"
                             alt="Kfz-Sachverständiger dokumentiert einen Fahrzeugschaden"
-                            class="h-full w-full object-cover"
-                        >
+                            caption="Kfz-Sachverständiger dokumentiert einen Fahrzeugschaden — Klemmbrett oder Tablet, deutsche Werkstatt oder Außenaufnahme, kühl abgestimmt, unposiert. Hochformat 4:5."
+                        />
                     </div>
                     <div class="absolute bottom-0 left-0 flex items-center gap-3.5 rounded-card border border-gray-200 bg-white px-5 py-4 shadow-(--shadow-1)">
                         <span class="grid h-11 w-11 shrink-0 place-items-center rounded-full border border-navy-700" aria-hidden="true">
