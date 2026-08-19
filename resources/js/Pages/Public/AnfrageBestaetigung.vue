@@ -12,6 +12,9 @@ const props = defineProps({
 
 const page = usePage()
 const t = (section, field, fallback = '') => props.content?.[section]?.[field] ?? fallback
+
+// The design names the actual postal code in step one, not a generic phrase.
+const step = (n, part) => t('ablauf', `schritt_${n}_${part}`).replace(':plz', props.request.postal_code ?? '')
 </script>
 
 <template>
@@ -40,8 +43,8 @@ const t = (section, field, fallback = '') => props.content?.[section]?.[field] ?
                 <li v-for="n in [1, 2, 3]" :key="n" class="grid grid-cols-[32px_minmax(0,1fr)] gap-4 border-b border-gray-200 py-5">
                     <span class="pt-0.5 font-mono text-sm tabular-nums text-gray-400">0{{ n }}</span>
                     <div>
-                        <h2 class="text-lead font-semibold text-navy-700">{{ t('ablauf', `schritt_${n}_titel`) }}</h2>
-                        <p class="measure pt-1 text-base leading-normal text-gray-600">{{ t('ablauf', `schritt_${n}_text`) }}</p>
+                        <h2 class="text-lead font-semibold text-navy-700">{{ step(n, 'titel') }}</h2>
+                        <p class="measure pt-1 text-base leading-normal text-gray-600">{{ step(n, 'text') }}</p>
                     </div>
                 </li>
             </ol>

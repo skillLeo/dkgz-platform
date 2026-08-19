@@ -106,10 +106,10 @@ const shownError = computed(() => props.error || localError.value)
             >
                 <Upload :size="24" :stroke-width="1.5" class="text-gray-600" aria-hidden="true" />
                 <span class="text-base text-gray-800">
-                    Datei hierher ziehen oder
+                    {{ multiple ? 'Dateien' : 'Datei' }} hierher ziehen oder
                     <span class="font-medium text-navy-700 underline underline-offset-2">auswählen</span>
                 </span>
-                <span class="text-xs text-gray-400">{{ acceptLabel }}</span>
+                <span class="font-mono text-eyebrow text-gray-400">{{ acceptLabel }}</span>
             </button>
         </div>
 

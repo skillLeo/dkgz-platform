@@ -163,7 +163,7 @@ const submit = () => form.post('/anfrage', { forceFormData: true })
                                 v-model="form.images"
                                 label="Fotos"
                                 accept=".jpg,.jpeg,.png,.webp"
-                                :accept-label="`JPG, PNG oder WebP · max. ${maxImages} Dateien · je ${maxUploadMb} MB`"
+                                :accept-label="`JPG, PNG · max. ${maxImages} Dateien · je ${maxUploadMb} MB`"
                                 multiple
                                 :max-files="maxImages"
                                 :max-size-mb="maxUploadMb"

@@ -42,7 +42,12 @@ const categories = [
     <PublicLayout :sticky-cta="false">
         <div class="mx-auto w-full max-w-(--container-review) px-4 py-20 md:px-6">
             <p class="font-mono text-sm tabular-nums text-gray-600">
-                {{ context.reference }}<template v-if="context.service_type"> · {{ context.service_type }}</template><template v-if="context.city"> · {{ context.city }}</template>
+                <template v-if="feedbackStep">
+                    {{ context.reference }} · Bewertung {{ review.rating ?? rating.rating }} von 10
+                </template>
+                <template v-else>
+                    {{ context.reference }}<template v-if="context.service_type"> · {{ context.service_type }}</template><template v-if="context.city"> · {{ context.city }}</template>
+                </template>
             </p>
 
             <!-- Step one: the rating -->
@@ -85,7 +90,14 @@ const categories = [
                 <p class="measure pt-3 text-base leading-normal text-gray-600">{{ t('feedback', 'text') }}</p>
 
                 <div class="mt-8 flex flex-col gap-5 rounded-card border border-gray-200 p-6 md:p-8">
-                    <BaseSelect v-model="feedback.feedback_category" label="Woran lag es?" :options="categories" :error="feedback.errors.feedback_category" required />
+                    <BaseSelect
+                        v-model="feedback.feedback_category"
+                        label="Woran lag es?"
+                        :options="categories"
+                        :error="feedback.errors.feedback_category"
+                        hint="Weitere Kategorien: Terminfindung · Dauer bis zum Gutachten · Qualität der Unterlagen · Kommunikation · Kosten · Sonstiges"
+                        required
+                    />
                     <BaseTextarea v-model="feedback.feedback" label="Beschreibung" placeholder="Bitte schildern Sie kurz, was passiert ist." :rows="5" :error="feedback.errors.feedback" optional />
                     <BaseCheckbox v-model="feedback.may_contact">DKGZ darf mich zu diesem Vorgang telefonisch kontaktieren.</BaseCheckbox>
                 </div>
