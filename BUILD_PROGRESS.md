@@ -22,4 +22,25 @@ Resume rule: read BUILD_SPEC.md, continue at the first item not marked `[x]`.
 - [x] 18. Full Pest suite green — 268 tests, order-independent
 - [x] 19. Token discipline verified: zero arbitrary values, zero inline hex, zero CDN font requests
 - [x] 20. DEPLOYMENT.md (both layouts), 2 × .htaccess, deploy.sh, cron line, .env.example, README.md, German HANDOVER.md
-- [ ] 21. Push to origin (skillLeo authorship) + deploy to dkgz.skillleo.com, verify over SSH
+- [x] 21. Pushed to origin and deployed to https://dkgz.skillleo.com — every
+      public route 200, admin login verified end to end, production log clean.
+      **One step left for the operator:** the minute cron. `crontab` is not
+      available to this account, so it must be added in hPanel — see below.
+
+---
+
+## Outstanding — operator action required
+
+**Add the cron job in hPanel → Advanced → Cron Jobs, interval "Every minute":**
+
+```
+/home/u290685119/domains/dkgz.skillleo.com/public_html/queue-tick.sh
+```
+
+Until this exists, no e-mail leaves the system: every message queues in the
+`jobs` table and the admin System page will show the queue depth climbing.
+`crontab` is not exposed to this hosting account over SSH, so this is the one
+step that cannot be scripted from here.
+
+The script is already installed and tested on the server; it runs the scheduler
+and then drains the queue, guarded so a slow job cannot stack workers.
