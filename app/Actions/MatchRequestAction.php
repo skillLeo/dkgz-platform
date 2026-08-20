@@ -2,6 +2,7 @@
 
 namespace App\Actions;
 
+use App\Jobs\NotifyCustomerNoResponseJob;
 use App\Jobs\NotifyMatchedAssessorsJob;
 use App\Jobs\NotifyNoAssessorsFoundJob;
 use App\Models\Assessor;
@@ -36,6 +37,11 @@ class MatchRequestAction
             ]);
 
             NotifyNoAssessorsFoundJob::dispatch($request->id);
+
+            // The customer is told too, not only the office. Someone who has
+            // just handed over their details and hears nothing assumes help is
+            // on the way; the mail says plainly that it is being placed by hand.
+            NotifyCustomerNoResponseJob::dispatch($request->id);
 
             return 0;
         }

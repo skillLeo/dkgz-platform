@@ -37,3 +37,4 @@ auth.json
 
 # SSR bundle for the page-render smoke test, rebuilt on every run
 /storage/framework/testing
+/storage/app/private/test-summary.json

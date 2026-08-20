@@ -103,3 +103,21 @@ it('never sends the same customer mail twice', function () {
 
     expect(EmailLog::where('template_key', 'anfrage-keine-rueckmeldung')->count())->toBe(1);
 });
+
+it('tells the customer when no partner covers the area at all', function () {
+    $request = ServiceRequest::factory()->inPostalCode('99999')->create([
+        'service_type_id' => $this->type->id,
+        'reference' => ServiceRequest::nextReference(),
+        'customer_email' => 'kundin@example.test',
+        'customer_name' => 'Martina Reinhardt',
+    ]);
+
+    expect(app(MatchRequestAction::class)->execute($request))->toBe(0);
+
+    (new NotifyCustomerNoResponseJob($request->id))->handle();
+
+    expect($request->fresh()->status)->toBe(ServiceRequest::STATUS_NEW)
+        ->and($request->fresh()->matched_count)->toBe(0)
+        ->and($request->fresh()->customer_notified_at)->not->toBeNull()
+        ->and(EmailLog::where('template_key', 'anfrage-keine-rueckmeldung')->count())->toBe(1);
+});

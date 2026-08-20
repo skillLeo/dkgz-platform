@@ -67,6 +67,26 @@ const tone = {
             {{ check.message }}
         </p>
 
+        <!--
+            The checked domain is the one mail is sent FROM, which is not always
+            the one the site runs on. Saying so prevents an operator from fixing
+            DNS on the wrong domain and wondering why nothing changed.
+        -->
+        <div
+            v-if="check?.domain && !check.domain_matches_app"
+            class="border-b border-gray-200 bg-warning/5 px-5 py-4"
+        >
+            <p class="text-base font-medium text-warning">Absenderdomain weicht von der Website ab</p>
+            <p class="measure pt-1 text-sm leading-normal text-gray-800">
+                Diese Seite läuft unter <span class="font-mono">{{ check.app_domain ?? 'unbekannt' }}</span>,
+                versendet aber als <span class="font-mono">{{ check.from_address }}</span>. Geprüft werden deshalb
+                die DNS-Einträge von <span class="font-mono">{{ check.domain }}</span> — nicht die der Website.
+                Das ist zulässig, wenn es so gewollt ist; tragen Sie die Einträge dann bei
+                <span class="font-mono">{{ check.domain }}</span> ein. Soll von der Website-Domain gesendet werden,
+                ändern Sie zuerst die Absenderadresse unter E-Mail.
+            </p>
+        </div>
+
         <!-- The one warning that matters most, stated first and loudly. -->
         <div
             v-if="(check?.records ?? []).some((r) => r.name === 'SPF' && r.state === 'missing')"

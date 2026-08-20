@@ -60,3 +60,31 @@ it('sets the bounce address as Return-Path when one is configured', function () 
     expect((new TemplateMail('auftrag-bestaetigt', []))->headers()->text)
         ->toHaveKey('Return-Path', '<bounce@dkgz.de>');
 });
+
+describe('the sending domain against the application domain', function () {
+    it('accepts an exact match and a subdomain of it', function () {
+        config(['app.url' => 'https://dkgz.skillleo.com']);
+
+        expect(MailDomainCheck::domainMatchesApplication('dkgz.skillleo.com'))->toBeTrue()
+            ->and(MailDomainCheck::domainMatchesApplication('mail.dkgz.skillleo.com'))->toBeTrue()
+            ->and(MailDomainCheck::domainMatchesApplication('www.dkgz.skillleo.com'))->toBeTrue();
+    });
+
+    it('flags an unrelated sending domain', function () {
+        config(['app.url' => 'https://dkgz.skillleo.com']);
+
+        expect(MailDomainCheck::domainMatchesApplication('dkgz.de'))->toBeFalse()
+            ->and(MailDomainCheck::domainMatchesApplication(null))->toBeFalse();
+    });
+
+    it('reports both domains so the panel can explain the difference', function () {
+        config(['app.url' => 'https://dkgz.skillleo.com']);
+
+        $result = MailDomainCheck::run('no-reply@dkgz.de');
+
+        expect($result['app_domain'])->toBe('dkgz.skillleo.com')
+            ->and($result['domain'])->toBe('dkgz.de')
+            ->and($result['domain_matches_app'])->toBeFalse()
+            ->and($result['from_address'])->toBe('no-reply@dkgz.de');
+    });
+});

@@ -40,10 +40,15 @@ class NotifyCustomerNoResponseJob implements ShouldQueue
             return;
         }
 
-        if (! in_array($request->status, [
+        // Three ways a request ends without a partner: the clock ran out, every
+        // partner declined, or nobody covered the area in the first place. The
+        // last one keeps status 'new' with a zero match count.
+        $unplaced = in_array($request->status, [
             ServiceRequest::STATUS_EXPIRED,
             ServiceRequest::STATUS_UNANSWERED,
-        ], true)) {
+        ], true) || ($request->status === ServiceRequest::STATUS_NEW && $request->matched_count === 0);
+
+        if (! $unplaced) {
             return;
         }
 

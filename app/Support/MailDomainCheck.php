@@ -27,6 +27,9 @@ class MailDomainCheck
         if ($domain === null) {
             return [
                 'domain' => null,
+                'app_domain' => self::applicationDomain(),
+                'domain_matches_app' => false,
+                'from_address' => $fromAddress,
                 'checked_at' => now(),
                 'records' => [],
                 'available' => false,
@@ -37,6 +40,9 @@ class MailDomainCheck
         if (! function_exists('dns_get_record')) {
             return [
                 'domain' => $domain,
+                'app_domain' => self::applicationDomain(),
+                'domain_matches_app' => self::domainMatchesApplication($domain),
+                'from_address' => $fromAddress,
                 'checked_at' => now(),
                 'records' => [],
                 'available' => false,
@@ -46,6 +52,9 @@ class MailDomainCheck
 
         return [
             'domain' => $domain,
+            'app_domain' => self::applicationDomain(),
+            'domain_matches_app' => self::domainMatchesApplication($domain),
+            'from_address' => $fromAddress,
             'checked_at' => now(),
             'available' => true,
             'message' => null,
@@ -55,6 +64,36 @@ class MailDomainCheck
                 self::checkDkim($domain),
             ],
         ];
+    }
+
+    /** The host the application is actually served from. */
+    public static function applicationDomain(): ?string
+    {
+        $host = parse_url((string) config('app.url'), PHP_URL_HOST);
+
+        return $host ? strtolower(preg_replace('/^www\./', '', $host)) : null;
+    }
+
+    /**
+     * Whether mail is sent from the domain the site runs on.
+     *
+     * A mismatch is not automatically wrong — plenty of operators send from a
+     * dedicated domain — but it means the DNS records checked here belong to a
+     * domain other than the one the client recognises, and the SPF that matters
+     * is the sender's, not the website's. Worth saying out loud either way.
+     */
+    public static function domainMatchesApplication(?string $domain): bool
+    {
+        $app = self::applicationDomain();
+
+        if ($domain === null || $app === null) {
+            return false;
+        }
+
+        $domain = preg_replace('/^www\./', '', strtolower($domain));
+
+        // A subdomain of the application domain still counts as the same estate.
+        return $domain === $app || str_ends_with($domain, '.'.$app) || str_ends_with($app, '.'.$domain);
     }
 
     public static function domainOf(?string $address): ?string
