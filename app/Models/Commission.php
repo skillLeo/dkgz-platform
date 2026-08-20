@@ -99,8 +99,8 @@ class Commission extends Model
     {
         return match ($this->status) {
             self::STATUS_OPEN => 'Offen',
-            self::STATUS_INVOICED => 'Berechnet',
-            self::STATUS_SETTLED => 'Beglichen',
+            self::STATUS_INVOICED => 'Abgerechnet',
+            self::STATUS_SETTLED => 'Bezahlt',
             self::STATUS_WAIVED => 'Erlassen',
             default => $this->status,
         };

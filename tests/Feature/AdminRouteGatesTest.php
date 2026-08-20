@@ -1,6 +1,11 @@
 <?php
 
+use App\Models\Assessor;
+use App\Models\RequestMatch;
+use App\Models\ServiceRequest;
+use App\Models\ServiceType;
 use App\Models\User;
+use App\Support\AttentionQueue;
 use App\Support\Settings;
 use Database\Seeders\RolePermissionSeeder;
 use Database\Seeders\SettingsSeeder;
@@ -109,5 +114,65 @@ describe('write routes', function () {
         $this->actingAs(actingAsRole('admin'))
             ->post("/admin/rollen/{$role->id}", ['permissions' => []])
             ->assertForbidden();
+    });
+});
+
+describe('the attention queue', function () {
+    it('lists a request every matched partner declined', function () {
+        $type = ServiceType::factory()->create();
+        $request = ServiceRequest::factory()->create([
+            'service_type_id' => $type->id,
+            'reference' => ServiceRequest::nextReference(),
+            'status' => ServiceRequest::STATUS_MATCHED,
+            'matched_count' => 2,
+        ]);
+
+        $assessor = Assessor::factory()->create(['approval_status' => Assessor::STATUS_APPROVED]);
+        RequestMatch::create([
+            'service_request_id' => $request->id,
+            'assessor_id' => $assessor->id,
+            'outcome' => RequestMatch::OUTCOME_DECLINED,
+            'notified_at' => now(),
+            'responded_at' => now(),
+        ]);
+
+        $items = collect(AttentionQueue::items());
+
+        expect($items->pluck('reference'))->toContain($request->reference)
+            ->and($items->firstWhere('reference', $request->reference)['matter'])
+            ->toBe('Von allen 2 Partnern abgelehnt');
+    });
+
+    it('lists a request no partner covered', function () {
+        $request = ServiceRequest::factory()->create([
+            'service_type_id' => ServiceType::factory()->create()->id,
+            'reference' => ServiceRequest::nextReference(),
+            'status' => ServiceRequest::STATUS_NEW,
+            'matched_count' => 0,
+            'postal_code' => '17033',
+        ]);
+
+        expect(collect(AttentionQueue::items())->firstWhere('reference', $request->reference)['matter'])
+            ->toBe('Kein Partner im PLZ-Gebiet 17033');
+    });
+
+    it('lists a partner whose liability cover is about to lapse', function () {
+        $assessor = Assessor::factory()->create(['approval_status' => Assessor::STATUS_APPROVED]);
+        $assessor->documents()->create([
+            'type' => 'liability',
+            'path' => 'nachweise/h.pdf',
+            'original_name' => 'h.pdf',
+            'size_bytes' => 100,
+            'mime_type' => 'application/pdf',
+            'uploaded_at' => now(),
+            'valid_until' => now()->addDays(5),
+        ]);
+
+        expect(collect(AttentionQueue::items())->pluck('reference'))
+            ->toContain($assessor->partnerId());
+    });
+
+    it('is empty when nothing needs a human', function () {
+        expect(AttentionQueue::items())->toBe([]);
     });
 });

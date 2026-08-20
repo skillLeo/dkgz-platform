@@ -38,7 +38,7 @@ const columns = [
 
         <div class="grid grid-cols-1 gap-4 pb-6 sm:grid-cols-2">
             <StatCard label="Offen" :cents="totals.open_cents" tone="warning" />
-            <StatCard label="Beglichen" :cents="totals.settled_cents" tone="success" />
+            <StatCard label="Bezahlt" :cents="totals.settled_cents" tone="success" />
         </div>
 
         <DataTable

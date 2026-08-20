@@ -17,13 +17,14 @@ class AssessorDocument extends Model
     public const TYPE_OTHER = 'other';
 
     protected $fillable = [
-        'assessor_id', 'type', 'path', 'original_name', 'size_bytes', 'mime_type', 'uploaded_at',
+        'assessor_id', 'type', 'path', 'original_name', 'size_bytes', 'mime_type', 'uploaded_at', 'valid_until',
     ];
 
     protected function casts(): array
     {
         return [
             'uploaded_at' => 'datetime',
+            'valid_until' => 'date',
             'size_bytes' => 'integer',
         ];
     }
@@ -31,6 +32,19 @@ class AssessorDocument extends Model
     public function assessor(): BelongsTo
     {
         return $this->belongsTo(Assessor::class);
+    }
+
+    /** True when cover has lapsed — such a partner must not receive new work. */
+    public function hasLapsed(): bool
+    {
+        return $this->valid_until !== null && $this->valid_until->isPast();
+    }
+
+    public function expiresSoon(int $days = 30): bool
+    {
+        return $this->valid_until !== null
+            && ! $this->hasLapsed()
+            && $this->valid_until->lessThanOrEqualTo(now()->addDays($days));
     }
 
     public function typeLabel(): string

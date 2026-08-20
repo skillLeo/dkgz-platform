@@ -5,6 +5,7 @@ import { ArrowDown, ArrowUp, ChevronRight } from 'lucide-vue-next'
 import TablePagination from './TablePagination.vue'
 import TableSkeleton from './TableSkeleton.vue'
 import EmptyState from '../Feedback/EmptyState.vue'
+import BaseButton from '../Base/BaseButton.vue'
 import { useBreakpoint } from '../../Composables/useBreakpoint.js'
 
 /**
@@ -28,6 +29,14 @@ const props = defineProps({
     loading: { type: Boolean, default: false },
     emptyTitle: { type: String, default: 'Keine Einträge' },
     emptyDescription: { type: String, default: '' },
+    /**
+     * The filters currently narrowing the list. When these are set and nothing
+     * came back, the empty state says so and offers a way out — otherwise a
+     * filtered-to-nothing table reads as "there is no data", which sends people
+     * looking for a bug that is not there.
+     */
+    activeFilters: { type: Object, default: () => ({}) },
+    resetHref: { type: String, default: null },
     emptyIcon: { type: [Object, Function], default: null },
     only: { type: Array, default: () => [] },
 })
@@ -63,6 +72,17 @@ const alignClass = (column) => ({
         <slot name="toolbar" />
 
         <TableSkeleton v-if="loading" :columns="columns.length" />
+
+        <EmptyState
+            v-else-if="!rows.length && hasFilters"
+            title="Kein Ergebnis"
+            :description="filteredDescription"
+            class="border-0"
+        >
+            <BaseButton v-if="resetHref" :href="resetHref" variant="secondary" size="compact">
+                Filter zurücksetzen
+            </BaseButton>
+        </EmptyState>
 
         <EmptyState
             v-else-if="!rows.length"

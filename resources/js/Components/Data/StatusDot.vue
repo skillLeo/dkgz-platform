@@ -29,8 +29,8 @@ const tones = {
     documents_uploaded: { dot: 'bg-navy-500', text: 'text-navy-700', label: 'Unterlagen hochgeladen' },
     // commissions
     open: { dot: 'bg-warning', text: 'text-warning', label: 'Offen' },
-    invoiced: { dot: 'bg-navy-500', text: 'text-navy-700', label: 'Berechnet' },
-    settled: { dot: 'bg-success', text: 'text-success', label: 'Beglichen' },
+    invoiced: { dot: 'bg-navy-500', text: 'text-navy-700', label: 'Abgerechnet' },
+    settled: { dot: 'bg-success', text: 'text-success', label: 'Bezahlt' },
     waived: { dot: 'bg-gray-400', text: 'text-gray-600', label: 'Erlassen' },
     // assessors
     approved: { dot: 'bg-success', text: 'text-success', label: 'Freigegeben' },

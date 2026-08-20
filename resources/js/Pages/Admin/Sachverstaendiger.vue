@@ -128,7 +128,29 @@ const doUnsuspend = async () => {
                         <div class="flex items-baseline justify-between gap-4 border-b border-gray-100 py-2.5">
                             <dt class="text-sm text-gray-600">Berufserfahrung</dt><dd class="font-mono text-sm tabular-nums text-gray-800">{{ assessor.years_experience ?? '—' }} Jahre</dd>
                         </div>
+                        <div class="flex items-baseline justify-between gap-4 border-b border-gray-100 py-2.5">
+                            <dt class="text-sm text-gray-600">Partner-ID</dt><dd class="font-mono text-sm text-gray-800">{{ assessor.partner_id }}</dd>
+                        </div>
+                        <div class="flex items-baseline justify-between gap-4 border-b border-gray-100 py-2.5">
+                            <dt class="text-sm text-gray-600">Annahmequote</dt>
+                            <dd class="font-mono text-sm tabular-nums text-gray-800">
+                                <template v-if="assessor.acceptance_rate === null">noch keine Anfragen</template>
+                                <template v-else>{{ assessor.acceptance_rate }} %</template>
+                            </dd>
+                        </div>
                     </dl>
+
+                    <div
+                        v-if="assessor.cover_has_lapsed"
+                        class="mt-4 rounded-sm border border-danger bg-danger/5 p-3"
+                        role="status"
+                    >
+                        <p class="text-sm font-medium text-danger">Haftpflichtnachweis abgelaufen</p>
+                        <p class="pt-1 text-sm leading-normal text-gray-800">
+                            Dieser Partner erhält keine neuen Anfragen mehr, bis ein gültiger Nachweis vorliegt.
+                            Laufende Aufträge bleiben bestehen.
+                        </p>
+                    </div>
 
                     <div class="border-t border-gray-200 pt-4 mt-4">
                         <p class="text-eyebrow font-semibold uppercase text-gray-600">Nachweise</p>
@@ -147,9 +169,17 @@ const doUnsuspend = async () => {
                                 <span class="min-w-0 flex-1">
                                     <span class="block truncate text-sm text-gray-800">{{ doc.type_label }}</span>
                                     <span class="block truncate font-mono text-meta text-gray-400">
-                                        {{ doc.original_name }} · {{ doc.size_label }}
+                                        {{ doc.original_name }} · {{ doc.size_label }}<template v-if="doc.valid_until_label"> · {{ doc.valid_until_label }}</template>
                                     </span>
                                 </span>
+                                <span
+                                    class="shrink-0 text-xs"
+                                    :class="{
+                                        'text-danger': doc.state === 'lapsed',
+                                        'text-warning': doc.state === 'expiring',
+                                        'text-success': doc.state === 'ok',
+                                    }"
+                                >{{ doc.state_label }}</span>
                                 <a
                                     :href="doc.download_url"
                                     class="shrink-0 text-gray-600 hover:text-navy-700"

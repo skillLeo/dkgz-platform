@@ -58,7 +58,7 @@ const doSettle = async () => {
                 <StatusDot :status="commission.status" :label="commission.status_label" />
                 <BaseButton v-if="can.invoice" size="compact" :loading="invoice.processing" @click="doInvoice">Abrechnung erzeugen</BaseButton>
                 <BaseButton v-if="commission.has_invoice" variant="secondary" size="compact" :href="`/admin/provisionen/${commission.id}/rechnung`">PDF herunterladen</BaseButton>
-                <BaseButton v-if="can.settle" variant="secondary" size="compact" :loading="settle.processing" @click="doSettle">Beglichen</BaseButton>
+                <BaseButton v-if="can.settle" variant="secondary" size="compact" :loading="settle.processing" @click="doSettle">Als bezahlt markieren</BaseButton>
                 <BaseButton v-if="can.waive" variant="ghost" size="compact" @click="waiveOpen = !waiveOpen">Erlassen</BaseButton>
             </template>
         </PageHeader>
@@ -142,7 +142,7 @@ const doSettle = async () => {
                     <SectionLabel text="Verlauf" tone="muted" />
                     <dl class="pt-4">
                         <div v-if="commission.invoiced_at" class="flex items-baseline justify-between gap-4 border-b border-gray-100 py-2.5">
-                            <dt class="text-sm text-gray-600">Berechnet</dt><dd class="font-mono text-sm tabular-nums text-gray-800">{{ dateTime(commission.invoiced_at) }}</dd>
+                            <dt class="text-sm text-gray-600">Abgerechnet</dt><dd class="font-mono text-sm tabular-nums text-gray-800">{{ dateTime(commission.invoiced_at) }}</dd>
                         </div>
                         <div v-if="commission.settled_at" class="flex items-baseline justify-between gap-4 border-b border-gray-100 py-2.5">
                             <dt class="text-sm text-gray-600">Beglichen</dt><dd class="font-mono text-sm tabular-nums text-gray-800">{{ dateTime(commission.settled_at) }}</dd>

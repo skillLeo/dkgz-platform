@@ -34,6 +34,8 @@ const columns = [
             :columns="columns"
             :rows="rows"
             :meta="meta"
+            :active-filters="filters"
+            reset-href="/admin/protokoll"
             empty-title="Keine Einträge"
             :empty-icon="FileType"
         >

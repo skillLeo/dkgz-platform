@@ -82,12 +82,25 @@ class AssessorController extends Controller
                 'certification_number' => $assessor->certification_number,
                 'certification_valid_until' => $assessor->certification_valid_until,
                 'years_experience' => $assessor->years_experience,
+                'partner_id' => $assessor->partnerId(),
+                'acceptance_rate' => $assessor->acceptanceRate(),
+                'cover_has_lapsed' => $assessor->liabilityCoverHasLapsed(),
                 'documents' => $assessor->documents->map(fn (AssessorDocument $document) => [
                     'id' => $document->id,
                     'type_label' => $document->typeLabel(),
                     'original_name' => $document->original_name,
                     'size_label' => Formatter::fileSize($document->size_bytes),
                     'uploaded_at' => $document->uploaded_at,
+                    'valid_until' => $document->valid_until,
+                    'valid_until_label' => $document->valid_until === null
+                        ? null
+                        : 'gültig bis '.Formatter::date($document->valid_until),
+                    'state' => $document->hasLapsed()
+                        ? 'lapsed'
+                        : ($document->expiresSoon() ? 'expiring' : 'ok'),
+                    'state_label' => $document->hasLapsed()
+                        ? 'Nachweis abgelaufen'
+                        : ($document->expiresSoon() ? 'Läuft ab' : 'Geprüft'),
                     'download_url' => route('admin.assessors.documents.download', [$assessor, $document]),
                 ])->all(),
                 'approval_status' => $assessor->approval_status,

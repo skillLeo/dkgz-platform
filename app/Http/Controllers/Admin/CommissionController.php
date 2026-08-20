@@ -4,11 +4,13 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Jobs\SendCommissionInvoiceJob;
+use App\Models\Assessor;
 use App\Models\Commission;
 use App\Support\Formatter;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -30,6 +32,11 @@ class CommissionController extends Controller
                     ->orWhereHas('assignment.serviceRequest', fn ($s) => $s->where('reference', 'like', $term));
             }))
             ->when($request->filled('status'), fn ($q) => $q->where('status', $request->string('status')))
+            ->when($request->filled('monat'), fn ($q) => $q
+                ->whereYear('created_at', substr($request->string('monat'), 0, 4))
+                ->whereMonth('created_at', substr($request->string('monat'), 5, 2)))
+            ->when($request->filled('sachverstaendiger'),
+                fn ($q) => $q->where('assessor_id', $request->integer('sachverstaendiger')))
             ->orderBy(
                 $request->string('sort')->toString() ?: 'created_at',
                 $request->string('direction')->toString() === 'asc' ? 'asc' : 'desc'
@@ -50,11 +57,15 @@ class CommissionController extends Controller
                 'needs_review' => $c->needsReview(),
                 'created_at' => $c->created_at,
             ]),
-            'filters' => $request->only(['suche', 'status', 'sort', 'direction']),
+            'filters' => $request->only(['suche', 'status', 'sort', 'direction', 'monat', 'sachverstaendiger']),
+            'monthOptions' => $this->monthOptions(),
+            'assessorOptions' => Assessor::orderBy('company_name')->get(['id', 'company_name'])
+                ->map(fn (Assessor $a) => ['id' => $a->id, 'label' => $a->company_name]),
+            'summary' => $this->summaryFor($request),
             'statusOptions' => [
                 Commission::STATUS_OPEN => 'Offen',
-                Commission::STATUS_INVOICED => 'Berechnet',
-                Commission::STATUS_SETTLED => 'Beglichen',
+                Commission::STATUS_INVOICED => 'Abgerechnet',
+                Commission::STATUS_SETTLED => 'Bezahlt',
                 Commission::STATUS_WAIVED => 'Erlassen',
             ],
             'totals' => [
@@ -213,5 +224,54 @@ class CommissionController extends Controller
         }, 'provisionen-'.now()->format('Y-m-d').'.csv', [
             'Content-Type' => 'text/csv; charset=UTF-8',
         ]);
+    }
+
+    /**
+     * The figures under the register, scoped to the same month the list is
+     * showing. Summed in the database rather than from the paginated rows, so
+     * page two does not report a different total than page one.
+     *
+     * @return array<string, mixed>
+     */
+    private function summaryFor(Request $request): array
+    {
+        $month = $request->filled('monat')
+            ? Carbon::createFromFormat('Y-m', $request->string('monat')->toString())->startOfMonth()
+            : now()->startOfMonth();
+
+        $scope = fn () => Commission::query()
+            ->whereYear('created_at', $month->year)
+            ->whereMonth('created_at', $month->month)
+            ->when($request->filled('sachverstaendiger'),
+                fn ($q) => $q->where('assessor_id', $request->integer('sachverstaendiger')));
+
+        return [
+            'label' => 'Summe '.Formatter::monthName($month).' '.$month->year,
+            'assignments' => $scope()->count(),
+            'fee_cents' => (int) $scope()->sum('fee_cents'),
+            'commission_cents' => (int) $scope()->sum('commission_cents'),
+            'open_cents' => (int) $scope()->where('status', Commission::STATUS_OPEN)->sum('commission_cents'),
+        ];
+    }
+
+    /**
+     * Only months that actually hold commissions, newest first — offering empty
+     * months would invite a filter that can only ever return nothing.
+     *
+     * @return array<int, array<string, string>>
+     */
+    private function monthOptions(): array
+    {
+        return Commission::query()
+            ->orderByDesc('created_at')
+            ->pluck('created_at')
+            ->map(fn ($date) => $date->format('Y-m'))
+            ->unique()
+            ->values()
+            ->map(fn (string $value) => [
+                'value' => $value,
+                'label' => Formatter::monthName($value.'-01').' '.substr($value, 0, 4),
+            ])
+            ->all();
     }
 }

@@ -49,6 +49,8 @@ const statusSelectOptions = Object.entries(props.statusOptions).map(([value, lab
             :columns="columns"
             :rows="assessors.data"
             :meta="assessors"
+            :active-filters="filters"
+            reset-href="/admin/sachverstaendige"
             :sort="filters.sort"
             :direction="filters.direction"
             :row-href="(row) => `/admin/sachverstaendige/${row.id}`"

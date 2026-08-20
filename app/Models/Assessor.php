@@ -154,7 +154,45 @@ class Assessor extends Model
     {
         return $this->isApproved()
             && $this->is_available
-            && (bool) $this->user?->is_active;
+            && (bool) $this->user?->is_active
+            && ! $this->liabilityCoverHasLapsed();
+    }
+
+    /**
+     * A partner whose professional liability cover has run out must not be sent
+     * new work. Cover with no recorded end date is treated as current: the date
+     * is optional on older rows, and refusing to match everyone who registered
+     * before the field existed would empty the network overnight.
+     */
+    public function liabilityCoverHasLapsed(): bool
+    {
+        $dated = $this->documents
+            ->where('type', AssessorDocument::TYPE_LIABILITY)
+            ->filter(fn (AssessorDocument $document) => $document->valid_until !== null);
+
+        if ($dated->isEmpty()) {
+            return false;
+        }
+
+        return $dated->every(fn (AssessorDocument $document) => $document->hasLapsed());
+    }
+
+    /**
+     * Share of notified requests this partner accepted, as a whole percent.
+     * Null while they have never been notified — 0 % would read as a judgement
+     * on someone who has simply not been offered anything yet.
+     */
+    public function acceptanceRate(): ?int
+    {
+        $notified = $this->requestMatches()->count();
+
+        if ($notified === 0) {
+            return null;
+        }
+
+        $accepted = $this->requestMatches()->where('outcome', RequestMatch::OUTCOME_ACCEPTED)->count();
+
+        return (int) round(($accepted / $notified) * 100);
     }
 
     public function displayAddress(): string
@@ -184,7 +222,18 @@ class Assessor extends Model
     {
         return $query->approved()
             ->where('is_available', true)
-            ->whereHas('user', fn (Builder $q) => $q->where('is_active', true));
+            ->whereHas('user', fn (Builder $q) => $q->where('is_active', true))
+            // Either no dated liability cover on file, or at least one that is
+            // still valid. Grouped in one closure so the clause composes with
+            // covering() and offering() instead of leaking an OR across them.
+            ->where(fn (Builder $q) => $q
+                ->whereDoesntHave('documents', fn (Builder $d) => $d
+                    ->where('type', AssessorDocument::TYPE_LIABILITY)
+                    ->whereNotNull('valid_until'))
+                ->orWhereHas('documents', fn (Builder $d) => $d
+                    ->where('type', AssessorDocument::TYPE_LIABILITY)
+                    ->whereNotNull('valid_until')
+                    ->whereDate('valid_until', '>=', now())));
     }
 
     /** Assessors whose service areas numerically span the given postal code. */

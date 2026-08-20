@@ -269,3 +269,64 @@ describe('declining', function () {
             ->and(ServiceRequest::needsAttention()->pluck('id'))->toContain($request->id);
     });
 });
+
+describe('lapsed liability cover', function () {
+    it('takes a partner out of matching once their cover has run out', function () {
+        $assessor = matchableAssessor($this->type);
+        $assessor->documents()->create([
+            'type' => 'liability',
+            'path' => 'nachweise/haftpflicht.pdf',
+            'original_name' => 'haftpflicht.pdf',
+            'size_bytes' => 1000,
+            'mime_type' => 'application/pdf',
+            'uploaded_at' => now()->subYear(),
+            'valid_until' => now()->subDay(),
+        ]);
+
+        $request = matchableRequest($this->type);
+
+        expect(app(MatchRequestAction::class)->execute($request))->toBe(0)
+            ->and($assessor->fresh()->isMatchable())->toBeFalse();
+    });
+
+    it('keeps a partner whose cover is still valid', function () {
+        $assessor = matchableAssessor($this->type);
+        $assessor->documents()->create([
+            'type' => 'liability',
+            'path' => 'nachweise/haftpflicht.pdf',
+            'original_name' => 'haftpflicht.pdf',
+            'size_bytes' => 1000,
+            'mime_type' => 'application/pdf',
+            'uploaded_at' => now(),
+            'valid_until' => now()->addMonth(),
+        ]);
+
+        expect(app(MatchRequestAction::class)->execute(matchableRequest($this->type)))->toBe(1)
+            ->and($assessor->fresh()->isMatchable())->toBeTrue();
+    });
+
+    it('keeps a partner who has no dated cover on file at all', function () {
+        matchableAssessor($this->type);
+
+        expect(app(MatchRequestAction::class)->execute(matchableRequest($this->type)))->toBe(1);
+    });
+
+    it('keeps a partner whose lapsed cover was replaced by a current one', function () {
+        $assessor = matchableAssessor($this->type);
+
+        foreach ([now()->subDay(), now()->addYear()] as $validUntil) {
+            $assessor->documents()->create([
+                'type' => 'liability',
+                'path' => 'nachweise/haftpflicht-'.$validUntil->timestamp.'.pdf',
+                'original_name' => 'haftpflicht.pdf',
+                'size_bytes' => 1000,
+                'mime_type' => 'application/pdf',
+                'uploaded_at' => now(),
+                'valid_until' => $validUntil,
+            ]);
+        }
+
+        expect(app(MatchRequestAction::class)->execute(matchableRequest($this->type)))->toBe(1)
+            ->and($assessor->fresh()->isMatchable())->toBeTrue();
+    });
+});
