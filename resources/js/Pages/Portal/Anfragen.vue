@@ -33,7 +33,7 @@ const countLabel = computed(() => `${props.requests.total} ${props.requests.tota
     <Head title="Neue Anfragen" />
 
     <PortalLayout title="Neue Anfragen" :open-requests="requests.total" search-href="/portal/anfragen">
-        <div class="flex flex-wrap items-center justify-between gap-4 pb-4">
+        <div class="flex flex-col gap-3 pb-4 md:flex-row md:flex-wrap md:items-center md:justify-between md:gap-4">
             <div class="flex flex-wrap items-center gap-2.5">
                 <label class="flex h-8 items-center gap-2 rounded-sm border border-gray-300 bg-white px-2.5">
                     <Filter :size="16" :stroke-width="1.5" class="shrink-0 text-gray-600" aria-hidden="true" />
@@ -79,7 +79,7 @@ const countLabel = computed(() => `${props.requests.total} ${props.requests.tota
             </p>
         </div>
 
-        <div v-else class="overflow-x-auto rounded-card border border-gray-200 bg-white">
+        <div v-else class="hidden overflow-x-auto rounded-card border border-gray-200 bg-white md:block">
             <table class="w-full min-w-250">
                 <thead>
                     <tr class="border-b border-gray-200">
@@ -133,6 +133,50 @@ const countLabel = computed(() => `${props.requests.total} ${props.requests.tota
                 </tbody>
             </table>
         </div>
+
+        <ul v-if="rows.length" class="flex flex-col gap-3 md:hidden">
+            <li
+                v-for="row in rows"
+                :key="`karte-${row.id}`"
+                class="rounded-card border border-gray-200 bg-white"
+            >
+                <div class="flex items-baseline justify-between gap-3 px-4 pt-4">
+                    <Link :href="`/portal/anfragen/${row.id}`" class="font-mono text-sm text-navy-700">
+                        {{ row.reference }}
+                    </Link>
+                    <span class="shrink-0 font-mono text-meta text-gray-400">{{ relativeTime(row.created_at) }}</span>
+                </div>
+
+                <div class="px-4 pt-2">
+                    <p class="text-base font-medium text-gray-800">{{ row.service_type?.name }}</p>
+                    <p class="pt-0.5 text-sm text-gray-600">{{ row.location }}</p>
+
+                    <p class="flex items-center gap-2 pt-2.5">
+                        <Lock :size="14" :stroke-width="1.5" class="shrink-0 text-gray-400" aria-hidden="true" />
+                        <span class="text-sm text-gray-600">Nach Annahme</span>
+                    </p>
+
+                    <p class="flex items-center gap-2 pt-1.5 pb-4">
+                        <span class="block h-1.5 w-1.5 shrink-0 rounded-full bg-navy-700" aria-hidden="true" />
+                        <span class="font-mono text-sm tabular-nums text-gray-800">
+                            Frist {{ deadline(row.accept_deadline_at) }}
+                        </span>
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-2 border-t border-gray-200">
+                    <Link
+                        :href="`/portal/anfragen/${row.id}`"
+                        class="flex h-12 items-center justify-center border-r border-gray-200 text-sm font-medium text-navy-700"
+                    >Details</Link>
+                    <button
+                        type="button"
+                        class="flex h-12 items-center justify-center bg-navy-700 text-sm font-medium text-white"
+                        @click="router.post(`/portal/anfragen/${row.id}/annehmen`)"
+                    >Annehmen</button>
+                </div>
+            </li>
+        </ul>
 
         <TablePagination v-if="rows.length" :meta="requests" class="pt-4" />
 

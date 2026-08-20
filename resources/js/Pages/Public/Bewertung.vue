@@ -57,12 +57,18 @@ const categories = [
 
                 <fieldset class="pt-8">
                     <legend class="sr-only">Bewertung von 1 bis 10</legend>
-                    <div class="flex flex-wrap gap-2">
+                    <!--
+                        Ten across on a desktop; on a phone the scale breaks to
+                        5 x 2 with larger cells, per DKGZ Mobil. Reading order
+                        stays left-to-right, top-to-bottom, so 1-10 still reads
+                        as one run.
+                    -->
+                    <div class="measure-scale grid grid-cols-5 gap-2 sm:grid-cols-10">
                         <button
                             v-for="n in 10"
                             :key="n"
                             type="button"
-                            class="h-12 w-12 rounded-sm border text-base font-medium tabular-nums transition-colors duration-(--duration-hover) ease-(--ease-dkgz) focus-visible:outline-2 focus-visible:outline-navy-500 focus-visible:outline-offset-2"
+                            class="h-(--spacing-scale-sm) w-full rounded-sm border text-base font-medium tabular-nums transition-colors duration-(--duration-hover) ease-(--ease-dkgz) focus-visible:outline-2 focus-visible:outline-navy-500 focus-visible:outline-offset-2 sm:h-(--spacing-scale)"
                             :class="rating.rating === n
                                 ? 'border-navy-700 bg-navy-700 text-white'
                                 : 'border-gray-300 bg-white text-gray-800 hover:border-navy-700'"

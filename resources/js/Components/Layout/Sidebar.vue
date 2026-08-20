@@ -1,4 +1,5 @@
 <script setup>
+import { computed } from 'vue'
 import { Link, usePage } from '@inertiajs/vue3'
 import { LogOut } from 'lucide-vue-next'
 
@@ -8,14 +9,26 @@ import { LogOut } from 'lucide-vue-next'
  * marker on the leading edge, and a foot carrying the partner ID and sign-out.
  * Groups are separated by a hairline, not by a heading.
  */
-defineProps({
+const props = defineProps({
+    /**
+     * Either an array of item arrays, or an array of { label?, items }. The
+     * portal rail has no headings and separates by hairline; the admin rail
+     * carries headings because it holds far more entries than an eye can group
+     * by spacing alone.
+     */
     groups: { type: Array, required: true },
-    subtitle: { type: Array, default: () => ['Partner-', 'Portal'] },
+    subtitle: { type: [Array, String], default: () => ['Partner-', 'Portal'] },
     identLabel: { type: String, default: null },
     identValue: { type: String, default: null },
 })
 
 const page = usePage()
+
+const subtitleLines = computed(() => (Array.isArray(props.subtitle) ? props.subtitle : [props.subtitle]))
+
+const normalised = computed(() => props.groups
+    .map((group) => (Array.isArray(group) ? { label: null, items: group } : group))
+    .filter((group) => group.items?.length))
 
 const isActive = (item) => {
     const current = page.url.split('?')[0]
@@ -35,10 +48,18 @@ const isActive = (item) => {
         </div>
 
         <nav class="min-h-0 flex-1 overflow-y-auto py-4" aria-label="Bereichsnavigation">
-            <template v-for="(group, index) in groups" :key="index">
-                <span v-if="index > 0" class="my-4 mx-5 block h-px bg-white/10" aria-hidden="true" />
+            <template v-for="(group, index) in normalised" :key="index">
+                <span
+                    v-if="index > 0 && !group.label"
+                    class="my-4 mx-5 block h-px bg-white/10"
+                    aria-hidden="true"
+                />
+                <p
+                    v-if="group.label"
+                    class="px-5 pb-2 pt-5 text-eyebrow font-semibold uppercase text-white/45"
+                >{{ group.label }}</p>
                 <ul>
-                    <li v-for="item in group" :key="item.href">
+                    <li v-for="item in group.items" :key="item.href">
                         <Link
                             :href="item.href"
                             class="flex h-10 items-center gap-3 border-l-2 px-5 text-base transition-colors duration-(--duration-hover) ease-(--ease-dkgz)"
@@ -60,9 +81,11 @@ const isActive = (item) => {
         </nav>
 
         <div class="shrink-0 border-t border-white/10 p-5">
-            <p v-if="identValue" class="font-mono text-meta text-white/45">
-                {{ identLabel }}<br >{{ identValue }}
-            </p>
+            <slot name="footer">
+                <p v-if="identValue" class="font-mono text-meta text-white/45">
+                    {{ identLabel }}<br >{{ identValue }}
+                </p>
+            </slot>
             <button
                 type="button"
                 class="flex items-center gap-2.5 pt-3 text-sm text-white/60 transition-colors duration-(--duration-hover) ease-(--ease-dkgz) hover:text-white"

@@ -30,7 +30,7 @@ const rows = computed(() => props.assignments.data)
     <Head title="Meine Aufträge" />
 
     <PortalLayout title="Meine Aufträge" search-href="/portal/auftraege">
-        <div class="flex flex-wrap items-center justify-between gap-4 pb-4">
+        <div class="flex flex-col gap-3 pb-4 md:flex-row md:flex-wrap md:items-center md:justify-between md:gap-4">
             <SegmentedFilter :segments="segments" :current="filters.status ?? null" />
             <span class="font-mono text-sm tabular-nums text-gray-600">
                 {{ counts.active }} aktive · {{ counts.completed }} abgeschlossen
@@ -45,7 +45,7 @@ const rows = computed(() => props.assignments.data)
             </p>
         </div>
 
-        <div v-else class="overflow-x-auto rounded-card border border-gray-200 bg-white">
+        <div v-else class="hidden overflow-x-auto rounded-card border border-gray-200 bg-white md:block">
             <table class="w-full min-w-225">
                 <thead>
                     <tr class="border-b border-gray-200">
@@ -84,6 +84,31 @@ const rows = computed(() => props.assignments.data)
                 </tbody>
             </table>
         </div>
+
+        <ul v-if="rows.length" class="flex flex-col gap-3 md:hidden">
+            <li v-for="row in rows" :key="`karte-${row.id}`">
+                <Link
+                    :href="`/portal/auftraege/${row.id}`"
+                    class="block rounded-card border border-gray-200 bg-white p-4"
+                >
+                    <div class="flex items-baseline justify-between gap-3">
+                        <span class="font-mono text-sm text-navy-700">{{ row.request.reference }}</span>
+                        <span class="shrink-0 font-mono text-meta tabular-nums text-gray-400">
+                            {{ date(row.accepted_at) }}
+                        </span>
+                    </div>
+                    <p class="pt-2 text-base font-medium text-gray-800">{{ row.request.service_type }}</p>
+                    <p class="pt-0.5 text-sm text-gray-600">
+                        {{ row.request.customer_initial ?? '—' }} · {{ row.request.location }}
+                    </p>
+                    <div class="flex items-center justify-between gap-3 pt-3">
+                        <StatusDot :status="row.status" :label="row.status_label" />
+                        <MoneyValue v-if="row.fee_cents" :cents="row.fee_cents" />
+                        <span v-else class="font-mono text-sm text-gray-400">offen</span>
+                    </div>
+                </Link>
+            </li>
+        </ul>
 
         <TablePagination v-if="rows.length" :meta="assignments" class="pt-4" />
     </PortalLayout>

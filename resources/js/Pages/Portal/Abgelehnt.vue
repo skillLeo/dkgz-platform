@@ -34,7 +34,7 @@ const rows = computed(() => props.requests.data)
             </p>
         </div>
 
-        <div v-else class="overflow-x-auto rounded-card border border-gray-200 bg-white">
+        <div v-else class="hidden overflow-x-auto rounded-card border border-gray-200 bg-white md:block">
             <table class="w-full min-w-200">
                 <thead>
                     <tr class="border-b border-gray-200">
@@ -61,6 +61,19 @@ const rows = computed(() => props.requests.data)
                 </tbody>
             </table>
         </div>
+
+        <ul v-if="rows.length" class="flex flex-col gap-3 md:hidden">
+            <li v-for="row in rows" :key="`karte-${row.id}`" class="rounded-card border border-gray-200 bg-white p-4">
+                <div class="flex items-baseline justify-between gap-3">
+                    <span class="font-mono text-sm text-gray-800">{{ row.reference }}</span>
+                    <span class="shrink-0 font-mono text-meta tabular-nums text-gray-400">{{ date(row.responded_at) }}</span>
+                </div>
+                <p class="pt-2 text-base text-gray-800">{{ row.service_type?.name }}</p>
+                <p class="pt-0.5 text-sm text-gray-600">{{ row.location }}</p>
+                <p class="pt-2 text-sm text-gray-600">{{ row.outcome_label }}</p>
+                <p v-if="row.decline_reason" class="pt-0.5 text-xs text-gray-400">{{ row.decline_reason }}</p>
+            </li>
+        </ul>
 
         <TablePagination v-if="rows.length" :meta="requests" class="pt-4" />
     </PortalLayout>

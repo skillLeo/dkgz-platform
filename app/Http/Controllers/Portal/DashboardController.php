@@ -65,6 +65,7 @@ class DashboardController extends Controller
                     'location' => $match->serviceRequest->locationLabel(),
                     'service_type' => $match->serviceRequest->serviceType?->name_de,
                     'notified_at' => $match->notified_at,
+                    'accept_deadline_at' => $match->serviceRequest->accept_deadline_at,
                     'href' => route('portal.requests.show', $match->serviceRequest),
                 ])
                 ->all(),

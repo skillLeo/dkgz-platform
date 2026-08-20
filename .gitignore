@@ -34,3 +34,6 @@ auth.json
 
 # Local SQLite scratch database — production uses MySQL
 /database/database.sqlite
+
+# SSR bundle for the page-render smoke test, rebuilt on every run
+/storage/framework/testing

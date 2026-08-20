@@ -41,7 +41,8 @@ const remove = async (area) => {
                     an.
                 </p>
 
-                <div v-else class="flex flex-wrap gap-2 py-4">
+                <!-- Chips above md; below it they become 44px rows (DKGZ Mobil). -->
+                <div v-else class="hidden flex-wrap gap-2 py-4 md:flex">
                     <span
                         v-for="area in areas"
                         :key="area.id"
@@ -59,6 +60,29 @@ const remove = async (area) => {
                         </button>
                     </span>
                 </div>
+
+                <ul v-if="areas.length" class="py-2 md:hidden">
+                    <li
+                        v-for="area in areas"
+                        :key="`zeile-${area.id}`"
+                        class="flex min-h-11 items-center justify-between gap-3 border-b border-gray-100 last:border-b-0"
+                    >
+                        <span class="min-w-0">
+                            <span v-if="area.label" class="block truncate text-sm text-gray-800">{{ area.label }}</span>
+                            <span class="block font-mono text-sm tabular-nums text-gray-600">
+                                {{ area.from }}–{{ area.to }}
+                            </span>
+                        </span>
+                        <button
+                            type="button"
+                            class="grid h-11 w-11 shrink-0 place-items-center text-gray-400"
+                            :aria-label="`${area.range} entfernen`"
+                            @click="remove(area)"
+                        >
+                            <X :size="18" :stroke-width="1.5" aria-hidden="true" />
+                        </button>
+                    </li>
+                </ul>
 
                 <div class="border-t border-gray-200 pt-4">
                     <CoverageGrid :areas="areas" />

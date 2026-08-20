@@ -25,6 +25,13 @@ const page = usePage()
 const { can } = usePermissions()
 const moreOpen = ref(false)
 
+const initials = computed(() => (page.props.auth?.user?.name ?? '')
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((part) => part[0].toUpperCase())
+    .join(''))
+
 const tabs = computed(() => [
     { href: '/admin', label: 'Start', icon: Home, exact: true },
     { href: '/admin/anfragen', label: 'Anfragen', icon: Inbox },
@@ -100,15 +107,15 @@ const onTab = (event) => {
         <MobileTopBar :title="title" :back-href="backHref" show-search />
 
         <div class="flex min-h-screen">
-            <Sidebar :sections="sections">
-                <template #footer>
-                    <p class="text-eyebrow font-semibold uppercase text-gray-400">Administration</p>
-                    <p class="pt-1 text-sm text-gray-600">{{ page.props.auth?.user?.name }}</p>
-                </template>
-            </Sidebar>
+            <Sidebar
+                :groups="sections"
+                subtitle="Administration"
+                :ident-value="page.props.auth?.user?.name ?? null"
+                ident-label="Angemeldet als"
+            />
 
             <div class="flex min-w-0 flex-1 flex-col">
-                <TopBar :title="title" :user-name="page.props.auth?.user?.name ?? ''" />
+                <TopBar :title="title" :initials="initials" />
 
                 <main
                     class="min-w-0 flex-1 px-4 pb-[calc(4rem+env(safe-area-inset-bottom)+1rem)] pt-[calc(3.5rem+env(safe-area-inset-top)+1rem)] md:px-6 md:py-6"

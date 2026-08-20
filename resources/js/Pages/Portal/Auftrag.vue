@@ -61,6 +61,8 @@ const steps = computed(() => {
     ]
 })
 
+const doneCount = computed(() => steps.value.filter((step) => step.done).length)
+
 const upload = (form) => form.post(`/portal/auftraege/${props.assignment.id}/dokumente`, {
     forceFormData: true,
     preserveScroll: true,
@@ -100,11 +102,16 @@ const submitCompletion = () => complete.post(`/portal/auftraege/${props.assignme
                 <p class="font-mono text-h4 text-navy-700">{{ request.reference }}</p>
                 <p class="pt-1 text-sm text-gray-600">{{ request.service_type?.name }} · {{ request.city }}</p>
             </div>
-            <StatusDot :status="assignment.status" :label="assignment.status_label" />
+            <span class="flex items-center gap-3">
+                <StatusDot :status="assignment.status" :label="assignment.status_label" />
+                <span class="font-mono text-sm tabular-nums text-gray-400 lg:hidden">
+                    {{ doneCount }} von {{ steps.length }}
+                </span>
+            </span>
         </div>
 
         <div class="grid grid-cols-1 items-start gap-6 lg:grid-cols-2 xl:grid-cols-3">
-            <section class="rounded-card border border-gray-200 bg-white p-5">
+            <section class="hidden rounded-card border border-gray-200 bg-white p-5 lg:block">
                 <h2 class="pb-4 text-eyebrow font-semibold uppercase text-gray-600">Status</h2>
                 <StatusRail :steps="steps" />
             </section>
@@ -113,18 +120,20 @@ const submitCompletion = () => complete.post(`/portal/auftraege/${props.assignme
                 <h2 class="text-eyebrow font-semibold uppercase text-gray-600">Kundenkontakt</h2>
                 <div v-if="request.contact_released" class="pt-3">
                     <p class="text-base font-medium text-gray-800">{{ request.customer.name }}</p>
-                    <p class="flex items-center gap-2.5 pt-2">
+                    <a
+                        :href="`tel:${request.customer.phone}`"
+                        class="flex min-h-11 items-center gap-2.5 border-b border-gray-100 md:min-h-0 md:border-b-0 md:pt-2"
+                    >
                         <Phone :size="16" :stroke-width="1.5" class="shrink-0 text-gray-600" aria-hidden="true" />
-                        <a :href="`tel:${request.customer.phone}`" class="font-mono text-sm text-navy-700">
-                            {{ request.customer.phone_label }}
-                        </a>
-                    </p>
-                    <p class="flex items-center gap-2.5 pt-1.5">
+                        <span class="font-mono text-sm text-navy-700">{{ request.customer.phone_label }}</span>
+                    </a>
+                    <a
+                        :href="`mailto:${request.customer.email}`"
+                        class="flex min-h-11 items-center gap-2.5 md:min-h-0 md:pt-1.5"
+                    >
                         <Mail :size="16" :stroke-width="1.5" class="shrink-0 text-gray-600" aria-hidden="true" />
-                        <a :href="`mailto:${request.customer.email}`" class="break-all text-sm text-navy-700">
-                            {{ request.customer.email }}
-                        </a>
-                    </p>
+                        <span class="break-all text-sm text-navy-700">{{ request.customer.email }}</span>
+                    </a>
                 </div>
 
                 <h2 class="pt-6 text-eyebrow font-semibold uppercase text-gray-600">Fahrzeug</h2>
@@ -230,11 +239,28 @@ const submitCompletion = () => complete.post(`/portal/auftraege/${props.assignme
 
             <BaseButton
                 size="cta"
-                class="mt-4"
+                class="mt-4 hidden md:inline-flex"
                 :disabled="!assignment.can_complete"
                 @click="completeOpen = true"
             >Auftrag abschließen</BaseButton>
         </section>
+
+        <!--
+            On mobile the action lives in a sticky bar above the tab bar, so it
+            stays reachable while the partner scrolls through the uploads.
+        -->
+        <div
+            v-if="assignment.is_open"
+            class="fixed inset-x-0 bottom-0 z-30 border-t border-gray-200 bg-white px-4 pb-[calc(4rem+env(safe-area-inset-bottom))] pt-3 md:hidden"
+        >
+            <p v-if="missingLabel" class="pb-2 text-center text-sm text-warning">{{ missingLabel }}</p>
+            <BaseButton
+                size="cta"
+                block
+                :disabled="!assignment.can_complete"
+                @click="completeOpen = true"
+            >Auftrag abschließen</BaseButton>
+        </div>
 
         <section v-if="commission" class="mt-6 rounded-card border border-gray-200 bg-white p-5">
             <h2 class="text-eyebrow font-semibold uppercase text-gray-600">Provision</h2>
