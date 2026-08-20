@@ -29,6 +29,10 @@ class InvitationController extends Controller
                     : ($invitation->isAccepted()
                         ? 'Diese Einladung wurde bereits angenommen.'
                         : 'Diese Einladung ist abgelaufen.'),
+                'sentAt' => $invitation?->created_at,
+                'validDays' => $invitation === null
+                    ? 14
+                    : (int) $invitation->created_at->diffInDays($invitation->expires_at),
             ]);
         }
 

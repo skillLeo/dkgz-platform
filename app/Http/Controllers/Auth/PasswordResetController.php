@@ -43,29 +43,13 @@ class PasswordResetController extends Controller
         return Inertia::render('Auth/PasswortZuruecksetzen', [
             'token' => $token,
             'email' => $request->query('email'),
-            // Checked up front so an expired link shows the design's recovery
-            // state rather than letting the visitor fill the form and fail.
-            'expired' => $this->tokenHasExpired($request->query('email'), $token),
+            // Never probed on GET. Checking the token here would answer
+            // "does this address have an account?" to anyone who asks, which
+            // is exactly what send() above is written to avoid. The expired
+            // state is raised by update() instead, once a reset has actually
+            // been attempted and the attacker has had to supply a token.
+            'expired' => $request->session()->get('reset_link_expired', false),
         ]);
-    }
-
-    /**
-     * A token is only meaningful together with its address; without one we
-     * cannot judge it, and the form's own validation will catch the rest.
-     */
-    private function tokenHasExpired(?string $email, string $token): bool
-    {
-        if (blank($email)) {
-            return false;
-        }
-
-        $user = Password::getUser(['email' => $email]);
-
-        if ($user === null) {
-            return false;
-        }
-
-        return ! Password::tokenExists($user, $token);
     }
 
     public function update(Request $request): RedirectResponse
@@ -88,6 +72,13 @@ class PasswordResetController extends Controller
                 ])->save();
             }
         );
+
+        if ($status === Password::INVALID_TOKEN) {
+            // Show the design's recovery state rather than a bare field error.
+            // Safe here: the caller already had to present a token, so this
+            // reveals nothing a guess had not already tested.
+            return back()->with('reset_link_expired', true);
+        }
 
         if ($status !== Password::PASSWORD_RESET) {
             return back()->withErrors(['email' => trans($status)]);

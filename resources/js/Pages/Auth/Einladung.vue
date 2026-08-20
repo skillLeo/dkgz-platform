@@ -126,7 +126,7 @@ const labels = {
                 <BasePasswordInput
                     id="password"
                     v-model="form.password"
-                    label="Passwort"
+                    label="Passwort festlegen"
                     autocomplete="new-password"
                     :error="form.errors.password"
                     show-meter
@@ -157,7 +157,7 @@ const labels = {
             </div>
 
             <BaseButton type="submit" block class="mt-6" :loading="form.processing" loading-label="Wird eingerichtet…">
-                Zugang einrichten
+                Einladung annehmen und fortfahren
             </BaseButton>
         </form>
     </AuthLayout>

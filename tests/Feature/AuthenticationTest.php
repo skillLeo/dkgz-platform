@@ -91,7 +91,7 @@ describe('signing in', function () {
         $this->post('/anmelden', ['email' => $user->email, 'password' => 'falsch'])
             ->assertSessionHasErrorsIn('default', ['email']);
 
-        expect(session('errors')->first('email'))->toContain('Zu viele Anmeldeversuche');
+        expect(session('errors')->first('email'))->toContain('Bitte warten Sie');
     });
 });
 
@@ -174,5 +174,45 @@ describe('password reset', function () {
 describe('guest-only routes', function () {
     it('keeps a signed-in user off the login screen', function () {
         $this->actingAs(assessorUser())->get('/anmelden')->assertRedirect();
+    });
+});
+
+describe('the reset screen does not enumerate accounts', function () {
+    it('renders identically for a real address and an unknown one', function () {
+        $user = assessorUser();
+
+        $known = $this->get('/passwort-zuruecksetzen/irgendein-token?email='.urlencode($user->email));
+        $unknown = $this->get('/passwort-zuruecksetzen/irgendein-token?email=niemand@example.test');
+
+        $known->assertOk()->assertInertia(fn ($page) => $page->where('expired', false));
+        $unknown->assertOk()->assertInertia(fn ($page) => $page->where('expired', false));
+    });
+
+    it('raises the expired state only after a reset is actually attempted', function () {
+        $user = assessorUser();
+
+        $this->post('/passwort-zuruecksetzen', [
+            'token' => 'abgelaufener-token',
+            'email' => $user->email,
+            'password' => 'NeuesPasswort2026!',
+            'password_confirmation' => 'NeuesPasswort2026!',
+        ])->assertSessionHas('reset_link_expired', true);
+
+        $this->get('/passwort-zuruecksetzen/abgelaufener-token')
+            ->assertInertia(fn ($page) => $page->where('expired', true));
+    });
+
+    it('still resets with a valid token', function () {
+        $user = assessorUser();
+        $token = Password::createToken($user);
+
+        $this->post('/passwort-zuruecksetzen', [
+            'token' => $token,
+            'email' => $user->email,
+            'password' => 'NeuesPasswort2026!',
+            'password_confirmation' => 'NeuesPasswort2026!',
+        ])->assertRedirect(route('login'))->assertSessionMissing('reset_link_expired');
+
+        expect(Hash::check('NeuesPasswort2026!', $user->fresh()->password))->toBeTrue();
     });
 });

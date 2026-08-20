@@ -24,7 +24,7 @@ const submit = () => {
 
 // The throttle message is the one the form request raises after five attempts;
 // it gets the calmer warning tone rather than the error one.
-const throttled = computed(() => (form.errors.email ?? '').startsWith('Zu viele Anmeldeversuche'))
+const throttled = computed(() => (form.errors.email ?? '').startsWith('Bitte warten Sie'))
 </script>
 
 <template>

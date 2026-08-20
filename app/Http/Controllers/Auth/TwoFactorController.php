@@ -28,11 +28,10 @@ class TwoFactorController extends Controller
 
     public function verify(Request $request): RedirectResponse
     {
-        $request->validate(
-            ['code' => ['required', 'string', 'size:6']],
-            [],
-            ['code' => 'der Bestätigungscode']
-        );
+        $request->validate([
+            'code' => ['required', 'string', 'size:6'],
+            'trust_device' => ['boolean'],
+        ], [], ['code' => 'der Bestätigungscode']);
 
         $userId = $request->session()->get('two_factor_user_id');
         abort_if($userId === null, 419);
@@ -46,7 +45,13 @@ class TwoFactorController extends Controller
         }
 
         $request->session()->forget('two_factor_user_id');
-        auth()->login($user, $request->session()->pull('two_factor_remember', false));
+
+        // "Diesem Gerät für 30 Tage vertrauen" maps onto the remember cookie,
+        // which is the only long-lived credential this application issues.
+        auth()->login(
+            $user,
+            $request->boolean('trust_device') || $request->session()->pull('two_factor_remember', false),
+        );
         $request->session()->regenerate();
 
         return redirect()->intended(route('admin.dashboard'));

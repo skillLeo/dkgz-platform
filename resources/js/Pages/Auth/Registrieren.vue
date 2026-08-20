@@ -137,17 +137,22 @@ const stepErrors = computed(() =>
         <!-- Step indicator -->
         <ol class="flex items-center gap-2 pb-6">
             <li v-for="s in steps" :key="s.number" class="flex flex-1 items-center gap-2">
-                <span
-                    class="grid h-6 w-6 shrink-0 place-items-center rounded-full border font-mono text-xs tabular-nums"
+                <button
+                    type="button"
+                    class="grid h-6 w-6 shrink-0 place-items-center rounded-full border font-mono text-xs tabular-nums transition-colors duration-(--duration-hover) ease-(--ease-dkgz)"
                     :class="s.number < current
                         ? 'border-navy-700 bg-navy-700 text-white'
                         : s.number === current
                             ? 'border-navy-700 text-navy-700'
                             : 'border-gray-300 text-gray-400'"
+                    :disabled="s.number > current"
+                    :aria-current="s.number === current ? 'step' : undefined"
+                    :aria-label="`Schritt ${s.number}: ${s.label}`"
+                    @click="s.number < current && (current = s.number)"
                 >
                     <Check v-if="s.number < current" :size="12" :stroke-width="1.5" aria-hidden="true" />
                     <template v-else>{{ s.number }}</template>
-                </span>
+                </button>
                 <span
                     class="hidden text-xs sm:block"
                     :class="s.number === current ? 'font-medium text-navy-700' : 'text-gray-400'"
@@ -155,6 +160,10 @@ const stepErrors = computed(() =>
                 <span v-if="s.number < 4" class="h-px flex-1 bg-gray-200" aria-hidden="true" />
             </li>
         </ol>
+
+        <p class="pb-6 font-mono text-xs tabular-nums text-gray-400">
+            Schritt {{ current }} von 4 · über die Knotenpunkte navigierbar
+        </p>
 
         <ErrorSummary v-if="Object.keys(stepErrors).length" :errors="stepErrors" :labels="labels" class="mb-6" />
 
@@ -166,7 +175,7 @@ const stepErrors = computed(() =>
                         <BaseInput id="first_name" v-model="form.first_name" label="Vorname" :error="form.errors.first_name" autocomplete="given-name" required />
                         <BaseInput id="last_name" v-model="form.last_name" label="Nachname" :error="form.errors.last_name" autocomplete="family-name" required />
                     </div>
-                    <BaseInput id="email" v-model="form.email" label="E-Mail-Adresse" type="email" :error="form.errors.email" autocomplete="username" placeholder="name@buero.de" required />
+                    <BaseInput id="email" v-model="form.email" label="E-Mail-Adresse" type="email" :error="form.errors.email" autocomplete="username" placeholder="name@buero.de" hint="Diese Adresse wird für alle Anfragebenachrichtigungen verwendet." required />
                     <BaseInput id="phone" v-model="form.phone" label="Telefonnummer" :error="form.errors.phone" autocomplete="tel" placeholder="+49 179 0000000" numeric required />
                     <BasePasswordInput id="password" v-model="form.password" label="Passwort" autocomplete="new-password" :error="form.errors.password" show-meter show-checklist required />
                     <BasePasswordInput id="password_confirmation" v-model="form.password_confirmation" label="Passwort wiederholen" autocomplete="new-password" :error="form.errors.password_confirmation" required />
@@ -175,7 +184,7 @@ const stepErrors = computed(() =>
                 <!-- 2 · Unternehmen -->
                 <div v-else-if="current === 2" class="flex flex-col gap-5">
                     <BaseInput id="company_name" v-model="form.company_name" label="Firmenname" :error="form.errors.company_name" autocomplete="organization" required />
-                    <BaseSelect id="legal_form" v-model="form.legal_form" label="Rechtsform" :options="legalFormOptions" :error="form.errors.legal_form" required />
+                    <BaseSelect id="legal_form" v-model="form.legal_form" label="Rechtsform" :options="legalFormOptions" :error="form.errors.legal_form" hint="Einzelunternehmen · GbR · GmbH · UG · GmbH &amp; Co. KG · Sonstige" required />
                     <div class="grid grid-cols-[minmax(0,1fr)_120px] gap-4">
                         <BaseInput id="street" v-model="form.street" label="Straße" :error="form.errors.street" autocomplete="address-line1" required />
                         <BaseInput id="house_number" v-model="form.house_number" label="Hausnummer" :error="form.errors.house_number" required />
@@ -193,7 +202,7 @@ const stepErrors = computed(() =>
                     <BaseSelect id="certification_body" v-model="form.certification_body" label="Zertifizierungsstelle" :options="certificationOptions" :error="form.errors.certification_body" required />
                     <BaseInput id="certification_number" v-model="form.certification_number" label="Zertifizierungsnummer" :error="form.errors.certification_number" mono required />
                     <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                        <BaseDatePicker id="certification_valid_until" v-model="form.certification_valid_until" label="Gültig bis" :error="form.errors.certification_valid_until" optional />
+                        <BaseDatePicker id="certification_valid_until" v-model="form.certification_valid_until" label="Zertifikat gültig bis" :error="form.errors.certification_valid_until" optional />
                         <BaseInput id="years_experience" v-model="form.years_experience" label="Berufserfahrung in Jahren" :error="form.errors.years_experience" inputmode="numeric" numeric optional />
                     </div>
                     <BaseFileUpload
@@ -208,7 +217,7 @@ const stepErrors = computed(() =>
                 <!-- 4 · Leistungen und Einsatzgebiet -->
                 <div v-else class="flex flex-col gap-6">
                     <div>
-                        <p class="pb-2 text-sm font-medium text-gray-800">Welche Gutachten erstellen Sie? <span class="text-danger">*</span></p>
+                        <p class="pb-2 text-sm font-medium text-gray-800">Angebotene Gutachtenarten <span class="text-danger">*</span></p>
                         <div class="flex flex-col gap-2">
                             <label
                                 v-for="type in serviceTypes"
@@ -239,7 +248,11 @@ const stepErrors = computed(() =>
                     </div>
 
                     <div>
-                        <p class="pb-2 text-sm font-medium text-gray-800">Ihr Einsatzgebiet nach PLZ <span class="text-danger">*</span></p>
+                        <p class="text-sm font-medium text-gray-800">Ihr Einsatzgebiet nach PLZ <span class="text-danger">*</span></p>
+                        <p class="measure pb-3 pt-1 text-sm leading-normal text-gray-600">
+                            Legen Sie fest, aus welchen Postleitzahlgebieten Sie Anfragen erhalten. Sie können das
+                            Gebiet später jederzeit im Portal ändern.
+                        </p>
                         <div class="flex flex-col gap-3">
                             <div
                                 v-for="(area, index) in form.service_areas"
@@ -297,7 +310,7 @@ const stepErrors = computed(() =>
 
         <template #footer>
             Bereits Partner?
-            <Link href="/anmelden" class="font-medium text-navy-700 hover:text-navy-500">Zur Anmeldung</Link>
+            <Link href="/anmelden" class="font-medium text-navy-700 hover:text-navy-500">Anmelden</Link>
         </template>
     </AuthLayout>
 </template>

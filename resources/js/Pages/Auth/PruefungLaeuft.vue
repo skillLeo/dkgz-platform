@@ -66,8 +66,8 @@ const steps = computed(() => [
             class="mt-6 rounded-sm border border-warning bg-warning/5 p-4"
         >
             <p class="text-sm leading-normal text-gray-800">
-                Ergänzen Sie schon jetzt Einsatzgebiet und Leistungen — dann können wir Ihnen unmittelbar nach der
-                Freigabe passende Anfragen zuleiten.
+                Qualifikationsnachweise sind noch nicht im bestätigten Umfang hinterlegt. Ergänzen Sie Einsatzgebiet
+                und Leistungen — dann können wir Ihnen unmittelbar nach der Freigabe passende Anfragen zuleiten.
             </p>
         </div>
 
