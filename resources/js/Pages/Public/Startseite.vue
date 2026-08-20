@@ -2,7 +2,7 @@
 import { computed, ref } from 'vue'
 import { Head, Link, usePage } from '@inertiajs/vue3'
 import {
-    Camera, Car, Check, ChevronDown, ClipboardCheck, Euro, History, Phone, Shield, ShieldCheck, Wrench,
+    ArrowRight, Camera, Car, Check, ChevronDown, ClipboardCheck, Euro, History, Phone, Shield, ShieldCheck, Wrench,
 } from 'lucide-vue-next'
 import PublicLayout from '../../Layouts/PublicLayout.vue'
 import BaseButton from '../../Components/Base/BaseButton.vue'
@@ -89,9 +89,17 @@ const telHref = computed(() => `tel:${String(page.props.app?.phone ?? '').replac
                         alternative for anyone who would rather speak to someone.
                     -->
                     <div class="mt-10">
-                        <BaseButton href="/anfrage" size="cta" class="px-8">
-                            {{ t('hero', 'cta', 'Anfragen') }}
+                        <BaseButton
+                            href="/anfrage"
+                            class="h-16 w-full px-10 text-lead sm:w-auto"
+                        >
+                            {{ t('hero', 'cta', 'Jetzt Gutachter anfragen') }}
+                            <ArrowRight :size="20" :stroke-width="1.75" aria-hidden="true" />
                         </BaseButton>
+
+                        <p class="pt-3 text-sm text-gray-600">
+                            Kostenlos und unverbindlich · Antwort in der Regel innerhalb von 24 Stunden
+                        </p>
 
                         <p v-if="page.props.app?.phone" class="pt-4 text-base text-gray-600">
                             Oder rufen Sie an:
@@ -161,9 +169,10 @@ const telHref = computed(() => `tel:${String(page.props.app?.phone ?? '').replac
         -->
         <section id="ablauf" class="border-t border-gray-200 bg-white">
             <div class="mx-auto w-full max-w-(--container-shell) px-4 py-16 md:px-6 lg:py-24">
-                <div class="flex flex-wrap items-end justify-between gap-12 pb-14">
+                <!-- Subtitle sits under the heading, not beside it. -->
+                <div class="pb-14">
                     <h2 class="text-h2 font-semibold text-navy-700">{{ t('ablauf', 'ueberschrift') }}</h2>
-                    <p class="measure-hero text-base leading-normal text-gray-600">{{ t('ablauf', 'text') }}</p>
+                    <p class="measure-lead pt-4 text-lead leading-relaxed text-gray-600">{{ t('ablauf', 'text') }}</p>
                 </div>
 
                 <!--
@@ -191,13 +200,13 @@ const telHref = computed(() => `tel:${String(page.props.app?.phone ?? '').replac
 
         <!-- Services: sticky left column, two-column card grid -->
         <!-- Coverage, between the process and the services grid. -->
-        <section v-if="coverage.length" id="abdeckung" class="border-t border-gray-200 bg-white">
+        <section v-if="coverage.length" id="abdeckung" class="border-t border-gray-200 bg-gray-50">
             <div class="mx-auto w-full max-w-(--container-shell) px-4 py-16 md:px-6 lg:py-24">
-                <div class="flex flex-wrap items-end justify-between gap-12 pb-12">
+                <div class="pb-12">
                     <h2 class="text-h2 font-semibold text-navy-700">
                         {{ t('abdeckung', 'ueberschrift', 'Wo wir vermitteln') }}
                     </h2>
-                    <p class="measure-hero text-base leading-normal text-gray-600">
+                    <p class="measure-lead pt-4 text-lead leading-relaxed text-gray-600">
                         {{ t('abdeckung', 'text', 'Unser Netz wächst. Diese Karte zeigt den aktuellen Stand.') }}
                     </p>
                 </div>
@@ -206,7 +215,7 @@ const telHref = computed(() => `tel:${String(page.props.app?.phone ?? '').replac
             </div>
         </section>
 
-        <section id="leistungen" class="border-t border-gray-200 bg-gray-50">
+        <section id="leistungen" class="border-t border-gray-200 bg-white">
             <div class="mx-auto grid w-full max-w-(--container-shell) grid-cols-1 items-start gap-16 px-4 py-16 md:px-6 lg:grid-cols-[380px_minmax(0,1fr)] lg:py-24">
                 <div class="lg:sticky lg:top-26">
                     <h2 class="text-h2 font-semibold text-navy-700">{{ t('leistungen', 'ueberschrift') }}</h2>

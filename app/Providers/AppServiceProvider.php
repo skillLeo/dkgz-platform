@@ -2,13 +2,16 @@
 
 namespace App\Providers;
 
+use App\Listeners\RecordMailDelivery;
 use App\Models\ContentBlock;
 use App\Models\Setting;
 use App\Observers\CacheBustingObserver;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
+use Illuminate\Mail\Events\MessageSent;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Date;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Vite;
 use Illuminate\Support\ServiceProvider;
@@ -22,6 +25,8 @@ class AppServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
+        Event::listen(MessageSent::class, RecordMailDelivery::class);
+
         Date::use(Carbon::class);
 
         Vite::prefetch(concurrency: 3);

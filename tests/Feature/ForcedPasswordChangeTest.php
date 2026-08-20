@@ -59,3 +59,47 @@ it('flags the account when the console sets a password', function () {
     expect($admin->fresh()->must_change_password)->toBeTrue()
         ->and(Hash::check('EinLangesPasswort2026', $admin->fresh()->password))->toBeTrue();
 });
+
+it('lets a flagged admin actually submit the change, not only see the form', function () {
+    $admin = User::factory()->create([
+        'is_active' => true,
+        'must_change_password' => true,
+        'password' => Hash::make('VomTeamGesetzt2026!'),
+    ]);
+    $admin->assignRole('admin');
+
+    $this->actingAs($admin)->post('/admin/profil/passwort', [
+        'current_password' => 'VomTeamGesetzt2026!',
+        'password' => 'MeinEigenes2026!',
+        'password_confirmation' => 'MeinEigenes2026!',
+    ])->assertSessionHasNoErrors();
+
+    $admin->refresh();
+
+    expect($admin->must_change_password)->toBeFalse()
+        ->and(Hash::check('MeinEigenes2026!', $admin->password))->toBeTrue();
+
+    // And the rest of the panel opens again.
+    $this->actingAs($admin)->get('/admin/anfragen')->assertOk();
+});
+
+it('lets a flagged partner submit their change too', function () {
+    $user = User::factory()->create([
+        'is_active' => true,
+        'must_change_password' => true,
+        'password' => Hash::make('VomTeamGesetzt2026!'),
+    ]);
+    $user->assignRole('assessor');
+    Assessor::factory()->create([
+        'user_id' => $user->id,
+        'approval_status' => Assessor::STATUS_APPROVED,
+    ]);
+
+    $this->actingAs($user->fresh('assessor'))->post('/portal/einstellungen/passwort', [
+        'current_password' => 'VomTeamGesetzt2026!',
+        'password' => 'MeinEigenes2026!',
+        'password_confirmation' => 'MeinEigenes2026!',
+    ])->assertSessionHasNoErrors();
+
+    expect($user->fresh()->must_change_password)->toBeFalse();
+});

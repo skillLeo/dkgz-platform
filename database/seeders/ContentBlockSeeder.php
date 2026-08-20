@@ -71,7 +71,7 @@ class ContentBlockSeeder extends Seeder
             ['page_key' => 'startseite', 'section_key' => 'hero', 'field_key' => 'text', 'type' => 'richtext', 'value' => 'Sie stellen eine Anfrage. Wir vermitteln sie automatisch an einen qualifizierten Sachverständigen in Ihrer Region. Kein Vergleichen, kein Warten auf mehrere Angebote.', 'label_de' => 'Hero · Fließtext'],
             ['page_key' => 'startseite', 'section_key' => 'hero', 'field_key' => 'plz_label', 'value' => 'Ihre Postleitzahl', 'label_de' => 'Hero · Beschriftung des PLZ-Felds'],
             ['page_key' => 'startseite', 'section_key' => 'hero', 'field_key' => 'plz_platzhalter', 'value' => 'z. B. 40589', 'label_de' => 'Hero · Platzhalter im PLZ-Feld'],
-            ['page_key' => 'startseite', 'section_key' => 'hero', 'field_key' => 'cta', 'value' => 'Anfragen', 'label_de' => 'Hero · Schaltfläche'],
+            ['page_key' => 'startseite', 'section_key' => 'hero', 'field_key' => 'cta', 'value' => 'Jetzt Gutachter anfragen', 'label_de' => 'Hero · Schaltfläche'],
             ['page_key' => 'startseite', 'section_key' => 'hero', 'field_key' => 'hinweis', 'value' => 'Kostenlos und unverbindlich · Keine Registrierung erforderlich', 'label_de' => 'Hero · Hinweis unter dem Feld'],
             ['page_key' => 'startseite', 'section_key' => 'hero', 'field_key' => 'bild', 'type' => 'image', 'value' => '/images/hero-institutionell.svg', 'label_de' => 'Hero · Bild', 'help_de' => 'Platzhaltergrafik im DKGZ-Stil. Ersetzen Sie sie durch ein echtes Foto im Hochformat 4:5.'],
             ['page_key' => 'startseite', 'section_key' => 'hero', 'field_key' => 'siegel_titel', 'value' => 'Geprüfte Partner', 'label_de' => 'Hero · Siegel, Überschrift'],

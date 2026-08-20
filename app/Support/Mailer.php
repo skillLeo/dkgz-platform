@@ -34,6 +34,11 @@ class Mailer
             'related_id' => $related?->getKey(),
         ]);
 
+        // The row is stamped onto the message so the delivery listener can find
+        // it again. Without this the log stayed at "queued" forever, and the
+        // System panel reported nothing sent even while mail was arriving.
+        $mailable->logId = $log->id;
+
         try {
             Mail::to($recipient)->queue($mailable);
         } catch (Throwable $e) {

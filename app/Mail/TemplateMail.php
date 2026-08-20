@@ -67,12 +67,19 @@ class TemplateMail extends Mailable implements ShouldQueue
      */
     private const BULK_TEMPLATES = ['provisionsabrechnung'];
 
+    /** Set by Mailer so the delivery listener can mark the right row sent. */
+    public ?int $logId = null;
+
     public function headers(): Headers
     {
         $unsubscribe = Settings::get('email.unsubscribe_address') ?: Settings::get('email.reply_to');
         $bounce = Settings::get('email.bounce_address');
 
         $text = [];
+
+        if ($this->logId !== null) {
+            $text['X-DKGZ-Log'] = (string) $this->logId;
+        }
 
         if (filled($bounce)) {
             $text['Return-Path'] = "<{$bounce}>";

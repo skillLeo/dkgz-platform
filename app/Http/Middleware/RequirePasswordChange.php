@@ -16,12 +16,19 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class RequirePasswordChange
 {
-    /** Reachable while the change is outstanding, or the user would be trapped. */
+    /**
+     * Reachable while the change is outstanding, or the user would be trapped.
+     *
+     * The submit target matters as much as the screen: allowing only the screen
+     * let the form render and then swallowed its POST, so the password could
+     * never actually change.
+     */
     private const ALLOWED = [
         'portal/einstellungen',
         'portal/einstellungen/passwort',
-        'admin/einstellungen/passwort',
         'admin/profil',
+        'admin/profil/passwort',
+        'admin/einstellungen/passwort',
         'abmelden',
     ];
 
