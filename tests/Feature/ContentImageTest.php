@@ -60,13 +60,15 @@ it('removes the image and clears the block', function () {
     Storage::disk('public')->assertMissing($path);
 });
 
-it('refuses a file that is not an image', function () {
+it('refuses a file that is not an image and leaves the current one in place', function () {
+    $before = $this->block->value;
+
     $this->actingAs($this->editor)
         ->post("/admin/inhalte-bild/{$this->block->id}", [
             'image' => UploadedFile::fake()->create('schaden.pdf', 100, 'application/pdf'),
         ])->assertSessionHasErrors('image');
 
-    expect($this->block->fresh()->value)->toBeEmpty();
+    expect($this->block->fresh()->value)->toBe($before);
 });
 
 it('refuses an upload onto a block that is not an image field', function () {

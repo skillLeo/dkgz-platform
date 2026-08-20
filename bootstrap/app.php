@@ -3,6 +3,7 @@
 use App\Http\Middleware\EnsureAssessorIsApproved;
 use App\Http\Middleware\EnsureMaintenanceMode;
 use App\Http\Middleware\HandleInertiaRequests;
+use App\Http\Middleware\RequirePasswordChange;
 use App\Http\Middleware\SecurityHeaders;
 use App\Http\Middleware\SetLocale;
 use App\Support\Content;
@@ -36,6 +37,7 @@ return Application::configure(basePath: dirname(__DIR__))
             SetLocale::class,
             SecurityHeaders::class,
             HandleInertiaRequests::class,
+            RequirePasswordChange::class,
             AddLinkHeadersForPreloadedAssets::class,
         ]);
 

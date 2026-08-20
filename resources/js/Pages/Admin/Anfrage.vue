@@ -15,12 +15,15 @@ const props = defineProps({
     request: { type: Object, required: true },
     trail: { type: Array, default: () => [] },
     assignment: { type: Object, default: null },
+    customerNotifiedAt: { type: String, default: null },
+    canNotifyCustomer: { type: Boolean, default: false },
 })
 
 const { dateTime, date } = useGermanFormat()
 const { confirm } = useConfirm()
 
 const rematch = useForm({})
+const notifyCustomer = useForm({})
 
 const doRematch = async () => {
     const ok = await confirm({
@@ -52,6 +55,31 @@ const doRematch = async () => {
 
         <div class="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_360px]">
             <div class="flex flex-col gap-6">
+                <!--
+                    Whether the customer knows. A request nobody took and nobody
+                    explained is the one state that must never sit unnoticed.
+                -->
+                <section v-if="canNotifyCustomer" class="rounded-card border border-gray-200 bg-white p-5">
+                    <SectionLabel text="Kunde benachrichtigt" tone="muted" />
+                    <p v-if="customerNotifiedAt" class="flex items-center gap-2.5 pt-3">
+                        <span class="block h-1.5 w-1.5 shrink-0 rounded-full bg-success" aria-hidden="true" />
+                        <span class="text-sm text-gray-800">
+                            Ja — am <span class="font-mono tabular-nums">{{ dateTime(customerNotifiedAt) }}</span>
+                        </span>
+                    </p>
+                    <p v-else class="flex items-center gap-2.5 pt-3">
+                        <span class="block h-1.5 w-1.5 shrink-0 rounded-full bg-warning" aria-hidden="true" />
+                        <span class="text-sm text-warning">Noch nicht — der Kunde wartet ohne Rückmeldung.</span>
+                    </p>
+                    <BaseButton
+                        variant="secondary"
+                        size="compact"
+                        class="mt-4"
+                        :loading="notifyCustomer.processing"
+                        @click="notifyCustomer.post(`/admin/anfragen/${request.id}/kunde-benachrichtigen`, { preserveScroll: true })"
+                    >Kunde erneut benachrichtigen</BaseButton>
+                </section>
+
                 <!-- The forensic trail -->
                 <section class="border border-gray-200 bg-white">
                     <div class="border-b border-gray-200 p-5">

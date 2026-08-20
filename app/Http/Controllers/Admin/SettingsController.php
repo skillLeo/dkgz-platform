@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Setting;
 use App\Support\Branding;
+use App\Support\MailDomainCheck;
 use App\Support\Mailer;
 use App\Support\SafeStorage;
 use App\Support\Settings;
@@ -28,6 +29,13 @@ class SettingsController extends Controller
             'canEdit' => $request->user()->can('updateGroup', [Setting::class, $group]),
             'smtpConfigured' => filled(Settings::get('integrations.smtp_host')),
             'brandingTokens' => $group === 'branding' ? Branding::tokens() : [],
+            // The deliverability panel only belongs where mail is configured.
+            'deliverability' => in_array($group, ['integrations', 'email'], true)
+                ? MailDomainCheck::run()
+                : null,
+            'mailPresets' => in_array($group, ['integrations', 'email'], true)
+                ? $this->mailPresets()
+                : [],
         ]);
     }
 
@@ -140,6 +148,45 @@ class SettingsController extends Controller
             'business' => 'Geschäftsregeln',
             'seo' => 'Suchmaschinen',
             'features' => 'Funktionen',
+        ];
+    }
+
+    /**
+     * Re-resolves the sending domain's DNS on demand, so an operator who has
+     * just added a record can see it land without waiting for a page cache.
+     */
+    public function checkMailDomain(Request $request): RedirectResponse
+    {
+        $this->authorize('viewAny', Setting::class);
+
+        $result = MailDomainCheck::run();
+
+        $failing = collect($result['records'] ?? [])
+            ->reject(fn (array $r) => $r['state'] === MailDomainCheck::STATE_OK)
+            ->count();
+
+        return back()->with(
+            $failing === 0 ? 'success' : 'info',
+            $failing === 0
+                ? 'SPF, DKIM und DMARC sind korrekt hinterlegt.'
+                : "Die Prüfung wurde durchgeführt. {$failing} Eintrag/Einträge benötigen noch Aufmerksamkeit."
+        );
+    }
+
+    /**
+     * Host, port and encryption for the services a German operator is most
+     * likely to use. Chosen from a list so nobody has to remember whether
+     * Brevo wants 587 or 465.
+     *
+     * @return array<int, array<string, mixed>>
+     */
+    private function mailPresets(): array
+    {
+        return [
+            ['id' => 'brevo', 'label' => 'Brevo (Sendinblue)', 'host' => 'smtp-relay.brevo.com', 'port' => 587, 'encryption' => 'tls'],
+            ['id' => 'mailgun', 'label' => 'Mailgun (EU)', 'host' => 'smtp.eu.mailgun.org', 'port' => 587, 'encryption' => 'tls'],
+            ['id' => 'postmark', 'label' => 'Postmark', 'host' => 'smtp.postmarkapp.com', 'port' => 587, 'encryption' => 'tls'],
+            ['id' => 'smtp', 'label' => 'Allgemeiner SMTP-Server', 'host' => '', 'port' => 587, 'encryption' => 'tls'],
         ];
     }
 }

@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1000" width="800" height="1000" role="img" aria-labelledby="t">
+  <title id="t">Dokumentation eines Fahrzeugschadens — institutionelle Darstellung</title>
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#14294A"/>
+      <stop offset="1" stop-color="#0A1628"/>
+    </linearGradient>
+    <linearGradient id="s" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#FFFFFF" stop-opacity=".07"/>
+      <stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="800" height="1000" fill="url(#g)"/>
+
+  <!-- Measured grid: the platform's language is documentation, not drama -->
+  <g stroke="#FFFFFF" stroke-opacity=".05">
+    <path d="M0 250h800M0 500h800M0 750h800M200 0v1000M400 0v1000M600 0v1000"/>
+  </g>
+
+  <!-- Clipboard: the instrument of the assessment -->
+  <g transform="translate(240 250)">
+    <rect x="0" y="24" width="320" height="440" rx="5" fill="#FFFFFF" fill-opacity=".95"/>
+    <rect x="0" y="24" width="320" height="440" rx="5" fill="url(#s)"/>
+    <rect x="110" y="0" width="100" height="46" rx="4" fill="#B08A2E"/>
+    <rect x="128" y="12" width="64" height="10" rx="3" fill="#0A1628" fill-opacity=".35"/>
+    <g fill="#14294A" fill-opacity=".14">
+      <rect x="36" y="96"  width="180" height="12" rx="3"/>
+      <rect x="36" y="132" width="248" height="8"  rx="3"/>
+      <rect x="36" y="156" width="214" height="8"  rx="3"/>
+      <rect x="36" y="204" width="120" height="10" rx="3"/>
+      <rect x="36" y="240" width="248" height="8"  rx="3"/>
+      <rect x="36" y="264" width="196" height="8"  rx="3"/>
+      <rect x="36" y="312" width="150" height="10" rx="3"/>
+      <rect x="36" y="348" width="248" height="8"  rx="3"/>
+      <rect x="36" y="372" width="168" height="8"  rx="3"/>
+    </g>
+    <g stroke="#1B6E48" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M258 404l14 14 26-30"/>
+    </g>
+  </g>
+
+  <!-- Seal: the German standard the platform certifies against -->
+  <g transform="translate(400 806)">
+    <circle r="58" fill="none" stroke="#B08A2E" stroke-width="1.5" opacity=".9"/>
+    <circle r="46" fill="none" stroke="#B08A2E" stroke-width="1" opacity=".55"/>
+    <text x="0" y="7" text-anchor="middle" font-family="'IBM Plex Sans',Helvetica,Arial,sans-serif"
+          font-size="19" font-weight="700" letter-spacing="1.6" fill="#FFFFFF" fill-opacity=".92">DKGZ</text>
+  </g>
+
+  <!-- Flag rule -->
+  <g transform="translate(340 906)">
+    <rect width="40" height="3" fill="#000000"/>
+    <rect x="40" width="40" height="3" fill="#DD0000"/>
+    <rect x="80" width="40" height="3" fill="#FFCE00"/>
+  </g>
+</svg>

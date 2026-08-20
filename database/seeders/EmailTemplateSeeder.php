@@ -165,6 +165,22 @@ class EmailTemplateSeeder extends Seeder
                 'body_html' => '<p>Guten Tag,</p><p>für die Anfrage {{ referenz }} ({{ gutachtenart }}, {{ plz }} {{ ort }}) konnte kein passender Sachverständiger ermittelt werden.</p><p>Die Anfrage steht in der Administration unter „Nicht vermittelt“ und wartet auf eine manuelle Zuordnung.</p>',
             ],
             [
+                'key' => 'anfrage-keine-rueckmeldung',
+                'name_de' => 'Anfrage ohne Rückmeldung (Kunde)',
+                'subject_de' => 'Ihre Anfrage {{ referenz }} — unser Zwischenstand',
+                'preheader_de' => 'Wir konnten Ihre Anfrage noch nicht vermitteln und kümmern uns persönlich darum.',
+                'available_variables' => ['referenz', 'gutachtenart', 'plz', 'ort', 'telefon', 'email', 'oeffnungszeiten'],
+                'body_html' => '<p>zu Ihrer Anfrage {{ referenz }} haben wir bisher keine Zusage von einem Sachverständigen in {{ plz }} {{ ort }} erhalten. Das liegt nicht an Ihren Angaben — im Moment ist in diesem Gebiet schlicht keiner unserer Partner frei.</p><p>Wir geben Ihre Anfrage deshalb nicht auf, sondern kümmern uns ab jetzt persönlich darum und melden uns bei Ihnen.</p><p>Wenn es eilt, erreichen Sie uns direkt unter {{ telefon }} ({{ oeffnungszeiten }}) oder per E-Mail an {{ email }}. Nennen Sie dabei einfach Ihre Referenz {{ referenz }}.</p>',
+            ],
+            [
+                'key' => 'haftpflicht-laeuft-ab',
+                'name_de' => 'Haftpflichtnachweis läuft ab (Partner)',
+                'subject_de' => 'Ihr Haftpflichtnachweis läuft am {{ ablaufdatum }} ab',
+                'preheader_de' => 'Ohne gültigen Nachweis können wir Ihnen keine Aufträge mehr vermitteln.',
+                'available_variables' => ['sv_nachname', 'ablaufdatum', 'resttage', 'partner_id', 'cta_url'],
+                'body_html' => '<p>Ihr hinterlegter Nachweis der Berufshaftpflichtversicherung ist noch bis zum {{ ablaufdatum }} gültig.</p><p>Ohne gültigen Nachweis dürfen wir Ihnen keine Aufträge mehr vermitteln. Laufende Aufträge bleiben davon unberührt und können normal abgeschlossen werden.</p><p>Bitte hinterlegen Sie den aktuellen Nachweis rechtzeitig in Ihrem Portal.</p>',
+            ],
+            [
                 'key' => 'kontaktanfrage',
                 'name_de' => 'Kontaktanfrage',
                 'subject_de' => 'Kontaktanfrage von {{ name }}',

@@ -1,8 +1,11 @@
 <?php
 
 use App\Models\Assessor;
+use App\Models\Setting;
 use App\Models\User;
+use App\Support\Settings;
 use Database\Seeders\RolePermissionSeeder;
+use Database\Seeders\SettingsSeeder;
 
 beforeEach(fn () => $this->seed(RolePermissionSeeder::class));
 
@@ -20,6 +23,12 @@ function settingsPartner(): User
 }
 
 describe('the Bankverbindung panel', function () {
+    beforeEach(function () {
+        $this->seed(SettingsSeeder::class);
+        Setting::where('key', 'features.collect_bank_details')->update(['value' => '1']);
+        Settings::flush();
+    });
+
     it('stores an IBAN with the spaces stripped and upper-cased', function () {
         $user = settingsPartner();
 
@@ -102,5 +111,48 @@ describe('the Firma panel', function () {
             'vat_id' => 'DE1',
             'phone' => '+49 211 4470012',
         ])->assertSessionHasErrors('vat_id');
+    });
+});
+
+describe('bank collection is opt-in', function () {
+    it('hides the tab and refuses the endpoint when the feature is off', function () {
+        $user = settingsPartner();
+
+        $this->actingAs($user)->get('/portal/einstellungen')
+            ->assertInertia(fn ($page) => $page->where('collectsBankDetails', false)->where('bank', null));
+
+        $this->actingAs($user)->post('/portal/einstellungen/bankverbindung', [
+            'bank_account_holder' => 'Martina Reinhardt',
+            'bank_iban' => 'DE89370400440532013000',
+        ])->assertNotFound();
+
+        expect($user->assessor->fresh()->bank_iban)->toBeNull();
+    });
+
+    it('accepts an empty IBAN when the feature is on', function () {
+        Setting::where('key', 'features.collect_bank_details')->update(['value' => '1']);
+        Settings::flush();
+
+        $user = settingsPartner();
+
+        $this->actingAs($user)->post('/portal/einstellungen/bankverbindung', [
+            'bank_account_holder' => '',
+            'bank_iban' => '',
+        ])->assertSessionHasNoErrors();
+
+        expect($user->assessor->fresh()->bank_iban)->toBeNull();
+    });
+
+    it('purges everything already stored', function () {
+        Setting::where('key', 'features.collect_bank_details')->update(['value' => '1']);
+        Settings::flush();
+
+        $user = settingsPartner();
+        $user->assessor->update(['bank_iban' => 'DE89370400440532013000', 'bank_account_holder' => 'X']);
+
+        $this->artisan('dkgz:purge-bank-details --force')->assertSuccessful();
+
+        expect($user->assessor->fresh()->bank_iban)->toBeNull()
+            ->and($user->assessor->fresh()->bank_account_holder)->toBeNull();
     });
 });

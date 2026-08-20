@@ -37,6 +37,12 @@ class HandleInertiaRequests extends Middleware
                     'assessor' => $user->assessor === null ? null : [
                         'id' => $user->assessor->id,
                         'partner_id' => $user->assessor->partnerId(),
+                        'cover' => [
+                            'valid_until' => $user->assessor->liabilityCoverValidUntil(),
+                            'has_lapsed' => $user->assessor->liabilityCoverHasLapsed(),
+                            'expires_soon' => $user->assessor->liabilityCoverExpiresSoon(),
+                            'blocks_matching' => Settings::bool('business.require_valid_liability_cover', true),
+                        ],
                         'company_name' => $user->assessor->company_name,
                         'is_available' => $user->assessor->is_available,
                         'approval_status' => $user->assessor->approval_status,
@@ -60,6 +66,8 @@ class HandleInertiaRequests extends Middleware
             'branding' => fn () => Branding::forInertia(),
 
             'app' => [
+                'analytics_configured' => filled(Settings::get('integrations.analytics_id')),
+                'poll_seconds' => max(15, Settings::int('business.notification_cadence_minutes', 45)),
                 'name' => Settings::get('branding.platform_name', config('app.name')),
                 'phone' => Settings::get('contact.phone'),
                 'office_hours' => Settings::get('contact.office_hours'),

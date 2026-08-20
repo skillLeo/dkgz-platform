@@ -11,6 +11,7 @@ use Illuminate\Mail\Mailables\Address;
 use Illuminate\Mail\Mailables\Attachment;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
+use Illuminate\Mail\Mailables\Headers;
 use Illuminate\Queue\SerializesModels;
 
 /**
@@ -56,6 +57,33 @@ class TemplateMail extends Mailable implements ShouldQueue
                 : [],
             subject: $subject,
         );
+    }
+
+    /**
+     * Templates that are not tied to a single transaction. Only these carry a
+     * List-Unsubscribe header — offering to unsubscribe from "your assignment
+     * was accepted" would be both meaningless and, for a partner relying on it,
+     * actively harmful.
+     */
+    private const BULK_TEMPLATES = ['provisionsabrechnung'];
+
+    public function headers(): Headers
+    {
+        $unsubscribe = Settings::get('email.unsubscribe_address') ?: Settings::get('email.reply_to');
+        $bounce = Settings::get('email.bounce_address');
+
+        $text = [];
+
+        if (filled($bounce)) {
+            $text['Return-Path'] = "<{$bounce}>";
+        }
+
+        if (in_array($this->templateKey, self::BULK_TEMPLATES, true) && filled($unsubscribe)) {
+            $text['List-Unsubscribe'] = "<mailto:{$unsubscribe}?subject=Abmeldung%20Provisionsabrechnung>";
+            $text['List-Unsubscribe-Post'] = 'List-Unsubscribe=One-Click';
+        }
+
+        return new Headers(text: $text);
     }
 
     public function content(): Content

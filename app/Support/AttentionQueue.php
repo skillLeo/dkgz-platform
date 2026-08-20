@@ -31,6 +31,7 @@ class AttentionQueue
     public static function items(int $limit = 25): array
     {
         $items = array_merge(
+            self::customerUninformed(),
             self::declinedByEveryone(),
             self::withoutCover(),
             self::missingReports(),
@@ -49,11 +50,34 @@ class AttentionQueue
         return count(self::items(PHP_INT_MAX));
     }
 
+    /**
+     * Requests that ended without an assignment and whose customer has still not
+     * been told. The mail is queued automatically, so a row here means the queue
+     * did not run — which is exactly what nobody notices until someone complains.
+     *
+     * @return array<int, array<string, mixed>>
+     */
+    private static function customerUninformed(): array
+    {
+        return ServiceRequest::query()
+            ->whereIn('status', [ServiceRequest::STATUS_EXPIRED, ServiceRequest::STATUS_UNANSWERED])
+            ->whereNull('customer_notified_at')
+            ->whereNotNull('customer_email')
+            ->get()
+            ->map(fn (ServiceRequest $request) => self::row(
+                $request->reference,
+                'Kunde wurde noch nicht benachrichtigt',
+                $request->updated_at,
+                route('admin.requests.show', $request),
+            ))
+            ->all();
+    }
+
     /** @return array<int, array<string, mixed>> */
     private static function declinedByEveryone(): array
     {
         return ServiceRequest::query()
-            ->where('status', ServiceRequest::STATUS_MATCHED)
+            ->whereIn('status', [ServiceRequest::STATUS_MATCHED, ServiceRequest::STATUS_UNANSWERED])
             ->where('matched_count', '>', 0)
             ->whereDoesntHave('matches', fn ($query) => $query
                 ->where('outcome', RequestMatch::OUTCOME_PENDING))

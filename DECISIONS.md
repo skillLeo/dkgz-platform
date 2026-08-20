@@ -47,3 +47,32 @@ delayed send. All 18 named in the spec are present; this is a superset.
 there, assignment documents and commission invoices get their own `private`
 disk rooted at `storage/app/private/dkgz` with `serve => false`, so no route
 can ever stream them by accident.
+
+## D-11 · Liability cover as a matching criterion (switchable)
+
+The client specified four matching conditions: approved, available, area covers
+the postal code, service type offered. Valid professional liability cover is a
+**fifth** condition this build adds.
+
+It is added because the account-suspension screen already tells partners their
+cover expired, and matching an uninsured assessor is the one compliance failure
+this business cannot absorb. It is a **setting**, not a hard rule, because it
+goes beyond the brief:
+
+`business.require_valid_liability_cover` — default **true**.
+
+- **true** — a partner whose dated cover has all lapsed is removed from matching.
+- **false** — cover is still tracked, still shown, and reminders still go out;
+  it simply does not affect matching.
+
+Partners with no dated cover on file are never excluded under either setting:
+the date field was added after some partners had already registered, and
+excluding everyone who predates a column would empty the network overnight.
+
+## D-12 · Bank details are opt-in
+
+The platform processes no payments and never pays a partner, so storing an IBAN
+has no operational purpose by default and is a GDPR liability. Collection is
+therefore behind `features.collect_bank_details`, default **false**. When off,
+the Bankverbindung tab does not exist and no IBAN is stored. `dkgz:purge-bank-details`
+clears anything already collected.

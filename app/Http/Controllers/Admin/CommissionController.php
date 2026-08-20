@@ -7,6 +7,7 @@ use App\Jobs\SendCommissionInvoiceJob;
 use App\Models\Assessor;
 use App\Models\Commission;
 use App\Support\Formatter;
+use App\Support\Settings;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -129,15 +130,20 @@ class CommissionController extends Controller
         $commission->load(['assessor.user', 'assignment.serviceRequest.serviceType']);
 
         $number = Commission::nextInvoiceNumber();
+        $path = null;
 
-        $pdf = Pdf::loadView('pdf.commission-invoice', [
-            'commission' => $commission,
-            'invoiceNumber' => $number,
-            'issuedAt' => now(),
-        ])->setPaper('a4');
+        // Some operators invoice from their own accounting system; then the
+        // platform still records the number and the status, but produces no PDF.
+        if (Settings::bool('business.generate_commission_invoices', true)) {
+            $pdf = Pdf::loadView('pdf.commission-invoice', [
+                'commission' => $commission,
+                'invoiceNumber' => $number,
+                'issuedAt' => now(),
+            ])->setPaper('a4');
 
-        $path = "provisionen/{$commission->id}/{$number}.pdf";
-        Storage::disk('private')->put($path, $pdf->output());
+            $path = "provisionen/{$commission->id}/{$number}.pdf";
+            Storage::disk('private')->put($path, $pdf->output());
+        }
 
         $commission->update([
             'status' => Commission::STATUS_INVOICED,

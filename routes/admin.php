@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\ContentController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\EmailTemplateController;
 use App\Http\Controllers\Admin\InvitationController;
+use App\Http\Controllers\Admin\ProfileController as AdminProfileController;
 use App\Http\Controllers\Admin\RequestController;
 use App\Http\Controllers\Admin\ServiceTypeController;
 use App\Http\Controllers\Admin\SettingsController;
@@ -29,6 +30,8 @@ Route::prefix('admin')
         Route::middleware('can:requests.view')->group(function () {
             Route::get('/anfragen', [RequestController::class, 'index'])->name('requests');
             Route::get('/anfragen/{serviceRequest}', [RequestController::class, 'show'])->name('requests.show');
+            Route::post('/anfragen/{serviceRequest}/kunde-benachrichtigen', [RequestController::class, 'notifyCustomer'])
+                ->name('requests.notify-customer');
         });
         Route::post('/anfragen/{serviceRequest}/erneut-vermitteln', [RequestController::class, 'rematch'])
             ->middleware('can:requests.reassign')->name('requests.rematch');
@@ -142,8 +145,16 @@ Route::prefix('admin')
             ->middleware('can:branding.edit')->name('branding');
         Route::get('/integrationen', [SettingsController::class, 'index'])->defaults('group', 'integrations')
             ->middleware('can:integrations.manage')->name('integrations');
+        Route::post('/e-mail-zustellbarkeit/pruefen', [SettingsController::class, 'checkMailDomain'])
+            ->name('settings.mail-domain.check');
         Route::post('/integrationen/smtp-test', [SettingsController::class, 'testMail'])
             ->middleware(['can:integrations.manage', 'throttle:smtp-test'])->name('integrations.smtp-test');
+        // The staff member's own account — reachable by every signed-in user, since
+        // changing your own password must never depend on a permission.
+        Route::get('/profil', [AdminProfileController::class, 'edit'])->name('profile');
+        Route::post('/profil', [AdminProfileController::class, 'update'])->name('profile.update');
+        Route::post('/profil/passwort', [AdminProfileController::class, 'updatePassword'])->name('profile.password');
+
         Route::get('/einstellungen/{group?}', [SettingsController::class, 'index'])
             ->middleware('can:settings.view')->name('settings');
         Route::post('/einstellungen/{group}', [SettingsController::class, 'update'])

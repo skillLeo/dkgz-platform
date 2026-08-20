@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Support\Settings;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -9,6 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Carbon;
 use Spatie\Activitylog\Models\Concerns\LogsActivity;
 use Spatie\Activitylog\Support\LogOptions;
 
@@ -155,7 +157,8 @@ class Assessor extends Model
         return $this->isApproved()
             && $this->is_available
             && (bool) $this->user?->is_active
-            && ! $this->liabilityCoverHasLapsed();
+            && (! Settings::bool('business.require_valid_liability_cover', true)
+                || ! $this->liabilityCoverHasLapsed());
     }
 
     /**
@@ -164,6 +167,37 @@ class Assessor extends Model
      * is optional on older rows, and refusing to match everyone who registered
      * before the field existed would empty the network overnight.
      */
+    /** The latest end date on file, or null when no dated cover exists. */
+    public function liabilityCoverValidUntil(): ?Carbon
+    {
+        return $this->documents
+            ->where('type', AssessorDocument::TYPE_LIABILITY)
+            ->pluck('valid_until')
+            ->filter()
+            ->max();
+    }
+
+    /**
+     * True when this date is the partner's effective cover end — so a reminder
+     * about an old certificate is not sent to someone who already filed a newer
+     * one.
+     */
+    public function liabilityCoverExpiresOn(\DateTimeInterface $date): bool
+    {
+        $effective = $this->liabilityCoverValidUntil();
+
+        return $effective !== null && $effective->isSameDay($date);
+    }
+
+    public function liabilityCoverExpiresSoon(int $days = 30): bool
+    {
+        $until = $this->liabilityCoverValidUntil();
+
+        return $until !== null
+            && ! $until->isPast()
+            && $until->lessThanOrEqualTo(now()->addDays($days));
+    }
+
     public function liabilityCoverHasLapsed(): bool
     {
         $dated = $this->documents
@@ -223,17 +257,21 @@ class Assessor extends Model
         return $query->approved()
             ->where('is_available', true)
             ->whereHas('user', fn (Builder $q) => $q->where('is_active', true))
-            // Either no dated liability cover on file, or at least one that is
-            // still valid. Grouped in one closure so the clause composes with
-            // covering() and offering() instead of leaking an OR across them.
-            ->where(fn (Builder $q) => $q
-                ->whereDoesntHave('documents', fn (Builder $d) => $d
-                    ->where('type', AssessorDocument::TYPE_LIABILITY)
-                    ->whereNotNull('valid_until'))
-                ->orWhereHas('documents', fn (Builder $d) => $d
-                    ->where('type', AssessorDocument::TYPE_LIABILITY)
-                    ->whereNotNull('valid_until')
-                    ->whereDate('valid_until', '>=', now())));
+            // Lapsed liability cover removes a partner from matching — but only
+            // while the platform is configured to require it. This is a fifth
+            // criterion beyond the four the client specified, so it is a switch
+            // rather than a hard rule. See DECISIONS.md D-11.
+            ->when(
+                Settings::bool('business.require_valid_liability_cover', true),
+                fn (Builder $query) => $query->where(fn (Builder $q) => $q
+                    ->whereDoesntHave('documents', fn (Builder $d) => $d
+                        ->where('type', AssessorDocument::TYPE_LIABILITY)
+                        ->whereNotNull('valid_until'))
+                    ->orWhereHas('documents', fn (Builder $d) => $d
+                        ->where('type', AssessorDocument::TYPE_LIABILITY)
+                        ->whereNotNull('valid_until')
+                        ->whereDate('valid_until', '>=', now())))
+            );
     }
 
     /** Assessors whose service areas numerically span the given postal code. */

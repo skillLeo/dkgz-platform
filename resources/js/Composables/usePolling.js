@@ -1,11 +1,16 @@
 import { onMounted, onUnmounted, ref } from 'vue'
+import { usePage } from '@inertiajs/vue3'
 
 /**
  * In-portal notifications, per BUILD_SPEC: no websockets on shared hosting, so
- * a lightweight endpoint is polled every 45 seconds. Polling pauses while the
- * tab is hidden so a backgrounded tab costs the server nothing.
+ * a lightweight endpoint is polled on a configurable cadence. Polling pauses
+ * while the
+ * tab is hidden, so a backgrounded tab costs the server nothing.
  */
-export function usePolling(url, { interval = 45000, immediate = true } = {}) {
+export function usePolling(url, { interval = null, immediate = true } = {}) {
+    // The cadence is an operator setting; the fallback matches its default.
+    const configured = usePage().props.app?.poll_seconds
+    const wait = interval ?? Math.max(15, Number(configured) || 45) * 1000
     const count = ref(0)
     const items = ref([])
     const polling = ref(false)
@@ -45,7 +50,7 @@ export function usePolling(url, { interval = 45000, immediate = true } = {}) {
         timer = setTimeout(async () => {
             await fetchOnce()
             schedule()
-        }, interval * (backoff ? 2 ** backoff : 1))
+        }, wait * (backoff ? 2 ** backoff : 1))
     }
 
     const stop = () => {

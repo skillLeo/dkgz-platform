@@ -73,7 +73,7 @@ class ContentBlockSeeder extends Seeder
             ['page_key' => 'startseite', 'section_key' => 'hero', 'field_key' => 'plz_platzhalter', 'value' => 'z. B. 40589', 'label_de' => 'Hero · Platzhalter im PLZ-Feld'],
             ['page_key' => 'startseite', 'section_key' => 'hero', 'field_key' => 'cta', 'value' => 'Gutachter anfragen', 'label_de' => 'Hero · Schaltfläche'],
             ['page_key' => 'startseite', 'section_key' => 'hero', 'field_key' => 'hinweis', 'value' => 'Kostenlos und unverbindlich · Keine Registrierung erforderlich', 'label_de' => 'Hero · Hinweis unter dem Feld'],
-            ['page_key' => 'startseite', 'section_key' => 'hero', 'field_key' => 'bild', 'type' => 'image', 'value' => '', 'label_de' => 'Hero · Bild'],
+            ['page_key' => 'startseite', 'section_key' => 'hero', 'field_key' => 'bild', 'type' => 'image', 'value' => '/images/hero-institutionell.svg', 'label_de' => 'Hero · Bild', 'help_de' => 'Platzhaltergrafik im DKGZ-Stil. Ersetzen Sie sie durch ein echtes Foto im Hochformat 4:5.'],
             ['page_key' => 'startseite', 'section_key' => 'hero', 'field_key' => 'siegel_titel', 'value' => 'Geprüfte Partner', 'label_de' => 'Hero · Siegel, Überschrift'],
             ['page_key' => 'startseite', 'section_key' => 'hero', 'field_key' => 'siegel_text', 'value' => 'Nach bundesweit einheitlichem Standard', 'label_de' => 'Hero · Siegel, Zusatz'],
 
@@ -172,7 +172,7 @@ class ContentBlockSeeder extends Seeder
             ['page_key' => 'partner', 'section_key' => 'hero', 'field_key' => 'text', 'value' => 'Sie legen Einsatzgebiet und Leistungen fest, wir leiten passende Anfragen weiter. Sie entscheiden bei jeder Anfrage neu.', 'label_de' => 'Hero · Fließtext'],
             ['page_key' => 'partner', 'section_key' => 'hero', 'field_key' => 'cta_primaer', 'value' => 'Als Partner registrieren', 'label_de' => 'Hero · Hauptschaltfläche'],
             ['page_key' => 'partner', 'section_key' => 'hero', 'field_key' => 'cta_sekundaer', 'value' => 'Zum Portal anmelden', 'label_de' => 'Hero · Zweitschaltfläche'],
-            ['page_key' => 'partner', 'section_key' => 'hero', 'field_key' => 'bild', 'type' => 'image', 'value' => '', 'label_de' => 'Hero · Bild'],
+            ['page_key' => 'partner', 'section_key' => 'hero', 'field_key' => 'bild', 'type' => 'image', 'value' => '/images/hero-institutionell.svg', 'label_de' => 'Hero · Bild', 'help_de' => 'Platzhaltergrafik im DKGZ-Stil. Ersetzen Sie sie durch ein echtes Foto.'],
             ['page_key' => 'partner', 'section_key' => 'provision', 'field_key' => 'ueberschrift', 'value' => 'Das Provisionsmodell', 'label_de' => 'Provision · Überschrift'],
             ['page_key' => 'partner', 'section_key' => 'provision', 'field_key' => 'text', 'value' => 'Es gibt keine Grundgebühr und keine Kosten pro Anfrage. Die Vermittlungsprovision fällt ausschließlich auf abgeschlossene Aufträge an und wird auf das tatsächlich berechnete Netto-Honorar erhoben.', 'label_de' => 'Provision · Fließtext'],
             ['page_key' => 'partner', 'section_key' => 'voraussetzungen', 'field_key' => 'ueberschrift', 'value' => 'Voraussetzungen für die Aufnahme', 'label_de' => 'Voraussetzungen · Überschrift'],

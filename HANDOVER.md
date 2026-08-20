@@ -274,3 +274,58 @@ Provisionsentscheidungen, Rollenänderungen.
 Bei technischen Problemen wenden Sie sich an Ihre Entwicklung und nennen Sie,
 was auf der Seite **System** steht — das beantwortet die meisten Rückfragen
 sofort.
+
+---
+
+## Leistungsarten sind vorläufig
+
+Die acht Gutachtenarten (Unfallgutachten, Haftpflichtgutachten, Kaskogutachten,
+Fahrzeugschadengutachten, Wertgutachten, Oldtimergutachten, Gebrauchtwagen-Check,
+Beweissicherung) sind ein **Vorschlag aus der Entwurfsphase**, keine festgelegte
+Liste.
+
+Sie sind vollständig unter **Administration → Leistungsarten** pflegbar: umbenennen,
+neu anlegen, deaktivieren und in der Reihenfolge ändern. Jede Art hat eine eigene
+öffentliche Seite und steuert, welche Anfragen ein Partner erhält.
+
+Deaktivieren Sie eine Art nur, wenn dazu keine offenen Aufträge mehr laufen — bereits
+vermittelte Vorgänge behalten ihre Art in jedem Fall.
+
+## Das Bild auf der Startseite
+
+Ausgeliefert wird eine **Platzhaltergrafik** im DKGZ-Stil
+(`public/images/hero-institutionell.svg`), damit die Startseite nie einen leeren
+Rahmen zeigt. Sie ist kein Foto.
+
+Ersetzen unter **Administration → Inhalte → Startseite → Hero · Bild**: Bild
+auswählen oder hineinziehen, fertig. Empfohlen ist ein Hochformat im Verhältnis
+**4:5**, mindestens 800 × 1000 px, JPG oder WebP, höchstens 4 MB. Motiv laut
+Entwurf: ein Kfz-Sachverständiger dokumentiert einen Fahrzeugschaden — Klemmbrett
+oder Tablet, deutsche Werkstatt oder Außenaufnahme, kühl abgestimmt, unposiert.
+
+Über dieselbe Stelle lassen sich alle Bilder **hochladen, ersetzen und entfernen**.
+Beim Ersetzen wird die vorherige Datei gelöscht; beim Entfernen zeigt die Seite
+wieder den beschrifteten Platzhalter.
+
+## Sicherung und Wiederherstellung
+
+Täglich um 02:30 schreibt `dkgz:backup-database` einen gzip-komprimierten Dump nach
+`storage/app/private/backups/`. Die letzten vierzehn bleiben erhalten, ältere werden
+automatisch entfernt. Das Verzeichnis liegt außerhalb des Web-Zugriffs.
+
+Manuell auslösen:
+
+```
+php artisan dkgz:backup-database
+```
+
+**Wiederherstellen** (MySQL, über phpMyAdmin oder Konsole):
+
+```
+gunzip -c storage/app/private/backups/dkgz-JJJJ-MM-TT-HHMMSS.sql.gz > wiederherstellung.sql
+mysql -u BENUTZER -p DATENBANK < wiederherstellung.sql
+php artisan optimize
+```
+
+Prüfen Sie nach jeder Wiederherstellung, ob `php artisan migrate --force` noch
+ausstehende Migrationen meldet.

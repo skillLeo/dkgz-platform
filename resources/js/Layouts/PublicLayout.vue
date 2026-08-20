@@ -1,4 +1,5 @@
 <script setup>
+import CookieConsent from '../Components/Feedback/CookieConsent.vue'
 import { computed, onMounted, onUnmounted, ref } from 'vue'
 import { Link, usePage } from '@inertiajs/vue3'
 import { Menu, X } from 'lucide-vue-next'
@@ -203,5 +204,6 @@ onUnmounted(() => window.removeEventListener('scroll', onScroll))
                 </div>
             </div>
         </footer>
+        <CookieConsent />
     </div>
 </template>

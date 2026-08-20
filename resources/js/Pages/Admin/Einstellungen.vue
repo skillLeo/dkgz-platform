@@ -8,6 +8,7 @@ import BaseInput from '../../Components/Base/BaseInput.vue'
 import BaseTextarea from '../../Components/Base/BaseTextarea.vue'
 import BaseToggle from '../../Components/Base/BaseToggle.vue'
 import BaseButton from '../../Components/Base/BaseButton.vue'
+import MailDeliverabilityPanel from '../../Components/Domain/MailDeliverabilityPanel.vue'
 import ErrorSummary from '../../Components/Feedback/ErrorSummary.vue'
 
 /**
@@ -21,6 +22,8 @@ const props = defineProps({
     canEdit: { type: Boolean, default: false },
     smtpConfigured: { type: Boolean, default: false },
     brandingTokens: { type: Object, default: () => ({}) },
+    deliverability: { type: Object, default: null },
+    mailPresets: { type: Array, default: () => [] },
 })
 
 const initial = {}
@@ -30,6 +33,13 @@ props.settings.forEach((setting) => {
 
 const form = useForm(initial)
 const testMail = useForm({ email: '' })
+
+/** Fills host, port and encryption; credentials stay the operator's to enter. */
+const applyPreset = (preset) => {
+    if ('integrations.smtp_host' in form) form['integrations.smtp_host'] = preset.host
+    if ('integrations.smtp_port' in form) form['integrations.smtp_port'] = String(preset.port)
+    if ('integrations.smtp_encryption' in form) form['integrations.smtp_encryption'] = preset.encryption
+}
 
 const submit = () => form.post(`/admin/einstellungen/${props.group}`, {
     preserveScroll: true,
@@ -148,6 +158,14 @@ const submit = () => form.post(`/admin/einstellungen/${props.group}`, {
 
                     <BaseButton v-if="canEdit" type="submit" class="mt-6" :loading="form.processing">Einstellungen speichern</BaseButton>
                 </form>
+
+                <MailDeliverabilityPanel
+                    v-if="deliverability"
+                    :check="deliverability"
+                    :presets="mailPresets"
+                    class="mt-6"
+                    @apply-preset="applyPreset"
+                />
 
                 <!-- Testmail: sends a real message and prints the real SMTP error -->
                 <form

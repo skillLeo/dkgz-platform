@@ -2,6 +2,8 @@
 
 namespace App\Console\Commands;
 
+use App\Jobs\NotifyCustomerNoResponseJob;
+use App\Jobs\NotifyNoAssessorsFoundJob;
 use App\Models\RequestMatch;
 use App\Models\ServiceRequest;
 use Illuminate\Console\Command;
@@ -49,6 +51,10 @@ class ExpireLapsedRequestsCommand extends Command
                             ]);
 
                         $locked->update(['status' => ServiceRequest::STATUS_EXPIRED]);
+
+                        NotifyNoAssessorsFoundJob::dispatch($locked->id);
+                        NotifyCustomerNoResponseJob::dispatch($locked->id);
+
                         $expired++;
                     });
                 }

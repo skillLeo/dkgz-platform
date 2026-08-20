@@ -29,12 +29,20 @@ class ServiceRequest extends Model
 
     public const STATUS_EXPIRED = 'expired';
 
+    /**
+     * Every matched partner answered, and all of them declined. Distinct from
+     * 'expired', which means the clock ran out while some were still silent —
+     * the office needs to tell those two apart, because thin coverage and slow
+     * partners call for different action.
+     */
+    public const STATUS_UNANSWERED = 'unanswered';
+
     protected $fillable = [
         'reference', 'service_type_id', 'postal_code', 'city',
         'customer_name', 'customer_phone', 'customer_email',
         'vehicle_make', 'vehicle_model', 'vehicle_year', 'vehicle_plate', 'vehicle_vin',
         'description', 'preferred_date', 'urgency', 'status', 'matched_count',
-        'assigned_at', 'accept_deadline_at', 'ip_address', 'user_agent', 'consent_at',
+        'assigned_at', 'accept_deadline_at', 'customer_notified_at', 'ip_address', 'user_agent', 'consent_at',
     ];
 
     protected function casts(): array
@@ -43,6 +51,7 @@ class ServiceRequest extends Model
             'preferred_date' => 'date',
             'assigned_at' => 'datetime',
             'accept_deadline_at' => 'datetime',
+            'customer_notified_at' => 'datetime',
             'consent_at' => 'datetime',
             'matched_count' => 'integer',
             'vehicle_year' => 'integer',
@@ -110,7 +119,9 @@ class ServiceRequest extends Model
     /** Every matched assessor declined; the request needs admin attention. */
     public function isFullyDeclined(): bool
     {
-        return $this->status === self::STATUS_MATCHED
+        // 'unanswered' is set the moment the last partner declines, so both it
+        // and a still-'matched' row with no pending matches mean the same thing.
+        return in_array($this->status, [self::STATUS_MATCHED, self::STATUS_UNANSWERED], true)
             && $this->matched_count > 0
             && ! $this->matches()->where('outcome', RequestMatch::OUTCOME_PENDING)->exists();
     }
@@ -164,9 +175,10 @@ class ServiceRequest extends Model
                 ->where('status', self::STATUS_NEW)
                 ->where('matched_count', 0))
                 ->orWhere(fn (Builder $inner) => $inner
-                    ->where('status', self::STATUS_MATCHED)
+                    ->whereIn('status', [self::STATUS_MATCHED, self::STATUS_UNANSWERED])
                     ->whereDoesntHave('matches', fn (Builder $m) => $m
-                        ->where('outcome', RequestMatch::OUTCOME_PENDING)));
+                        ->where('outcome', RequestMatch::OUTCOME_PENDING)))
+                ->orWhere('status', self::STATUS_EXPIRED);
         });
     }
 

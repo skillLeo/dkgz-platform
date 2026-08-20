@@ -85,6 +85,9 @@ class SettingsSeeder extends Seeder
             ['group' => 'email', 'key' => 'email.from_name', 'type' => 'string', 'value' => 'DKGZ Gutachterzentrale', 'label_de' => 'Absendername'],
             ['group' => 'email', 'key' => 'email.from_address', 'type' => 'string', 'value' => 'no-reply@dkgz.de', 'label_de' => 'Absenderadresse'],
             ['group' => 'email', 'key' => 'email.reply_to', 'type' => 'string', 'value' => 'info@dkgz.de', 'label_de' => 'Antwortadresse'],
+            ['group' => 'email', 'key' => 'email.bounce_address', 'type' => 'string', 'label_de' => 'Rücklaufadresse (Bounce)', 'help_de' => 'Empfängt Unzustellbarkeitsmeldungen. Ohne Angabe wird die Absenderadresse verwendet.'],
+            ['group' => 'email', 'key' => 'email.dkim_selector', 'type' => 'string', 'label_de' => 'DKIM-Selector', 'help_de' => 'Vom Versanddienst vorgegeben, zum Beispiel „mail“ oder „brevo1“. Wird nur zur Prüfung des DNS-Eintrags benötigt.'],
+            ['group' => 'email', 'key' => 'email.unsubscribe_address', 'type' => 'string', 'label_de' => 'Abmeldeadresse für Rundmails', 'help_de' => 'Erscheint als List-Unsubscribe in nicht-transaktionalen E-Mails wie der Provisionsabrechnung.'],
             ['group' => 'email', 'key' => 'email.footer_text', 'type' => 'text', 'value' => 'Diese E-Mail wurde automatisch versendet. Bitte antworten Sie nicht auf diese Adresse.', 'label_de' => 'Fußzeile in allen E-Mails'],
             ['group' => 'email', 'key' => 'email.admin_recipient', 'type' => 'string', 'value' => 'info@dkgz.de', 'label_de' => 'Interne Empfängeradresse', 'help_de' => 'Erhält Registrierungen, Kontaktanfragen und Meldungen ohne Treffer.'],
 
@@ -104,6 +107,9 @@ class SettingsSeeder extends Seeder
             ['group' => 'business', 'key' => 'business.review_redirect_url', 'type' => 'string', 'label_de' => 'Weiterleitung nach guter Bewertung', 'help_de' => 'Zum Beispiel das öffentliche Bewertungsprofil.'],
             ['group' => 'business', 'key' => 'business.review_min_rating', 'type' => 'integer', 'value' => '8', 'label_de' => 'Mindestbewertung für die Weiterleitung'],
             ['group' => 'business', 'key' => 'business.review_delay_days', 'type' => 'integer', 'value' => '3', 'label_de' => 'Bewertungsanfrage nach Tagen'],
+            ['group' => 'business', 'key' => 'business.require_valid_liability_cover', 'type' => 'boolean', 'value' => '1', 'label_de' => 'Gültigen Haftpflichtnachweis für die Vermittlung verlangen', 'help_de' => 'Ist dies aktiv, erhalten Partner mit abgelaufenem Nachweis keine neuen Anfragen. Der Nachweis wird in jedem Fall überwacht und es wird rechtzeitig erinnert.'],
+            ['group' => 'business', 'key' => 'business.generate_commission_invoices', 'type' => 'boolean', 'value' => '1', 'label_de' => 'Provisionsrechnungen als PDF erzeugen'],
+            ['group' => 'features', 'key' => 'features.collect_bank_details', 'type' => 'boolean', 'value' => '', 'label_de' => 'Bankverbindung der Partner erheben', 'help_de' => 'Nur aktivieren, wenn die Provision per Überweisung abgerechnet wird. Ist dies aus, wird keine IBAN gespeichert.'],
             ['group' => 'business', 'key' => 'business.retention_days', 'type' => 'integer', 'value' => '1095', 'label_de' => 'Aufbewahrung von Anfragedaten in Tagen', 'help_de' => 'Danach werden Kundendaten anonymisiert.'],
 
             ['group' => 'seo', 'key' => 'seo.default_title', 'type' => 'string', 'value' => 'Kfz-Sachverständigen finden — DKGZ Deutsche KFZ-Gutachterzentrale', 'label_de' => 'Standard-Seitentitel'],

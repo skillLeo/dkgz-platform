@@ -1,6 +1,8 @@
 <?php
 
 use App\Console\Commands\AnonymiseOldRequestsCommand;
+use App\Console\Commands\BackupDatabaseCommand;
+use App\Console\Commands\CheckLiabilityCoverCommand;
 use App\Console\Commands\ExpireLapsedRequestsCommand;
 use Illuminate\Support\Facades\Schedule;
 
@@ -23,6 +25,12 @@ Schedule::command('cache:prune-stale-tags')->hourly();
 // Requests nobody accepted inside the acceptance window move to 'expired' so
 // they surface for a human decision instead of sitting open indefinitely.
 Schedule::command(ExpireLapsedRequestsCommand::class)->everyFifteenMinutes();
+
+// Nightly database backup, kept for a fortnight.
+Schedule::command(BackupDatabaseCommand::class)->dailyAt('02:30');
+
+// Partners are warned before their liability cover runs out, never after.
+Schedule::command(CheckLiabilityCoverCommand::class)->dailyAt('07:00');
 
 // GDPR retention: anonymise customer data on requests past the configured age.
 Schedule::command(AnonymiseOldRequestsCommand::class)->dailyAt('03:20');

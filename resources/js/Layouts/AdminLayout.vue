@@ -3,7 +3,7 @@ import { computed, ref } from 'vue'
 import { usePage } from '@inertiajs/vue3'
 import {
     Bell, Building2, Euro, FileText, FileType, Home, Inbox, LayoutGrid, Mail, Settings,
-    ShieldCheck, Sliders, UserPlus, Users, Wrench,
+    ShieldCheck, Sliders, User, UserPlus, Users, Wrench,
 } from 'lucide-vue-next'
 import Sidebar from '../Components/Layout/Sidebar.vue'
 import TopBar from '../Components/Layout/TopBar.vue'
@@ -57,6 +57,7 @@ const moreItems = computed(() => [
     can('roles.view') ? { href: '/admin/rollen', label: 'Rollen', icon: ShieldCheck } : null,
     can('logs.view') ? { href: '/admin/protokoll', label: 'Protokoll', icon: FileType } : null,
     can('settings.view') ? { href: '/admin/system', label: 'System', icon: Sliders } : null,
+    { href: '/admin/profil', label: 'Mein Konto', icon: User },
 ].filter(Boolean))
 
 const sections = computed(() => [
@@ -90,6 +91,7 @@ const sections = computed(() => [
             can('roles.view') ? { href: '/admin/rollen', label: 'Rollen', icon: ShieldCheck } : null,
             can('logs.view') ? { href: '/admin/protokoll', label: 'Protokoll', icon: FileType } : null,
             can('settings.view') ? { href: '/admin/system', label: 'System', icon: Sliders } : null,
+            { href: '/admin/profil', label: 'Mein Konto', icon: User },
         ].filter(Boolean),
     },
 ].filter((section) => section.items.length))

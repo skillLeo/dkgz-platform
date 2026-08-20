@@ -23,6 +23,7 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     protected $fillable = [
+        'must_change_password',
         'name', 'first_name', 'last_name', 'email', 'password', 'phone',
         'avatar_path', 'locale', 'is_active',
     ];
@@ -34,6 +35,7 @@ class User extends Authenticatable implements MustVerifyEmail
     protected function casts(): array
     {
         return [
+            'must_change_password' => 'boolean',
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'is_active' => 'boolean',

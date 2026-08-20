@@ -8,7 +8,10 @@ import BaseToggle from '../../Components/Base/BaseToggle.vue'
 import BaseButton from '../../Components/Base/BaseButton.vue'
 import ErrorSummary from '../../Components/Feedback/ErrorSummary.vue'
 
-const props = defineProps({ page: { type: Object, required: true } })
+const props = defineProps({
+    isPlaceholder: { type: Boolean, default: false },
+    page: { type: Object, required: true },
+})
 
 const form = useForm({
     title_de: props.page.title_de,
@@ -23,6 +26,18 @@ const form = useForm({
     <Head :title="page.title_de" />
 
     <AdminLayout :title="page.title_de" back-href="/admin/seiten">
+        <!--
+            Legal text carries obligations. The seeded drafts are a starting
+            point, not advice, and this says so until someone has replaced them.
+        -->
+        <div v-if="isPlaceholder" class="mb-6 rounded-card border border-warning bg-warning/5 p-4" role="status">
+            <p class="text-base font-medium text-warning">Platzhaltertext</p>
+            <p class="measure pt-1 text-sm leading-normal text-gray-800">
+                Dieser Text ist ein Platzhalter und muss durch rechtlich geprüfte Inhalte ersetzt werden. Der Hinweis
+                verschwindet, sobald Sie die Seite gespeichert haben.
+            </p>
+        </div>
+
         <PageHeader :title="page.title_de" :eyebrow="`/${page.slug}`" />
 
         <form class="border border-gray-200 bg-white p-6" novalidate @submit.prevent="form.post(`/admin/seiten/${page.slug}`, { preserveScroll: true })">

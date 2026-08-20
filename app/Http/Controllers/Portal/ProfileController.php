@@ -10,6 +10,7 @@ use App\Models\ServiceType;
 use App\Rules\ExistingPostalCode;
 use App\Rules\GermanVatId;
 use App\Rules\Iban;
+use App\Support\Settings;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -152,11 +153,15 @@ class ProfileController extends Controller
                 'phone' => $user->phone,
                 'email' => $user->email,
             ],
-            'bank' => [
+            // Off by default: the platform takes no payments and never pays the
+            // partner, so an IBAN has no purpose here unless the operator has
+            // decided to settle commission by transfer. See DECISIONS.md D-12.
+            'collectsBankDetails' => Settings::bool('features.collect_bank_details', false),
+            'bank' => Settings::bool('features.collect_bank_details', false) ? [
                 'bank_account_holder' => $assessor->bank_account_holder,
                 'bank_iban' => $assessor->bank_iban,
                 'bank_bic' => $assessor->bank_bic,
-            ],
+            ] : null,
             'notifications' => [
                 'notify_new_request' => $assessor->notify_new_request,
                 'notify_deadline_reminder' => $assessor->notify_deadline_reminder,
@@ -192,9 +197,12 @@ class ProfileController extends Controller
      */
     public function updateBank(Request $request): RedirectResponse
     {
+        abort_unless(Settings::bool('features.collect_bank_details', false), 404);
+
         $data = $request->validate([
-            'bank_account_holder' => ['required', 'string', 'max:180'],
-            'bank_iban' => ['required', new Iban],
+            // Optional even when collected — a partner may decline to give it.
+            'bank_account_holder' => ['nullable', 'string', 'max:180'],
+            'bank_iban' => ['nullable', new Iban],
             // Case-insensitive: the value is upper-cased on the way in, so
             // rejecting a lower-case BIC here would fail input we accept.
             'bank_bic' => ['nullable', 'string', 'regex:/^[A-Za-z]{6}[A-Za-z0-9]{2}([A-Za-z0-9]{3})?$/'],
@@ -207,9 +215,11 @@ class ProfileController extends Controller
         ]);
 
         $request->user()->assessor->update([
-            'bank_account_holder' => $data['bank_account_holder'],
-            'bank_iban' => str($data['bank_iban'])->replace(' ', '')->upper()->value(),
-            'bank_bic' => $data['bank_bic'] === null ? null : strtoupper($data['bank_bic']),
+            'bank_account_holder' => $data['bank_account_holder'] ?? null,
+            'bank_iban' => blank($data['bank_iban'] ?? null)
+                ? null
+                : str($data['bank_iban'])->replace(' ', '')->upper()->value(),
+            'bank_bic' => blank($data['bank_bic'] ?? null) ? null : strtoupper($data['bank_bic']),
         ]);
 
         return back()->with('success', 'Ihre Bankverbindung wurde gespeichert.');
@@ -238,7 +248,10 @@ class ProfileController extends Controller
             'password' => 'das neue Passwort',
         ]);
 
-        $request->user()->update(['password' => Hash::make($data['password'])]);
+        $request->user()->update([
+            'password' => Hash::make($data['password']),
+            'must_change_password' => false,
+        ]);
 
         return back()->with('success', 'Ihr Passwort wurde geändert.');
     }

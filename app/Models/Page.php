@@ -13,13 +13,14 @@ class Page extends Model
     use HasFactory, LogsActivity;
 
     protected $fillable = [
-        'slug', 'title_de', 'body_de', 'meta_title', 'meta_description',
+        'slug', 'title_de', 'body_de', 'meta_title', 'meta_description', 'is_placeholder',
         'is_published', 'sort_order',
     ];
 
     protected function casts(): array
     {
         return [
+            'is_placeholder' => 'boolean',
             'is_published' => 'boolean',
             'sort_order' => 'integer',
         ];

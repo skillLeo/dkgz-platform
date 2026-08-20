@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { Head, useForm } from '@inertiajs/vue3'
 import PortalLayout from '../../Layouts/PortalLayout.vue'
 import TabBar from '../../Components/Data/TabBar.vue'
@@ -12,21 +12,22 @@ import ErrorSummary from '../../Components/Feedback/ErrorSummary.vue'
 const props = defineProps({
     email: { type: String, default: '' },
     company: { type: Object, default: () => ({}) },
-    bank: { type: Object, default: () => ({}) },
+    bank: { type: Object, default: null },
+    collectsBankDetails: { type: Boolean, default: false },
     notifications: { type: Object, default: () => ({}) },
 })
 
-const tabs = [
+const tabs = computed(() => [
     { value: 'firma', label: 'Profil & Firma' },
-    { value: 'bank', label: 'Bankverbindung' },
+    props.collectsBankDetails ? { value: 'bank', label: 'Bankverbindung' } : null,
     { value: 'passwort', label: 'Passwort' },
     { value: 'benachrichtigungen', label: 'Benachrichtigungen' },
-]
+].filter(Boolean))
 
 const current = ref('firma')
 
 const companyForm = useForm({ ...props.company })
-const bankForm = useForm({ ...props.bank })
+const bankForm = useForm({ ...(props.bank ?? {}) })
 const notifyForm = useForm({ ...props.notifications })
 const passwordForm = useForm({ current_password: '', password: '', password_confirmation: '' })
 </script>
@@ -61,21 +62,22 @@ const passwordForm = useForm({ current_password: '', password: '', password_conf
             </form>
 
             <form
-                v-else-if="current === 'bank'"
+                v-else-if="current === 'bank' && collectsBankDetails"
                 class="rounded-card border border-gray-200 bg-white p-5"
                 novalidate
                 @submit.prevent="bankForm.post('/portal/einstellungen/bankverbindung', { preserveScroll: true })"
             >
                 <h2 class="text-eyebrow font-semibold uppercase text-gray-600">Bankverbindung</h2>
                 <p class="measure pt-2 text-sm leading-normal text-gray-600">
-                    Für die Abrechnung der monatlichen Vermittlungsprovision. Es wird zu keinem Zeitpunkt ein Betrag
-                    von diesem Konto eingezogen.
+                    Diese Angaben dienen ausschließlich der Abrechnung der monatlichen Vermittlungsprovision per
+                    Überweisung. Es wird zu keinem Zeitpunkt ein Betrag von diesem Konto eingezogen, und die
+                    Plattform wickelt keinerlei Zahlungen ab. Die Angabe ist freiwillig.
                 </p>
                 <ErrorSummary v-if="bankForm.hasErrors" :errors="bankForm.errors" class="mt-4" />
 
                 <div class="flex flex-col gap-5 pt-4">
-                    <BaseInput v-model="bankForm.bank_account_holder" label="Kontoinhaber" :error="bankForm.errors.bank_account_holder" required />
-                    <BaseInput v-model="bankForm.bank_iban" label="IBAN" placeholder="DE89 3704 0044 0532 0130 00" :error="bankForm.errors.bank_iban" required />
+                    <BaseInput v-model="bankForm.bank_account_holder" label="Kontoinhaber" :error="bankForm.errors.bank_account_holder" optional />
+                    <BaseInput v-model="bankForm.bank_iban" label="IBAN" placeholder="DE89 3704 0044 0532 0130 00" :error="bankForm.errors.bank_iban" optional />
                     <BaseInput v-model="bankForm.bank_bic" label="BIC" placeholder="COBADEFFXXX" :error="bankForm.errors.bank_bic" optional />
                 </div>
 

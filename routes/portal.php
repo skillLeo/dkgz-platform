@@ -22,8 +22,12 @@ Route::prefix('portal')
         // Incoming requests
         Route::get('/anfragen', [RequestController::class, 'index'])->name('requests');
         Route::get('/anfragen/{serviceRequest}', [RequestController::class, 'show'])->name('requests.show');
-        Route::post('/anfragen/{serviceRequest}/annehmen', [RequestController::class, 'accept'])->name('requests.accept');
-        Route::post('/anfragen/{serviceRequest}/ablehnen', [RequestController::class, 'decline'])->name('requests.decline');
+        // Rate-limited: accepting is a race, and a script hammering it would
+        // both distort that race and hold row locks the whole network waits on.
+        Route::post('/anfragen/{serviceRequest}/annehmen', [RequestController::class, 'accept'])
+            ->middleware('throttle:vermittlung')->name('requests.accept');
+        Route::post('/anfragen/{serviceRequest}/ablehnen', [RequestController::class, 'decline'])
+            ->middleware('throttle:vermittlung')->name('requests.decline');
         Route::get('/abgelehnt', [RequestController::class, 'declined'])->name('requests.declined');
 
         // Assignments

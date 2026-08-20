@@ -71,6 +71,11 @@ class DashboardController extends Controller
                 ->all(),
             'activity' => $this->activityTrail($assessor->id),
             'availability' => $assessor->is_available,
+            'cover' => [
+                'valid_until' => $assessor->liabilityCoverValidUntil(),
+                'has_lapsed' => $assessor->liabilityCoverHasLapsed(),
+                'expires_soon' => $assessor->liabilityCoverExpiresSoon(),
+            ],
         ]);
     }
 

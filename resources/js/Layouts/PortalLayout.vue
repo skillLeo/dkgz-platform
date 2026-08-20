@@ -10,6 +10,7 @@ import MobileBottomNav from '../Components/Layout/MobileBottomNav.vue'
 import MobileTopBar from '../Components/Layout/MobileTopBar.vue'
 import MobileMoreSheet from '../Components/Layout/MobileMoreSheet.vue'
 import FlashMessage from '../Components/Feedback/FlashMessage.vue'
+import LiabilityCoverBanner from '../Components/Domain/LiabilityCoverBanner.vue'
 import ConfirmDialog from '../Components/Feedback/ConfirmDialog.vue'
 import ToastStack from '../Components/Feedback/ToastStack.vue'
 import SessionExpiredDialog from '../Components/Feedback/SessionExpiredDialog.vue'
@@ -117,6 +118,7 @@ const onTab = (event) => {
                     class="min-w-0 flex-1 px-4 pb-[calc(4rem+env(safe-area-inset-bottom)+1rem)] pt-[calc(3.5rem+env(safe-area-inset-top)+1rem)] md:p-8"
                 >
                     <FlashMessage class="mb-5" />
+                    <LiabilityCoverBanner :cover="assessor?.cover ?? null" class="mb-5" />
                     <slot />
                 </main>
             </div>

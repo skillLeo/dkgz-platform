@@ -167,6 +167,7 @@ class ContentController extends Controller
         $this->authorize('update', $page);
 
         return Inertia::render('Admin/Seite', [
+            'isPlaceholder' => $page->is_placeholder,
             'page' => [
                 'id' => $page->id,
                 'slug' => $page->slug,
@@ -194,7 +195,7 @@ class ContentController extends Controller
             'body_de' => 'der Inhalt',
         ]);
 
-        $page->update($data);
+        $page->update(array_merge($data, ['is_placeholder' => false]));
 
         return back()->with('success', 'Die Seite wurde gespeichert.');
     }

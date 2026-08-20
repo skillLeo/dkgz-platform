@@ -11,9 +11,10 @@ const props = defineProps({
     latestMatches: { type: Array, default: () => [] },
     activity: { type: Array, default: () => [] },
     availability: { type: Boolean, default: true },
+    cover: { type: Object, default: null },
 })
 
-const { money, relativeTime, dateTime, deadline } = useGermanFormat()
+const { money, relativeTime, dateTime, deadline, date } = useGermanFormat()
 
 const page = usePage()
 
@@ -85,6 +86,18 @@ const cards = computed(() => [
                 Solange das so bleibt, erhalten Sie keine neuen Anfragen aus Ihrem Einsatzgebiet.
             </p>
         </div>
+
+        <p v-if="cover?.valid_until" class="flex items-center gap-2.5 pt-4">
+            <span
+                class="block h-1.5 w-1.5 shrink-0 rounded-full"
+                :class="cover.has_lapsed ? 'bg-danger' : cover.expires_soon ? 'bg-warning' : 'bg-success'"
+                aria-hidden="true"
+            />
+            <span class="text-sm text-gray-600">
+                Haftpflichtnachweis gültig bis
+                <span class="font-mono tabular-nums text-gray-800">{{ date(cover.valid_until) }}</span>
+            </span>
+        </p>
 
         <div class="grid grid-cols-1 items-start gap-6 pt-6 xl:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)]">
             <section class="rounded-card border border-gray-200 bg-white">

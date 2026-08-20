@@ -51,6 +51,11 @@ class AppServiceProvider extends ServiceProvider
 
         // Polling is deliberately generous: the portal hits it every 45 seconds
         // and a user may have several tabs open.
+        // Accepting is a race between partners; a script hammering it would
+        // distort that race and hold locks the rest of the network waits on.
+        RateLimiter::for('vermittlung', fn (Request $request) => Limit::perMinute(10)
+            ->by($request->user()?->id ?: $request->ip()));
+
         RateLimiter::for('polling', fn (Request $request) => Limit::perMinute(30)->by($request->user()?->id ?: $request->ip()));
 
         RateLimiter::for('smtp-test', fn (Request $request) => Limit::perMinute(3)->by($request->user()?->id ?: $request->ip()));

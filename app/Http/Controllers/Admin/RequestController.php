@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Actions\MatchRequestAction;
 use App\Http\Controllers\Controller;
+use App\Jobs\NotifyCustomerNoResponseJob;
 use App\Models\RequestMatch;
 use App\Models\ServiceRequest;
 use App\Models\ServiceType;
@@ -73,6 +74,11 @@ class RequestController extends Controller
         ]);
 
         return Inertia::render('Admin/Anfrage', [
+            'customerNotifiedAt' => $serviceRequest->customer_notified_at,
+            'canNotifyCustomer' => in_array($serviceRequest->status, [
+                ServiceRequest::STATUS_EXPIRED,
+                ServiceRequest::STATUS_UNANSWERED,
+            ], true) && filled($serviceRequest->customer_email),
             'request' => [
                 'id' => $serviceRequest->id,
                 'reference' => $serviceRequest->reference,
@@ -198,7 +204,31 @@ class RequestController extends Controller
             ServiceRequest::STATUS_ASSIGNED => 'Vergeben',
             ServiceRequest::STATUS_COMPLETED => 'Abgeschlossen',
             ServiceRequest::STATUS_CANCELLED => 'Storniert',
-            ServiceRequest::STATUS_EXPIRED => 'Abgelaufen',
+            ServiceRequest::STATUS_EXPIRED => 'Frist abgelaufen',
+            ServiceRequest::STATUS_UNANSWERED => 'Ohne Rückmeldung',
         ];
+    }
+
+    /**
+     * Sends the "we could not place this" mail again, by hand.
+     *
+     * The job refuses to send twice on its own, so the stamp is cleared first —
+     * a person choosing to resend has decided the customer needs telling again,
+     * usually because the first attempt bounced.
+     */
+    public function notifyCustomer(Request $request, ServiceRequest $serviceRequest): RedirectResponse
+    {
+        $this->authorize('update', $serviceRequest);
+
+        abort_unless(in_array($serviceRequest->status, [
+            ServiceRequest::STATUS_EXPIRED,
+            ServiceRequest::STATUS_UNANSWERED,
+        ], true), 422);
+
+        $serviceRequest->forceFill(['customer_notified_at' => null])->save();
+
+        NotifyCustomerNoResponseJob::dispatch($serviceRequest->id);
+
+        return back()->with('success', 'Die Nachricht an den Kunden wurde erneut in die Warteschlange gestellt.');
     }
 }
