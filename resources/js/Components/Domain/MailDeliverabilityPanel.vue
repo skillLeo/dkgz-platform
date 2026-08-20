@@ -16,6 +16,7 @@ import { useGermanFormat } from '../../Composables/useGermanFormat.js'
 const props = defineProps({
     check: { type: Object, default: null },
     presets: { type: Array, default: () => [] },
+    transportReady: { type: Boolean, default: true },
 })
 
 const emit = defineEmits(['apply-preset'])
@@ -61,6 +62,19 @@ const tone = {
                 <RefreshCw :size="14" :stroke-width="1.5" aria-hidden="true" />
                 Erneut prüfen
             </BaseButton>
+        </div>
+
+        <!--
+            Stated before anything about DNS: without a server to hand the mail
+            to, no record in the world makes it arrive.
+        -->
+        <div v-if="!transportReady" class="border-b border-gray-200 bg-danger/5 px-5 py-4">
+            <p class="text-base font-medium text-danger">Es ist kein Postausgangsserver hinterlegt</p>
+            <p class="measure pt-1 text-sm leading-normal text-gray-800">
+                Solange kein SMTP-Server eingetragen ist, verlässt keine einzige E-Mail die Plattform — weder an
+                Kunden noch an Partner. Tragen Sie Server, Port und Zugangsdaten unten ein oder wählen Sie einen
+                Anbieter. Die DNS-Einträge darunter sind erst danach von Bedeutung.
+            </p>
         </div>
 
         <p v-if="check && !check.available" class="border-b border-gray-200 bg-warning/5 px-5 py-3 text-sm text-warning">

@@ -24,6 +24,7 @@ const props = defineProps({
     brandingTokens: { type: Object, default: () => ({}) },
     deliverability: { type: Object, default: null },
     mailPresets: { type: Array, default: () => [] },
+    mailTransportReady: { type: Boolean, default: true },
 })
 
 const initial = {}
@@ -161,6 +162,7 @@ const submit = () => form.post(`/admin/einstellungen/${props.group}`, {
 
                 <MailDeliverabilityPanel
                     v-if="deliverability"
+                    :transport-ready="mailTransportReady"
                     :check="deliverability"
                     :presets="mailPresets"
                     class="mt-6"

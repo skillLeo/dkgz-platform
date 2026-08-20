@@ -33,6 +33,10 @@ class SettingsController extends Controller
             'deliverability' => in_array($group, ['integrations', 'email'], true)
                 ? MailDomainCheck::run()
                 : null,
+            // Empty host means no mail can leave at all, whatever the DNS says.
+            'mailTransportReady' => filled(config('mail.mailers.smtp.host'))
+                || filled(Settings::get('integrations.smtp_host'))
+                || config('mail.default') !== 'smtp',
             'mailPresets' => in_array($group, ['integrations', 'email'], true)
                 ? $this->mailPresets()
                 : [],
