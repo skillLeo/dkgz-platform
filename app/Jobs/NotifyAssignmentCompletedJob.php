@@ -45,6 +45,13 @@ class NotifyAssignmentCompletedJob implements ShouldQueue
             ->pluck('path')
             ->all();
 
+        // Available immediately: the token is created at completion, so the
+        // customer can rate straight from this mail rather than waiting for the
+        // separate reminder.
+        $reviewUrl = $assignment->review !== null && Settings::bool('features.review_flow', true)
+            ? route('review.show', $assignment->review->token)
+            : null;
+
         Mailer::send($request->customer_email, 'auftrag-abgeschlossen', [
             'eyebrow' => 'Vorgang abgeschlossen',
             'headline' => 'Ihr Gutachten liegt vor.',
@@ -67,9 +74,15 @@ class NotifyAssignmentCompletedJob implements ShouldQueue
                 ])->all(),
                 ['k' => 'Honorar netto', 'v' => Formatter::money($assignment->fee_cents), 'mono' => true],
             ])),
-            'cta' => 'Vorgang ansehen',
-            'cta_url' => route('request.confirmation', $request->reference),
-            'note' => 'Die Rechnung stellt der Sachverständige. DKGZ ist nicht Vertragspartner der Begutachtung und stellt Ihnen keine Kosten in Rechnung.',
+            // The rating is the one thing we actually want the customer to do
+            // next, so it is the button — not a sentence mentioning a link that
+            // arrives separately days later.
+            'cta' => $reviewUrl !== null ? 'Jetzt bewerten' : 'Vorgang ansehen',
+            'cta_url' => $reviewUrl ?? route('request.confirmation', $request->reference),
+            'bewertung_url' => $reviewUrl,
+            'note' => $reviewUrl !== null
+                ? 'Ihre Rückmeldung hilft uns, das Netz geprüfter Sachverständiger zu verbessern — sie dauert weniger als eine Minute. Die Rechnung stellt der Sachverständige. DKGZ ist nicht Vertragspartner der Begutachtung und stellt Ihnen keine Kosten in Rechnung.'
+                : 'Die Rechnung stellt der Sachverständige. DKGZ ist nicht Vertragspartner der Begutachtung und stellt Ihnen keine Kosten in Rechnung.',
         ], attachments: $attachments, related: $assignment);
 
         if (Settings::bool('features.review_flow', true) && $assignment->review !== null) {

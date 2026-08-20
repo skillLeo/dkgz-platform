@@ -134,3 +134,24 @@ invoiced.
   is gated on the two documents only.
 - The global `business.commission_rate` setting is hidden from the UI but the row
   survives, so a rollback does not lose the configured value.
+
+## D-17 · The request flow stays one page
+
+Client change request, section 4, asks for a request-flow header showing
+"current request progress". The form was deliberately built as a single page —
+seven required fields, under two minutes — and there is no wizard to show
+progress through.
+
+A numbered stepper over one step would be theatre, so the flow header carries a
+single static label ("Ihre Anfrage") instead. Logo, a back chevron where there
+is somewhere to go, and an exit that confirms before discarding typed input. No
+footer, no navigation, no announcement bar.
+
+## D-18 · No fee figures on public pages
+
+Client change request, section 5. The worked example (850,00 € / 127,50 €) is
+removed from the public partner page and replaced with a description of the
+model: a fixed fee per assessment type, shown to the partner when a request
+arrives, varying by service. The figure is still shown to the assessor once they
+are looking at an actual request — that is an authenticated context and a
+different question.

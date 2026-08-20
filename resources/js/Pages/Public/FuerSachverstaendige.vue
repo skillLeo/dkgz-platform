@@ -5,22 +5,15 @@ import PublicLayout from '../../Layouts/PublicLayout.vue'
 import SectionLabel from '../../Components/Layout/SectionLabel.vue'
 import BaseInput from '../../Components/Base/BaseInput.vue'
 import BaseButton from '../../Components/Base/BaseButton.vue'
-import MoneyValue from '../../Components/Data/MoneyValue.vue'
 import ImageSlot from '../../Components/Layout/ImageSlot.vue'
-import { useGermanFormat } from '../../Composables/useGermanFormat.js'
 
 const props = defineProps({
     content: { type: Object, default: () => ({}) },
-    commissionRate: { type: Number, default: 15 },
     registrationOpen: { type: Boolean, default: true },
 })
 
-const { percent, money } = useGermanFormat()
 const t = (section, field, fallback = '') => props.content?.[section]?.[field] ?? fallback
 
-// The worked example from the client's brief: 850,00 € at 15 % leaves 722,50 €.
-const exampleFee = 85_000
-const exampleCommission = Math.round(exampleFee * props.commissionRate / 100)
 
 const requirements = ['punkt_1', 'punkt_2', 'punkt_3', 'punkt_4', 'punkt_5', 'punkt_6']
 </script>
@@ -53,37 +46,35 @@ const requirements = ['punkt_1', 'punkt_2', 'punkt_3', 'punkt_4', 'punkt_5', 'pu
                 <h2 class="text-h2 font-semibold text-navy-700">{{ t('provision', 'ueberschrift') }}</h2>
                 <p class="measure pt-4 text-base leading-normal text-gray-600">{{ t('provision', 'text') }}</p>
 
-                <table class="mt-8 w-full border-collapse border-t border-b border-gray-200">
-                    <thead>
-                        <tr>
-                            <th scope="col" class="border-b border-gray-200 py-3 pr-4 text-left text-eyebrow font-semibold uppercase text-gray-600">Position</th>
-                            <th scope="col" class="border-b border-gray-200 px-4 py-3 text-left text-eyebrow font-semibold uppercase text-gray-600">Regel</th>
-                            <th scope="col" class="border-b border-gray-200 py-3 pl-4 text-right text-eyebrow font-semibold uppercase text-gray-600">Beispiel</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td class="border-b border-gray-100 py-3.5 pr-4 text-sm text-gray-800">Auftragswert (netto)</td>
-                            <td class="border-b border-gray-100 px-4 py-3.5 text-sm text-gray-600">Vom Sachverständigen nach Abschluss erfasst</td>
-                            <td class="border-b border-gray-100 py-3.5 pl-4 text-right"><MoneyValue :cents="exampleFee" /></td>
-                        </tr>
-                        <tr>
-                            <td class="border-b border-gray-100 py-3.5 pr-4 text-sm text-gray-800">Vermittlungsprovision</td>
-                            <td class="border-b border-gray-100 px-4 py-3.5 text-sm text-gray-600">{{ percent(commissionRate) }} des Netto-Honorars</td>
-                            <td class="border-b border-gray-100 py-3.5 pl-4 text-right"><MoneyValue :cents="exampleCommission" /></td>
-                        </tr>
-                        <tr>
-                            <td class="border-b border-gray-100 py-3.5 pr-4 text-sm text-gray-800">Abgelehnte Anfragen</td>
-                            <td class="border-b border-gray-100 px-4 py-3.5 text-sm text-gray-600">Keine Berechnung, keine Nachteile bei der Verteilung</td>
-                            <td class="border-b border-gray-100 py-3.5 pl-4 text-right"><MoneyValue :cents="0" /></td>
-                        </tr>
-                        <tr>
-                            <td class="border-t-2 border-navy-700 py-3.5 pr-4 text-sm font-medium text-navy-700">Ihr Anteil im Beispiel</td>
-                            <td class="border-t-2 border-navy-700 px-4 py-3.5 text-sm text-gray-600">Abrechnung monatlich, Sammelrechnung</td>
-                            <td class="border-t-2 border-navy-700 py-3.5 pl-4 text-right"><MoneyValue :cents="exampleFee - exampleCommission" emphasis /></td>
-                        </tr>
-                    </tbody>
-                </table>
+                <dl class="border-t border-gray-200">
+                    <div class="grid gap-1 border-b border-gray-100 py-4 sm:grid-cols-[minmax(0,18rem)_minmax(0,1fr)] sm:gap-6">
+                        <dt class="text-sm font-medium text-gray-800">Feste Gebühr je Gutachtenart</dt>
+                        <dd class="measure text-sm leading-normal text-gray-600">
+                            DKGZ berechnet keinen Prozentsatz Ihres Honorars, sondern einen festen Betrag je
+                            vermitteltem Auftrag. Wie hoch er ist, hängt von der Art des Gutachtens ab.
+                        </dd>
+                    </div>
+                    <div class="grid gap-1 border-b border-gray-100 py-4 sm:grid-cols-[minmax(0,18rem)_minmax(0,1fr)] sm:gap-6">
+                        <dt class="text-sm font-medium text-gray-800">Vor Ihrer Entscheidung sichtbar</dt>
+                        <dd class="measure text-sm leading-normal text-gray-600">
+                            Der genaue Betrag steht bei jeder Anfrage, die Sie erreicht — bevor Sie annehmen.
+                            Nach der Annahme ändert er sich für diesen Auftrag nicht mehr.
+                        </dd>
+                    </div>
+                    <div class="grid gap-1 border-b border-gray-100 py-4 sm:grid-cols-[minmax(0,18rem)_minmax(0,1fr)] sm:gap-6">
+                        <dt class="text-sm font-medium text-gray-800">Nur bei Abschluss</dt>
+                        <dd class="measure text-sm leading-normal text-gray-600">
+                            Keine Grundgebühr, keine Kosten pro Anfrage und keine Berechnung für Anfragen, die
+                            Sie ablehnen. Eine Ablehnung wirkt sich nicht auf die weitere Verteilung aus.
+                        </dd>
+                    </div>
+                    <div class="grid gap-1 py-4 sm:grid-cols-[minmax(0,18rem)_minmax(0,1fr)] sm:gap-6">
+                        <dt class="text-sm font-medium text-gray-800">Abrechnung</dt>
+                        <dd class="measure text-sm leading-normal text-gray-600">
+                            Monatlich als Sammelrechnung über die im Berichtsmonat abgeschlossenen Aufträge.
+                        </dd>
+                    </div>
+                </dl>
 
                 <p class="pt-12 text-eyebrow font-semibold uppercase text-gray-600">{{ t('voraussetzungen', 'ueberschrift') }}</p>
                 <div class="grid grid-cols-1 gap-x-8 gap-y-3.5 pt-5 sm:grid-cols-2">

@@ -62,7 +62,6 @@ class PublicController extends Controller
     {
         return Inertia::render('Public/FuerSachverstaendige', [
             'content' => Content::page('partner'),
-            'commissionRate' => Settings::commissionRate(),
             'registrationOpen' => Settings::bool('features.self_registration', true),
         ]);
     }

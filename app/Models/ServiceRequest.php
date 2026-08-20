@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\CarbonInterface;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -87,18 +88,31 @@ class ServiceRequest extends Model
      * Reference in the format DKGZ-YYYY-NNNNN, sequential within the year.
      * Called inside the submission transaction so the counter cannot race.
      */
-    public static function nextReference(?int $year = null): string
+    /**
+     * The customer's reference: `DKGZ` + two-digit year + two-digit month + a
+     * four-digit sequence that restarts each month, e.g. `DKGZ26081234`.
+     *
+     * The sequence is derived from the highest reference already issued in that
+     * month rather than a counter, so it cannot drift out of step with reality.
+     * References issued under the earlier `DKGZ-YYYY-NNNNN` format are left
+     * exactly as they are — a reference a customer already holds must keep
+     * matching the one in the system.
+     */
+    public static function nextReference(?CarbonInterface $moment = null): string
     {
-        $year ??= (int) now()->format('Y');
+        $moment ??= now();
+        $prefix = 'DKGZ'.$moment->format('ym');
 
         $last = static::withTrashed()
-            ->where('reference', 'like', "DKGZ-{$year}-%")
+            ->where('reference', 'like', "{$prefix}%")
             ->orderByDesc('reference')
             ->value('reference');
 
-        $sequence = $last ? ((int) substr($last, -5)) + 1 : 1;
+        $sequence = $last === null ? 1 : ((int) substr($last, -4)) + 1;
 
-        return sprintf('DKGZ-%d-%05d', $year, $sequence);
+        // Four digits allow 9,999 requests in one month; beyond that the month
+        // rolls into five rather than silently colliding.
+        return $prefix.str_pad((string) $sequence, 4, '0', STR_PAD_LEFT);
     }
 
     public function isOpen(): bool
@@ -148,10 +162,10 @@ class ServiceRequest extends Model
         return mb_substr($parts[0], 0, 1).'. '.end($parts);
     }
 
-    /** "DKGZ-2026-04812" → "04812", the form used in compact lists. */
+    /** "DKGZ26081234" → "1234", the form used in compact lists. */
     public function shortReference(): string
     {
-        return str($this->reference)->afterLast('-')->value();
+        return substr($this->reference, -4);
     }
 
     public function locationLabel(): string

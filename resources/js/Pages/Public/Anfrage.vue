@@ -1,8 +1,8 @@
 <script setup>
 import { onMounted, ref } from 'vue'
-import { Head, useForm } from '@inertiajs/vue3'
+import { useForm } from '@inertiajs/vue3'
 import { Check } from 'lucide-vue-next'
-import PublicLayout from '../../Layouts/PublicLayout.vue'
+import RequestFlowLayout from '../../Layouts/RequestFlowLayout.vue'
 import SectionLabel from '../../Components/Layout/SectionLabel.vue'
 import BaseInput from '../../Components/Base/BaseInput.vue'
 import BaseSelect from '../../Components/Base/BaseSelect.vue'
@@ -73,9 +73,8 @@ const submit = () => form.post('/anfrage', { forceFormData: true })
 </script>
 
 <template>
-    <Head title="Gutachter anfragen" />
 
-    <PublicLayout :sticky-cta="false">
+    <RequestFlowLayout title="Anfrage" :dirty="form.isDirty">
         <div class="bg-gray-50">
             <div class="mx-auto grid w-full max-w-(--container-wide) grid-cols-1 gap-12 px-4 py-16 md:px-6 lg:grid-cols-[minmax(0,720px)_300px] lg:items-start">
                 <div class="min-w-0">
@@ -213,5 +212,5 @@ const submit = () => form.post('/anfrage', { forceFormData: true })
                 </aside>
             </div>
         </div>
-    </PublicLayout>
+    </RequestFlowLayout>
 </template>

@@ -85,7 +85,7 @@ it('carries a request from the public form all the way to a settled review', fun
     $request = ServiceRequest::firstWhere('customer_email', 'm.reinhardt@web.test');
 
     expect($request)->not->toBeNull()
-        ->and($request->reference)->toMatch('/^DKGZ-\d{4}-\d{5}$/')
+        ->and($request->reference)->toMatch('/^DKGZ\d{4}\d{4}$/')
         ->and($request->consent_at)->not->toBeNull();
 
     $response->assertRedirect(route('request.confirmation', $request->reference));

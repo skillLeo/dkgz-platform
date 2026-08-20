@@ -26,7 +26,7 @@ class ServiceRequestFactory extends Factory
         $make = fake()->randomElement(array_keys($makes));
 
         return [
-            'reference' => sprintf('DKGZ-%d-%05d', now()->year, fake()->unique()->numberBetween(1, 99999)),
+            'reference' => 'DKGZ'.now()->format('ym').str_pad((string) fake()->unique()->numberBetween(1, 9999), 4, '0', STR_PAD_LEFT),
             'service_type_id' => ServiceType::factory(),
             'postal_code' => fake()->numerify('#####'),
             'city' => fake('de_DE')->city(),

@@ -49,7 +49,7 @@ const labels = { name: 'Name', email: 'E-Mail-Adresse', subject: 'Betreff', mess
                         </div>
                         <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
                             <BaseInput id="phone" v-model="form.phone" label="Telefon" autocomplete="tel" numeric :error="form.errors.phone" optional />
-                            <BaseInput id="reference" v-model="form.reference" label="Vorgangsnummer" placeholder="DKGZ-2026-00000" mono :error="form.errors.reference" optional />
+                            <BaseInput id="reference" v-model="form.reference" label="Vorgangsnummer" placeholder="DKGZ26080000" mono :error="form.errors.reference" optional />
                         </div>
                         <BaseInput id="subject" v-model="form.subject" label="Betreff" :error="form.errors.subject" required />
                         <BaseTextarea id="message" v-model="form.message" label="Nachricht" :rows="6" :error="form.errors.message" required />

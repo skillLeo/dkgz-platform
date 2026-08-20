@@ -232,13 +232,22 @@ describe('invoice numbering', function () {
 });
 
 describe('reference numbering', function () {
-    it('runs sequentially within a year', function () {
-        $year = (int) now()->format('Y');
+    it('runs sequentially within the month', function () {
+        expect(ServiceRequest::nextReference())->toBe('DKGZ'.now()->format('ym').'0001');
 
-        expect(ServiceRequest::nextReference($year))->toBe(sprintf('DKGZ-%d-00001', $year));
+        ServiceRequest::factory()->create(['reference' => 'DKGZ'.now()->format('ym').'0001']);
 
-        ServiceRequest::factory()->create(['reference' => sprintf('DKGZ-%d-00001', $year)]);
+        expect(ServiceRequest::nextReference())->toBe('DKGZ'.now()->format('ym').'0002');
+    });
 
-        expect(ServiceRequest::nextReference($year))->toBe(sprintf('DKGZ-%d-00002', $year));
+    it('restarts the sequence in a new month', function () {
+        ServiceRequest::factory()->create(['reference' => 'DKGZ'.now()->format('ym').'0042']);
+
+        expect(ServiceRequest::nextReference(now()->addMonthNoOverflow()))
+            ->toBe('DKGZ'.now()->addMonthNoOverflow()->format('ym').'0001');
+    });
+
+    it('matches the format the client asked for', function () {
+        expect(ServiceRequest::nextReference())->toMatch('/^DKGZ\d{4}\d{4}$/');
     });
 });

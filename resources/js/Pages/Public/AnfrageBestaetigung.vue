@@ -1,7 +1,6 @@
 <script setup>
-import { Head } from '@inertiajs/vue3'
 import { Check } from 'lucide-vue-next'
-import PublicLayout from '../../Layouts/PublicLayout.vue'
+import RequestFlowLayout from '../../Layouts/RequestFlowLayout.vue'
 import BaseButton from '../../Components/Base/BaseButton.vue'
 import { usePage } from '@inertiajs/vue3'
 
@@ -18,9 +17,8 @@ const step = (n, part) => t('ablauf', `schritt_${n}_${part}`).replace(':plz', pr
 </script>
 
 <template>
-    <Head title="Anfrage eingegangen" />
 
-    <PublicLayout :sticky-cta="false">
+    <RequestFlowLayout title="Anfrage bestätigt" label="Anfrage eingegangen">
         <div class="mx-auto w-full max-w-(--container-prose) px-4 py-20 md:px-6 md:py-24">
             <div class="grid h-14 w-14 place-items-center rounded-full border-2 border-navy-700 text-navy-700">
                 <Check :size="26" :stroke-width="1.5" aria-hidden="true" />
@@ -56,5 +54,5 @@ const step = (n, part) => t('ablauf', `schritt_${n}_${part}`).replace(':plz', pr
                 </span>
             </div>
         </div>
-    </PublicLayout>
+    </RequestFlowLayout>
 </template>

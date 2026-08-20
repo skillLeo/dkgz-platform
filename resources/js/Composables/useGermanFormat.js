@@ -169,7 +169,7 @@ export function useGermanFormat() {
         return `${formatted} ${units[unit]}`
     }
 
-    /** "DKGZ-2026-04817" stays as-is; used to mark reference numbers as mono. */
+    /** "DKGZ26084817" stays as-is; used to mark reference numbers as mono. */
     const reference = (value) => (value ? String(value) : '')
 
     return {
