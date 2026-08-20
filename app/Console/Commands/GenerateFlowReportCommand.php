@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Models\EmailTemplate;
 use App\Models\Page;
 use App\Models\ServiceType;
+use App\Support\Formatter;
 use Illuminate\Console\Command;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Support\Carbon;
@@ -51,6 +52,7 @@ class GenerateFlowReportCommand extends Command
         'passwort-zuruecksetzen' => ['Nutzer', 'Zurücksetzen angefordert'],
         'provisionsabrechnung' => ['Partner', 'Monatliche Abrechnung'],
         'haftpflicht-laeuft-ab' => ['Partner', '30, 14 und 3 Tage vor Ablauf sowie am Ablauftag'],
+        'anfrage-keine-rueckmeldung' => ['Kunde', 'Alle Partner abgelehnt, manuell geschlossen oder kein Partner im Gebiet'],
         'kontaktanfrage' => ['Büro', 'Kontaktformular abgesendet'],
         'testmail' => ['Gewählte Adresse', 'Administration prüft den Versand'],
     ];
@@ -292,16 +294,28 @@ class GenerateFlowReportCommand extends Command
         $md .= "## Zustände einer Anfrage\n\n";
         $md .= "| Status | Bedeutung |\n|---|---|\n";
         $md .= "| `new` | Eingegangen. Mit `matched_count = 0` bedeutet das: kein Partner im Gebiet. |\n";
-        $md .= "| `matched` | An mindestens einen Partner vermittelt, Frist läuft. |\n";
+        $md .= "| `matched` | An mindestens einen Partner vermittelt und offen. |\n";
         $md .= "| `assigned` | Ein Partner hat angenommen, für alle anderen geschlossen. |\n";
         $md .= "| `completed` | Gutachten und Rechnung liegen vor, Honorar erfasst. |\n";
-        $md .= "| `unanswered` | Alle vermittelten Partner haben abgelehnt. |\n";
-        $md .= "| `expired` | Die Annahmefrist verstrich ohne Antwort. |\n";
-        $md .= "| `cancelled` | Von der Administration storniert. |\n\n";
-        $md .= '`unanswered` und `expired` bleiben getrennt, weil sie Unterschiedliches über die ';
-        $md .= 'Abdeckung im Gebiet aussagen: einmal wurde geantwortet und abgelehnt, einmal gar nicht ';
-        $md .= 'reagiert. In allen drei Fällen ohne Vermittlung erhält der Kunde die Nachricht ';
-        $md .= "`anfrage-keine-rueckmeldung`.\n";
+        $md .= "| `unanswered` | Alle vermittelten Partner haben abgelehnt. Bleibt für eine erneute Vermittlung offen. |\n";
+        $md .= "| `cancelled` | Von der Administration manuell geschlossen, mit Begründung. |\n\n";
+        $md .= 'Es gibt **keine Annahmefrist**. Eine vermittelte Anfrage bleibt offen, bis ein Partner ';
+        $md .= 'sie übernimmt oder die Administration sie mit Begründung schließt. In jedem Fall ohne ';
+        $md .= "Vermittlung erhält der Kunde die Nachricht `anfrage-keine-rueckmeldung`.\n\n";
+
+        $md .= "## Gebührenmodell\n\n";
+        $md .= 'DKGZ berechnet je vermitteltem Auftrag einen **festen Betrag**, hinterlegt pro ';
+        $md .= 'Gutachtenart unter Administration → Leistungsarten. Der Betrag ist dem Partner vor der ';
+        $md .= 'Annahme sichtbar und wird bei der Annahme festgeschrieben, sodass eine spätere Änderung ';
+        $md .= 'bereits angenommene Aufträge nicht berührt. Ältere Abrechnungen aus der Zeit des ';
+        $md .= "Prozentmodells bleiben unverändert und sind über `fee_type` als solche erkennbar.\n\n";
+
+        $md .= "| Gutachtenart | DKGZ-Gebühr |\n|---|---|\n";
+
+        foreach ($types as $type) {
+            $fee = $type->dkgz_fee_cents === null ? '— nicht festgelegt' : Formatter::money($type->dkgz_fee_cents);
+            $md .= "| {$type->name_de} | {$fee} |\n";
+        }
 
         return $md;
     }

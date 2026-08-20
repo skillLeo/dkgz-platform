@@ -54,7 +54,7 @@ Es gibt kein Konto, keine Registrierung, keinen Angebotsvergleich.
 - Die Spalte **Kunde** zeigt einen grauen Balken mit Schloss: *„Sichtbar nach Annahme“*.
   Name, Telefon und E-Mail werden nicht nur ausgeblendet — sie werden gar nicht erst
   an den Browser gesendet.
-- Die Spalte **Frist** zeigt eine echte Uhrzeit.
+- Die Spalte **DKGZ-Gebühr** zeigt den festen Betrag für diese Gutachtenart — vor jeder Entscheidung.
 - Partner 3 (nicht verfügbar) erhält die Anfrage nicht.
 
 ---
@@ -62,8 +62,8 @@ Es gibt kein Konto, keine Registrierung, keinen Angebotsvergleich.
 ## 3 · Annahme — und der Wettlauf
 
 8. Öffnen Sie als **Partner 1** die Anfrage über **Details**.
-9. Zeigen Sie das Feld **Frist zur Annahme** und den Satz
-   *„Danach geht die Anfrage an weitere Partner im Gebiet.“*
+9. Zeigen Sie die **DKGZ-Gebühr** und den Hinweis, dass die Anfrage offen bleibt,
+   bis ein Partner sie übernimmt — es läuft keine Frist.
 10. Klicken Sie **Auftrag annehmen** und bestätigen Sie.
 
 **Zu zeigen:**
@@ -90,18 +90,21 @@ Es gibt kein Konto, keine Registrierung, keinen Angebotsvergleich.
 ## 5 · Abschluss und Provision
 
 15. Klicken Sie **Auftrag abschließen**.
-16. Tragen Sie als Honorar **850,00** ein.
+16. Das Honorarfeld ist **optional** — es dient nur Ihren eigenen Unterlagen und
+    wird für den Abschluss nicht benötigt. Tragen Sie zur Veranschaulichung
+    **850,00** ein.
 
-**Zu zeigen:** Noch während der Eingabe rechnet der Dialog mit:
-- DKGZ-Vermittlungsprovision 15 % → **127,50 €**
-- Verbleibt bei Ihnen → **722,50 €**
+**Zu zeigen:** Der Dialog rechnet nichts aus. Die **DKGZ-Gebühr** steht bereits
+fest — sie wurde bei der Annahme festgeschrieben und ändert sich nicht mehr,
+auch wenn die Administration den Betrag für diese Leistung später anpasst.
 
 17. Setzen Sie den Haken und klicken Sie **Abschluss bestätigen**.
 
 **Zu zeigen:**
 - Der Kunde erhält Gutachten und Rechnung per E-Mail.
-- Im Portal unter **Provisionen** steht die Provision mit dem Satz, der zum
-  Zeitpunkt des Abschlusses galt — spätere Änderungen des Satzes ändern sie nie.
+- Im Portal unter **Provisionen** steht die Gebühr, die bei der Annahme galt.
+  Ältere Einträge aus der Zeit des Prozentmodells bleiben unverändert stehen und
+  sind als solche gekennzeichnet.
 - **Es wird an keiner Stelle Geld bewegt.** Die Plattform erfasst nur, was
   berechnet wurde.
 
@@ -109,7 +112,8 @@ Es gibt kein Konto, keine Registrierung, keinen Angebotsvergleich.
 
 ## 6 · Die Bewertung
 
-18. Rufen Sie die Bewertungs-E-Mail beim Kunden ab und öffnen Sie den Link.
+18. Die Abschluss-E-Mail an den Kunden enthält bereits einen direkten Link zur
+    Bewertung. Öffnen Sie ihn.
 19. Vergeben Sie **9 von 10** und senden Sie ab.
 
 **Zu zeigen:** Auf dem Telefon bricht die Skala auf 5 × 2 mit größeren Feldern um.
@@ -125,6 +129,8 @@ weitergeleitet werden; darunter wird stattdessen intern nachgefragt.
 **Zu zeigen:**
 - **Dashboard:** sechs Kennzahlen, Anfragen pro Woche, und **Erfordert Aufmerksamkeit**
   — jeder Vorgang, den die Plattform nicht allein lösen kann, mit Angabe, seit wann.
+- **Anfragen → Detail:** Sie können einen Vorgang jederzeit **manuell schließen**
+  — mit Begründung, und der Kunde wird dabei benachrichtigt.
 - **Anfragen → Detail:** der vollständige **Vermittlungsverlauf** — wer wann
   benachrichtigt wurde, wer hingesehen hat, wie schnell geantwortet wurde.
 - **Sachverständige → Detail:** Annahmequote, die eingereichten Nachweise als
@@ -140,7 +146,9 @@ weitergeleitet werden; darunter wird stattdessen intern nachgefragt.
 
 Zum Abschluss ausdrücklich benennen:
 
-- **Keine Zahlungsabwicklung.** Nirgends. Die Provision wird erfasst, nicht eingezogen.
+- **Keine Zahlungsabwicklung.** Nirgends. Die Gebühr wird erfasst, nicht eingezogen.
 - **Kein Angebotsvergleich.** Der Kunde wählt nicht aus — der erste verfügbare
   Partner übernimmt.
 - **Kein Kundenkonto.** Eine Anfrage, eine Referenznummer, fertig.
+- **Keine Frist.** Eine Anfrage bleibt offen, bis ein Partner sie übernimmt oder
+  die Administration sie schließt.
