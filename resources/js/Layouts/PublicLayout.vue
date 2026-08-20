@@ -64,14 +64,14 @@ onUnmounted(() => window.removeEventListener('scroll', onScroll))
                 <Link href="/" class="flex items-center gap-3.5" aria-label="Zur Startseite">
                     <span class="grid h-10 w-10 shrink-0 place-items-center rounded-full border border-navy-700" aria-hidden="true">
                         <span
-                            class="grid h-[31px] w-[31px] place-items-center rounded-full border"
+                            class="grid h-(--spacing-seal-ring) w-(--spacing-seal-ring) place-items-center rounded-full border"
                             style="border-color: var(--dkgz-accent)"
                         >
-                            <span class="text-[7px] font-bold tracking-[0.04em] text-navy-700">DKGZ</span>
+                            <span class="text-seal-3xs font-bold tracking-[0.04em] text-navy-700">DKGZ</span>
                         </span>
                     </span>
-                    <span class="text-[24px] font-bold leading-none tracking-[-0.022em] text-navy-700">DKGZ</span>
-                    <span class="h-[26px] w-px shrink-0" style="background: var(--dkgz-accent)" aria-hidden="true" />
+                    <span class="text-mark font-bold leading-none tracking-[-0.022em] text-navy-700">DKGZ</span>
+                    <span class="h-(--spacing-mark-rule) w-px shrink-0" style="background: var(--dkgz-accent)" aria-hidden="true" />
                     <span class="hidden text-seal font-semibold uppercase leading-[1.5] text-gray-600 sm:block">
                         Deutsche<br>KFZ-Gutachterzentrale
                     </span>
@@ -153,7 +153,7 @@ onUnmounted(() => window.removeEventListener('scroll', onScroll))
                             <span class="h-6 w-px shrink-0" style="background: var(--dkgz-accent)" aria-hidden="true" />
                             <span class="text-seal font-semibold uppercase leading-[1.5] text-white/72">Deutsche<br>KFZ-Gutachterzentrale</span>
                         </div>
-                        <p class="max-w-[44ch] pt-5 text-sm leading-relaxed text-white/60">
+                        <p class="measure-brand pt-5 text-sm leading-relaxed text-white/60">
                             {{ t('fuss', 'beschreibung', 'Bundesweite Vermittlung von Kfz-Sachverständigen. Eine Anfrage, ein Ansprechpartner, geprüfte Partner in allen PLZ-Gebieten.') }}
                         </p>
                         <div v-if="app.phone" class="flex items-center gap-5 pt-5">
@@ -197,7 +197,7 @@ onUnmounted(() => window.removeEventListener('scroll', onScroll))
 
                 <div class="mt-12 flex flex-wrap items-center justify-between gap-6 border-t border-white/12 pt-6">
                     <span class="text-sm text-white/45">© {{ new Date().getFullYear() }} DKGZ Deutsche KFZ-Gutachterzentrale</span>
-                    <span class="max-w-[64ch] text-sm text-white/45">
+                    <span class="measure-footer text-sm text-white/45">
                         {{ t('fuss', 'rechtshinweis', 'DKGZ ist eine Vermittlungsstelle. Das Gutachten erstellt der vermittelte Sachverständige.') }}
                     </span>
                 </div>

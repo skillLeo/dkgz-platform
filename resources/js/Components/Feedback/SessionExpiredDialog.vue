@@ -23,7 +23,7 @@ defineProps({
 
             <div class="absolute inset-0 grid place-items-center p-5">
                 <div
-                    class="w-full max-w-[480px] rounded-card bg-white p-8 shadow-(--shadow-3)"
+                    class="w-full max-w-(--container-dialog) rounded-card bg-white p-8 shadow-(--shadow-3)"
                     role="alertdialog"
                     aria-modal="true"
                     aria-labelledby="sitzung-titel"

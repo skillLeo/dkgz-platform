@@ -30,14 +30,14 @@ const steps = computed(() => [
     <AuthLayout
         eyebrow="Registrierung"
         title="Ihre Registrierung wird geprüft"
-        description="Wir prüfen Ihre Angaben und Nachweise. Sobald Ihr Zugang freigegeben ist, erhalten Sie eine E-Mail."
+        description="DKGZ prüft jede Partnerregistrierung einzeln — Qualifikationsnachweis, Haftpflicht und Einsatzgebiet. Sobald die Freigabe erteilt ist, erhalten Sie eine E-Mail und sehen hier Ihre ersten Anfragen."
         panel-title="Ihre Unterlagen liegen uns vor."
         panel-text="Die Prüfung erfolgt manuell. In der Regel melden wir uns innerhalb von zwei Werktagen."
     >
         <p v-if="assessor?.company_name" class="pb-6 text-base text-gray-800">
             {{ assessor.company_name }}
-            <span v-if="assessor.submitted_at" class="block pt-1 font-mono text-xs tabular-nums text-gray-400">
-                Eingegangen am {{ dateTime(assessor.submitted_at) }}
+            <span v-if="assessor.reference || assessor.submitted_at" class="block pt-1 font-mono text-xs tabular-nums text-gray-400">
+                <template v-if="assessor.reference">{{ assessor.reference }} · </template>{{ dateTime(assessor.submitted_at) }}
             </span>
         </p>
 

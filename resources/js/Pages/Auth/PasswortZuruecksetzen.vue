@@ -5,10 +5,12 @@ import BaseInput from '../../Components/Base/BaseInput.vue'
 import BasePasswordInput from '../../Components/Base/BasePasswordInput.vue'
 import BaseButton from '../../Components/Base/BaseButton.vue'
 import ErrorSummary from '../../Components/Feedback/ErrorSummary.vue'
+import AuthNotice from '../../Components/Feedback/AuthNotice.vue'
 
 const props = defineProps({
     token: { type: String, required: true },
     email: { type: String, default: '' },
+    expired: { type: Boolean, default: false },
 })
 
 const form = useForm({
@@ -28,9 +30,24 @@ const labels = { email: 'E-Mail-Adresse', password: 'Passwort' }
         title="Neues Passwort vergeben"
         description="Wählen Sie ein Passwort, das Sie nirgendwo sonst verwenden."
         panel-title="Neues Passwort vergeben."
-        panel-text="Nach dem Speichern melden Sie sich mit dem neuen Passwort an."
+        panel-text="Dieser Link ist 24 Stunden gültig. Nach dem Speichern melden Sie sich mit dem neuen Passwort an."
     >
-        <form novalidate @submit.prevent="form.post('/passwort-zuruecksetzen')">
+        <!-- Expired link: the design offers a new one rather than a dead end -->
+        <template v-if="expired">
+            <AuthNotice tone="warning" title="Link abgelaufen">
+                Der Link zum Zurücksetzen war 24 Stunden gültig und ist nicht mehr verwendbar.
+            </AuthNotice>
+
+            <div class="pt-6">
+                <p class="text-sm font-medium text-gray-800">Neuen Link anfordern</p>
+                <p class="pt-1 text-sm leading-normal text-gray-600">
+                    Wir senden Ihnen einen neuen Link an die hinterlegte Adresse.
+                </p>
+                <BaseButton href="/passwort-vergessen" block class="mt-4">Neuen Link anfordern</BaseButton>
+            </div>
+        </template>
+
+        <form v-else novalidate @submit.prevent="form.post('/passwort-zuruecksetzen')">
             <ErrorSummary v-if="form.hasErrors" :errors="form.errors" :labels="labels" class="mb-6" />
 
             <div class="flex flex-col gap-5">
@@ -60,7 +77,10 @@ const labels = { email: 'E-Mail-Adresse', password: 'Passwort' }
                     v-model="form.password_confirmation"
                     label="Passwort wiederholen"
                     autocomplete="new-password"
-                    :error="form.errors.password_confirmation"
+                    :error="form.errors.password_confirmation
+                        || (form.password_confirmation && form.password !== form.password_confirmation
+                            ? 'Die Passwörter stimmen nicht überein.'
+                            : '')"
                     required
                 />
             </div>

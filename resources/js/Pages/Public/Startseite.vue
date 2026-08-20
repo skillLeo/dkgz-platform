@@ -82,7 +82,7 @@ const telHref = computed(() => `tel:${String(page.props.app?.phone ?? '').replac
 
                     <p class="measure-lead text-lead leading-relaxed text-gray-600">{{ t('hero', 'text') }}</p>
 
-                    <form class="mt-10 max-w-[520px] rounded-card border border-gray-300 bg-white p-5" @submit.prevent="start">
+                    <form class="mt-10 max-w-(--container-plz) rounded-card border border-gray-300 bg-white p-5" @submit.prevent="start">
                         <label for="hero-plz" class="block pb-2 text-base font-medium text-gray-800">
                             {{ t('hero', 'plz_label', 'Ihre Postleitzahl') }}
                         </label>
@@ -117,7 +117,7 @@ const telHref = computed(() => `tel:${String(page.props.app?.phone ?? '').replac
                     </div>
                     <div class="absolute bottom-0 left-0 flex items-center gap-3.5 rounded-card border border-gray-200 bg-white px-5 py-4 shadow-(--shadow-1)">
                         <span class="grid h-11 w-11 shrink-0 place-items-center rounded-full border border-navy-700" aria-hidden="true">
-                            <span class="grid h-[34px] w-[34px] place-items-center rounded-full border" style="border-color: var(--dkgz-accent)">
+                            <span class="grid h-(--spacing-seal-ring-lg) w-(--spacing-seal-ring-lg) place-items-center rounded-full border" style="border-color: var(--dkgz-accent)">
                                 <span class="text-seal-xs font-bold tracking-[0.04em] text-navy-700">DKGZ</span>
                             </span>
                         </span>
@@ -202,9 +202,9 @@ const telHref = computed(() => `tel:${String(page.props.app?.phone ?? '').replac
             </div>
 
             <div class="relative mx-auto w-full max-w-(--container-shell) px-4 py-16 md:px-6 lg:py-24">
-                <h2 class="max-w-[22ch] text-h2 font-semibold text-white">{{ t('ueber', 'ueberschrift') }}</h2>
+                <h2 class="measure-panel-h text-h2 font-semibold text-white">{{ t('ueber', 'ueberschrift') }}</h2>
 
-                <div class="grid max-w-[1000px] grid-cols-1 gap-12 pt-16 md:grid-cols-3">
+                <div class="grid max-w-(--container-trust) grid-cols-1 gap-12 pt-16 md:grid-cols-3">
                     <div v-for="point in trustPoints" :key="point.title">
                         <div class="rule-accent" aria-hidden="true" />
                         <h3 class="pt-4 text-lead font-semibold leading-snug text-white">{{ point.title }}</h3>
@@ -212,7 +212,7 @@ const telHref = computed(() => `tel:${String(page.props.app?.phone ?? '').replac
                     </div>
                 </div>
 
-                <p class="mt-12 max-w-[78ch] border-t border-white/12 pt-12 text-sm leading-normal text-white/45">
+                <p class="mt-12 measure-legal border-t border-white/12 pt-12 text-sm leading-normal text-white/45">
                     {{ t('ueber', 'hinweis') }}
                 </p>
             </div>

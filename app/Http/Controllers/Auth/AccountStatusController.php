@@ -26,6 +26,7 @@ class AccountStatusController extends Controller
         return Inertia::render('Auth/PruefungLaeuft', [
             'assessor' => $assessor === null ? null : [
                 'company_name' => $assessor->company_name,
+                'reference' => sprintf('REG-%s-%05d', $assessor->created_at->format('Y'), $assessor->id),
                 'submitted_at' => $assessor->created_at,
                 'has_document' => $assessor->qualification_document_path !== null,
                 'has_service_areas' => $assessor->serviceAreas()->exists(),
@@ -44,6 +45,8 @@ class AccountStatusController extends Controller
 
         return Inertia::render('Auth/RegistrierungAbgelehnt', [
             'reason' => $assessor->rejection_reason,
+            'reference' => sprintf('REG-%s-%05d', $assessor->created_at->format('Y'), $assessor->id),
+            'decidedAt' => $assessor->updated_at,
         ]);
     }
 
@@ -54,6 +57,7 @@ class AccountStatusController extends Controller
         return Inertia::render('Auth/KontoGesperrt', [
             'reason' => $assessor?->suspension_reason,
             'suspendedAt' => $assessor?->suspended_at,
+            'partnerId' => $assessor === null ? null : sprintf('DKGZ-SV-%04d', $assessor->id),
         ]);
     }
 }

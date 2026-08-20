@@ -94,12 +94,14 @@
 
   /* Logo lockup only. The wordmark and its two-line subtitle are drawn at
    * fixed sizes in the design and do not scale with the type ramp. */
+  --text-mark:     24px;   /* wordmark in the public header */
   --text-mark-sm:  19px;   /* wordmark in e-mail */
   --text-seal:     9.5px;
   --text-seal--letter-spacing: 0.14em;
   --text-seal-sm:  9px;
   --text-seal-xs:  8px;
   --text-seal-2xs: 6.5px;
+  --text-seal-3xs: 7px;    /* seal ring in the public header */
 
   /* ---- Geometry · Foundations 04 "Geometrie & Tiefe" ----------------- */
   --radius-xs:   2px;
@@ -121,12 +123,18 @@
   --spacing-hairline:   1.5px; /* spinner ring, thin marker */
   --spacing-dot-inset:  5px;   /* timeline node, half its own width */
   --spacing-dot-top:    18px;  /* timeline node, aligned to the first line */
+  --spacing-seal-ring:  31px;  /* inner gold ring, header seal */
+  --spacing-seal-ring-lg: 34px; /* inner gold ring, hero and footer seal */
+  --spacing-mark-rule:  26px;  /* gold hairline beside the wordmark */
 
   --container-shell: 1240px;
   --container-form:  420px;
   --container-prose: 680px;   /* confirmation, error and review columns */
   --container-wide:  1068px;  /* two-column legal and request layouts */
   --container-review: 720px;
+  --container-plz:    520px;  /* the hero's postal-code card */
+  --container-dialog: 480px;  /* session-expired and confirmation dialogs */
+  --container-trust:  1000px; /* the navy trust panel's three columns */
 
   /* Fixed heights the design specifies outright. */
   --size-auth-shell:   760px;  /* auth shell minimum height at 1440px */
@@ -211,6 +219,10 @@
   .measure-note     { max-width: 34ch; }  /* short note beside a reference */
   .measure-headline { max-width: 18ch; }  /* auth panel headline */
   .measure-scale    { max-width: 560px; } /* the 1–10 rating row */
+  .measure-legal    { max-width: 78ch; }  /* the panel's legal footnote */
+  .measure-footer   { max-width: 64ch; }  /* footer legal line */
+  .measure-brand    { max-width: 44ch; }  /* footer brand paragraph */
+  .measure-panel-h  { max-width: 22ch; }  /* navy panel headline */
 }
 
 /* Foundations 10 "Bewegung" — the only animations in the system. */

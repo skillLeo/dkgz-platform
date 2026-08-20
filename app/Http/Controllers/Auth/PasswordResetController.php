@@ -43,7 +43,29 @@ class PasswordResetController extends Controller
         return Inertia::render('Auth/PasswortZuruecksetzen', [
             'token' => $token,
             'email' => $request->query('email'),
+            // Checked up front so an expired link shows the design's recovery
+            // state rather than letting the visitor fill the form and fail.
+            'expired' => $this->tokenHasExpired($request->query('email'), $token),
         ]);
+    }
+
+    /**
+     * A token is only meaningful together with its address; without one we
+     * cannot judge it, and the form's own validation will catch the rest.
+     */
+    private function tokenHasExpired(?string $email, string $token): bool
+    {
+        if (blank($email)) {
+            return false;
+        }
+
+        $user = Password::getUser(['email' => $email]);
+
+        if ($user === null) {
+            return false;
+        }
+
+        return ! Password::tokenExists($user, $token);
     }
 
     public function update(Request $request): RedirectResponse

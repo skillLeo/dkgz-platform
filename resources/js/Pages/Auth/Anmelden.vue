@@ -6,7 +6,7 @@ import BaseInput from '../../Components/Base/BaseInput.vue'
 import BasePasswordInput from '../../Components/Base/BasePasswordInput.vue'
 import BaseCheckbox from '../../Components/Base/BaseCheckbox.vue'
 import BaseButton from '../../Components/Base/BaseButton.vue'
-import ErrorSummary from '../../Components/Feedback/ErrorSummary.vue'
+import AuthNotice from '../../Components/Feedback/AuthNotice.vue'
 
 const props = defineProps({
     admin: { type: Boolean, default: false },
@@ -22,8 +22,9 @@ const submit = () => {
     })
 }
 
-const labels = { email: 'E-Mail-Adresse', password: 'Passwort' }
-const title = computed(() => 'Anmeldung')
+// The throttle message is the one the form request raises after five attempts;
+// it gets the calmer warning tone rather than the error one.
+const throttled = computed(() => (form.errors.email ?? '').startsWith('Zu viele Anmeldeversuche'))
 </script>
 
 <template>
@@ -32,7 +33,7 @@ const title = computed(() => 'Anmeldung')
     <AuthLayout
         :variant="admin ? 'admin' : 'partner'"
         :eyebrow="admin ? 'Administration' : 'Partnerportal'"
-        :title="title"
+        title="Anmeldung"
         :description="admin ? '' : 'Melden Sie sich mit Ihren Zugangsdaten an.'"
     >
         <form novalidate @submit.prevent="submit">
@@ -40,7 +41,13 @@ const title = computed(() => 'Anmeldung')
                 <p class="text-sm text-gray-800">{{ status }}</p>
             </div>
 
-            <ErrorSummary v-if="form.hasErrors" :errors="form.errors" :labels="labels" class="mb-6" />
+            <AuthNotice v-if="throttled" tone="warning" title="Zu viele Versuche" class="mb-6">
+                {{ form.errors.email }}
+            </AuthNotice>
+
+            <AuthNotice v-else-if="form.errors.email" tone="error" title="Anmeldung nicht möglich" class="mb-6">
+                {{ form.errors.email }}
+            </AuthNotice>
 
             <div class="flex flex-col gap-5">
                 <BaseInput
@@ -50,7 +57,7 @@ const title = computed(() => 'Anmeldung')
                     type="email"
                     :placeholder="admin ? 'vorname.nachname@dkgz.de' : 'name@buero.de'"
                     autocomplete="username"
-                    :error="form.errors.email"
+                    hint="Die im Portal hinterlegte Adresse."
                     required
                 />
 
