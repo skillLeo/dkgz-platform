@@ -1,6 +1,7 @@
 <script setup>
 import { ref } from 'vue'
 import { Head, useForm } from '@inertiajs/vue3'
+import InvitationImportPanel from '../../Components/Domain/InvitationImportPanel.vue'
 import { UserPlus } from 'lucide-vue-next'
 import AdminLayout from '../../Layouts/AdminLayout.vue'
 import PageHeader from '../../Components/Layout/PageHeader.vue'
@@ -61,6 +62,8 @@ const revoke = async (row) => {
             <p class="text-sm text-gray-800">Einladungen sind derzeit über die Funktionseinstellungen deaktiviert.</p>
         </div>
 
+
+        <InvitationImportPanel v-if="can.create && enabled" />
         <form v-if="createOpen" class="mb-6 border border-gray-200 bg-white p-6" novalidate @submit.prevent="form.post('/admin/einladungen', { preserveScroll: true, onSuccess: () => { createOpen = false; form.reset() } })">
             <ErrorSummary v-if="form.hasErrors" :errors="form.errors" class="mb-5" />
             <div class="flex flex-col gap-5">

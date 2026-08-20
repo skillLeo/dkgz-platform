@@ -77,6 +77,10 @@ Route::prefix('admin')
             ->middleware('can:invitations.view')->name('invitations');
         Route::post('/einladungen', [InvitationController::class, 'store'])
             ->middleware('can:invitations.create')->name('invitations.store');
+        Route::post('/einladungen/import-vorschau', [InvitationController::class, 'preview'])
+            ->middleware('can:invitations.create')->name('invitations.preview');
+        Route::post('/einladungen/import', [InvitationController::class, 'importSend'])
+            ->middleware('can:invitations.create')->name('invitations.import');
         Route::post('/einladungen/{invitation}/erneut', [InvitationController::class, 'resend'])
             ->middleware('can:invitations.create')->name('invitations.resend');
         Route::delete('/einladungen/{invitation}', [InvitationController::class, 'revoke'])
