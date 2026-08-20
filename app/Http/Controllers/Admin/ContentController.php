@@ -7,9 +7,11 @@ use App\Models\ContentBlock;
 use App\Models\Faq;
 use App\Models\Page;
 use App\Support\Content;
+use App\Support\Formatter;
 use App\Support\SafeStorage;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -34,6 +36,8 @@ class ContentController extends Controller
                 'type' => $b->type,
                 'value' => $b->value,
                 'preview_url' => $b->type === 'image' ? SafeStorage::url($b->value) : null,
+                'image' => $b->type === 'image' ? $this->imageMeta($b) : null,
+                'help' => $b->help_de,
             ])->values());
 
         return Inertia::render('Admin/Inhalte', [
@@ -79,10 +83,65 @@ class ContentController extends Controller
             ['image' => 'das Bild']
         );
 
+        $previous = $contentBlock->value;
+
         $contentBlock->update(['value' => $request->file('image')->store('inhalte', 'public')]);
+
+        // Replacing an image deletes the one it replaced. Without this every
+        // correction leaves a file nobody can reach and nobody will ever clean.
+        $this->forgetFile($previous);
+
         Content::flush($contentBlock->page_key);
 
         return back()->with('success', 'Das Bild wurde gespeichert.');
+    }
+
+    public function destroyImage(Request $request, ContentBlock $contentBlock): RedirectResponse
+    {
+        $this->authorize('content.edit');
+        abort_unless($contentBlock->type === 'image', 422);
+
+        $this->forgetFile($contentBlock->value);
+        $contentBlock->update(['value' => '']);
+
+        Content::flush($contentBlock->page_key);
+
+        return back()->with('success', 'Das Bild wurde entfernt. Die Seite zeigt wieder den Platzhalter.');
+    }
+
+    /**
+     * Size and dimensions of the stored file, so the editor can see what is
+     * actually there rather than only that something is.
+     *
+     * @return array<string, mixed>|null
+     */
+    private function imageMeta(ContentBlock $block): ?array
+    {
+        if (blank($block->value) || ! Storage::disk('public')->exists($block->value)) {
+            return null;
+        }
+
+        $meta = [
+            'name' => basename($block->value),
+            'size_label' => Formatter::fileSize(Storage::disk('public')->size($block->value)),
+            'dimensions' => null,
+        ];
+
+        $dimensions = @getimagesize(Storage::disk('public')->path($block->value));
+
+        if ($dimensions !== false) {
+            $meta['dimensions'] = $dimensions[0].' × '.$dimensions[1].' px';
+        }
+
+        return $meta;
+    }
+
+    /** Removes a stored file, tolerating one that has already gone. */
+    private function forgetFile(?string $path): void
+    {
+        if (filled($path) && Storage::disk('public')->exists($path)) {
+            Storage::disk('public')->delete($path);
+        }
     }
 
     // ---- Legal and standalone pages -------------------------------------

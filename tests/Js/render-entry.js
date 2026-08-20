@@ -108,3 +108,34 @@ export async function run () {
 
     return { total: names.length, failures }
 }
+
+/**
+ * Which props each page declares required.
+ *
+ * Rendering proves the template holds together; it does not prove the
+ * controller sends what the template needs. This lets the PHP side check every
+ * real response against the component's own contract.
+ */
+export async function manifest () {
+    const out = {}
+
+    for (const path of Object.keys(modules).sort()) {
+        const name = path.replace(/^.*\/Pages\//, '').replace(/\.vue$/, '')
+        const mod = await modules[path]()
+        const declared = mod.default?.props ?? {}
+
+        if (Array.isArray(declared)) {
+            out[name] = { required: declared, all: declared }
+            continue
+        }
+
+        const names = Object.keys(declared)
+
+        out[name] = {
+            required: names.filter((key) => declared[key]?.required === true),
+            all: names,
+        }
+    }
+
+    return out
+}

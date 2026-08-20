@@ -4,6 +4,7 @@ import { Head, Link, useForm } from '@inertiajs/vue3'
 import AdminLayout from '../../Layouts/AdminLayout.vue'
 import PageHeader from '../../Components/Layout/PageHeader.vue'
 import SectionLabel from '../../Components/Layout/SectionLabel.vue'
+import ContentImageField from '../../Components/Domain/ContentImageField.vue'
 import BaseInput from '../../Components/Base/BaseInput.vue'
 import BaseTextarea from '../../Components/Base/BaseTextarea.vue'
 import BaseButton from '../../Components/Base/BaseButton.vue'
@@ -54,11 +55,11 @@ const valueFor = (id) => form.blocks.find((b) => b.id === id)
                         <SectionLabel :text="sectionKey" tone="muted" />
                         <div class="flex flex-col gap-5 pt-5">
                             <template v-for="field in fields" :key="field.id">
-                                <div v-if="field.type === 'image'">
-                                    <label class="block pb-2 text-sm font-medium text-gray-800">{{ field.label }}</label>
-                                    <img v-if="field.preview_url" :src="field.preview_url" :alt="field.label" class="mb-3 h-24 w-auto border border-gray-200">
-                                    <p class="text-xs text-gray-400">Bilder werden über die Bildauswahl der jeweiligen Seite gepflegt.</p>
-                                </div>
+                                <ContentImageField
+                                    v-if="field.type === 'image'"
+                                    :block="field"
+                                    :disabled="!canEdit"
+                                />
 
                                 <BaseTextarea
                                     v-else-if="field.type === 'richtext' || (field.value ?? '').length > 120"

@@ -107,6 +107,8 @@ Route::prefix('admin')
         });
         Route::post('/inhalte/{pageKey}', [ContentController::class, 'update'])
             ->middleware('can:content.edit')->name('content.update');
+        Route::delete('/inhalte-bild/{contentBlock}', [ContentController::class, 'destroyImage'])
+            ->name('content.image.destroy');
         Route::post('/inhalte-bild/{contentBlock}', [ContentController::class, 'uploadImage'])
             ->middleware('can:content.edit')->name('content.image');
 
