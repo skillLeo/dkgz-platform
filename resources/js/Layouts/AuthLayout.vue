@@ -36,9 +36,14 @@ const isAdmin = computed(() => props.variant === 'admin')
 
 <template>
     <div class="min-h-svh bg-gray-100">
-        <div class="mx-auto grid min-h-svh w-full grid-cols-1 bg-white md:min-h-(--size-auth-shell) md:grid-cols-[minmax(340px,46fr)_minmax(360px,54fr)]">
-            <!-- Authority panel -->
-            <div class="relative flex min-w-0 flex-col overflow-hidden bg-navy-900 p-6 md:p-16">
+        <div class="mx-auto grid min-h-svh w-full grid-cols-1 bg-white md:min-h-(--size-auth-shell) md:grid-cols-[minmax(300px,37fr)_minmax(420px,63fr)]">
+            <!--
+                The authority panel is desktop only. On a phone it pushed the
+                form below the fold, and a collapsed navy band was just a
+                smaller version of the same problem — so it is gone entirely
+                there and the form gets the whole screen.
+            -->
+            <div class="relative hidden min-w-0 flex-col overflow-hidden bg-navy-900 p-6 md:flex md:p-12 lg:p-16">
                 <div
                     class="pointer-events-none absolute -left-10 bottom-10 grid h-30 w-30 place-items-center rounded-full border border-white/7"
                     aria-hidden="true"
@@ -93,7 +98,7 @@ const isAdmin = computed(() => props.variant === 'admin')
 
             <!-- Action panel -->
             <div
-                class="relative flex min-w-0 items-center bg-white p-6 md:p-16"
+                class="relative flex min-w-0 items-center bg-white px-5 py-10 sm:p-8 md:p-12 lg:p-16"
                 style="animation: dkgz-rise 360ms cubic-bezier(0.4,0,0.2,1) both"
             >
                 <Link
@@ -105,6 +110,12 @@ const isAdmin = computed(() => props.variant === 'admin')
                 </Link>
 
                 <div class="w-full max-w-(--container-form)">
+                    <!-- Just enough branding to identify the site where the
+                         navy panel is hidden. -->
+                    <Link href="/" class="mb-8 inline-block md:hidden" aria-label="Zur Startseite">
+                        <DkgzMark size="sm" :with-subtitle="false" />
+                    </Link>
+
                     <SectionLabel :text="eyebrow" :tone="isAdmin ? 'muted' : 'accent'" />
                     <h1 class="pt-6 text-h4 font-semibold text-navy-700 md:text-h2">{{ title }}</h1>
                     <p v-if="description" class="measure-form pt-2 text-base leading-normal text-gray-600">{{ description }}</p>

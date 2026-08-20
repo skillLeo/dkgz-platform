@@ -6,6 +6,8 @@ use App\Models\RequestImage;
 use App\Models\ServiceRequest;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
+use Intervention\Image\Drivers\Gd\Driver as GdDriver;
+use Intervention\Image\Encoders\WebpEncoder;
 use Intervention\Image\ImageManager;
 
 /**
@@ -20,7 +22,7 @@ class StoreRequestImagesAction
     /** @param array<int, UploadedFile> $files */
     public function execute(ServiceRequest $request, array $files): int
     {
-        $manager = ImageManager::gd();
+        $manager = ImageManager::usingDriver(new GdDriver);
         $stored = 0;
 
         foreach ($files as $file) {
@@ -35,13 +37,13 @@ class StoreRequestImagesAction
                 continue;
             }
 
-            $image = $manager->read($file->getRealPath());
+            $image = $manager->decodePath($file->getRealPath());
 
             if ($image->width() > self::MAX_EDGE || $image->height() > self::MAX_EDGE) {
                 $image->scaleDown(self::MAX_EDGE, self::MAX_EDGE);
             }
 
-            $encoded = $image->toWebp(82);
+            $encoded = $image->encode(new WebpEncoder(quality: 82));
             $path = 'anfragen/'.$request->id.'/'.bin2hex(random_bytes(12)).'.webp';
 
             Storage::disk('private')->put($path, (string) $encoded);

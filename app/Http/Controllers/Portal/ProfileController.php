@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Portal;
 
+use App\Actions\StoreAssessorPhotoAction;
 use App\Http\Controllers\Auth\PasswordResetController;
 use App\Http\Controllers\Controller;
 use App\Models\Commission;
@@ -17,6 +18,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 use Inertia\Response;
+use RuntimeException;
 
 class ProfileController extends Controller
 {
@@ -26,6 +28,8 @@ class ProfileController extends Controller
 
         return Inertia::render('Portal/Profil', [
             'profile' => [
+                'photo_url' => $assessor->photoUrl(),
+                'initials' => $assessor->initials(),
                 'first_name' => $request->user()->first_name,
                 'last_name' => $request->user()->last_name,
                 'email' => $request->user()->email,
@@ -283,5 +287,29 @@ class ProfileController extends Controller
                     ->where('status', Commission::STATUS_SETTLED)->sum('commission_cents'),
             ],
         ]);
+    }
+
+    public function updatePhoto(Request $request, StoreAssessorPhotoAction $store): RedirectResponse
+    {
+        $request->validate(
+            ['photo' => ['required', 'file', 'mimes:jpg,jpeg,png,webp', 'max:4096']],
+            [],
+            ['photo' => 'das Profilbild']
+        );
+
+        try {
+            $store->execute($request->user()->assessor, $request->file('photo'));
+        } catch (RuntimeException $e) {
+            return back()->withErrors(['photo' => $e->getMessage()]);
+        }
+
+        return back()->with('success', 'Ihr Profilbild wurde gespeichert.');
+    }
+
+    public function destroyPhoto(Request $request, StoreAssessorPhotoAction $store): RedirectResponse
+    {
+        $store->remove($request->user()->assessor);
+
+        return back()->with('success', 'Ihr Profilbild wurde entfernt.');
     }
 }

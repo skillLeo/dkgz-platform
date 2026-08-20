@@ -1,11 +1,12 @@
 <script setup>
 import { Link, router } from '@inertiajs/vue3'
-import { Bell, ChevronLeft, Search } from 'lucide-vue-next'
+import { Bell, ChevronLeft, Menu, Search } from 'lucide-vue-next'
 
 /**
- * DKGZ Mobil: fixed 56px app bar plus the safe-area inset. On a detail screen a
- * back chevron takes the title's left position; there is never both a hamburger
- * and a back arrow.
+ * Fixed 56px app bar plus the safe-area inset. On a detail screen a back
+ * chevron takes the title's left position; there is never both a hamburger and
+ * a back arrow. The hamburger on the right opens the full navigation, which
+ * replaced the bottom tab bar.
  */
 defineProps({
     title: { type: String, required: true },
@@ -13,7 +14,10 @@ defineProps({
     showSearch: { type: Boolean, default: false },
     notificationCount: { type: Number, default: 0 },
     notificationsHref: { type: String, default: null },
+    showMenu: { type: Boolean, default: false },
 })
+
+defineEmits(['open-menu'])
 
 const goBack = (href) => {
     if (href) router.visit(href)
@@ -61,6 +65,16 @@ const goBack = (href) => {
                     class="absolute right-1.5 top-1.5 grid h-4 min-w-4 place-items-center rounded-full bg-navy-700 px-1 font-mono text-badge tabular-nums text-white"
                 >{{ notificationCount > 99 ? '99+' : notificationCount }}</span>
             </Link>
+
+            <button
+                v-if="showMenu"
+                type="button"
+                class="grid h-11 w-11 shrink-0 place-items-center text-navy-700"
+                aria-label="Menü öffnen"
+                @click="$emit('open-menu')"
+            >
+                <Menu :size="24" :stroke-width="1.5" aria-hidden="true" />
+            </button>
         </div>
     </header>
 </template>

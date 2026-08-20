@@ -170,6 +170,7 @@
   --duration-hover:      140ms;
   --duration-meter:      160ms;
   --duration-disclosure: 180ms;
+  --duration-panel:      200ms;  /* mobile navigation panel */
   --duration-step:       200ms;
   --duration-sheet:      240ms;
   --duration-rise:       360ms;

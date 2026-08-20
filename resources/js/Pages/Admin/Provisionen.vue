@@ -87,7 +87,7 @@ const statusSelectOptions = Object.entries(props.statusOptions).map(([value, lab
 
         <section
             v-if="summary"
-            class="sticky bottom-0 z-20 mt-6 border-t-2 border-t-navy-700 bg-white px-4 py-3 pb-[calc(0.75rem+4rem+env(safe-area-inset-bottom))] md:static md:rounded-card md:border md:border-gray-200 md:border-t-2 md:border-t-navy-700 md:px-5 md:pb-3"
+            class="sticky bottom-0 z-20 mt-6 border-t-2 border-t-navy-700 bg-white px-4 py-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))] md:static md:rounded-card md:border md:border-gray-200 md:border-t-2 md:border-t-navy-700 md:px-5 md:pb-3"
         >
             <div class="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2">
                 <p class="text-base font-medium text-navy-700">

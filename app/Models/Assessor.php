@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Support\SafeStorage;
 use App\Support\Settings;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -29,6 +30,7 @@ class Assessor extends Model
     protected $fillable = [
         'user_id', 'company_name', 'legal_form', 'street', 'house_number',
         'postal_code', 'city', 'country', 'vat_id', 'website',
+        'photo_path',
         'bank_account_holder', 'bank_iban', 'bank_bic',
         'notify_new_request', 'notify_commission_statement',
         'certification_body', 'certification_number', 'certification_valid_until',
@@ -54,6 +56,24 @@ class Assessor extends Model
      * The identifier partners see and quote in correspondence. Derived from the
      * key rather than stored, so it can never drift out of step with the row.
      */
+    /** Absolute URL of the portrait, or null when none is set. */
+    public function photoUrl(): ?string
+    {
+        return blank($this->photo_path) ? null : SafeStorage::url($this->photo_path);
+    }
+
+    /** Fallback when there is no portrait: never a broken image or empty box. */
+    public function initials(): string
+    {
+        $source = filled($this->company_name) ? $this->company_name : ($this->user?->name ?? '');
+
+        return collect(preg_split('/\s+/', trim($source)))
+            ->filter()
+            ->take(2)
+            ->map(fn (string $part) => mb_strtoupper(mb_substr($part, 0, 1)))
+            ->implode('');
+    }
+
     public function partnerId(): string
     {
         return sprintf('DKGZ-SV-%04d', $this->id);

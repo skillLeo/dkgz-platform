@@ -53,6 +53,8 @@ Route::prefix('portal')
         Route::post('/verfuegbarkeit', [ProfileController::class, 'availability'])->name('availability');
         Route::get('/profil', [ProfileController::class, 'edit'])->name('profile');
         Route::post('/profil', [ProfileController::class, 'update'])->name('profile.update');
+        Route::post('/profil/bild', [ProfileController::class, 'updatePhoto'])->name('profile.photo');
+        Route::delete('/profil/bild', [ProfileController::class, 'destroyPhoto'])->name('profile.photo.destroy');
         Route::get('/einstellungen', [ProfileController::class, 'settings'])->name('settings');
         Route::post('/einstellungen/firma', [ProfileController::class, 'updateCompany'])->name('settings.company');
         Route::post('/einstellungen/bankverbindung', [ProfileController::class, 'updateBank'])->name('settings.bank');

@@ -251,7 +251,7 @@ const submitCompletion = () => complete.post(`/portal/auftraege/${props.assignme
         -->
         <div
             v-if="assignment.is_open"
-            class="fixed inset-x-0 bottom-0 z-30 border-t border-gray-200 bg-white px-4 pb-[calc(4rem+env(safe-area-inset-bottom))] pt-3 md:hidden"
+            class="fixed inset-x-0 bottom-0 z-30 border-t border-gray-200 bg-white px-4 pb-[calc(env(safe-area-inset-bottom)+0.75rem)] pt-3 md:hidden"
         >
             <p v-if="missingLabel" class="pb-2 text-center text-sm text-warning">{{ missingLabel }}</p>
             <BaseButton

@@ -34,6 +34,7 @@ const uid = `dp-${Math.random().toString(36).slice(2, 9)}`
         </div>
 
         <input
+                autocomplete="off"
             :id="uid"
             :value="modelValue"
             type="date"

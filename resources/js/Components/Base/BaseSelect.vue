@@ -42,6 +42,7 @@ const normalised = computed(() =>
 
         <div class="relative">
             <select
+                autocomplete="off"
                 :id="fieldId"
                 :value="modelValue"
                 :disabled="disabled"

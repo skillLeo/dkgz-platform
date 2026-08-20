@@ -190,23 +190,23 @@ const stepErrors = computed(() =>
                     <BaseSelect id="legal_form" v-model="form.legal_form" label="Rechtsform" :options="legalFormOptions" :error="form.errors.legal_form" hint="Einzelunternehmen · GbR · GmbH · UG · GmbH &amp; Co. KG · Sonstige" required />
                     <div class="grid grid-cols-[minmax(0,1fr)_120px] gap-4">
                         <BaseInput id="street" v-model="form.street" label="Straße" :error="form.errors.street" autocomplete="address-line1" required />
-                        <BaseInput id="house_number" v-model="form.house_number" label="Hausnummer" :error="form.errors.house_number" required />
+                        <BaseInput id="house_number" v-model="form.house_number" label="Hausnummer" autocomplete="address-line2" :error="form.errors.house_number" required />
                     </div>
                     <div class="grid grid-cols-[160px_minmax(0,1fr)] gap-4">
                         <BasePostalCodeInput id="postal_code" v-model="form.postal_code" v-model:city="form.city" :error="form.errors.postal_code" required />
                         <BaseInput id="city" v-model="form.city" label="Ort" :error="form.errors.city" autocomplete="address-level2" required />
                     </div>
                     <BaseVatInput id="vat_id" v-model="form.vat_id" :error="form.errors.vat_id" />
-                    <BaseInput id="website" v-model="form.website" label="Internetadresse" :error="form.errors.website" placeholder="www.buero.de" optional />
+                    <BaseInput id="website" v-model="form.website" label="Internetadresse" autocomplete="url" :error="form.errors.website" placeholder="www.buero.de" optional />
                 </div>
 
                 <!-- 3 · Qualifikation -->
                 <div v-else-if="current === 3" class="flex flex-col gap-5">
                     <BaseSelect id="certification_body" v-model="form.certification_body" label="Zertifizierungsstelle" optional :options="certificationOptions" :error="form.errors.certification_body" />
-                    <BaseInput id="certification_number" v-model="form.certification_number" label="Zertifizierungsnummer" optional :error="form.errors.certification_number" mono />
+                    <BaseInput id="certification_number" v-model="form.certification_number" label="Zertifizierungsnummer" autocomplete="off" optional :error="form.errors.certification_number" mono />
                     <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
                         <BaseDatePicker id="certification_valid_until" v-model="form.certification_valid_until" label="Zertifikat gültig bis" :error="form.errors.certification_valid_until" optional />
-                        <BaseInput id="years_experience" v-model="form.years_experience" label="Berufserfahrung in Jahren" :error="form.errors.years_experience" inputmode="numeric" numeric optional />
+                        <BaseInput id="years_experience" v-model="form.years_experience" label="Berufserfahrung in Jahren" autocomplete="off" :error="form.errors.years_experience" inputmode="numeric" numeric optional />
                     </div>
                     <p class="text-eyebrow font-semibold uppercase text-gray-600">
                         Qualifikationsnachweis und Haftpflichtnachweis
@@ -278,9 +278,9 @@ const stepErrors = computed(() =>
                                 :key="index"
                                 class="grid grid-cols-[100px_100px_minmax(0,1fr)_40px] items-end gap-2"
                             >
-                                <BaseInput v-model="area.from" label="von" placeholder="40000" inputmode="numeric" maxlength="5" numeric :error="form.errors[`service_areas.${index}.from`]" />
-                                <BaseInput v-model="area.to" label="bis" placeholder="40999" inputmode="numeric" maxlength="5" numeric :error="form.errors[`service_areas.${index}.to`]" />
-                                <BaseInput v-model="area.label" label="Bezeichnung" placeholder="Düsseldorf und Umgebung" optional />
+                                <BaseInput v-model="area.from" label="von" placeholder="40000" inputmode="numeric" maxlength="5" autocomplete="off" numeric :error="form.errors[`service_areas.${index}.from`]" />
+                                <BaseInput v-model="area.to" label="bis" placeholder="40999" inputmode="numeric" maxlength="5" autocomplete="off" numeric :error="form.errors[`service_areas.${index}.to`]" />
+                                <BaseInput v-model="area.label" label="Bezeichnung" autocomplete="off" placeholder="Düsseldorf und Umgebung" optional />
                                 <button
                                     v-if="form.service_areas.length > 1"
                                     type="button"

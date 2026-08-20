@@ -96,6 +96,10 @@ class NotifyAssignmentAcceptedJob implements ShouldQueue
             'referenz' => $request->reference,
             'refLabel' => 'Ihre Vorgangsnummer',
             'sv_firma' => $assessor->company_name,
+            // A name and a phone number is a stranger; a face is the person
+            // about to inspect the customer's car.
+            'sv_bild' => $assessor->photoUrl(),
+            'sv_initialen' => $assessor->initials(),
             'dataTitle' => 'Ihr Sachverständiger',
             'rows' => array_values(array_filter([
                 ['k' => 'Büro', 'v' => $assessor->company_name],

@@ -11,6 +11,7 @@
     $gray200 = '#E3E7EE';
     $gray100 = '#F1F3F7';
     $gray50 = '#F8F9FB';
+    $navy100 = '#E8EDF5';
 
     $sans = "'IBM Plex Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif";
     $mono = "'IBM Plex Mono', 'Courier New', monospace";
@@ -98,8 +99,29 @@
                             </table>
                         @endif
 
+
+                                {{-- The assessor's portrait, where one was supplied.
+                                     Table-based and with a hard width so Outlook
+                                     lays it out; initials stand in otherwise, so
+                                     the block is never a broken image icon. --}}
+                                @if ($portrait || $portraitInitials)
+                                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="padding-bottom:16px;">
+                                        <tr>
+                                            <td width="64" style="width:64px;vertical-align:middle;">
+                                                @if ($portrait)
+                                                    <img src="{{ $portrait }}" width="64" height="64" alt="Ihr Sachverständiger"
+                                                         style="display:block;width:64px;height:64px;border-radius:32px;border:1px solid {{ $gray200 }};" />
+                                                @else
+                                                    <div style="width:64px;height:64px;border-radius:32px;background:{{ $navy100 }};color:{{ $navy700 }};font-size:20px;font-weight:600;line-height:64px;text-align:center;">{{ $portraitInitials }}</div>
+                                                @endif
+
                         @if (! empty($rows))
                             <div style="padding-top:24px;">
+                                            </td>
+                                        </tr>
+                                    </table>
+                                @endif
+
                                 @if ($dataTitle)
                                     <div style="padding-bottom:12px;font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:{{ $gray600 }};">{{ $dataTitle }}</div>
                                 @endif

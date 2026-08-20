@@ -1,4 +1,5 @@
 <script setup>
+import AssessorPhotoField from '../../Components/Domain/AssessorPhotoField.vue'
 import { Head, useForm } from '@inertiajs/vue3'
 import PortalLayout from '../../Layouts/PortalLayout.vue'
 import PageHeader from '../../Components/Layout/PageHeader.vue'
@@ -26,6 +27,10 @@ const labels = {
     <Head title="Profil" />
 
     <PortalLayout title="Profil">
+        <section class="mb-6 max-w-3xl rounded-card border border-gray-200 bg-white p-5">
+            <AssessorPhotoField :photo-url="profile.photo_url" :initials="profile.initials" />
+        </section>
+
         <PageHeader title="Profil" description="Ihre Angaben im Partnernetz." />
 
         <form class="max-w-3xl" novalidate @submit.prevent="form.post('/portal/profil', { preserveScroll: true })">

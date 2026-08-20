@@ -6,9 +6,9 @@ import {
 } from 'lucide-vue-next'
 import Sidebar from '../Components/Layout/Sidebar.vue'
 import TopBar from '../Components/Layout/TopBar.vue'
-import MobileBottomNav from '../Components/Layout/MobileBottomNav.vue'
 import MobileTopBar from '../Components/Layout/MobileTopBar.vue'
-import MobileMoreSheet from '../Components/Layout/MobileMoreSheet.vue'
+import MobileNavMenu from '../Components/Layout/MobileNavMenu.vue'
+import BaseToggle from '../Components/Base/BaseToggle.vue'
 import FlashMessage from '../Components/Feedback/FlashMessage.vue'
 import LiabilityCoverBanner from '../Components/Domain/LiabilityCoverBanner.vue'
 import ConfirmDialog from '../Components/Feedback/ConfirmDialog.vue'
@@ -46,22 +46,21 @@ const initials = computed(() => (page.props.auth?.user?.name ?? '')
 
 const { count: notificationCount } = usePolling('/api/notifications/poll')
 
-const tabs = computed(() => [
-    { href: '/portal', label: 'Start', icon: BarChart3, exact: true },
-    { href: '/portal/anfragen', label: 'Anfragen', icon: Bell, badge: props.openRequests },
-    { href: '/portal/auftraege', label: 'Aufträge', icon: FileText },
-    { href: '/portal/provisionen', label: 'Provisionen', icon: Euro },
-    { href: '#mehr', label: 'Mehr', icon: LayoutGrid },
-])
 
-const moreItems = [
-    { href: '/portal/abgelehnt', label: 'Abgelehnte Anfragen', icon: X },
-    { href: '/portal/einsatzgebiet', label: 'Einsatzgebiet', icon: MapPin },
-    { href: '/portal/leistungen', label: 'Leistungen', icon: ClipboardCheck },
-    { href: '/portal/benachrichtigungen', label: 'Benachrichtigungen', icon: Bell },
-    { href: '/portal/profil', label: 'Profil', icon: User },
-    { href: '/portal/einstellungen', label: 'Einstellungen', icon: Settings },
-]
+
+/** Everything reachable on a phone, including screens the desktop rail omits. */
+const mobileGroups = computed(() => [
+    { items: groups.value[0] },
+    {
+        label: 'Mein Profil',
+        items: [
+            ...groups.value[1],
+            { href: '/portal/provisionen', label: 'Provisionen', icon: Euro },
+            { href: '/portal/benachrichtigungen', label: 'Benachrichtigungen', icon: Bell },
+            { href: '/portal/profil', label: 'Profil', icon: User },
+        ],
+    },
+])
 
 /** Two groups, separated by a hairline — the rail carries no group headings. */
 const groups = computed(() => [
@@ -78,12 +77,6 @@ const groups = computed(() => [
     ],
 ])
 
-const onTab = (event) => {
-    if (event.target.closest('a')?.getAttribute('href') === '#mehr') {
-        event.preventDefault()
-        moreOpen.value = true
-    }
-}
 </script>
 
 <template>
@@ -93,6 +86,8 @@ const onTab = (event) => {
             :back-href="backHref"
             :notification-count="notificationCount"
             notifications-href="/portal/benachrichtigungen"
+            show-menu
+            @open-menu="moreOpen = true"
         />
 
         <div class="flex min-h-screen">
@@ -115,7 +110,7 @@ const onTab = (event) => {
                 />
 
                 <main
-                    class="min-w-0 flex-1 px-4 pb-[calc(4rem+env(safe-area-inset-bottom)+1rem)] pt-[calc(3.5rem+env(safe-area-inset-top)+1rem)] md:p-8"
+                    class="min-w-0 flex-1 px-4 pb-[calc(env(safe-area-inset-bottom)+2rem)] pt-[calc(3.5rem+env(safe-area-inset-top)+1rem)] md:p-8"
                 >
                     <FlashMessage class="mb-5" />
                     <LiabilityCoverBanner :cover="assessor?.cover ?? null" class="mb-5" />
@@ -124,18 +119,17 @@ const onTab = (event) => {
             </div>
         </div>
 
-        <div @click="onTab">
-            <MobileBottomNav :tabs="tabs" />
-        </div>
 
-        <MobileMoreSheet
-            :open="moreOpen"
-            :items="moreItems"
-            :availability="available"
-            :user-name="page.props.auth?.user?.name ?? ''"
-            @close="moreOpen = false"
-            @update:availability="available = $event"
-        />
+        <MobileNavMenu :open="moreOpen" :groups="mobileGroups" @close="moreOpen = false">
+            <template #footer>
+                <BaseToggle
+                    v-model="available"
+                    label="Verfügbar für neue Anfragen"
+                    :show-state="false"
+                    class="text-white"
+                />
+            </template>
+        </MobileNavMenu>
 
         <ConfirmDialog />
         <ToastStack />

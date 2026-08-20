@@ -110,6 +110,8 @@ class TemplateMail extends Mailable implements ShouldQueue
                 'showScale' => (bool) ($this->data['scale'] ?? false),
                 'cta' => $this->data['cta'] ?? null,
                 'ctaUrl' => $this->data['cta_url'] ?? null,
+                'portrait' => $this->data['sv_bild'] ?? null,
+                'portraitInitials' => $this->data['sv_initialen'] ?? null,
                 'note' => $this->data['note'] ?? null,
                 'footnote' => $this->data['footnote'] ?? Settings::get('email.footer_text'),
                 'vars' => $this->data,
