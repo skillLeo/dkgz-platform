@@ -1,6 +1,7 @@
 <?php
 
 use App\Support\Formatter;
+use Carbon\Carbon;
 
 /**
  * The acceptance checklist requires money to render identically on both sides.
@@ -14,7 +15,7 @@ function nodeAvailable(): bool
     return $code === 0;
 }
 
-it('formats money, dates, phone and file sizes identically in PHP and JS', function () {
+it('formats money, dates, phone, file sizes and elapsed time identically in PHP and JS', function () {
     if (! nodeAvailable()) {
         $this->markTestSkipped('Node ist auf diesem System nicht verfügbar.');
     }
@@ -25,6 +26,19 @@ it('formats money, dates, phone and file sizes identically in PHP and JS', funct
     $phoneCases = ['01794480169', '+492114470012', '+494215580120', '03012345678'];
     $sizeCases = [2_411_724, 318_000, 1_200_000, 512, 999];
     $percentCases = [15.0, 12.5, 7.25];
+
+    // Elapsed time and deadlines are read against a fixed "now" so the
+    // comparison cannot drift while the test runs.
+    $now = '2026-08-17T14:32:00';
+    $agoCases = [
+        '2026-08-17T14:31:40', '2026-08-17T14:20:00', '2026-08-17T13:44:00',
+        '2026-08-17T11:32:00', '2026-08-16T14:32:00', '2026-08-14T09:00:00',
+        '2026-07-02T09:00:00',
+    ];
+    $deadlineCases = [
+        '2026-08-17T18:00:00', '2026-08-18T12:00:00', '2026-08-19T09:00:00',
+        '2026-09-01T08:05:00',
+    ];
 
     // The import resolves against the script's own directory, so the path to
     // the composable is injected absolute rather than written relative.
@@ -42,6 +56,8 @@ it('formats money, dates, phone and file sizes identically in PHP and JS', funct
         phone: input.phone.map((v) => f.phone(v)),
         size: input.size.map((b) => f.fileSize(b)),
         percent: input.percent.map((v) => f.percent(v)),
+        ago: input.ago.map((v) => f.relativeTime(v, new Date(input.now))),
+        deadline: input.deadline.map((v) => f.deadline(v, new Date(input.now))),
     }))
     JS;
 
@@ -56,6 +72,9 @@ it('formats money, dates, phone and file sizes identically in PHP and JS', funct
         'phone' => $phoneCases,
         'size' => $sizeCases,
         'percent' => $percentCases,
+        'now' => $now,
+        'ago' => $agoCases,
+        'deadline' => $deadlineCases,
     ]);
 
     $command = sprintf(
@@ -79,4 +98,8 @@ it('formats money, dates, phone and file sizes identically in PHP and JS', funct
     expect($js['phone'])->toBe(array_map(fn (string $p) => Formatter::phone($p), $phoneCases));
     expect($js['size'])->toBe(array_map(fn (int $b) => Formatter::fileSize($b), $sizeCases));
     expect($js['percent'])->toBe(array_map(fn (float $p) => Formatter::percent($p), $percentCases));
+
+    $fixedNow = Carbon::parse($now);
+    expect($js['ago'])->toBe(array_map(fn (string $v) => Formatter::relativeTime($v, $fixedNow), $agoCases));
+    expect($js['deadline'])->toBe(array_map(fn (string $v) => Formatter::deadline($v, $fixedNow), $deadlineCases));
 });

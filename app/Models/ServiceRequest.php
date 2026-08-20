@@ -34,7 +34,7 @@ class ServiceRequest extends Model
         'customer_name', 'customer_phone', 'customer_email',
         'vehicle_make', 'vehicle_model', 'vehicle_year', 'vehicle_plate', 'vehicle_vin',
         'description', 'preferred_date', 'urgency', 'status', 'matched_count',
-        'assigned_at', 'ip_address', 'user_agent', 'consent_at',
+        'assigned_at', 'accept_deadline_at', 'ip_address', 'user_agent', 'consent_at',
     ];
 
     protected function casts(): array
@@ -42,6 +42,7 @@ class ServiceRequest extends Model
         return [
             'preferred_date' => 'date',
             'assigned_at' => 'datetime',
+            'accept_deadline_at' => 'datetime',
             'consent_at' => 'datetime',
             'matched_count' => 'integer',
             'vehicle_year' => 'integer',
@@ -118,6 +119,12 @@ class ServiceRequest extends Model
     {
         return trim("{$this->vehicle_make} {$this->vehicle_model}".
             ($this->vehicle_year ? " · {$this->vehicle_year}" : ''));
+    }
+
+    /** "DKGZ-2026-04812" → "04812", the form used in compact lists. */
+    public function shortReference(): string
+    {
+        return str($this->reference)->afterLast('-')->value();
     }
 
     public function locationLabel(): string

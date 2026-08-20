@@ -36,9 +36,10 @@ class NotifyMatchedAssessorsJob implements ShouldQueue
             return;
         }
 
-        $deadline = $request->created_at
-            ->copy()
-            ->addHours(Settings::int('business.request_expiry_hours', 8));
+        // Set by MatchRequestAction when the request was matched; the fallback
+        // only covers rows matched before the column existed.
+        $deadline = $request->accept_deadline_at
+            ?? $request->created_at->copy()->addHours(Settings::int('business.request_expiry_hours', 8));
 
         RequestMatch::where('service_request_id', $request->id)
             ->pending()

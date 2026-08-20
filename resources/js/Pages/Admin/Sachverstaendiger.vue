@@ -139,7 +139,7 @@ const doUnsuspend = async () => {
                 <section class="border border-gray-200 bg-white p-5">
                     <SectionLabel text="Einsatzgebiet und Leistungen" tone="muted" />
                     <div class="pt-4">
-                        <p class="text-eyebrow font-semibold uppercase tracking-[0.09em] text-gray-400">Gebiete</p>
+                        <p class="text-eyebrow font-semibold uppercase text-gray-400">Gebiete</p>
                         <ul class="pt-2">
                             <li v-for="area in assessor.service_areas" :key="area.id" class="border-b border-gray-100 py-2 font-mono text-sm tabular-nums text-gray-800 last:border-b-0">
                                 {{ area.range }}
@@ -148,7 +148,7 @@ const doUnsuspend = async () => {
                         </ul>
                     </div>
                     <div class="pt-5">
-                        <p class="text-eyebrow font-semibold uppercase tracking-[0.09em] text-gray-400">Leistungen</p>
+                        <p class="text-eyebrow font-semibold uppercase text-gray-400">Leistungen</p>
                         <ul class="flex flex-wrap gap-2 pt-2">
                             <li v-for="type in assessor.service_types" :key="type" class="rounded-sm border border-gray-200 px-2.5 py-1 text-sm text-gray-800">{{ type }}</li>
                             <li v-if="!assessor.service_types.length" class="py-1 text-sm text-gray-400">Noch keine Leistung hinterlegt.</li>

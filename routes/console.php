@@ -1,6 +1,7 @@
 <?php
 
 use App\Console\Commands\AnonymiseOldRequestsCommand;
+use App\Console\Commands\ExpireLapsedRequestsCommand;
 use Illuminate\Support\Facades\Schedule;
 
 /*
@@ -18,6 +19,10 @@ Schedule::command('queue:work --stop-when-empty --max-time=55 --tries=3')
 Schedule::command('queue:prune-failed --hours=336')->weekly();
 
 Schedule::command('cache:prune-stale-tags')->hourly();
+
+// Requests nobody accepted inside the acceptance window move to 'expired' so
+// they surface for a human decision instead of sitting open indefinitely.
+Schedule::command(ExpireLapsedRequestsCommand::class)->everyFifteenMinutes();
 
 // GDPR retention: anonymise customer data on requests past the configured age.
 Schedule::command(AnonymiseOldRequestsCommand::class)->dailyAt('03:20');

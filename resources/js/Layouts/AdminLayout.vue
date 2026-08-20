@@ -102,7 +102,7 @@ const onTab = (event) => {
         <div class="flex min-h-screen">
             <Sidebar :sections="sections">
                 <template #footer>
-                    <p class="text-eyebrow font-semibold uppercase tracking-[0.09em] text-gray-400">Administration</p>
+                    <p class="text-eyebrow font-semibold uppercase text-gray-400">Administration</p>
                     <p class="pt-1 text-sm text-gray-600">{{ page.props.auth?.user?.name }}</p>
                 </template>
             </Sidebar>

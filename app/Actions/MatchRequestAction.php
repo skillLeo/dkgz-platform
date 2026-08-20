@@ -7,6 +7,7 @@ use App\Jobs\NotifyNoAssessorsFoundJob;
 use App\Models\Assessor;
 use App\Models\RequestMatch;
 use App\Models\ServiceRequest;
+use App\Support\Settings;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
@@ -60,6 +61,10 @@ class MatchRequestAction
             $request->update([
                 'status' => ServiceRequest::STATUS_MATCHED,
                 'matched_count' => count($rows),
+                // Every matched partner sees the same deadline, so it is a
+                // fact about the request, not about who was notified when.
+                'accept_deadline_at' => $now->copy()
+                    ->addHours(Settings::int('business.request_expiry_hours', 8)),
             ]);
         });
 

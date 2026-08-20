@@ -1,14 +1,18 @@
 <script setup>
-import { computed } from 'vue'
 import { Link, usePage } from '@inertiajs/vue3'
-import DkgzMark from './DkgzMark.vue'
+import { LogOut } from 'lucide-vue-next'
 
 /**
- * The desktop shell above 768px. Active rows carry the inset navy marker from
- * Foundations (`inset 2px 0 0`), which is the one inset shadow in the system.
+ * The desktop rail from DKGZ Sachverständigen-Portal: navy-900, a 64px brand
+ * head, 40px rows whose active state is a navy-700 fill plus a 2px accent
+ * marker on the leading edge, and a foot carrying the partner ID and sign-out.
+ * Groups are separated by a hairline, not by a heading.
  */
 defineProps({
-    sections: { type: Array, required: true },
+    groups: { type: Array, required: true },
+    subtitle: { type: Array, default: () => ['Partner-', 'Portal'] },
+    identLabel: { type: String, default: null },
+    identValue: { type: String, default: null },
 })
 
 const page = usePage()
@@ -21,42 +25,52 @@ const isActive = (item) => {
 </script>
 
 <template>
-    <aside class="hidden w-64 shrink-0 flex-col border-r border-gray-200 bg-white md:flex">
-        <div class="flex h-18 shrink-0 items-center border-b border-gray-200 px-5">
-            <DkgzMark size="sm" :with-subtitle="false" />
+    <aside class="hidden w-60 shrink-0 flex-col bg-navy-900 md:flex">
+        <div class="flex h-16 shrink-0 items-center gap-2.5 border-b border-white/10 px-5">
+            <span class="text-h4 font-bold leading-none tracking-wordmark text-white">DKGZ</span>
+            <span class="h-5 w-px bg-accent" aria-hidden="true" />
+            <span class="text-seal-sm font-semibold uppercase leading-snug tracking-rail text-white/60">
+                <template v-for="(part, i) in subtitle" :key="part">{{ part }}<br v-if="i < subtitle.length - 1" ></template>
+            </span>
         </div>
 
         <nav class="min-h-0 flex-1 overflow-y-auto py-4" aria-label="Bereichsnavigation">
-            <div v-for="section in sections" :key="section.label ?? 'haupt'" class="pb-5">
-                <p v-if="section.label" class="px-5 pb-2 text-eyebrow font-semibold uppercase tracking-[0.09em] text-gray-400">
-                    {{ section.label }}
-                </p>
+            <template v-for="(group, index) in groups" :key="index">
+                <span v-if="index > 0" class="my-4 mx-5 block h-px bg-white/10" aria-hidden="true" />
                 <ul>
-                    <li v-for="item in section.items" :key="item.href">
+                    <li v-for="item in group" :key="item.href">
                         <Link
                             :href="item.href"
-                            class="flex items-center justify-between gap-3 px-5 py-2.5 text-sm transition-colors duration-(--duration-hover) ease-(--ease-dkgz)"
+                            class="flex h-10 items-center gap-3 border-l-2 px-5 text-base transition-colors duration-(--duration-hover) ease-(--ease-dkgz)"
                             :class="isActive(item)
-                                ? 'bg-navy-100 font-medium text-navy-700 shadow-[inset_2px_0_0_var(--color-navy-700)]'
-                                : 'text-gray-600 hover:bg-gray-50 hover:text-navy-700'"
+                                ? 'border-l-accent bg-navy-700 text-white'
+                                : 'border-l-transparent text-white/72 hover:bg-navy-800 hover:text-white'"
                             :aria-current="isActive(item) ? 'page' : undefined"
                         >
-                            <span class="flex min-w-0 items-center gap-3">
-                                <component :is="item.icon" v-if="item.icon" :size="18" :stroke-width="1.5" class="shrink-0" aria-hidden="true" />
-                                <span class="truncate">{{ item.label }}</span>
-                            </span>
+                            <component :is="item.icon" :size="20" :stroke-width="1.5" class="shrink-0" aria-hidden="true" />
+                            <span class="truncate">{{ item.label }}</span>
                             <span
                                 v-if="item.badge"
-                                class="shrink-0 rounded-xs bg-navy-700 px-1.5 font-mono text-tab tabular-nums text-white"
+                                class="ml-auto shrink-0 rounded-sm bg-navy-500 px-1.5 py-px font-mono text-meta leading-normal tabular-nums text-white"
                             >{{ item.badge }}</span>
                         </Link>
                     </li>
                 </ul>
-            </div>
+            </template>
         </nav>
 
-        <div class="shrink-0 border-t border-gray-200 p-4">
-            <slot name="footer" />
+        <div class="shrink-0 border-t border-white/10 p-5">
+            <p v-if="identValue" class="font-mono text-meta text-white/45">
+                {{ identLabel }}<br >{{ identValue }}
+            </p>
+            <button
+                type="button"
+                class="flex items-center gap-2.5 pt-3 text-sm text-white/60 transition-colors duration-(--duration-hover) ease-(--ease-dkgz) hover:text-white"
+                @click="page.props.auth && $inertia.post('/abmelden')"
+            >
+                <LogOut :size="18" :stroke-width="1.5" aria-hidden="true" />
+                Abmelden
+            </button>
         </div>
     </aside>
 </template>

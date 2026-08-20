@@ -12,7 +12,7 @@ defineProps({
 <template>
     <div>
         <p
-            class="text-eyebrow font-semibold uppercase tracking-[0.09em]"
+            class="text-eyebrow font-semibold uppercase"
             :class="tone === 'accent' ? '' : 'text-gray-600'"
             :style="tone === 'accent' ? { color: 'var(--dkgz-accent)' } : undefined"
         >{{ text }}</p>

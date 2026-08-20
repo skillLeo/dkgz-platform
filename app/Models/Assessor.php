@@ -44,6 +44,15 @@ class Assessor extends Model
         ];
     }
 
+    /**
+     * The identifier partners see and quote in correspondence. Derived from the
+     * key rather than stored, so it can never drift out of step with the row.
+     */
+    public function partnerId(): string
+    {
+        return sprintf('DKGZ-SV-%04d', $this->id);
+    }
+
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()
@@ -65,6 +74,33 @@ class Assessor extends Model
     public function approvedBy(): BelongsTo
     {
         return $this->belongsTo(User::class, 'approved_by');
+    }
+
+    /**
+     * The covered ranges as the portal filter chip writes them: "405–409, 414".
+     * Ranges collapse to their shared leading digits so a partner covering a
+     * whole region does not get a chip listing forty codes.
+     */
+    public function serviceAreaLabel(): string
+    {
+        return $this->serviceAreas
+            ->map(function (AssessorServiceArea $area) {
+                $from = (string) $area->postal_code_from;
+                $to = (string) $area->postal_code_to;
+
+                if ($from === $to) {
+                    return $from;
+                }
+
+                // Trim the digits the two ends share nothing about: keep three.
+                $shortFrom = substr($from, 0, 3);
+                $shortTo = substr($to, 0, 3);
+
+                return $shortFrom === $shortTo ? $shortFrom : "{$shortFrom}–{$shortTo}";
+            })
+            ->unique()
+            ->sort()
+            ->implode(', ');
     }
 
     public function serviceAreas(): HasMany

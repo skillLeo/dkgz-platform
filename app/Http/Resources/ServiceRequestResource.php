@@ -44,6 +44,8 @@ class ServiceRequestResource extends JsonResource
             'preferred_date' => $this->preferred_date,
             'created_at' => $this->created_at,
             'created_at_label' => Formatter::dateTime($this->created_at),
+            'accept_deadline_at' => $this->accept_deadline_at,
+            'accept_deadline_label' => Formatter::deadline($this->accept_deadline_at),
             'matched_count' => $this->matched_count,
             'image_count' => $this->whenCounted('images'),
         ];

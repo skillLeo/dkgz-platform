@@ -57,7 +57,7 @@ class AccountStatusController extends Controller
         return Inertia::render('Auth/KontoGesperrt', [
             'reason' => $assessor?->suspension_reason,
             'suspendedAt' => $assessor?->suspended_at,
-            'partnerId' => $assessor === null ? null : sprintf('DKGZ-SV-%04d', $assessor->id),
+            'partnerId' => $assessor === null ? null : $assessor->partnerId(),
         ]);
     }
 }

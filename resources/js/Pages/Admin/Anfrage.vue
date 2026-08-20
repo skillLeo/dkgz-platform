@@ -72,11 +72,11 @@ const doRematch = async () => {
                         <table class="w-full border-collapse">
                             <thead>
                                 <tr class="border-b border-gray-200">
-                                    <th scope="col" class="px-5 py-3 text-left text-eyebrow font-semibold uppercase tracking-[0.09em] text-gray-600">Sachverständiger</th>
-                                    <th scope="col" class="px-5 py-3 text-left text-eyebrow font-semibold uppercase tracking-[0.09em] text-gray-600">Benachrichtigt</th>
-                                    <th scope="col" class="px-5 py-3 text-left text-eyebrow font-semibold uppercase tracking-[0.09em] text-gray-600">Geöffnet</th>
-                                    <th scope="col" class="px-5 py-3 text-left text-eyebrow font-semibold uppercase tracking-[0.09em] text-gray-600">Antwort</th>
-                                    <th scope="col" class="px-5 py-3 text-left text-eyebrow font-semibold uppercase tracking-[0.09em] text-gray-600">Ergebnis</th>
+                                    <th scope="col" class="px-5 py-3 text-left text-eyebrow font-semibold uppercase text-gray-600">Sachverständiger</th>
+                                    <th scope="col" class="px-5 py-3 text-left text-eyebrow font-semibold uppercase text-gray-600">Benachrichtigt</th>
+                                    <th scope="col" class="px-5 py-3 text-left text-eyebrow font-semibold uppercase text-gray-600">Geöffnet</th>
+                                    <th scope="col" class="px-5 py-3 text-left text-eyebrow font-semibold uppercase text-gray-600">Antwort</th>
+                                    <th scope="col" class="px-5 py-3 text-left text-eyebrow font-semibold uppercase text-gray-600">Ergebnis</th>
                                 </tr>
                             </thead>
                             <tbody>

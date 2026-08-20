@@ -59,15 +59,19 @@ class RequestMatch extends Model
         return $query->where('outcome', self::OUTCOME_PENDING);
     }
 
-    /** German label for the outcome column. */
+    /**
+     * Written from the partner's side: what happened to them, rather than the
+     * bare state name. "Geschlossen" told a partner nothing about why a
+     * request left their queue; "Von anderem Partner angenommen" does.
+     */
     public function outcomeLabel(): string
     {
         return match ($this->outcome) {
-            self::OUTCOME_PENDING => 'Offen',
-            self::OUTCOME_ACCEPTED => 'Angenommen',
-            self::OUTCOME_DECLINED => 'Abgelehnt',
-            self::OUTCOME_CLOSED => 'Geschlossen',
-            self::OUTCOME_EXPIRED => 'Abgelaufen',
+            self::OUTCOME_PENDING => 'Annahme offen',
+            self::OUTCOME_ACCEPTED => 'Von mir angenommen',
+            self::OUTCOME_DECLINED => 'Von mir abgelehnt',
+            self::OUTCOME_CLOSED => 'Von anderem Partner angenommen',
+            self::OUTCOME_EXPIRED => 'Frist abgelaufen',
             default => $this->outcome,
         };
     }

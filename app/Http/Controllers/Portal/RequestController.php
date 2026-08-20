@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\ServiceRequestResource;
 use App\Models\RequestMatch;
 use App\Models\ServiceRequest;
+use App\Models\ServiceType;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -20,10 +21,40 @@ class RequestController extends Controller
     {
         $assessor = $request->user()->assessor;
 
+        $filters = $request->validate([
+            'suche' => ['nullable', 'string', 'max:100'],
+            'art' => ['nullable', 'integer', 'exists:service_types,id'],
+            'frist' => ['nullable', 'in:heute,morgen'],
+        ]);
+
         $matches = RequestMatch::query()
             ->where('assessor_id', $assessor->id)
             ->pending()
-            ->whereHas('serviceRequest', fn ($q) => $q->where('status', ServiceRequest::STATUS_MATCHED))
+            ->whereHas('serviceRequest', function ($query) use ($filters) {
+                $query->where('status', ServiceRequest::STATUS_MATCHED);
+
+                // Reference or place — the two things a partner has at hand
+                // when someone rings about a request.
+                if (filled($filters['suche'] ?? null)) {
+                    $term = '%'.$filters['suche'].'%';
+                    $query->where(fn ($q) => $q
+                        ->where('reference', 'like', $term)
+                        ->orWhere('city', 'like', $term)
+                        ->orWhere('postal_code', 'like', $term));
+                }
+
+                if (filled($filters['art'] ?? null)) {
+                    $query->where('service_type_id', $filters['art']);
+                }
+
+                if (($filters['frist'] ?? null) === 'heute') {
+                    $query->whereDate('accept_deadline_at', today());
+                }
+
+                if (($filters['frist'] ?? null) === 'morgen') {
+                    $query->whereDate('accept_deadline_at', today()->addDay());
+                }
+            })
             ->with(['serviceRequest.serviceType', 'serviceRequest' => fn ($q) => $q->withCount('images')])
             ->latest('notified_at')
             ->paginate(15)
@@ -34,6 +65,13 @@ class RequestController extends Controller
                 (new ServiceRequestResource($match->serviceRequest))->toArray($request),
                 ['notified_at' => $match->notified_at, 'match_id' => $match->id],
             )),
+            'serviceTypes' => ServiceType::orderBy('sort_order')->get(['id', 'name_de']),
+            'areaLabel' => $assessor->serviceAreaLabel(),
+            'filters' => [
+                'suche' => $filters['suche'] ?? '',
+                'art' => $filters['art'] ?? null,
+                'frist' => $filters['frist'] ?? null,
+            ],
         ]);
     }
 
@@ -57,6 +95,7 @@ class RequestController extends Controller
             'request' => (new ServiceRequestResource($serviceRequest))->toArray($request),
             'match' => [
                 'outcome' => $match->outcome,
+                'outcome_label' => $match->outcomeLabel(),
                 'notified_at' => $match->notified_at,
                 'is_open' => $match->isPending() && $serviceRequest->status === ServiceRequest::STATUS_MATCHED,
             ],
@@ -106,11 +145,25 @@ class RequestController extends Controller
             ->with('success', 'Die Anfrage wurde abgelehnt. Das wirkt sich nicht auf die weitere Verteilung aus.');
     }
 
+    /**
+     * Every way a request left this partner's queue without becoming an
+     * assignment: they declined it, someone else took it, or the acceptance
+     * window ran out. Grouping the three is what makes the screen honest —
+     * a partner who only ever sees their own declines cannot tell whether
+     * they are being outpaced or simply not matched.
+     */
     public function declined(Request $request): Response
     {
+        $visibleDays = 90;
+
         $matches = RequestMatch::query()
             ->where('assessor_id', $request->user()->assessor->id)
-            ->where('outcome', RequestMatch::OUTCOME_DECLINED)
+            ->whereIn('outcome', [
+                RequestMatch::OUTCOME_DECLINED,
+                RequestMatch::OUTCOME_CLOSED,
+                RequestMatch::OUTCOME_EXPIRED,
+            ])
+            ->where('updated_at', '>=', now()->subDays($visibleDays))
             ->with('serviceRequest.serviceType')
             ->latest('responded_at')
             ->paginate(15)
@@ -119,8 +172,14 @@ class RequestController extends Controller
         return Inertia::render('Portal/Abgelehnt', [
             'requests' => $matches->through(fn (RequestMatch $match) => array_merge(
                 (new ServiceRequestResource($match->serviceRequest))->toArray($request),
-                ['responded_at' => $match->responded_at, 'decline_reason' => $match->decline_reason],
+                [
+                    'outcome' => $match->outcome,
+                    'outcome_label' => $match->outcomeLabel(),
+                    'responded_at' => $match->responded_at ?? $match->updated_at,
+                    'decline_reason' => $match->decline_reason,
+                ],
             )),
+            'visibleDays' => $visibleDays,
         ]);
     }
 }

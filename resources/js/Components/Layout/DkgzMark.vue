@@ -17,9 +17,9 @@ const page = usePage()
 const branding = computed(() => page.props.branding ?? {})
 
 const scale = {
-    sm: { seal: 32, inner: 25, word: 'text-mark-sm', rule: 'h-5', sub: 'text-seal-xs tracking-[0.12em]' },
-    md: { seal: 36, inner: 28, word: 'text-h3', rule: 'h-6', sub: 'text-seal-sm tracking-[0.14em]' },
-    lg: { seal: 44, inner: 34, word: 'text-wordmark', rule: 'h-7', sub: 'text-seal tracking-[0.14em]' },
+    sm: { seal: 32, inner: 25, word: 'text-mark-sm', rule: 'h-5', sub: 'text-seal-xs tracking-rail' },
+    md: { seal: 36, inner: 28, word: 'text-h3', rule: 'h-6', sub: 'text-seal-sm tracking-seal' },
+    lg: { seal: 44, inner: 34, word: 'text-wordmark', rule: 'h-7', sub: 'text-seal tracking-seal' },
 }
 
 const s = computed(() => scale[props.size] ?? scale.md)
@@ -58,7 +58,7 @@ const ringColour = computed(() => (props.inverted ? 'border-white/55' : 'border-
                     <span class="text-seal-2xs font-bold" :class="wordColour">DKGZ</span>
                 </span>
             </span>
-            <span class="font-bold leading-none tracking-[-0.022em]" :class="[s.word, wordColour]">
+            <span class="font-bold leading-none tracking-wordmark" :class="[s.word, wordColour]">
                 {{ branding.platform_name ?? 'DKGZ' }}
             </span>
             <template v-if="withSubtitle">

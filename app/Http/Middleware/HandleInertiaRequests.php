@@ -36,6 +36,7 @@ class HandleInertiaRequests extends Middleware
                     'is_assessor' => $user->hasRole('assessor'),
                     'assessor' => $user->assessor === null ? null : [
                         'id' => $user->assessor->id,
+                        'partner_id' => $user->assessor->partnerId(),
                         'company_name' => $user->assessor->company_name,
                         'is_available' => $user->assessor->is_available,
                         'approval_status' => $user->assessor->approval_status,

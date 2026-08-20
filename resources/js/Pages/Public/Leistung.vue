@@ -85,7 +85,7 @@ const openFaq = ref(null)
                 </div>
 
                 <div class="pt-6">
-                    <p class="text-eyebrow font-semibold uppercase tracking-[0.09em] text-gray-600">Weitere Leistungen</p>
+                    <p class="text-eyebrow font-semibold uppercase text-gray-600">Weitere Leistungen</p>
                     <ul class="flex flex-col gap-2 pt-3">
                         <li v-for="other in serviceTypes.filter((t) => t.slug !== serviceType.slug).slice(0, 6)" :key="other.id">
                             <Link :href="`/leistungen/${other.slug}`" class="text-sm text-gray-600 hover:text-navy-700">{{ other.name_de }}</Link>

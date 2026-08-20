@@ -78,6 +78,84 @@ class Formatter
         return Carbon::parse($value)->format('d.m.Y, H:i').' Uhr';
     }
 
+    /** → "August" — named here so the output cannot vary with host locale data. */
+    public static function monthName(DateTimeInterface|CarbonInterface|string|null $value): string
+    {
+        if ($value === null) {
+            return '';
+        }
+
+        return [
+            1 => 'Januar', 2 => 'Februar', 3 => 'März', 4 => 'April',
+            5 => 'Mai', 6 => 'Juni', 7 => 'Juli', 8 => 'August',
+            9 => 'September', 10 => 'Oktober', 11 => 'November', 12 => 'Dezember',
+        ][(int) Carbon::parse($value)->format('n')];
+    }
+
+    /**
+     * → "vor 12 Min." / "vor 3 Std." / "vor 2 Tagen"
+     *
+     * Kept deliberately in step with relativeTime() in useGermanFormat.js;
+     * FormatParityTest runs both against the same fixtures.
+     */
+    public static function relativeTime(DateTimeInterface|CarbonInterface|string|null $value, ?CarbonInterface $now = null): string
+    {
+        if ($value === null) {
+            return '';
+        }
+
+        $moment = Carbon::parse($value);
+        $now ??= Carbon::now();
+
+        $seconds = (int) floor($now->getTimestamp() - $moment->getTimestamp());
+
+        if ($seconds < 60) {
+            return 'gerade eben';
+        }
+
+        $minutes = intdiv($seconds, 60);
+
+        if ($minutes < 60) {
+            return "vor {$minutes} Min.";
+        }
+
+        $hours = intdiv($minutes, 60);
+
+        if ($hours < 24) {
+            return "vor {$hours} Std.";
+        }
+
+        $days = intdiv($hours, 24);
+
+        if ($days <= 7) {
+            return $days === 1 ? 'vor 1 Tag' : "vor {$days} Tagen";
+        }
+
+        return self::date($moment);
+    }
+
+    /** → "heute 18:00" / "18.08. 12:00" — the acceptance deadline in a list. */
+    public static function deadline(DateTimeInterface|CarbonInterface|string|null $value, ?CarbonInterface $now = null): string
+    {
+        if ($value === null) {
+            return '';
+        }
+
+        $moment = Carbon::parse($value);
+        $now ??= Carbon::now();
+        $clock = $moment->format('H:i');
+
+        if ($moment->isSameDay($now)) {
+            return "heute {$clock}";
+        }
+
+        if ($moment->isSameDay($now->copy()->addDay())) {
+            return "morgen {$clock}";
+        }
+
+        return $moment->format('d.m.').' '.$clock;
+    }
+
     /** → "14:32 Uhr" */
     public static function time(DateTimeInterface|CarbonInterface|string|null $value): string
     {

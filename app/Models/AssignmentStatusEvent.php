@@ -24,6 +24,22 @@ class AssignmentStatusEvent extends Model
         return ['created_at' => 'datetime'];
     }
 
+    /**
+     * How the step reads in the partner's "Verlauf": what happened, in the
+     * past tense, rather than the name of the state that was entered.
+     */
+    public function label(): string
+    {
+        return match ($this->to_status) {
+            Assignment::STATUS_ACCEPTED => 'Auftrag angenommen',
+            Assignment::STATUS_IN_PROGRESS => 'Bearbeitung begonnen',
+            Assignment::STATUS_DOCUMENTS_UPLOADED => 'Gutachten hochgeladen',
+            Assignment::STATUS_COMPLETED => 'Auftrag abgeschlossen',
+            Assignment::STATUS_CANCELLED => 'Auftrag storniert',
+            default => $this->to_status,
+        };
+    }
+
     public function assignment(): BelongsTo
     {
         return $this->belongsTo(Assignment::class);

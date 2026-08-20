@@ -71,7 +71,7 @@ const telHref = computed(() => `tel:${String(page.props.app?.phone ?? '').replac
         <section style="animation: dkgz-enter 420ms cubic-bezier(0.4,0,0.2,1) both">
             <div class="mx-auto grid w-full max-w-(--container-shell) grid-cols-1 items-start gap-16 px-4 py-16 md:px-6 lg:grid-cols-[minmax(0,58fr)_minmax(0,42fr)] lg:py-24">
                 <div>
-                    <p class="text-eyebrow font-semibold uppercase tracking-[0.09em]" style="color: var(--dkgz-accent)">
+                    <p class="text-eyebrow font-semibold uppercase" style="color: var(--dkgz-accent)">
                         {{ t('hero', 'eyebrow') }}
                     </p>
                     <div class="rule-accent mt-2.5" aria-hidden="true" />
@@ -118,7 +118,7 @@ const telHref = computed(() => `tel:${String(page.props.app?.phone ?? '').replac
                     <div class="absolute bottom-0 left-0 flex items-center gap-3.5 rounded-card border border-gray-200 bg-white px-5 py-4 shadow-(--shadow-1)">
                         <span class="grid h-11 w-11 shrink-0 place-items-center rounded-full border border-navy-700" aria-hidden="true">
                             <span class="grid h-(--spacing-seal-ring-lg) w-(--spacing-seal-ring-lg) place-items-center rounded-full border" style="border-color: var(--dkgz-accent)">
-                                <span class="text-seal-xs font-bold tracking-[0.04em] text-navy-700">DKGZ</span>
+                                <span class="text-seal-xs font-bold tracking-label text-navy-700">DKGZ</span>
                             </span>
                         </span>
                         <span>
@@ -197,7 +197,7 @@ const telHref = computed(() => `tel:${String(page.props.app?.phone ?? '').replac
         <section id="ueber" class="relative overflow-hidden bg-navy-900">
             <div class="pointer-events-none absolute right-24 top-24 hidden h-45 w-45 place-items-center rounded-full border border-white/14 lg:grid" aria-hidden="true">
                 <div class="grid h-35 w-35 place-items-center rounded-full" style="border: 1px solid rgba(176,138,46,0.30)">
-                    <span class="text-h3 font-bold tracking-[0.04em] text-white/10">DKGZ</span>
+                    <span class="text-h3 font-bold tracking-label text-white/10">DKGZ</span>
                 </div>
             </div>
 
@@ -232,7 +232,7 @@ const telHref = computed(() => `tel:${String(page.props.app?.phone ?? '').replac
                 </div>
 
                 <div class="rounded-card border border-gray-200 bg-white p-6">
-                    <p class="text-eyebrow font-semibold uppercase tracking-[0.09em] text-gray-600">{{ t('partner', 'karte_eyebrow') }}</p>
+                    <p class="text-eyebrow font-semibold uppercase text-gray-600">{{ t('partner', 'karte_eyebrow') }}</p>
                     <p class="pt-3 text-base leading-normal text-gray-800">{{ t('partner', 'karte_text') }}</p>
                     <BaseButton href="/fuer-sachverstaendige" variant="secondary" size="compact" class="mt-5">
                         {{ t('partner', 'cta', 'Partner werden') }}

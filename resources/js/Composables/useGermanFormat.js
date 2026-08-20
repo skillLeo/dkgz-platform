@@ -65,6 +65,50 @@ export function useGermanFormat() {
         return `${date(d)}, ${pad(d.getHours())}:${pad(d.getMinutes())} Uhr`
     }
 
+    /**
+     * → "vor 12 Min." / "vor 3 Std." / "vor 2 Tagen"
+     * Abbreviated the way the design writes it, and capped at days: anything
+     * older is shown as a date, because "vor 5 Wochen" tells a partner nothing
+     * they can act on.
+     */
+    const relativeTime = (value, now = new Date()) => {
+        const d = toDate(value)
+        if (!d) return ''
+
+        const seconds = Math.floor((now.getTime() - d.getTime()) / 1000)
+        if (seconds < 60) return 'gerade eben'
+
+        const minutes = Math.floor(seconds / 60)
+        if (minutes < 60) return `vor ${minutes} Min.`
+
+        const hours = Math.floor(minutes / 60)
+        if (hours < 24) return `vor ${hours} Std.`
+
+        const days = Math.floor(hours / 24)
+        if (days <= 7) return days === 1 ? 'vor 1 Tag' : `vor ${days} Tagen`
+
+        return date(d)
+    }
+
+    /** → "heute 18:00" / "18.08. 12:00" — the acceptance deadline in a list. */
+    const deadline = (value, now = new Date()) => {
+        const d = toDate(value)
+        if (!d) return ''
+
+        const clock = `${pad(d.getHours())}:${pad(d.getMinutes())}`
+        const sameDay = (a, b) => a.getFullYear() === b.getFullYear()
+            && a.getMonth() === b.getMonth()
+            && a.getDate() === b.getDate()
+
+        if (sameDay(d, now)) return `heute ${clock}`
+
+        const tomorrow = new Date(now.getTime())
+        tomorrow.setDate(tomorrow.getDate() + 1)
+        if (sameDay(d, tomorrow)) return `morgen ${clock}`
+
+        return `${pad(d.getDate())}.${pad(d.getMonth() + 1)}. ${clock}`
+    }
+
     /** → "14:32 Uhr" */
     const time = (value) => {
         const d = toDate(value)
@@ -138,5 +182,8 @@ export function useGermanFormat() {
     /** "DKGZ-2026-04817" stays as-is; used to mark reference numbers as mono. */
     const reference = (value) => (value ? String(value) : '')
 
-    return { money, amount, parseMoney, date, dateTime, time, phone, percent, fileSize, reference }
+    return {
+        money, amount, parseMoney, date, dateTime, time, relativeTime, deadline,
+        phone, percent, fileSize, reference,
+    }
 }

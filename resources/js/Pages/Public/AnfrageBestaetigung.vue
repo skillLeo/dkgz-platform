@@ -31,13 +31,13 @@ const step = (n, part) => t('ablauf', `schritt_${n}_${part}`).replace(':plz', pr
 
             <div class="mt-8 flex flex-wrap items-center justify-between gap-6 rounded-card border border-navy-700 px-6 py-5">
                 <div>
-                    <p class="text-eyebrow font-semibold uppercase tracking-[0.09em] text-gray-600">{{ t('referenz', 'label', 'Ihre Vorgangsnummer') }}</p>
+                    <p class="text-eyebrow font-semibold uppercase text-gray-600">{{ t('referenz', 'label', 'Ihre Vorgangsnummer') }}</p>
                     <p class="pt-1.5 font-mono text-h3 tabular-nums text-navy-700">{{ request.reference }}</p>
                 </div>
                 <p class="measure-note text-sm leading-normal text-gray-600">{{ t('referenz', 'hinweis') }}</p>
             </div>
 
-            <p class="pt-12 text-eyebrow font-semibold uppercase tracking-[0.09em] text-gray-600">{{ t('ablauf', 'ueberschrift', 'Wie es weitergeht') }}</p>
+            <p class="pt-12 text-eyebrow font-semibold uppercase text-gray-600">{{ t('ablauf', 'ueberschrift', 'Wie es weitergeht') }}</p>
 
             <ol class="border-t border-gray-200 pt-2">
                 <li v-for="n in [1, 2, 3]" :key="n" class="grid grid-cols-[32px_minmax(0,1fr)] gap-4 border-b border-gray-200 py-5">

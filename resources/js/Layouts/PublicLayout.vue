@@ -46,7 +46,7 @@ onUnmounted(() => window.removeEventListener('scroll', onScroll))
         <!-- Meldeband, 28px -->
         <div class="hidden h-7 items-center bg-navy-900 md:flex">
             <div class="mx-auto flex w-full max-w-(--container-shell) items-center justify-between gap-6 px-6">
-                <span class="text-xs tracking-[0.01em] text-gray-300">
+                <span class="text-xs tracking-nav text-gray-300">
                     {{ t('meldeband', 'text', 'Bundesweites Netz geprüfter Kfz-Sachverständiger') }}
                 </span>
                 <div class="flex items-center gap-5">
@@ -67,10 +67,10 @@ onUnmounted(() => window.removeEventListener('scroll', onScroll))
                             class="grid h-(--spacing-seal-ring) w-(--spacing-seal-ring) place-items-center rounded-full border"
                             style="border-color: var(--dkgz-accent)"
                         >
-                            <span class="text-seal-3xs font-bold tracking-[0.04em] text-navy-700">DKGZ</span>
+                            <span class="text-seal-3xs font-bold tracking-label text-navy-700">DKGZ</span>
                         </span>
                     </span>
-                    <span class="text-mark font-bold leading-none tracking-[-0.022em] text-navy-700">DKGZ</span>
+                    <span class="text-mark font-bold leading-none tracking-wordmark text-navy-700">DKGZ</span>
                     <span class="h-(--spacing-mark-rule) w-px shrink-0" style="background: var(--dkgz-accent)" aria-hidden="true" />
                     <span class="hidden text-seal font-semibold uppercase leading-[1.5] text-gray-600 sm:block">
                         Deutsche<br>KFZ-Gutachterzentrale
@@ -105,7 +105,7 @@ onUnmounted(() => window.removeEventListener('scroll', onScroll))
             <div v-if="menuOpen" class="fixed inset-0 z-50 flex flex-col bg-navy-900 lg:hidden" role="dialog" aria-modal="true" aria-label="Menü">
                 <div class="flex h-18 shrink-0 items-center justify-between px-4 pt-[env(safe-area-inset-top)]">
                     <span class="flex items-center gap-3">
-                        <span class="text-h3 font-bold leading-none tracking-[-0.022em] text-white">DKGZ</span>
+                        <span class="text-h3 font-bold leading-none tracking-wordmark text-white">DKGZ</span>
                         <span class="h-6 w-px" style="background: var(--dkgz-accent)" aria-hidden="true" />
                         <span class="text-seal font-semibold uppercase leading-[1.5] text-white/72">Deutsche<br>KFZ-Gutachterzentrale</span>
                     </span>
@@ -149,7 +149,7 @@ onUnmounted(() => window.removeEventListener('scroll', onScroll))
                 <div class="grid grid-cols-1 gap-12 sm:grid-cols-2 lg:grid-cols-[minmax(0,1.6fr)_repeat(3,minmax(0,1fr))]">
                     <div>
                         <div class="flex items-center gap-3">
-                            <span class="text-h3 font-bold leading-none tracking-[-0.022em] text-white">DKGZ</span>
+                            <span class="text-h3 font-bold leading-none tracking-wordmark text-white">DKGZ</span>
                             <span class="h-6 w-px shrink-0" style="background: var(--dkgz-accent)" aria-hidden="true" />
                             <span class="text-seal font-semibold uppercase leading-[1.5] text-white/72">Deutsche<br>KFZ-Gutachterzentrale</span>
                         </div>
@@ -164,7 +164,7 @@ onUnmounted(() => window.removeEventListener('scroll', onScroll))
                     </div>
 
                     <div>
-                        <p class="pb-4 text-eyebrow font-semibold uppercase tracking-[0.09em] text-white/45">Leistungen</p>
+                        <p class="pb-4 text-eyebrow font-semibold uppercase text-white/45">Leistungen</p>
                         <ul class="flex flex-col gap-2.5">
                             <li v-for="item in ['Unfallgutachten', 'Haftpflichtgutachten', 'Wertgutachten', 'Oldtimergutachten']" :key="item">
                                 <Link href="/leistungen" class="text-sm text-white/72 transition-colors duration-(--duration-hover) ease-(--ease-dkgz) hover:text-white">{{ item }}</Link>
@@ -174,7 +174,7 @@ onUnmounted(() => window.removeEventListener('scroll', onScroll))
                     </div>
 
                     <div>
-                        <p class="pb-4 text-eyebrow font-semibold uppercase tracking-[0.09em] text-white/45">Unternehmen</p>
+                        <p class="pb-4 text-eyebrow font-semibold uppercase text-white/45">Unternehmen</p>
                         <ul class="flex flex-col gap-2.5">
                             <li><Link href="/ueber-uns" class="text-sm text-white/72 hover:text-white">Über DKGZ</Link></li>
                             <li><Link href="/ablauf" class="text-sm text-white/72 hover:text-white">Ablauf</Link></li>
@@ -185,7 +185,7 @@ onUnmounted(() => window.removeEventListener('scroll', onScroll))
                     </div>
 
                     <div>
-                        <p class="pb-4 text-eyebrow font-semibold uppercase tracking-[0.09em] text-white/45">Rechtliches</p>
+                        <p class="pb-4 text-eyebrow font-semibold uppercase text-white/45">Rechtliches</p>
                         <ul class="flex flex-col gap-2.5">
                             <li><Link href="/impressum" class="text-sm text-white/72 hover:text-white">Impressum</Link></li>
                             <li><Link href="/datenschutz" class="text-sm text-white/72 hover:text-white">Datenschutzerklärung</Link></li>

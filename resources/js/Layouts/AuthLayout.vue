@@ -43,7 +43,7 @@ const isAdmin = computed(() => props.variant === 'admin')
                     aria-hidden="true"
                 >
                     <div class="grid h-23 w-23 place-items-center rounded-full border border-white/7">
-                        <span class="text-lead font-bold tracking-[0.06em] text-white/7">DKGZ</span>
+                        <span class="text-lead font-bold tracking-plate text-white/7">DKGZ</span>
                     </div>
                 </div>
 
@@ -78,7 +78,7 @@ const isAdmin = computed(() => props.variant === 'admin')
                 </div>
 
                 <div v-else class="relative mt-auto pt-16">
-                    <p class="text-eyebrow font-semibold uppercase tracking-[0.09em] text-white/45">Interner Zugang</p>
+                    <p class="text-eyebrow font-semibold uppercase text-white/45">Interner Zugang</p>
                 </div>
 
                 <div v-if="!isAdmin" class="relative mt-auto flex items-end justify-end pt-16">

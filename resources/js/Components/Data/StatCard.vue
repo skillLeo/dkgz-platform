@@ -28,11 +28,11 @@ const valueClass = computed(() => ({
     <component
         :is="href ? Link : 'div'"
         :href="href"
-        class="block border border-gray-200 bg-white p-5 transition-colors duration-(--duration-hover) ease-(--ease-dkgz)"
+        class="block rounded-card border border-gray-200 bg-white p-5 transition-colors duration-(--duration-hover) ease-(--ease-dkgz)"
         :class="href ? 'hover:border-gray-300' : ''"
     >
-        <p class="text-eyebrow font-semibold uppercase tracking-[0.09em] text-gray-600">{{ label }}</p>
-        <p class="pt-2.5 font-mono text-h3 tabular-nums" :class="valueClass">{{ display }}</p>
-        <p v-if="hint" class="pt-1 text-xs text-gray-400">{{ hint }}</p>
+        <p class="text-eyebrow font-semibold uppercase text-gray-600">{{ label }}</p>
+        <p class="pt-3 text-h2 font-semibold tabular-nums" :class="valueClass">{{ display }}</p>
+        <p v-if="hint" class="text-sm text-gray-600">{{ hint }}</p>
     </component>
 </template>

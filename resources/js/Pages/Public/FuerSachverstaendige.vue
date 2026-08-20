@@ -56,9 +56,9 @@ const requirements = ['punkt_1', 'punkt_2', 'punkt_3', 'punkt_4', 'punkt_5', 'pu
                 <table class="mt-8 w-full border-collapse border-t border-b border-gray-200">
                     <thead>
                         <tr>
-                            <th scope="col" class="border-b border-gray-200 py-3 pr-4 text-left text-eyebrow font-semibold uppercase tracking-[0.09em] text-gray-600">Position</th>
-                            <th scope="col" class="border-b border-gray-200 px-4 py-3 text-left text-eyebrow font-semibold uppercase tracking-[0.09em] text-gray-600">Regel</th>
-                            <th scope="col" class="border-b border-gray-200 py-3 pl-4 text-right text-eyebrow font-semibold uppercase tracking-[0.09em] text-gray-600">Beispiel</th>
+                            <th scope="col" class="border-b border-gray-200 py-3 pr-4 text-left text-eyebrow font-semibold uppercase text-gray-600">Position</th>
+                            <th scope="col" class="border-b border-gray-200 px-4 py-3 text-left text-eyebrow font-semibold uppercase text-gray-600">Regel</th>
+                            <th scope="col" class="border-b border-gray-200 py-3 pl-4 text-right text-eyebrow font-semibold uppercase text-gray-600">Beispiel</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -85,7 +85,7 @@ const requirements = ['punkt_1', 'punkt_2', 'punkt_3', 'punkt_4', 'punkt_5', 'pu
                     </tbody>
                 </table>
 
-                <p class="pt-12 text-eyebrow font-semibold uppercase tracking-[0.09em] text-gray-600">{{ t('voraussetzungen', 'ueberschrift') }}</p>
+                <p class="pt-12 text-eyebrow font-semibold uppercase text-gray-600">{{ t('voraussetzungen', 'ueberschrift') }}</p>
                 <div class="grid grid-cols-1 gap-x-8 gap-y-3.5 pt-5 sm:grid-cols-2">
                     <div v-for="key in requirements" :key="key" class="flex min-w-0 gap-3">
                         <Check :size="20" :stroke-width="1.5" class="mt-0.5 shrink-0 text-navy-700" aria-hidden="true" />

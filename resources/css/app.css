@@ -85,6 +85,8 @@
   --text-eyebrow:  11.5px;
   --text-eyebrow--line-height: 1.4;
   --text-eyebrow--letter-spacing: 0.09em;
+  --text-meta:     11.5px; /* mono annotation: references, IDs, timestamps */
+  --text-meta--line-height: 1.6;
   --text-tab:      11px;   /* mobile bottom-tab label only — see DECISIONS.md */
   --text-tab--line-height: 1.2;
   --text-badge:    10px;   /* count badge on a tab or bell icon */
@@ -104,6 +106,14 @@
   --text-seal-3xs: 7px;    /* seal ring in the public header */
 
   /* ---- Geometry · Foundations 04 "Geometrie & Tiefe" ----------------- */
+  /* Letter-spacing roles the design uses outside the type scale. */
+  --tracking-wordmark: -0.022em; /* DKGZ wordmark */
+  --tracking-nav:       0.01em;  /* public header nav */
+  --tracking-label:     0.04em;  /* small caps label */
+  --tracking-plate:     0.06em;  /* auth panel eyebrow */
+  --tracking-rail:      0.12em;  /* sidebar sub-wordmark */
+  --tracking-seal:      0.14em;  /* seal ring */
+
   --radius-xs:   2px;
   --radius-sm:   3px;   /* default: buttons, inputs, code cells */
   --radius-card: 5px;   /* cards, panels */
@@ -219,6 +229,7 @@
   .measure-note     { max-width: 34ch; }  /* short note beside a reference */
   .measure-headline { max-width: 18ch; }  /* auth panel headline */
   .measure-scale    { max-width: 560px; } /* the 1–10 rating row */
+  .measure-wide     { max-width: 80ch; }  /* portal privacy note under a table */
   .measure-legal    { max-width: 78ch; }  /* the panel's legal footnote */
   .measure-footer   { max-width: 64ch; }  /* footer legal line */
   .measure-brand    { max-width: 44ch; }  /* footer brand paragraph */

@@ -83,7 +83,7 @@ const alignClass = (column) => ({
                             v-for="column in columns"
                             :key="column.key"
                             scope="col"
-                            class="px-4 py-3 text-eyebrow font-semibold uppercase tracking-[0.09em] text-gray-600"
+                            class="px-4 py-3 text-eyebrow font-semibold uppercase text-gray-600"
                             :class="alignClass(column)"
                             :style="column.width ? { width: column.width } : undefined"
                             :aria-sort="sort === column.key ? (direction === 'asc' ? 'ascending' : 'descending') : undefined"
