@@ -67,12 +67,15 @@ it('gives every section heading a count matching its own table', function () {
     }
 });
 
-it('documents the withdrawal page and both unplaced statuses', function () {
+it('documents the withdrawal page, the unplaced status and the fee model', function () {
     expect($this->report)
         ->toContain('/widerruf')
         ->toContain('`unanswered`')
-        ->toContain('`expired`')
-        ->toContain('anfrage-keine-rueckmeldung');
+        ->toContain('anfrage-keine-rueckmeldung')
+        ->toContain('Gebührenmodell')
+        // The deadline was removed; the report must not describe one.
+        ->not->toContain('`expired`')
+        ->not->toContain('Frist läuft');
 });
 
 it('never prints a test figure it did not verify', function () {

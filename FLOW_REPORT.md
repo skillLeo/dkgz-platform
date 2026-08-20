@@ -1,6 +1,6 @@
 # DKGZ — Ablaufbericht
 
-_Erzeugt am 20.08.2026 um 17:00 durch `php artisan dkgz:generate-flow-report`._
+_Erzeugt am 20.08.2026 um 17:05 durch `php artisan dkgz:generate-flow-report`._
 _Jede Zahl in diesem Dokument wird beim Erzeugen gezählt, nicht eingetragen._
 
 ## Kennzahlen
@@ -10,7 +10,7 @@ _Jede Zahl in diesem Dokument wird beim Erzeugen gezählt, nicht eingetragen._
 | Bildschirme | 59 |
 | davon | Admin 23 + Auth 11 + Fehler 1 + Portal 12 + Public 12 = 59 |
 | Routen insgesamt | 158 |
-| Tests (bestanden) | 369 _(Lauf vom 20.08.2026 16:58)_ |
+| Tests (bestanden) | 369 _(Lauf vom 20.08.2026 17:05)_ |
 | Gerenderte Seiten | 59 |
 | Rollen | 6 |
 | E-Mail-Vorlagen | 21 |
