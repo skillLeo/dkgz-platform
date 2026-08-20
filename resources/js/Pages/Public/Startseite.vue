@@ -110,7 +110,13 @@ const telHref = computed(() => `tel:${String(page.props.app?.phone ?? '').replac
 
                 <!-- Image column with the overlapping seal card -->
                 <div class="relative hidden pb-6 pl-6 lg:block">
-                    <div class="h-140 overflow-hidden rounded-card border border-gray-200">
+                    <!--
+                        The frame holds the briefed 4:5 ratio rather than a fixed
+                        560px height. Locked to a pixel height it stretched or
+                        cropped as the column widened, which is what made the
+                        hero look wrong on a large screen.
+                    -->
+                    <div class="aspect-4/5 max-h-160 overflow-hidden rounded-card border border-gray-200">
                         <ImageSlot
                             :src="t('hero', 'bild')"
                             alt="Kfz-Sachverständiger dokumentiert einen Fahrzeugschaden"

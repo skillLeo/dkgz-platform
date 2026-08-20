@@ -745,7 +745,7 @@
     "src": "node_modules/@fontsource/ibm-plex-sans/files/ibm-plex-sans-vietnamese-700-normal.woff2"
   },
   "resources/css/app.css": {
-    "file": "assets/app-BD5Ygswc.css",
+    "file": "assets/app-BjvssorA.css",
     "name": "app",
     "names": [
       "app.css"
@@ -1729,7 +1729,7 @@
     ]
   },
   "resources/js/Pages/Public/Startseite.vue": {
-    "file": "assets/Startseite-DjXRdTQC.js",
+    "file": "assets/Startseite-BYLFQM-l.js",
     "name": "Startseite",
     "src": "resources/js/Pages/Public/Startseite.vue",
     "isDynamicEntry": true,
@@ -1759,7 +1759,7 @@
     ]
   },
   "resources/js/app.js": {
-    "file": "assets/app-DmNVNYNK.js",
+    "file": "assets/app-TobK_i7h.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true,
