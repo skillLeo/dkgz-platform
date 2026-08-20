@@ -35,8 +35,8 @@ const isAdmin = computed(() => props.variant === 'admin')
 </script>
 
 <template>
-    <div class="min-h-screen bg-gray-100">
-        <div class="mx-auto grid min-h-screen w-full grid-cols-1 bg-white md:min-h-(--size-auth-shell) md:grid-cols-[minmax(340px,46fr)_minmax(360px,54fr)]">
+    <div class="min-h-svh bg-gray-100">
+        <div class="mx-auto grid min-h-svh w-full grid-cols-1 bg-white md:min-h-(--size-auth-shell) md:grid-cols-[minmax(340px,46fr)_minmax(360px,54fr)]">
             <!-- Authority panel -->
             <div class="relative flex min-w-0 flex-col overflow-hidden bg-navy-900 p-6 md:p-16">
                 <div
