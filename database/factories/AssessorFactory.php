@@ -11,6 +11,21 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class AssessorFactory extends Factory
 {
+    /** A VAT id that satisfies GermanVatId, so factory data survives validation. */
+    private static function vatId(): string
+    {
+        $digits = fake()->numerify('########');
+        $product = 10;
+
+        foreach (str_split($digits) as $digit) {
+            $sum = ((int) $digit + $product) % 10;
+            $sum = $sum === 0 ? 10 : $sum;
+            $product = (2 * $sum) % 11;
+        }
+
+        return 'DE'.$digits.((11 - $product) % 10);
+    }
+
     public function definition(): array
     {
         return [
@@ -22,7 +37,7 @@ class AssessorFactory extends Factory
             'postal_code' => fake()->numerify('#####'),
             'city' => fake('de_DE')->city(),
             'country' => 'DE',
-            'vat_id' => 'DE'.fake()->numerify('#########'),
+            'vat_id' => self::vatId(),
             'website' => 'www.'.fake()->domainWord().'.de',
             'certification_body' => fake()->randomElement(['tuev', 'dekra', 'gtue', 'kues', 'bvsk']),
             'certification_number' => fake()->bothify('??-#####'),

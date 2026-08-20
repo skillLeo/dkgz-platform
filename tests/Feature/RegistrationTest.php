@@ -11,6 +11,15 @@ use Database\Seeders\SettingsSeeder;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 
+/** An administrator with the permission the assessor screens are gated on. */
+function registrationAdmin(): User
+{
+    $user = User::factory()->create(['is_active' => true]);
+    $user->assignRole('admin');
+
+    return $user;
+}
+
 beforeEach(function () {
     $this->seed(RolePermissionSeeder::class);
     $this->seed(SettingsSeeder::class);
@@ -74,17 +83,55 @@ it('creates the user, the profile, the areas and the services', function () {
         ->and($assessor->serviceAreas->first()->postal_code_from)->toBe('40000');
 });
 
-it('stores the qualification document on the private disk', function () {
+it('stores both proofs on the private disk, typed and named', function () {
     Storage::fake('private');
 
     $this->post('/registrieren', registrationPayload([
-        'qualification_document' => UploadedFile::fake()->create('nachweis.pdf', 400, 'application/pdf'),
+        'documents' => [
+            ['type' => 'qualification', 'file' => UploadedFile::fake()->create('qualifikation.pdf', 400, 'application/pdf')],
+            ['type' => 'liability', 'file' => UploadedFile::fake()->create('haftpflicht.pdf', 250, 'application/pdf')],
+        ],
     ]))->assertRedirect(route('registration.pending'));
 
-    $path = User::firstWhere('email', 'm.reinhardt@kfz-gutachten-d.test')->assessor->qualification_document_path;
+    $documents = User::firstWhere('email', 'm.reinhardt@kfz-gutachten-d.test')->assessor->documents;
 
-    expect($path)->not->toBeNull();
-    Storage::disk('private')->assertExists($path);
+    expect($documents)->toHaveCount(2)
+        ->and($documents->pluck('type')->all())->toBe(['qualification', 'liability'])
+        ->and($documents->firstWhere('type', 'qualification')->original_name)->toBe('qualifikation.pdf');
+
+    foreach ($documents as $document) {
+        Storage::disk('private')->assertExists($document->path);
+        expect($document->size_bytes)->toBeGreaterThan(0);
+    }
+});
+
+it('refuses more than three proofs', function () {
+    Storage::fake('private');
+
+    $this->post('/registrieren', registrationPayload([
+        'documents' => collect(range(1, 4))->map(fn (int $n) => [
+            'type' => 'other',
+            'file' => UploadedFile::fake()->create("nachweis-{$n}.pdf", 100, 'application/pdf'),
+        ])->all(),
+    ]))->assertSessionHasErrors('documents');
+});
+
+it('lets an administrator download a submitted proof', function () {
+    Storage::fake('private');
+
+    $this->post('/registrieren', registrationPayload([
+        'documents' => [
+            ['type' => 'qualification', 'file' => UploadedFile::fake()->create('qualifikation.pdf', 400, 'application/pdf')],
+        ],
+    ]));
+
+    $assessor = User::firstWhere('email', 'm.reinhardt@kfz-gutachten-d.test')->assessor;
+    $document = $assessor->documents->first();
+
+    $this->actingAs(registrationAdmin())
+        ->get(route('admin.assessors.documents.download', [$assessor, $document]))
+        ->assertOk()
+        ->assertDownload('qualifikation.pdf');
 });
 
 it('rejects a postal code that does not exist', function () {

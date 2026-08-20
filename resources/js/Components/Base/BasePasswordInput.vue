@@ -109,7 +109,7 @@ const onKey = (event) => {
         </div>
 
         <div v-if="capsLock" class="mt-3.5 flex items-start gap-1.5 border-t border-gray-100 pt-3.5">
-            <AlertTriangle :size="14" :stroke-width="1.5" class="mt-[3px] shrink-0 text-warning" aria-hidden="true" />
+            <AlertTriangle :size="14" :stroke-width="1.5" class="mt-(--spacing-icon-nudge) shrink-0 text-warning" aria-hidden="true" />
             <span class="text-xs leading-normal text-warning">Feststelltaste ist aktiviert.</span>
         </div>
 

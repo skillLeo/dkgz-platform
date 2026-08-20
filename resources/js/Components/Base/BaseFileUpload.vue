@@ -20,11 +20,14 @@ const props = defineProps({
     progress: { type: Number, default: null },
     existing: { type: Array, default: () => [] },
     disabled: { type: Boolean, default: false },
+    required: { type: Boolean, default: false },
 })
 
 const emit = defineEmits(['update:modelValue', 'remove-existing'])
 
 const { fileSize, dateTime } = useGermanFormat()
+
+const fileNoun = computed(() => (props.multiple ? 'Dateien' : 'PDF'))
 
 const input = ref(null)
 const dragging = ref(false)
@@ -89,7 +92,9 @@ const shownError = computed(() => props.error || localError.value)
 
 <template>
     <div>
-        <label class="block pb-2 text-sm font-medium text-gray-800">{{ label }}</label>
+        <label class="block pb-2 text-sm font-medium text-gray-800">
+            {{ label }}<span v-if="required" class="text-danger" aria-hidden="true"> *</span>
+        </label>
 
         <div v-if="!hasContent">
             <button
@@ -106,7 +111,7 @@ const shownError = computed(() => props.error || localError.value)
             >
                 <Upload :size="24" :stroke-width="1.5" class="text-gray-600" aria-hidden="true" />
                 <span class="text-base text-gray-800">
-                    {{ multiple ? 'Dateien' : 'Datei' }} hierher ziehen oder
+                    {{ fileNoun }} hierher ziehen oder
                     <span class="font-medium text-navy-700 underline underline-offset-2">auswählen</span>
                 </span>
                 <span class="font-mono text-eyebrow text-gray-400">{{ acceptLabel }}</span>

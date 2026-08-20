@@ -58,6 +58,7 @@ it('formats money, dates, phone, file sizes and elapsed time identically in PHP 
         percent: input.percent.map((v) => f.percent(v)),
         ago: input.ago.map((v) => f.relativeTime(v, new Date(input.now))),
         deadline: input.deadline.map((v) => f.deadline(v, new Date(input.now))),
+        stamp: input.date.map((v) => f.stamp(v)),
     }))
     JS;
 
@@ -102,4 +103,5 @@ it('formats money, dates, phone, file sizes and elapsed time identically in PHP 
     $fixedNow = Carbon::parse($now);
     expect($js['ago'])->toBe(array_map(fn (string $v) => Formatter::relativeTime($v, $fixedNow), $agoCases));
     expect($js['deadline'])->toBe(array_map(fn (string $v) => Formatter::deadline($v, $fixedNow), $deadlineCases));
+    expect($js['stamp'])->toBe(array_map(fn (string $v) => Formatter::stamp($v), $dateCases));
 });

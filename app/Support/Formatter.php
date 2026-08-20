@@ -134,6 +134,16 @@ class Formatter
         return self::date($moment);
     }
 
+    /** → "17.08. · 08:42" — the compact stamp on a timeline step. */
+    public static function stamp(DateTimeInterface|CarbonInterface|string|null $value): string
+    {
+        if ($value === null) {
+            return '';
+        }
+
+        return Carbon::parse($value)->format('d.m.').' · '.Carbon::parse($value)->format('H:i');
+    }
+
     /** → "heute 18:00" / "18.08. 12:00" — the acceptance deadline in a list. */
     public static function deadline(DateTimeInterface|CarbonInterface|string|null $value, ?CarbonInterface $now = null): string
     {

@@ -59,7 +59,7 @@ const labels = {
         panel-title="Sie wurden in das DKGZ-Partnernetz eingeladen."
         panel-text="Nach dem Einrichten hinterlegen Sie Einsatzgebiet und Leistungen — danach erhalten Sie passende Anfragen."
     >
-        <div v-if="invitation.message" class="mb-6 rounded-sm border border-gray-200 border-l-[3px] border-l-navy-700 bg-gray-50 p-4">
+        <div v-if="invitation.message" class="mb-6 rounded-sm border border-gray-200 border-l-(length:--spacing-quote-rule) border-l-navy-700 bg-gray-50 p-4">
             <p class="text-base leading-relaxed text-gray-800">{{ invitation.message }}</p>
             <p v-if="invitation.invited_by" class="pt-2.5 font-mono text-xs text-gray-400">
                 {{ invitation.invited_by }} · DKGZ Administration

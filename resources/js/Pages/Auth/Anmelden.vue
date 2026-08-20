@@ -34,7 +34,7 @@ const throttled = computed(() => (form.errors.email ?? '').startsWith('Bitte war
         :variant="admin ? 'admin' : 'partner'"
         :eyebrow="admin ? 'Administration' : 'Partnerportal'"
         title="Anmeldung"
-        :description="admin ? '' : 'Melden Sie sich mit Ihren Zugangsdaten an.'"
+        :description="admin ? '' : 'Melden Sie sich mit Ihrer hinterlegten E-Mail-Adresse an.'"
     >
         <form novalidate @submit.prevent="submit">
             <div v-if="status" class="mb-6 rounded-sm border border-navy-700 bg-navy-100 p-4">
@@ -83,7 +83,7 @@ const throttled = computed(() => (form.errors.email ?? '').startsWith('Bitte war
 
         <template v-if="!admin && canRegister" #footer>
             Noch kein Partner?
-            <Link href="/registrieren" class="font-medium text-navy-700 hover:text-navy-500">Jetzt registrieren</Link>
+            <Link href="/registrieren" class="font-medium text-navy-700 hover:text-navy-500">Registrierung starten</Link>
         </template>
     </AuthLayout>
 </template>

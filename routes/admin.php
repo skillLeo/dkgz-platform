@@ -50,6 +50,8 @@ Route::prefix('admin')
         // Assessors
         Route::middleware('can:assessors.view')->group(function () {
             Route::get('/sachverstaendige', [AssessorController::class, 'index'])->name('assessors');
+            Route::get('/sachverstaendige/{assessor}/nachweise/{document}', [AssessorController::class, 'downloadDocument'])
+                ->name('assessors.documents.download');
             Route::get('/sachverstaendige/{assessor}', [AssessorController::class, 'show'])->name('assessors.show');
         });
         Route::post('/sachverstaendige/{assessor}/freigeben', [AssessorController::class, 'approve'])

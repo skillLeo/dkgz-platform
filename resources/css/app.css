@@ -130,6 +130,10 @@
   --spacing-appbar:     56px;
   --spacing-check:      18px;  /* checkbox and radio box */
   --spacing-flag:       3px;   /* black-red-gold rule height */
+  --spacing-raster:     3px;  /* gap between coverage-raster cells */
+  --spacing-icon-nudge: 3px;  /* optical baseline nudge on a 14px inline icon */
+  --spacing-quote-rule: 3px;  /* leading rule on a quoted invitation message */
+  --blur-dialog:        4px;  /* the one blur in the system — see DECISIONS.md */
   --spacing-hairline:   1.5px; /* spinner ring, thin marker */
   --spacing-dot-inset:  5px;   /* timeline node, half its own width */
   --spacing-dot-top:    18px;  /* timeline node, aligned to the first line */
@@ -144,6 +148,7 @@
   --container-review: 720px;
   --container-plz:    520px;  /* the hero's postal-code card */
   --container-dialog: 480px;  /* session-expired and confirmation dialogs */
+  --container-sheet:  560px;  /* the completion dialog, which carries a form */
   --container-trust:  1000px; /* the navy trust panel's three columns */
 
   /* Fixed heights the design specifies outright. */

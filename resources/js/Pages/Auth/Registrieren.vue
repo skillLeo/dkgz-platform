@@ -52,7 +52,10 @@ const form = useForm({
     certification_number: props.draft.certification_number ?? '',
     certification_valid_until: props.draft.certification_valid_until ?? '',
     years_experience: props.draft.years_experience ?? '',
-    qualification_document: null,
+    documents: [
+        { type: 'qualification', file: null },
+        { type: 'liability', file: null },
+    ],
     service_type_ids: props.draft.service_type_ids ?? [],
     service_areas: props.draft.service_areas ?? [{ from: '', to: '', label: '' }],
     terms: false,
@@ -69,7 +72,7 @@ const steps = [
 const fieldsForStep = {
     1: ['first_name', 'last_name', 'email', 'phone', 'password', 'password_confirmation'],
     2: ['company_name', 'legal_form', 'street', 'house_number', 'postal_code', 'city', 'vat_id', 'website'],
-    3: ['certification_body', 'certification_number', 'certification_valid_until', 'years_experience', 'qualification_document'],
+    3: ['certification_body', 'certification_number', 'certification_valid_until', 'years_experience', 'documents'],
     4: ['service_type_ids', 'service_areas', 'terms', 'privacy'],
 }
 
@@ -205,13 +208,27 @@ const stepErrors = computed(() =>
                         <BaseDatePicker id="certification_valid_until" v-model="form.certification_valid_until" label="Zertifikat gültig bis" :error="form.errors.certification_valid_until" optional />
                         <BaseInput id="years_experience" v-model="form.years_experience" label="Berufserfahrung in Jahren" :error="form.errors.years_experience" inputmode="numeric" numeric optional />
                     </div>
-                    <BaseFileUpload
-                        v-model="form.qualification_document"
-                        label="Nachweis der Qualifikation"
-                        accept=".pdf,.jpg,.jpeg,.png"
-                        accept-label="PDF, JPG oder PNG · max. 10 MB"
-                        :error="form.errors.qualification_document"
-                    />
+                    <p class="text-eyebrow font-semibold uppercase text-gray-600">
+                        Qualifikationsnachweis und Haftpflichtnachweis
+                    </p>
+                    <div class="flex flex-col gap-5">
+                        <BaseFileUpload
+                            v-model="form.documents[0].file"
+                            label="Qualifikationsnachweis"
+                            required
+                            accept=".pdf,.jpg,.jpeg,.png"
+                            accept-label="PDF · max. 3 Dateien · je max. 10 MB"
+                            :error="form.errors['documents.0.file']"
+                        />
+                        <BaseFileUpload
+                            v-model="form.documents[1].file"
+                            label="Haftpflichtnachweis"
+                            required
+                            accept=".pdf,.jpg,.jpeg,.png"
+                            accept-label="PDF · je max. 10 MB"
+                            :error="form.errors['documents.1.file']"
+                        />
+                    </div>
                 </div>
 
                 <!-- 4 · Leistungen und Einsatzgebiet -->

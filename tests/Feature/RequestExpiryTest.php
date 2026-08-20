@@ -2,14 +2,17 @@
 
 use App\Actions\MatchRequestAction;
 use App\Console\Commands\ExpireLapsedRequestsCommand;
+use App\Jobs\NotifyMatchedAssessorsJob;
 use App\Models\Assessor;
 use App\Models\AssessorServiceArea;
+use App\Models\EmailLog;
 use App\Models\RequestMatch;
 use App\Models\ServiceRequest;
 use App\Models\ServiceType;
 use App\Models\Setting;
 use App\Models\User;
 use App\Support\Settings;
+use Illuminate\Support\Facades\Queue;
 
 /** A request that has been matched to one qualifying assessor. */
 function matchedRequest(): ServiceRequest
@@ -84,5 +87,28 @@ describe('the acceptance deadline', function () {
         $this->artisan(ExpireLapsedRequestsCommand::class)->assertSuccessful();
 
         expect($request->fresh()->status)->toBe(ServiceRequest::STATUS_ASSIGNED);
+    });
+});
+
+describe('the new-request e-mail preference', function () {
+    it('still records the in-portal notification when the e-mail is switched off', function () {
+        Queue::fake();
+
+        $request = matchedRequest();
+        $assessor = Assessor::first();
+        $assessor->update(['notify_new_request' => false]);
+
+        (new NotifyMatchedAssessorsJob($request->id))->handle();
+
+        expect($assessor->user->notifications()->count())->toBe(1)
+            ->and(EmailLog::count())->toBe(0);
+    });
+
+    it('sends the e-mail when the preference is on', function () {
+        $request = matchedRequest();
+
+        (new NotifyMatchedAssessorsJob($request->id))->handle();
+
+        expect(EmailLog::count())->toBeGreaterThan(0);
     });
 });

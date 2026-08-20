@@ -57,8 +57,15 @@ class NotifyMatchedAssessorsJob implements ShouldQueue
             return;
         }
 
-        // In-portal notification, read back by the 45-second poll.
+        // In-portal notification, read back by the 45-second poll. This one is
+        // not opt-out: the portal must show the partner what they were matched
+        // to, or the match is invisible to them.
         $assessor->user->notify(new NewRequestNotification($request));
+
+        // The e-mail is opt-out, from the Benachrichtigungen panel in settings.
+        if (! $assessor->notify_new_request) {
+            return;
+        }
 
         Mailer::send($assessor->user->email, 'neue-anfrage-im-gebiet', [
             'eyebrow' => 'Neue Anfrage',

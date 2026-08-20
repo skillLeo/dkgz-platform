@@ -23,6 +23,8 @@ class ServiceAreaController extends Controller
                     'to' => $area->postal_code_to,
                     'label' => $area->label,
                     'range' => $area->range(),
+                    'postal_code_from' => $area->postal_code_from,
+                    'postal_code_to' => $area->postal_code_to,
                 ]),
         ]);
     }

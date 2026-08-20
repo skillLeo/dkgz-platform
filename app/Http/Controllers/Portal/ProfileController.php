@@ -5,9 +5,11 @@ namespace App\Http\Controllers\Portal;
 use App\Http\Controllers\Auth\PasswordResetController;
 use App\Http\Controllers\Controller;
 use App\Models\Commission;
+use App\Models\ServiceRequest;
 use App\Models\ServiceType;
 use App\Rules\ExistingPostalCode;
 use App\Rules\GermanVatId;
+use App\Rules\Iban;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -80,10 +82,34 @@ class ProfileController extends Controller
     public function services(Request $request): Response
     {
         $assessor = $request->user()->assessor;
+        $windowDays = 90;
+
+        // How much work each type has actually drawn inside this partner's own
+        // area, so switching a type on or off is an informed decision rather
+        // than a guess. Counted across all requests in range, not only the ones
+        // this partner was matched to — otherwise a type they do not currently
+        // offer would always read zero.
+        $demand = ServiceRequest::query()
+            ->where('created_at', '>=', now()->subDays($windowDays))
+            ->whereExists(fn ($sub) => $sub->selectRaw('1')
+                ->from('assessor_service_areas')
+                ->where('assessor_service_areas.assessor_id', $assessor->id)
+                ->whereColumn('service_requests.postal_code', '>=', 'assessor_service_areas.postal_code_from')
+                ->whereColumn('service_requests.postal_code', '<=', 'assessor_service_areas.postal_code_to'))
+            ->selectRaw('service_type_id, COUNT(*) AS total')
+            ->groupBy('service_type_id')
+            ->pluck('total', 'service_type_id');
 
         return Inertia::render('Portal/Leistungen', [
-            'serviceTypes' => ServiceType::active()->ordered()->get(['id', 'name_de', 'description_de']),
+            'serviceTypes' => ServiceType::active()->ordered()->get(['id', 'name_de', 'description_de'])
+                ->map(fn (ServiceType $type) => [
+                    'id' => $type->id,
+                    'name_de' => $type->name_de,
+                    'description_de' => $type->description_de,
+                    'demand' => (int) ($demand[$type->id] ?? 0),
+                ]),
             'selected' => $assessor->serviceTypes()->pluck('service_types.id'),
+            'demandWindowDays' => $windowDays,
         ]);
     }
 
@@ -115,9 +141,91 @@ class ProfileController extends Controller
 
     public function settings(Request $request): Response
     {
+        $user = $request->user();
+        $assessor = $user->assessor;
+
         return Inertia::render('Portal/Einstellungen', [
-            'email' => $request->user()->email,
+            'email' => $user->email,
+            'company' => [
+                'company_name' => $assessor->company_name,
+                'vat_id' => $assessor->vat_id,
+                'phone' => $user->phone,
+                'email' => $user->email,
+            ],
+            'bank' => [
+                'bank_account_holder' => $assessor->bank_account_holder,
+                'bank_iban' => $assessor->bank_iban,
+                'bank_bic' => $assessor->bank_bic,
+            ],
+            'notifications' => [
+                'notify_new_request' => $assessor->notify_new_request,
+                'notify_deadline_reminder' => $assessor->notify_deadline_reminder,
+                'notify_commission_statement' => $assessor->notify_commission_statement,
+            ],
         ]);
+    }
+
+    public function updateCompany(Request $request): RedirectResponse
+    {
+        $data = $request->validate([
+            'company_name' => ['required', 'string', 'max:180'],
+            'vat_id' => ['nullable', new GermanVatId],
+            'phone' => ['required', 'string', 'max:40'],
+        ], [], [
+            'company_name' => 'der Firmenname',
+            'vat_id' => 'die USt-IdNr.',
+            'phone' => 'die Telefonnummer',
+        ]);
+
+        $request->user()->update(['phone' => $data['phone']]);
+        $request->user()->assessor->update([
+            'company_name' => $data['company_name'],
+            'vat_id' => $data['vat_id'],
+        ]);
+
+        return back()->with('success', 'Ihre Firmendaten wurden gespeichert.');
+    }
+
+    /**
+     * Recorded so the monthly commission invoice can be settled by transfer.
+     * DKGZ never debits this account — no payment runs through the platform.
+     */
+    public function updateBank(Request $request): RedirectResponse
+    {
+        $data = $request->validate([
+            'bank_account_holder' => ['required', 'string', 'max:180'],
+            'bank_iban' => ['required', new Iban],
+            // Case-insensitive: the value is upper-cased on the way in, so
+            // rejecting a lower-case BIC here would fail input we accept.
+            'bank_bic' => ['nullable', 'string', 'regex:/^[A-Za-z]{6}[A-Za-z0-9]{2}([A-Za-z0-9]{3})?$/'],
+        ], [
+            'bank_bic.regex' => 'Die BIC muss aus 8 oder 11 Zeichen bestehen.',
+        ], [
+            'bank_account_holder' => 'der Kontoinhaber',
+            'bank_iban' => 'die IBAN',
+            'bank_bic' => 'die BIC',
+        ]);
+
+        $request->user()->assessor->update([
+            'bank_account_holder' => $data['bank_account_holder'],
+            'bank_iban' => str($data['bank_iban'])->replace(' ', '')->upper()->value(),
+            'bank_bic' => $data['bank_bic'] === null ? null : strtoupper($data['bank_bic']),
+        ]);
+
+        return back()->with('success', 'Ihre Bankverbindung wurde gespeichert.');
+    }
+
+    public function updateNotifications(Request $request): RedirectResponse
+    {
+        $data = $request->validate([
+            'notify_new_request' => ['required', 'boolean'],
+            'notify_deadline_reminder' => ['required', 'boolean'],
+            'notify_commission_statement' => ['required', 'boolean'],
+        ]);
+
+        $request->user()->assessor->update($data);
+
+        return back()->with('success', 'Ihre Benachrichtigungen wurden gespeichert.');
     }
 
     public function updatePassword(Request $request): RedirectResponse

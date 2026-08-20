@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\Assessor;
+use App\Models\AssessorDocument;
 use App\Models\ServiceType;
 use App\Models\User;
 use App\Rules\ExistingPostalCode;
@@ -117,10 +118,23 @@ class RegistrationController extends Controller
                 'is_available' => true,
             ]);
 
-            if ($request->hasFile('qualification_document')) {
-                $assessor->update([
-                    'qualification_document_path' => $request->file('qualification_document')
-                        ->store('nachweise', 'private'),
+            // Iterating the validated array rather than the file bag: the bag
+            // does not preserve submission order, and the order is what the
+            // reviewer reads them in.
+            foreach ($data['documents'] ?? [] as $index => $entry) {
+                $file = $request->file("documents.{$index}.file");
+
+                if ($file === null) {
+                    continue;
+                }
+
+                $assessor->documents()->create([
+                    'type' => $entry['type'] ?? AssessorDocument::TYPE_OTHER,
+                    'path' => $file->store('nachweise', 'private'),
+                    'original_name' => $file->getClientOriginalName(),
+                    'size_bytes' => $file->getSize(),
+                    'mime_type' => $file->getMimeType() ?? 'application/octet-stream',
+                    'uploaded_at' => now(),
                 ]);
             }
 
@@ -171,7 +185,12 @@ class RegistrationController extends Controller
                 'certification_number' => ['required', 'string', 'max:60'],
                 'certification_valid_until' => ['nullable', 'date', 'after:today'],
                 'years_experience' => ['nullable', 'integer', 'min:0', 'max:70'],
-                'qualification_document' => ['nullable', 'file', 'mimes:pdf,jpg,jpeg,png', 'max:10240'],
+                // Qualification and liability cover, up to three files in all
+                // — the design's "Qualifikationsnachweis und Haftpflichtnachweis
+                // · PDF · max. 3 Dateien".
+                'documents' => ['nullable', 'array', 'max:3'],
+                'documents.*.file' => ['required', 'file', 'mimes:pdf,jpg,jpeg,png', 'max:10240'],
+                'documents.*.type' => ['required', 'in:qualification,liability,other'],
             ],
             4 => [
                 'service_type_ids' => ['required', 'array', 'min:1'],
@@ -238,7 +257,9 @@ class RegistrationController extends Controller
             'certification_number' => 'die Zertifizierungsnummer',
             'certification_valid_until' => 'die Gültigkeit der Zertifizierung',
             'years_experience' => 'die Berufserfahrung',
-            'qualification_document' => 'der Qualifikationsnachweis',
+            'documents' => 'die Nachweise',
+            'documents.*.file' => 'die Datei',
+            'documents.*.type' => 'die Art des Nachweises',
             'service_type_ids' => 'die Leistungen',
             'service_areas' => 'das Einsatzgebiet',
         ];

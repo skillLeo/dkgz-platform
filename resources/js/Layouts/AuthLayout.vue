@@ -17,7 +17,8 @@ const props = defineProps({
     title: { type: String, required: true },
     description: { type: String, default: '' },
     panelTitle: { type: String, default: 'Bundesweites Netz geprüfter Kfz-Sachverständiger.' },
-    panelText: { type: String, default: 'Zugang für freigegebene Partner der Deutschen KFZ-Gutachterzentrale.' },
+    panelText: { type: String, default: 'Zugang für Partner der Deutschen KFZ-Gutachterzentrale.' },
+    panelFooter: { type: String, default: 'Partnerbereich · Zugang nur für freigegebene Sachverständige' },
     variant: { type: String, default: 'partner' },
     facts: {
         type: Array,
@@ -81,7 +82,8 @@ const isAdmin = computed(() => props.variant === 'admin')
                     <p class="text-eyebrow font-semibold uppercase text-white/45">Interner Zugang</p>
                 </div>
 
-                <div v-if="!isAdmin" class="relative mt-auto flex items-end justify-end pt-16">
+                <div v-if="!isAdmin" class="relative mt-auto flex flex-wrap items-end justify-between gap-4 pt-16">
+                    <p class="text-xs text-white/40">{{ panelFooter }}</p>
                     <div class="text-right">
                         <FlagRule :width="40" class="ml-auto" />
                         <p class="pt-2 text-xs text-white/40">Deutsche KFZ-Gutachterzentrale</p>

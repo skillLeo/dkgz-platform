@@ -50,6 +50,9 @@ Route::prefix('portal')
         Route::get('/profil', [ProfileController::class, 'edit'])->name('profile');
         Route::post('/profil', [ProfileController::class, 'update'])->name('profile.update');
         Route::get('/einstellungen', [ProfileController::class, 'settings'])->name('settings');
+        Route::post('/einstellungen/firma', [ProfileController::class, 'updateCompany'])->name('settings.company');
+        Route::post('/einstellungen/bankverbindung', [ProfileController::class, 'updateBank'])->name('settings.bank');
+        Route::post('/einstellungen/benachrichtigungen', [ProfileController::class, 'updateNotifications'])->name('settings.notifications');
         Route::post('/einstellungen/passwort', [ProfileController::class, 'updatePassword'])->name('settings.password');
 
         // Notifications

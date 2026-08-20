@@ -90,6 +90,14 @@ export function useGermanFormat() {
         return date(d)
     }
 
+    /** → "17.08. · 08:42" — the compact stamp on a timeline step. */
+    const stamp = (value) => {
+        const d = toDate(value)
+        if (!d) return ''
+
+        return `${pad(d.getDate())}.${pad(d.getMonth() + 1)}. · ${pad(d.getHours())}:${pad(d.getMinutes())}`
+    }
+
     /** → "heute 18:00" / "18.08. 12:00" — the acceptance deadline in a list. */
     const deadline = (value, now = new Date()) => {
         const d = toDate(value)
@@ -183,7 +191,7 @@ export function useGermanFormat() {
     const reference = (value) => (value ? String(value) : '')
 
     return {
-        money, amount, parseMoney, date, dateTime, time, relativeTime, deadline,
+        money, amount, parseMoney, date, dateTime, time, relativeTime, deadline, stamp,
         phone, percent, fileSize, reference,
     }
 }

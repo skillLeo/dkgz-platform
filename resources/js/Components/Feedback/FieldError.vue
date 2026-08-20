@@ -13,7 +13,7 @@ defineProps({
 
 <template>
     <div :id="id" class="flex items-start gap-1.5 pt-1.5" role="alert">
-        <AlertCircle :size="14" :stroke-width="1.5" class="mt-[3px] shrink-0 text-danger" aria-hidden="true" />
+        <AlertCircle :size="14" :stroke-width="1.5" class="mt-(--spacing-icon-nudge) shrink-0 text-danger" aria-hidden="true" />
         <span class="text-xs leading-normal text-danger">{{ message }}</span>
     </div>
 </template>

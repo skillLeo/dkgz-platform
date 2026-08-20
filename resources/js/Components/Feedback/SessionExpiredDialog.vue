@@ -19,7 +19,7 @@ defineProps({
     <Teleport to="body">
         <div v-if="open" class="fixed inset-0 z-100">
             <!-- The application behind, blurred and dimmed -->
-            <div class="absolute inset-0 bg-navy-900/32 backdrop-blur-[4px]" aria-hidden="true" />
+            <div class="absolute inset-0 bg-navy-900/32 backdrop-blur-(--blur-dialog)" aria-hidden="true" />
 
             <div class="absolute inset-0 grid place-items-center p-5">
                 <div

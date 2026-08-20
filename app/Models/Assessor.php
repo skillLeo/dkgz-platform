@@ -27,6 +27,8 @@ class Assessor extends Model
     protected $fillable = [
         'user_id', 'company_name', 'legal_form', 'street', 'house_number',
         'postal_code', 'city', 'country', 'vat_id', 'website',
+        'bank_account_holder', 'bank_iban', 'bank_bic',
+        'notify_new_request', 'notify_deadline_reminder', 'notify_commission_statement',
         'certification_body', 'certification_number', 'certification_valid_until',
         'years_experience', 'qualification_document_path', 'is_available',
         'approval_status', 'approved_at', 'approved_by', 'rejection_reason',
@@ -37,6 +39,9 @@ class Assessor extends Model
     {
         return [
             'is_available' => 'boolean',
+            'notify_new_request' => 'boolean',
+            'notify_deadline_reminder' => 'boolean',
+            'notify_commission_statement' => 'boolean',
             'certification_valid_until' => 'date',
             'approved_at' => 'datetime',
             'suspended_at' => 'datetime',
@@ -101,6 +106,14 @@ class Assessor extends Model
             ->unique()
             ->sort()
             ->implode(', ');
+    }
+
+    public function documents(): HasMany
+    {
+        // Qualification first, then liability: the order a reviewer works in.
+        return $this->hasMany(AssessorDocument::class)
+            ->orderByRaw("CASE type WHEN 'qualification' THEN 0 WHEN 'liability' THEN 1 ELSE 2 END")
+            ->orderBy('id');
     }
 
     public function serviceAreas(): HasMany

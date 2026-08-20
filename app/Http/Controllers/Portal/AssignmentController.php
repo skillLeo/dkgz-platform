@@ -10,6 +10,7 @@ use App\Models\Assignment;
 use App\Models\AssignmentDocument;
 use App\Support\Formatter;
 use App\Support\Money;
+use App\Support\Settings;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -24,8 +25,25 @@ class AssignmentController extends Controller
 {
     public function index(Request $request): Response
     {
+        $assessorId = $request->user()->assessor->id;
+
+        $filters = $request->validate([
+            'status' => ['nullable', 'in:aktiv,abgeschlossen'],
+            'suche' => ['nullable', 'string', 'max:100'],
+        ]);
+
         $assignments = Assignment::query()
-            ->where('assessor_id', $request->user()->assessor->id)
+            ->where('assessor_id', $assessorId)
+            ->when(($filters['status'] ?? null) === 'aktiv', fn ($query) => $query->open())
+            ->when(($filters['status'] ?? null) === 'abgeschlossen',
+                fn ($query) => $query->where('status', Assignment::STATUS_COMPLETED))
+            ->when(filled($filters['suche'] ?? null), function ($query) use ($filters) {
+                $term = '%'.$filters['suche'].'%';
+                $query->whereHas('serviceRequest', fn ($q) => $q
+                    ->where('reference', 'like', $term)
+                    ->orWhere('city', 'like', $term)
+                    ->orWhere('postal_code', 'like', $term));
+            })
             ->with(['serviceRequest.serviceType'])
             ->latest('accepted_at')
             ->paginate(15)
@@ -44,8 +62,18 @@ class AssignmentController extends Controller
                     'location' => $assignment->serviceRequest->locationLabel(),
                     'vehicle' => $assignment->serviceRequest->vehicleLabel(),
                     'service_type' => $assignment->serviceRequest->serviceType?->name_de,
+                    'customer_initial' => $assignment->serviceRequest->customerShortName(),
                 ],
             ]),
+            'counts' => [
+                'active' => Assignment::where('assessor_id', $assessorId)->open()->count(),
+                'completed' => Assignment::where('assessor_id', $assessorId)
+                    ->where('status', Assignment::STATUS_COMPLETED)->count(),
+            ],
+            'filters' => [
+                'status' => $filters['status'] ?? null,
+                'suche' => $filters['suche'] ?? '',
+            ],
         ]);
     }
 
@@ -94,6 +122,10 @@ class AssignmentController extends Controller
                 'status' => $assignment->commission->status,
                 'status_label' => $assignment->commission->statusLabel(),
             ],
+            // The dialog shows the split live as the fee is typed, so it needs
+            // the current rate; the frozen rate on a settled commission is
+            // separate and comes back on the commission payload above.
+            'commissionRate' => Settings::commissionRate(),
             'feeBounds' => [
                 'min' => Money::MIN_FEE_CENTS,
                 'max' => Money::MAX_FEE_CENTS,

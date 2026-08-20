@@ -1,21 +1,22 @@
 <script setup>
 import { Head, useForm } from '@inertiajs/vue3'
-import { Check } from 'lucide-vue-next'
 import PortalLayout from '../../Layouts/PortalLayout.vue'
-import PageHeader from '../../Components/Layout/PageHeader.vue'
+import BaseCheckbox from '../../Components/Base/BaseCheckbox.vue'
 import BaseButton from '../../Components/Base/BaseButton.vue'
+import ErrorSummary from '../../Components/Feedback/ErrorSummary.vue'
 
 const props = defineProps({
     serviceTypes: { type: Array, default: () => [] },
     selected: { type: Array, default: () => [] },
+    demandWindowDays: { type: Number, default: 90 },
 })
 
 const form = useForm({ service_type_ids: [...props.selected] })
 
-const toggle = (id) => {
-    const index = form.service_type_ids.indexOf(id)
-    if (index === -1) form.service_type_ids.push(id)
-    else form.service_type_ids.splice(index, 1)
+const toggle = (id, on) => {
+    form.service_type_ids = on
+        ? [...form.service_type_ids, id]
+        : form.service_type_ids.filter((value) => value !== id)
 }
 </script>
 
@@ -23,37 +24,42 @@ const toggle = (id) => {
     <Head title="Leistungen" />
 
     <PortalLayout title="Leistungen">
-        <PageHeader
-            title="Leistungen"
-            description="Sie erhalten nur Anfragen zu den Gutachten, die Sie hier ausgewählt haben."
-        />
+        <form
+            class="max-w-3xl rounded-card border border-gray-200 bg-white p-5"
+            novalidate
+            @submit.prevent="form.post('/portal/leistungen', { preserveScroll: true })"
+        >
+            <h2 class="text-eyebrow font-semibold uppercase text-gray-600">Angebotene Leistungen</h2>
+            <p class="measure pt-2 text-sm leading-normal text-gray-600">
+                Sie erhalten nur Anfragen zu den hier ausgewählten Gutachtenarten.
+            </p>
 
-        <form class="max-w-2xl" @submit.prevent="form.post('/portal/leistungen', { preserveScroll: true })">
-            <p v-if="form.errors.service_type_ids" class="pb-4 text-sm text-danger" role="alert">{{ form.errors.service_type_ids }}</p>
+            <ErrorSummary v-if="form.hasErrors" :errors="form.errors" class="mt-4" />
 
-            <div class="flex flex-col gap-2">
-                <label
+            <ul class="pt-4">
+                <li
                     v-for="type in serviceTypes"
                     :key="type.id"
-                    class="flex cursor-pointer items-start gap-3 rounded-sm border bg-white p-4 transition-colors duration-(--duration-hover) ease-(--ease-dkgz)"
-                    :class="form.service_type_ids.includes(type.id) ? 'border-navy-700 bg-navy-100' : 'border-gray-200 hover:border-gray-300'"
+                    class="flex flex-wrap items-center justify-between gap-4 border-b border-gray-100 py-3.5 last:border-b-0"
                 >
-                    <input type="checkbox" :checked="form.service_type_ids.includes(type.id)" class="sr-only" @change="toggle(type.id)">
-                    <span
-                        class="mt-0.5 grid h-(--spacing-check) w-(--spacing-check) shrink-0 place-items-center rounded-sm border"
-                        :class="form.service_type_ids.includes(type.id) ? 'border-navy-700 bg-navy-700 text-white' : 'border-gray-300'"
-                        aria-hidden="true"
+                    <BaseCheckbox
+                        :model-value="form.service_type_ids.includes(type.id)"
+                        @update:model-value="toggle(type.id, $event)"
                     >
-                        <Check v-if="form.service_type_ids.includes(type.id)" :size="12" :stroke-width="1.5" />
+                        <span class="text-base text-gray-800">{{ type.name_de }}</span>
+                    </BaseCheckbox>
+                    <span class="shrink-0 font-mono text-meta tabular-nums text-gray-400">
+                        {{ type.demand }} {{ type.demand === 1 ? 'Anfrage' : 'Anfragen' }} / {{ demandWindowDays }} Tage
                     </span>
-                    <span class="min-w-0">
-                        <span class="block text-base font-medium text-gray-800">{{ type.name_de }}</span>
-                        <span v-if="type.description_de" class="block pt-0.5 text-sm leading-normal text-gray-600">{{ type.description_de }}</span>
-                    </span>
-                </label>
-            </div>
+                </li>
+            </ul>
 
-            <BaseButton type="submit" size="cta" class="mt-6" :loading="form.processing">Leistungen speichern</BaseButton>
+            <BaseButton type="submit" size="cta" class="mt-5" :loading="form.processing">Auswahl speichern</BaseButton>
+
+            <p class="pt-3 text-sm leading-normal text-gray-600">
+                Die Zahlen zeigen, wie viele Anfragen dieser Art in Ihrem Einsatzgebiet eingegangen sind — unabhängig
+                davon, ob Sie die Leistung derzeit anbieten.
+            </p>
         </form>
     </PortalLayout>
 </template>

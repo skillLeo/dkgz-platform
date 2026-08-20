@@ -5,9 +5,11 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Jobs\NotifyAssessorApprovalJob;
 use App\Models\Assessor;
+use App\Models\AssessorDocument;
 use App\Support\Formatter;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Inertia\Response;
 use League\Csv\Writer;
@@ -66,7 +68,7 @@ class AssessorController extends Controller
     {
         $this->authorize('view', $assessor);
 
-        $assessor->load(['user', 'serviceAreas', 'serviceTypes', 'approvedBy']);
+        $assessor->load(['documents', 'user', 'serviceAreas', 'serviceTypes', 'approvedBy']);
 
         return Inertia::render('Admin/Sachverstaendiger', [
             'assessor' => [
@@ -80,7 +82,14 @@ class AssessorController extends Controller
                 'certification_number' => $assessor->certification_number,
                 'certification_valid_until' => $assessor->certification_valid_until,
                 'years_experience' => $assessor->years_experience,
-                'has_document' => $assessor->qualification_document_path !== null,
+                'documents' => $assessor->documents->map(fn (AssessorDocument $document) => [
+                    'id' => $document->id,
+                    'type_label' => $document->typeLabel(),
+                    'original_name' => $document->original_name,
+                    'size_label' => Formatter::fileSize($document->size_bytes),
+                    'uploaded_at' => $document->uploaded_at,
+                    'download_url' => route('admin.assessors.documents.download', [$assessor, $document]),
+                ])->all(),
                 'approval_status' => $assessor->approval_status,
                 'is_available' => $assessor->is_available,
                 'approved_at' => $assessor->approved_at,
@@ -236,5 +245,21 @@ class AssessorController extends Controller
         }, 'sachverstaendige-'.now()->format('Y-m-d').'.csv', [
             'Content-Type' => 'text/csv; charset=UTF-8',
         ]);
+    }
+
+    /**
+     * Streams a submitted proof. Approval is a judgement about evidence, so the
+     * evidence has to be openable — knowing only that a file exists is not a
+     * basis for admitting someone to the partner network.
+     */
+    public function downloadDocument(Assessor $assessor, AssessorDocument $document): StreamedResponse
+    {
+        $this->authorize('view', $assessor);
+        abort_unless($document->assessor_id === $assessor->id, 404);
+
+        $disk = Storage::disk('private');
+        abort_unless($disk->exists($document->path), 404);
+
+        return $disk->download($document->path, $document->original_name);
     }
 }

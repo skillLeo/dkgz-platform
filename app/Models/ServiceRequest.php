@@ -121,6 +121,26 @@ class ServiceRequest extends Model
             ($this->vehicle_year ? " · {$this->vehicle_year}" : ''));
     }
 
+    /**
+     * "Martina Reinhardt" → "M. Reinhardt". Used in the partner's own order
+     * list, where the contact has already been released to them; the privacy
+     * boundary in ServiceRequestResource still governs who may see any of it.
+     */
+    public function customerShortName(): ?string
+    {
+        if (blank($this->customer_name)) {
+            return null;
+        }
+
+        $parts = preg_split('/\s+/', trim($this->customer_name));
+
+        if (count($parts) < 2) {
+            return $this->customer_name;
+        }
+
+        return mb_substr($parts[0], 0, 1).'. '.end($parts);
+    }
+
     /** "DKGZ-2026-04812" → "04812", the form used in compact lists. */
     public function shortReference(): string
     {

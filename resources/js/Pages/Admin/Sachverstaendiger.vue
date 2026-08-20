@@ -1,6 +1,7 @@
 <script setup>
 import { ref } from 'vue'
 import { Head, useForm } from '@inertiajs/vue3'
+import { Download, FileText } from 'lucide-vue-next'
 import AdminLayout from '../../Layouts/AdminLayout.vue'
 import PageHeader from '../../Components/Layout/PageHeader.vue'
 import SectionLabel from '../../Components/Layout/SectionLabel.vue'
@@ -127,13 +128,38 @@ const doUnsuspend = async () => {
                         <div class="flex items-baseline justify-between gap-4 border-b border-gray-100 py-2.5">
                             <dt class="text-sm text-gray-600">Berufserfahrung</dt><dd class="font-mono text-sm tabular-nums text-gray-800">{{ assessor.years_experience ?? '—' }} Jahre</dd>
                         </div>
-                        <div class="flex items-baseline justify-between gap-4 border-b border-gray-100 py-2.5">
-                            <dt class="text-sm text-gray-600">Nachweis</dt>
-                            <dd class="text-sm" :class="assessor.has_document ? 'text-success' : 'text-warning'">
-                                {{ assessor.has_document ? 'hinterlegt' : 'fehlt' }}
-                            </dd>
-                        </div>
                     </dl>
+
+                    <div class="border-t border-gray-200 pt-4 mt-4">
+                        <p class="text-eyebrow font-semibold uppercase text-gray-600">Nachweise</p>
+
+                        <p v-if="!assessor.documents.length" class="pt-2 text-sm text-warning">
+                            Es wurden keine Nachweise eingereicht.
+                        </p>
+
+                        <ul v-else class="pt-2">
+                            <li
+                                v-for="doc in assessor.documents"
+                                :key="doc.id"
+                                class="flex items-center gap-3 border-b border-gray-100 py-2.5 last:border-b-0"
+                            >
+                                <FileText :size="18" :stroke-width="1.5" class="shrink-0 text-gray-600" aria-hidden="true" />
+                                <span class="min-w-0 flex-1">
+                                    <span class="block truncate text-sm text-gray-800">{{ doc.type_label }}</span>
+                                    <span class="block truncate font-mono text-meta text-gray-400">
+                                        {{ doc.original_name }} · {{ doc.size_label }}
+                                    </span>
+                                </span>
+                                <a
+                                    :href="doc.download_url"
+                                    class="shrink-0 text-gray-600 hover:text-navy-700"
+                                    :aria-label="`${doc.type_label} herunterladen`"
+                                >
+                                    <Download :size="18" :stroke-width="1.5" aria-hidden="true" />
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
                 </section>
 
                 <section class="border border-gray-200 bg-white p-5">
