@@ -98,24 +98,6 @@ export function useGermanFormat() {
         return `${pad(d.getDate())}.${pad(d.getMonth() + 1)}. · ${pad(d.getHours())}:${pad(d.getMinutes())}`
     }
 
-    /** → "heute 18:00" / "18.08. 12:00" — the acceptance deadline in a list. */
-    const deadline = (value, now = new Date()) => {
-        const d = toDate(value)
-        if (!d) return ''
-
-        const clock = `${pad(d.getHours())}:${pad(d.getMinutes())}`
-        const sameDay = (a, b) => a.getFullYear() === b.getFullYear()
-            && a.getMonth() === b.getMonth()
-            && a.getDate() === b.getDate()
-
-        if (sameDay(d, now)) return `heute ${clock}`
-
-        const tomorrow = new Date(now.getTime())
-        tomorrow.setDate(tomorrow.getDate() + 1)
-        if (sameDay(d, tomorrow)) return `morgen ${clock}`
-
-        return `${pad(d.getDate())}.${pad(d.getMonth() + 1)}. ${clock}`
-    }
 
     /** → "14:32 Uhr" */
     const time = (value) => {
@@ -191,7 +173,7 @@ export function useGermanFormat() {
     const reference = (value) => (value ? String(value) : '')
 
     return {
-        money, amount, parseMoney, date, dateTime, time, relativeTime, deadline, stamp,
+        money, amount, parseMoney, date, dateTime, time, relativeTime, stamp,
         phone, percent, fileSize, reference,
     }
 }

@@ -60,7 +60,7 @@ class AttentionQueue
     private static function customerUninformed(): array
     {
         return ServiceRequest::query()
-            ->whereIn('status', [ServiceRequest::STATUS_EXPIRED, ServiceRequest::STATUS_UNANSWERED])
+            ->whereIn('status', [ServiceRequest::STATUS_UNANSWERED, ServiceRequest::STATUS_CANCELLED])
             ->whereNull('customer_notified_at')
             ->whereNotNull('customer_email')
             ->get()

@@ -18,7 +18,6 @@ const tones = {
     assigned: { dot: 'bg-navy-700', text: 'text-navy-700', label: 'Vergeben' },
     completed: { dot: 'bg-success', text: 'text-success', label: 'Abgeschlossen' },
     cancelled: { dot: 'bg-gray-400', text: 'text-gray-600', label: 'Storniert' },
-    expired: { dot: 'bg-warning', text: 'text-warning', label: 'Frist abgelaufen' },
     unanswered: { dot: 'bg-warning', text: 'text-warning', label: 'Ohne Rückmeldung' },
     // matches
     pending: { dot: 'bg-warning', text: 'text-warning', label: 'Offen' },

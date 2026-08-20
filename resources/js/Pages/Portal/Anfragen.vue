@@ -14,7 +14,7 @@ const props = defineProps({
     filters: { type: Object, default: () => ({}) },
 })
 
-const { relativeTime, deadline } = useGermanFormat()
+const { relativeTime } = useGermanFormat()
 
 const rows = computed(() => props.requests.data)
 
@@ -53,18 +53,6 @@ const countLabel = computed(() => `${props.requests.total} ${props.requests.tota
                     class="flex h-8 items-center rounded-sm border border-gray-300 bg-white px-2.5 text-sm text-gray-800"
                 >PLZ: {{ areaLabel }}</span>
 
-                <label class="flex h-8 items-center rounded-sm border border-gray-300 bg-white px-2.5">
-                    <span class="sr-only">Frist</span>
-                    <select
-                        class="border-none bg-transparent py-0 pl-0 pr-6 text-sm text-gray-800 focus:outline-none focus:ring-0"
-                        :value="filters.frist ?? ''"
-                        @change="applyFilter('frist', $event.target.value)"
-                    >
-                        <option value="">Frist: Alle</option>
-                        <option value="heute">Frist: heute</option>
-                        <option value="morgen">Frist: morgen</option>
-                    </select>
-                </label>
             </div>
 
             <span class="font-mono text-sm tabular-nums text-gray-600">{{ countLabel }}</span>
@@ -88,7 +76,6 @@ const countLabel = computed(() => `${props.requests.total} ${props.requests.tota
                         <th class="whitespace-nowrap px-3 py-3 text-left text-eyebrow font-semibold uppercase text-gray-600">Art des Gutachtens</th>
                         <th class="whitespace-nowrap px-3 py-3 text-left text-eyebrow font-semibold uppercase text-gray-600">Kunde</th>
                         <th class="whitespace-nowrap px-3 py-3 text-left text-eyebrow font-semibold uppercase text-gray-600">Eingegangen</th>
-                        <th class="whitespace-nowrap px-3 py-3 text-left text-eyebrow font-semibold uppercase text-gray-600">Frist</th>
                         <th class="px-5 py-3"><span class="sr-only">Aktionen</span></th>
                     </tr>
                 </thead>
@@ -112,12 +99,6 @@ const countLabel = computed(() => `${props.requests.total} ${props.requests.tota
                             </span>
                         </td>
                         <td class="whitespace-nowrap px-3 py-3.5 font-mono text-sm text-gray-600">{{ relativeTime(row.created_at) }}</td>
-                        <td class="whitespace-nowrap px-3 py-3.5">
-                            <span class="inline-flex items-center gap-2">
-                                <span class="block h-1.5 w-1.5 rounded-full bg-navy-700" aria-hidden="true" />
-                                <span class="font-mono text-sm tabular-nums text-gray-800">{{ deadline(row.accept_deadline_at) }}</span>
-                            </span>
-                        </td>
                         <td class="whitespace-nowrap px-5 py-3.5 text-right">
                             <span class="inline-flex items-center gap-2.5">
                                 <Link :href="`/portal/anfragen/${row.id}`" class="text-sm font-medium text-navy-700 hover:text-navy-500">
@@ -156,12 +137,7 @@ const countLabel = computed(() => `${props.requests.total} ${props.requests.tota
                         <span class="text-sm text-gray-600">Nach Annahme</span>
                     </p>
 
-                    <p class="flex items-center gap-2 pt-1.5 pb-4">
-                        <span class="block h-1.5 w-1.5 shrink-0 rounded-full bg-navy-700" aria-hidden="true" />
-                        <span class="font-mono text-sm tabular-nums text-gray-800">
-                            Frist {{ deadline(row.accept_deadline_at) }}
-                        </span>
-                    </p>
+                    <div class="pb-4" />
                 </div>
 
                 <div class="grid grid-cols-2 border-t border-gray-200">

@@ -122,13 +122,6 @@ const passwordForm = useForm({ current_password: '', password: '', password_conf
                             :show-state="false"
                         />
                     </div>
-                    <div class="border-b border-gray-100 py-3.5">
-                        <BaseToggle
-                            v-model="notifyForm.notify_deadline_reminder"
-                            label="Erinnerung vor Ablauf der Annahmefrist"
-                            :show-state="false"
-                        />
-                    </div>
                     <div class="py-3.5">
                         <BaseToggle
                             v-model="notifyForm.notify_commission_statement"

@@ -105,10 +105,13 @@ describe('the postal code lookup', function () {
         $this->getJson('/api/plz/40589')->assertOk()->assertJson(['code' => '40589', 'city' => 'Düsseldorf']);
     });
 
-    it('reports an unknown code in German', function () {
+    it('answers for an unknown code without rejecting it', function () {
+        // Superseded by the client's change request: the lookup is a
+        // convenience, not a gate. An unknown code answers 200 with a null
+        // city, so the field stops auto-filling rather than blocking the form.
         $this->getJson('/api/plz/99998')
-            ->assertNotFound()
-            ->assertJson(['message' => 'Diese Postleitzahl kennen wir nicht.']);
+            ->assertOk()
+            ->assertJson(['code' => '99998', 'city' => null, 'known' => false]);
     });
 });
 

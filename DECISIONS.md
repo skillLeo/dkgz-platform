@@ -76,3 +76,43 @@ has no operational purpose by default and is a GDPR liability. Collection is
 therefore behind `features.collect_bank_details`, default **false**. When off,
 the Bankverbindung tab does not exist and no IBAN is stored. `dkgz:purge-bank-details`
 clears anything already collected.
+
+## D-13 · Postal codes: format only (supersedes the existence check)
+
+Client change request, section 14. `ExistingPostalCode` checked every code
+against the seeded table, which holds ~179 of Germany's ~8,200 codes — so real
+addresses were rejected. Replaced by `GermanPostalCode`: five digits, nothing
+more.
+
+The table stays, purely to auto-fill a city. The lookup endpoint now answers 200
+with a null city for an unknown code instead of 404, so the field simply stops
+offering one. A wrong-but-valid code surfaces as a request nobody covers, which
+the attention queue already reports; a rejected real address just loses the
+customer.
+
+## D-14 · Certification and liability proofs are optional at registration
+
+Client change request, section 14. Zertifizierungsstelle and -nummer are a pair:
+supply one and the other is required, supply neither and nothing is validated.
+Both proof uploads are optional. A partner who never supplied a liability date
+is not treated as lapsed — only a supplied date that has passed triggers the
+warning system from the previous pass.
+
+## D-15 · No acceptance deadline (supersedes D-… deadline architecture)
+
+Client change request, section 15. A matched request now stays open until a
+partner accepts it or an administrator closes it by hand. Removed:
+`accept_deadline_at`, the `expired` status, the 15-minute expiry sweep, the
+deadline reminder preference, `business.request_expiry_hours`, and every Frist
+display.
+
+`unanswered` survives — every matched partner actively declining is still a real
+signal — but it is no longer time-based and no longer a dead end: a partner
+approved in that area later can be matched to it.
+
+The customer notification now fires on manual closure, on all-declined, or on
+zero-match. Never on a timer.
+
+Manual closure requires a reason, is recorded in the activity log and the
+request's internal notes, and gates on `requests.reassign` rather than plain
+viewing, since it ends the request for everyone it was sent to.

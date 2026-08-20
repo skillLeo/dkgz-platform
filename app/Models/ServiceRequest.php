@@ -27,13 +27,10 @@ class ServiceRequest extends Model
 
     public const STATUS_CANCELLED = 'cancelled';
 
-    public const STATUS_EXPIRED = 'expired';
-
     /**
-     * Every matched partner answered, and all of them declined. Distinct from
-     * 'expired', which means the clock ran out while some were still silent —
-     * the office needs to tell those two apart, because thin coverage and slow
-     * partners call for different action.
+     * Every matched partner declined. The request stays open — a partner
+     * approved in that area later can still be matched to it — but the office
+     * knows nobody currently covering it wanted the work.
      */
     public const STATUS_UNANSWERED = 'unanswered';
 
@@ -42,7 +39,7 @@ class ServiceRequest extends Model
         'customer_name', 'customer_phone', 'customer_email',
         'vehicle_make', 'vehicle_model', 'vehicle_year', 'vehicle_plate', 'vehicle_vin',
         'description', 'preferred_date', 'urgency', 'status', 'matched_count',
-        'assigned_at', 'accept_deadline_at', 'customer_notified_at', 'ip_address', 'user_agent', 'consent_at',
+        'assigned_at', 'customer_notified_at', 'ip_address', 'user_agent', 'consent_at',
     ];
 
     protected function casts(): array
@@ -50,7 +47,6 @@ class ServiceRequest extends Model
         return [
             'preferred_date' => 'date',
             'assigned_at' => 'datetime',
-            'accept_deadline_at' => 'datetime',
             'customer_notified_at' => 'datetime',
             'consent_at' => 'datetime',
             'matched_count' => 'integer',
@@ -177,8 +173,7 @@ class ServiceRequest extends Model
                 ->orWhere(fn (Builder $inner) => $inner
                     ->whereIn('status', [self::STATUS_MATCHED, self::STATUS_UNANSWERED])
                     ->whereDoesntHave('matches', fn (Builder $m) => $m
-                        ->where('outcome', RequestMatch::OUTCOME_PENDING)))
-                ->orWhere('status', self::STATUS_EXPIRED);
+                        ->where('outcome', RequestMatch::OUTCOME_PENDING)));
         });
     }
 

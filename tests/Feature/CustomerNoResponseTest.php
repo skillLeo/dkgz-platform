@@ -2,7 +2,6 @@
 
 use App\Actions\DeclineRequestAction;
 use App\Actions\MatchRequestAction;
-use App\Console\Commands\ExpireLapsedRequestsCommand;
 use App\Jobs\NotifyCustomerNoResponseJob;
 use App\Models\Assessor;
 use App\Models\AssessorServiceArea;
@@ -11,6 +10,7 @@ use App\Models\ServiceRequest;
 use App\Models\ServiceType;
 use App\Models\User;
 use Database\Seeders\EmailTemplateSeeder;
+use Database\Seeders\RolePermissionSeeder;
 use Database\Seeders\SettingsSeeder;
 
 function partnerFor(ServiceType $type): Assessor
@@ -42,23 +42,41 @@ function openRequest(ServiceType $type): ServiceRequest
 }
 
 beforeEach(function () {
+    $this->seed(RolePermissionSeeder::class);
     $this->seed(SettingsSeeder::class);
     $this->seed(EmailTemplateSeeder::class);
     $this->type = ServiceType::factory()->create();
 });
 
-it('tells the customer when the acceptance deadline runs out', function () {
+it('tells the customer when an administrator closes the request by hand', function () {
     $partner = partnerFor($this->type);
     $request = openRequest($this->type);
-    $request->update(['accept_deadline_at' => now()->subMinute()]);
 
-    $this->artisan(ExpireLapsedRequestsCommand::class)->assertSuccessful();
+    $admin = User::factory()->create(['is_active' => true]);
+    $admin->assignRole('admin');
+
+    $this->actingAs($admin)
+        ->post("/admin/anfragen/{$request->id}/schliessen", ['reason' => 'Kunde hat sich anderweitig geholfen.'])
+        ->assertSessionHasNoErrors();
+
     (new NotifyCustomerNoResponseJob($request->id))->handle();
 
-    expect($request->fresh()->status)->toBe(ServiceRequest::STATUS_EXPIRED)
-        ->and($request->fresh()->customer_notified_at)->not->toBeNull()
-        ->and(EmailLog::where('template_key', 'anfrage-keine-rueckmeldung')
-            ->where('recipient', 'kundin@example.test')->count())->toBe(1);
+    expect($request->fresh()->status)->toBe(ServiceRequest::STATUS_CANCELLED)
+        ->and(EmailLog::where('template_key', 'anfrage-keine-rueckmeldung')->count())->toBe(1);
+});
+
+it('requires a reason when closing a request by hand', function () {
+    $partner = partnerFor($this->type);
+    $request = openRequest($this->type);
+
+    $admin = User::factory()->create(['is_active' => true]);
+    $admin->assignRole('admin');
+
+    $this->actingAs($admin)
+        ->post("/admin/anfragen/{$request->id}/schliessen", ['reason' => ''])
+        ->assertSessionHasErrors('reason');
+
+    expect($request->fresh()->status)->toBe(ServiceRequest::STATUS_MATCHED);
 });
 
 it('tells the customer when the last matched partner declines', function () {

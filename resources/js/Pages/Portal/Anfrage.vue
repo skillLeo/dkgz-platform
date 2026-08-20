@@ -1,7 +1,7 @@
 <script setup>
 import { computed, ref } from 'vue'
 import { Head, Link, useForm } from '@inertiajs/vue3'
-import { ChevronLeft, Clock, Image as ImageIcon, Lock, Mail, Phone } from 'lucide-vue-next'
+import { ChevronLeft, Image as ImageIcon, Lock, Mail, Phone } from 'lucide-vue-next'
 import PortalLayout from '../../Layouts/PortalLayout.vue'
 import BaseButton from '../../Components/Base/BaseButton.vue'
 import BaseTextarea from '../../Components/Base/BaseTextarea.vue'
@@ -13,7 +13,7 @@ const props = defineProps({
     match: { type: Object, required: true },
 })
 
-const { date, deadline } = useGermanFormat()
+const { date } = useGermanFormat()
 const { confirm } = useConfirm()
 
 const accept = useForm({})
@@ -107,15 +107,10 @@ const doAccept = async () => {
 
             <aside class="flex flex-col gap-6 xl:sticky xl:top-6">
                 <div v-if="match.is_open" class="rounded-card border border-gray-200 bg-white p-5">
-                    <p class="text-eyebrow font-semibold uppercase text-gray-600">Frist zur Annahme</p>
-                    <p class="flex items-center gap-2.5 pt-3">
-                        <Clock :size="20" :stroke-width="1.5" class="shrink-0 text-navy-700" aria-hidden="true" />
-                        <span class="text-h4 font-semibold tabular-nums text-navy-700">
-                            {{ deadline(request.accept_deadline_at) }}
-                        </span>
-                    </p>
+                    <p class="text-eyebrow font-semibold uppercase text-gray-600">Ihre Entscheidung</p>
                     <p class="pt-2 text-sm leading-normal text-gray-600">
-                        Danach geht die Anfrage an weitere Partner im Gebiet.
+                        Diese Anfrage bleibt offen, bis ein Partner sie übernimmt. Es läuft keine Frist —
+                        eine Ablehnung wirkt sich nicht auf die weitere Verteilung aus.
                     </p>
 
                     <div class="flex flex-col gap-3 pt-5">

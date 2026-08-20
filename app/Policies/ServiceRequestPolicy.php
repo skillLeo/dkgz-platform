@@ -27,6 +27,15 @@ class ServiceRequestPolicy
         return $user->can('requests.reassign') && $request->isOpen();
     }
 
+    /**
+     * Closing a request by hand ends it for everyone it was sent to, so it sits
+     * with reassignment rather than with plain viewing.
+     */
+    public function close(User $user, ServiceRequest $request): bool
+    {
+        return $user->can('requests.reassign');
+    }
+
     public function delete(User $user, ServiceRequest $request): bool
     {
         return $user->can('requests.delete');

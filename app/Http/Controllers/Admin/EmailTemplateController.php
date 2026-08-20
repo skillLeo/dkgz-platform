@@ -127,7 +127,6 @@ class EmailTemplateController extends Controller
             'annahme_zeit' => '17.08.2026, 09:07 Uhr',
             'abschluss_zeit' => '19.08.2026, 16:44 Uhr',
             'abschluss_datum' => '19.08.2026',
-            'frist' => '17.08.2026, 18:00 Uhr',
             'honorar' => '1.640,00 €',
             'betrag' => '246,00 €',
             'rechnungsnummer' => 'DKGZ-RE-2026-0042',

@@ -202,8 +202,8 @@ const stepErrors = computed(() =>
 
                 <!-- 3 · Qualifikation -->
                 <div v-else-if="current === 3" class="flex flex-col gap-5">
-                    <BaseSelect id="certification_body" v-model="form.certification_body" label="Zertifizierungsstelle" :options="certificationOptions" :error="form.errors.certification_body" required />
-                    <BaseInput id="certification_number" v-model="form.certification_number" label="Zertifizierungsnummer" :error="form.errors.certification_number" mono required />
+                    <BaseSelect id="certification_body" v-model="form.certification_body" label="Zertifizierungsstelle" optional :options="certificationOptions" :error="form.errors.certification_body" />
+                    <BaseInput id="certification_number" v-model="form.certification_number" label="Zertifizierungsnummer" optional :error="form.errors.certification_number" mono />
                     <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
                         <BaseDatePicker id="certification_valid_until" v-model="form.certification_valid_until" label="Zertifikat gültig bis" :error="form.errors.certification_valid_until" optional />
                         <BaseInput id="years_experience" v-model="form.years_experience" label="Berufserfahrung in Jahren" :error="form.errors.years_experience" inputmode="numeric" numeric optional />
@@ -211,11 +211,14 @@ const stepErrors = computed(() =>
                     <p class="text-eyebrow font-semibold uppercase text-gray-600">
                         Qualifikationsnachweis und Haftpflichtnachweis
                     </p>
+                    <p class="measure text-sm leading-normal text-gray-600">
+                        Beides ist freiwillig. Sie können die Nachweise auch später im Portal hinterlegen — die
+                        Freigabe dauert dann in der Regel etwas länger.
+                    </p>
                     <div class="flex flex-col gap-5">
                         <BaseFileUpload
                             v-model="form.documents[0].file"
                             label="Qualifikationsnachweis"
-                            required
                             accept=".pdf,.jpg,.jpeg,.png"
                             accept-label="PDF · max. 3 Dateien · je max. 10 MB"
                             :error="form.errors['documents.0.file']"
@@ -223,7 +226,6 @@ const stepErrors = computed(() =>
                         <BaseFileUpload
                             v-model="form.documents[1].file"
                             label="Haftpflichtnachweis"
-                            required
                             accept=".pdf,.jpg,.jpeg,.png"
                             accept-label="PDF · je max. 10 MB"
                             :error="form.errors['documents.1.file']"

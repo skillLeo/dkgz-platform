@@ -25,7 +25,7 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->date('preferred_date')->nullable();
             $table->enum('urgency', ['normal', 'soon', 'urgent'])->nullable();
-            $table->enum('status', ['new', 'matched', 'assigned', 'completed', 'cancelled', 'expired', 'unanswered'])->default('new');
+            $table->enum('status', ['new', 'matched', 'assigned', 'completed', 'cancelled', 'unanswered'])->default('new');
             $table->unsignedInteger('matched_count')->default(0);
             $table->timestamp('assigned_at')->nullable();
             $table->string('ip_address', 45)->nullable();

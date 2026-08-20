@@ -100,7 +100,6 @@ class SettingsSeeder extends Seeder
             ['group' => 'integrations', 'key' => 'integrations.analytics_id', 'type' => 'string', 'label_de' => 'Analytics-Kennung'],
 
             ['group' => 'business', 'key' => 'business.commission_rate', 'type' => 'decimal', 'value' => '15.00', 'label_de' => 'Vermittlungsprovision in Prozent', 'help_de' => 'Gilt für neue Abschlüsse. Bereits abgerechnete Provisionen bleiben unverändert.'],
-            ['group' => 'business', 'key' => 'business.request_expiry_hours', 'type' => 'integer', 'value' => '8', 'label_de' => 'Frist zur Annahme in Stunden'],
             ['group' => 'business', 'key' => 'business.notification_cadence_minutes', 'type' => 'integer', 'value' => '45', 'label_de' => 'Abrufintervall für Benachrichtigungen in Sekunden'],
             ['group' => 'business', 'key' => 'business.max_images_per_request', 'type' => 'integer', 'value' => '5', 'label_de' => 'Maximale Anzahl Fotos je Anfrage'],
             ['group' => 'business', 'key' => 'business.max_upload_mb', 'type' => 'integer', 'value' => '10', 'label_de' => 'Maximale Dateigröße in MB'],

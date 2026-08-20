@@ -35,10 +35,6 @@ it('formats money, dates, phone, file sizes and elapsed time identically in PHP 
         '2026-08-17T11:32:00', '2026-08-16T14:32:00', '2026-08-14T09:00:00',
         '2026-07-02T09:00:00',
     ];
-    $deadlineCases = [
-        '2026-08-17T18:00:00', '2026-08-18T12:00:00', '2026-08-19T09:00:00',
-        '2026-09-01T08:05:00',
-    ];
 
     // The import resolves against the script's own directory, so the path to
     // the composable is injected absolute rather than written relative.
@@ -57,7 +53,6 @@ it('formats money, dates, phone, file sizes and elapsed time identically in PHP 
         size: input.size.map((b) => f.fileSize(b)),
         percent: input.percent.map((v) => f.percent(v)),
         ago: input.ago.map((v) => f.relativeTime(v, new Date(input.now))),
-        deadline: input.deadline.map((v) => f.deadline(v, new Date(input.now))),
         stamp: input.date.map((v) => f.stamp(v)),
     }))
     JS;
@@ -75,7 +70,6 @@ it('formats money, dates, phone, file sizes and elapsed time identically in PHP 
         'percent' => $percentCases,
         'now' => $now,
         'ago' => $agoCases,
-        'deadline' => $deadlineCases,
     ]);
 
     $command = sprintf(
@@ -102,6 +96,5 @@ it('formats money, dates, phone, file sizes and elapsed time identically in PHP 
 
     $fixedNow = Carbon::parse($now);
     expect($js['ago'])->toBe(array_map(fn (string $v) => Formatter::relativeTime($v, $fixedNow), $agoCases));
-    expect($js['deadline'])->toBe(array_map(fn (string $v) => Formatter::deadline($v, $fixedNow), $deadlineCases));
     expect($js['stamp'])->toBe(array_map(fn (string $v) => Formatter::stamp($v), $dateCases));
 });

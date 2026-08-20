@@ -2,8 +2,8 @@
 
 namespace App\Http\Requests;
 
-use App\Rules\ExistingPostalCode;
 use App\Rules\GermanLicencePlate;
+use App\Rules\GermanPostalCode;
 use App\Rules\VehicleIdentificationNumber;
 use App\Support\Settings;
 use Illuminate\Foundation\Http\FormRequest;
@@ -26,7 +26,7 @@ class StoreServiceRequestRequest extends FormRequest
 
         return [
             'service_type_id' => ['required', 'integer', Rule::exists('service_types', 'id')->where('is_active', true)],
-            'postal_code' => ['required', new ExistingPostalCode],
+            'postal_code' => ['required', new GermanPostalCode],
             'city' => ['required', 'string', 'max:120'],
             'customer_name' => ['required', 'string', 'max:160'],
             'customer_phone' => ['required', 'string', 'max:40'],

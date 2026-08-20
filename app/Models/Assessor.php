@@ -30,7 +30,7 @@ class Assessor extends Model
         'user_id', 'company_name', 'legal_form', 'street', 'house_number',
         'postal_code', 'city', 'country', 'vat_id', 'website',
         'bank_account_holder', 'bank_iban', 'bank_bic',
-        'notify_new_request', 'notify_deadline_reminder', 'notify_commission_statement',
+        'notify_new_request', 'notify_commission_statement',
         'certification_body', 'certification_number', 'certification_valid_until',
         'years_experience', 'qualification_document_path', 'is_available',
         'approval_status', 'approved_at', 'approved_by', 'rejection_reason',
@@ -42,7 +42,6 @@ class Assessor extends Model
         return [
             'is_available' => 'boolean',
             'notify_new_request' => 'boolean',
-            'notify_deadline_reminder' => 'boolean',
             'notify_commission_statement' => 'boolean',
             'certification_valid_until' => 'date',
             'approved_at' => 'datetime',

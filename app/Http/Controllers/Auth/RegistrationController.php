@@ -7,7 +7,7 @@ use App\Models\Assessor;
 use App\Models\AssessorDocument;
 use App\Models\ServiceType;
 use App\Models\User;
-use App\Rules\ExistingPostalCode;
+use App\Rules\GermanPostalCode;
 use App\Rules\GermanVatId;
 use App\Support\Settings;
 use Illuminate\Http\RedirectResponse;
@@ -110,8 +110,8 @@ class RegistrationController extends Controller
                 'country' => 'DE',
                 'vat_id' => $data['vat_id'] ?? null,
                 'website' => $data['website'] ?? null,
-                'certification_body' => $data['certification_body'],
-                'certification_number' => $data['certification_number'],
+                'certification_body' => $data['certification_body'] ?? null,
+                'certification_number' => $data['certification_number'] ?? null,
                 'certification_valid_until' => $data['certification_valid_until'] ?? null,
                 'years_experience' => $data['years_experience'] ?? null,
                 'approval_status' => Assessor::STATUS_PENDING,
@@ -124,6 +124,7 @@ class RegistrationController extends Controller
             foreach ($data['documents'] ?? [] as $index => $entry) {
                 $file = $request->file("documents.{$index}.file");
 
+                // Both proofs are optional now; an empty slot is simply skipped.
                 if ($file === null) {
                     continue;
                 }
@@ -175,22 +176,24 @@ class RegistrationController extends Controller
                 'legal_form' => ['required', Rule::in(array_keys($this->legalForms()))],
                 'street' => ['required', 'string', 'max:180'],
                 'house_number' => ['required', 'string', 'max:20'],
-                'postal_code' => ['required', new ExistingPostalCode],
+                'postal_code' => ['required', new GermanPostalCode],
                 'city' => ['required', 'string', 'max:120'],
                 'vat_id' => ['nullable', new GermanVatId],
                 'website' => ['nullable', 'string', 'max:255'],
             ],
             3 => [
-                'certification_body' => ['required', Rule::in(array_keys($this->certificationBodies()))],
-                'certification_number' => ['required', 'string', 'max:60'],
+                'certification_body' => ['nullable', 'required_with:certification_number', Rule::in(array_keys($this->certificationBodies()))],
+                // The pair belongs together: give one and the other is needed;
+                // give neither and no certification is claimed at all.
+                'certification_number' => ['nullable', 'required_with:certification_body', 'string', 'max:60'],
                 'certification_valid_until' => ['nullable', 'date', 'after:today'],
                 'years_experience' => ['nullable', 'integer', 'min:0', 'max:70'],
                 // Qualification and liability cover, up to three files in all
                 // — the design's "Qualifikationsnachweis und Haftpflichtnachweis
                 // · PDF · max. 3 Dateien".
                 'documents' => ['nullable', 'array', 'max:3'],
-                'documents.*.file' => ['required', 'file', 'mimes:pdf,jpg,jpeg,png', 'max:10240'],
-                'documents.*.type' => ['required', 'in:qualification,liability,other'],
+                'documents.*.file' => ['nullable', 'file', 'mimes:pdf,jpg,jpeg,png', 'max:10240'],
+                'documents.*.type' => ['required_with:documents.*.file', 'in:qualification,liability,other'],
             ],
             4 => [
                 'service_type_ids' => ['required', 'array', 'min:1'],

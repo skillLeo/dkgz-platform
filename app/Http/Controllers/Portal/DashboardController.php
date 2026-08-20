@@ -31,11 +31,6 @@ class DashboardController extends Controller
         return Inertia::render('Portal/Dashboard', [
             'stats' => [
                 'open_requests' => (clone $openRequests)->count(),
-                'due_today' => (clone $openRequests)
-                    ->whereHas('serviceRequest', fn ($query) => $query
-                        ->whereNotNull('accept_deadline_at')
-                        ->whereDate('accept_deadline_at', today()))
-                    ->count(),
                 'open_assignments' => Assignment::where('assessor_id', $assessor->id)->open()->count(),
                 'in_progress' => Assignment::where('assessor_id', $assessor->id)
                     ->whereIn('status', [Assignment::STATUS_IN_PROGRESS, Assignment::STATUS_DOCUMENTS_UPLOADED])
@@ -65,7 +60,6 @@ class DashboardController extends Controller
                     'location' => $match->serviceRequest->locationLabel(),
                     'service_type' => $match->serviceRequest->serviceType?->name_de,
                     'notified_at' => $match->notified_at,
-                    'accept_deadline_at' => $match->serviceRequest->accept_deadline_at,
                     'href' => route('portal.requests.show', $match->serviceRequest),
                 ])
                 ->all(),

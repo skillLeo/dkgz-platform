@@ -144,28 +144,6 @@ class Formatter
         return Carbon::parse($value)->format('d.m.').' · '.Carbon::parse($value)->format('H:i');
     }
 
-    /** → "heute 18:00" / "18.08. 12:00" — the acceptance deadline in a list. */
-    public static function deadline(DateTimeInterface|CarbonInterface|string|null $value, ?CarbonInterface $now = null): string
-    {
-        if ($value === null) {
-            return '';
-        }
-
-        $moment = Carbon::parse($value);
-        $now ??= Carbon::now();
-        $clock = $moment->format('H:i');
-
-        if ($moment->isSameDay($now)) {
-            return "heute {$clock}";
-        }
-
-        if ($moment->isSameDay($now->copy()->addDay())) {
-            return "morgen {$clock}";
-        }
-
-        return $moment->format('d.m.').' '.$clock;
-    }
-
     /** → "14:32 Uhr" */
     public static function time(DateTimeInterface|CarbonInterface|string|null $value): string
     {

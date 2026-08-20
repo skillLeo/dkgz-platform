@@ -7,7 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Commission;
 use App\Models\ServiceRequest;
 use App\Models\ServiceType;
-use App\Rules\ExistingPostalCode;
+use App\Rules\GermanPostalCode;
 use App\Rules\GermanVatId;
 use App\Rules\Iban;
 use App\Support\Settings;
@@ -59,7 +59,7 @@ class ProfileController extends Controller
             'company_name' => ['required', 'string', 'max:180'],
             'street' => ['required', 'string', 'max:180'],
             'house_number' => ['required', 'string', 'max:20'],
-            'postal_code' => ['required', new ExistingPostalCode],
+            'postal_code' => ['required', new GermanPostalCode],
             'city' => ['required', 'string', 'max:120'],
             'vat_id' => ['nullable', new GermanVatId],
             'website' => ['nullable', 'string', 'max:255'],
@@ -164,7 +164,6 @@ class ProfileController extends Controller
             ] : null,
             'notifications' => [
                 'notify_new_request' => $assessor->notify_new_request,
-                'notify_deadline_reminder' => $assessor->notify_deadline_reminder,
                 'notify_commission_statement' => $assessor->notify_commission_statement,
             ],
         ]);
@@ -229,7 +228,6 @@ class ProfileController extends Controller
     {
         $data = $request->validate([
             'notify_new_request' => ['required', 'boolean'],
-            'notify_deadline_reminder' => ['required', 'boolean'],
             'notify_commission_statement' => ['required', 'boolean'],
         ]);
 

@@ -3,7 +3,8 @@ import { computed, ref, watch } from 'vue'
 import BaseInput from './BaseInput.vue'
 
 /**
- * Five digits, resolved against the seeded PLZ table so the city fills itself
+ * Five digits, looked up against the seeded PLZ table so the city fills itself
+ * where it can. An unknown code is accepted — the table is a convenience,
  * and an invalid code is caught before submit. The lookup is debounced and
  * only fires on a complete code.
  */
@@ -59,6 +60,10 @@ const resolve = async (code) => {
             emit('update:city', data.city)
             emit('resolved', data)
         } else {
+            // Unknown to the lookup table is not invalid — the table holds a
+            // fraction of Germany's codes and only saves typing. The field
+            // simply stops offering a city.
+            resolvedCity.value = ''
             notFound.value = true
         }
     } catch {
@@ -73,7 +78,7 @@ watch(() => props.city, (value) => { resolvedCity.value = value })
 
 const hint = computed(() => {
     if (resolving.value) return 'Ort wird ermittelt…'
-    if (notFound.value) return 'Diese Postleitzahl kennen wir nicht.'
+    if (notFound.value) return 'Ort konnte nicht automatisch ermittelt werden — bitte ergänzen.'
     if (resolvedCity.value) return `${props.modelValue} · ${resolvedCity.value}`
 
     return 'Fünfstellig, z. B. 40589'
@@ -84,7 +89,7 @@ const hint = computed(() => {
     <BaseInput
         :model-value="modelValue"
         :label="label"
-        :error="error || (notFound ? 'Diese Postleitzahl kennen wir nicht.' : '')"
+        :error="error"
         :hint="hint"
         :required="required"
         :disabled="disabled"

@@ -153,8 +153,21 @@
                 <tr>
                     <td style="background:{{ $gray50 }};border-top:1px solid {{ $gray200 }};padding:20px 32px;">
                         <div style="font-size:12.5px;line-height:1.7;color:{{ $gray600 }};">
-                            {{ $company }}@if ($street) · {{ $street }} @endif@if ($plz || $city) · {{ trim($plz.' '.$city) }}@endif
-                            @if ($phone)<br />Telefon <span style="font-family:{{ $mono }};">{{ $phone }}</span>@if ($hours) · {{ $hours }}@endif @endif
+                            {{-- Built in PHP rather than chained inline directives: an
+                                 @endif immediately followed by @if compiled to invalid
+                                 code and only failed when this template actually rendered. --}}
+                            @php
+                                $legalLine = collect([$company, $street, trim($plz.' '.$city)])
+                                    ->filter()
+                                    ->implode(' · ');
+                                $contactLine = collect([$phone ? 'Telefon '.$phone : null, $hours])
+                                    ->filter()
+                                    ->implode(' · ');
+                            @endphp
+                            {{ $legalLine }}
+                            @if ($contactLine)
+                                <br />{{ $contactLine }}
+                            @endif
                         </div>
                         <div style="padding-top:10px;font-size:12.5px;color:{{ $gray600 }};">
                             <a href="{{ url('/impressum') }}" style="color:{{ $navy700 }};text-decoration:none;">Impressum</a> ·

@@ -32,6 +32,8 @@ Route::prefix('admin')
             Route::get('/anfragen/{serviceRequest}', [RequestController::class, 'show'])->name('requests.show');
             Route::post('/anfragen/{serviceRequest}/kunde-benachrichtigen', [RequestController::class, 'notifyCustomer'])
                 ->name('requests.notify-customer');
+            Route::post('/anfragen/{serviceRequest}/schliessen', [RequestController::class, 'close'])
+                ->name('requests.close');
         });
         Route::post('/anfragen/{serviceRequest}/erneut-vermitteln', [RequestController::class, 'rematch'])
             ->middleware('can:requests.reassign')->name('requests.rematch');
@@ -181,4 +183,6 @@ Route::prefix('admin')
         Route::get('/system', [SystemController::class, 'index'])->middleware('can:settings.view')->name('system');
         Route::post('/system/jobs-wiederholen', [SystemController::class, 'retryFailedJobs'])
             ->middleware('can:settings.edit')->name('system.retry-jobs');
+        Route::post('/system/warteschlange', [SystemController::class, 'runQueue'])
+            ->middleware('can:settings.edit')->name('system.queue');
     });

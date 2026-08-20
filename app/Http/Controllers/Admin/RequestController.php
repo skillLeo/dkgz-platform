@@ -75,9 +75,15 @@ class RequestController extends Controller
 
         return Inertia::render('Admin/Anfrage', [
             'customerNotifiedAt' => $serviceRequest->customer_notified_at,
+            'canClose' => $request->user()->can('close', $serviceRequest)
+                && ! in_array($serviceRequest->status, [
+                    ServiceRequest::STATUS_ASSIGNED,
+                    ServiceRequest::STATUS_COMPLETED,
+                    ServiceRequest::STATUS_CANCELLED,
+                ], true),
             'canNotifyCustomer' => in_array($serviceRequest->status, [
-                ServiceRequest::STATUS_EXPIRED,
                 ServiceRequest::STATUS_UNANSWERED,
+                ServiceRequest::STATUS_CANCELLED,
             ], true) && filled($serviceRequest->customer_email),
             'request' => [
                 'id' => $serviceRequest->id,
@@ -204,7 +210,6 @@ class RequestController extends Controller
             ServiceRequest::STATUS_ASSIGNED => 'Vergeben',
             ServiceRequest::STATUS_COMPLETED => 'Abgeschlossen',
             ServiceRequest::STATUS_CANCELLED => 'Storniert',
-            ServiceRequest::STATUS_EXPIRED => 'Frist abgelaufen',
             ServiceRequest::STATUS_UNANSWERED => 'Ohne Rückmeldung',
         ];
     }
@@ -218,11 +223,11 @@ class RequestController extends Controller
      */
     public function notifyCustomer(Request $request, ServiceRequest $serviceRequest): RedirectResponse
     {
-        $this->authorize('update', $serviceRequest);
+        $this->authorize('close', $serviceRequest);
 
         abort_unless(in_array($serviceRequest->status, [
-            ServiceRequest::STATUS_EXPIRED,
             ServiceRequest::STATUS_UNANSWERED,
+            ServiceRequest::STATUS_CANCELLED,
         ], true), 422);
 
         $serviceRequest->forceFill(['customer_notified_at' => null])->save();
@@ -230,5 +235,55 @@ class RequestController extends Controller
         NotifyCustomerNoResponseJob::dispatch($serviceRequest->id);
 
         return back()->with('success', 'Die Nachricht an den Kunden wurde erneut in die Warteschlange gestellt.');
+    }
+
+    /**
+     * Closes a request by hand.
+     *
+     * With the acceptance deadline gone, nothing closes a request on a timer —
+     * so an administrator needs a way to end one that has run its course, and
+     * to say why. Closing tells the customer, which is the point: the
+     * alternative is a request that sits open forever with nobody informed.
+     */
+    public function close(Request $request, ServiceRequest $serviceRequest): RedirectResponse
+    {
+        $this->authorize('close', $serviceRequest);
+
+        abort_if(in_array($serviceRequest->status, [
+            ServiceRequest::STATUS_ASSIGNED,
+            ServiceRequest::STATUS_COMPLETED,
+            ServiceRequest::STATUS_CANCELLED,
+        ], true), 422, 'Dieser Vorgang kann nicht mehr geschlossen werden.');
+
+        $data = $request->validate(
+            ['reason' => ['required', 'string', 'min:5', 'max:500']],
+            ['reason.required' => 'Bitte geben Sie an, warum der Vorgang geschlossen wird.'],
+            ['reason' => 'der Grund']
+        );
+
+        DB::transaction(function () use ($serviceRequest, $data) {
+            RequestMatch::where('service_request_id', $serviceRequest->id)
+                ->pending()
+                ->update([
+                    'outcome' => RequestMatch::OUTCOME_CLOSED,
+                    'responded_at' => now(),
+                    'updated_at' => now(),
+                ]);
+
+            $serviceRequest->update([
+                'status' => ServiceRequest::STATUS_CANCELLED,
+                'internal_notes' => trim(($serviceRequest->internal_notes ?? '')."\n"
+                    .now()->format('d.m.Y H:i').' — manuell geschlossen: '.$data['reason']),
+            ]);
+        });
+
+        activity()
+            ->performedOn($serviceRequest)
+            ->withProperties(['reason' => $data['reason']])
+            ->log('Anfrage manuell geschlossen');
+
+        NotifyCustomerNoResponseJob::dispatch($serviceRequest->id);
+
+        return back()->with('success', 'Der Vorgang wurde geschlossen und der Kunde benachrichtigt.');
     }
 }

@@ -1,4 +1,5 @@
 <script setup>
+import { ref } from 'vue'
 import { Head, useForm } from '@inertiajs/vue3'
 import { Lock } from 'lucide-vue-next'
 import AdminLayout from '../../Layouts/AdminLayout.vue'
@@ -8,6 +9,7 @@ import StatusDot from '../../Components/Data/StatusDot.vue'
 import ReferenceNumber from '../../Components/Data/ReferenceNumber.vue'
 import MoneyValue from '../../Components/Data/MoneyValue.vue'
 import BaseButton from '../../Components/Base/BaseButton.vue'
+import BaseTextarea from '../../Components/Base/BaseTextarea.vue'
 import { useGermanFormat } from '../../Composables/useGermanFormat.js'
 import { useConfirm } from '../../Composables/useConfirm.js'
 
@@ -17,6 +19,7 @@ const props = defineProps({
     assignment: { type: Object, default: null },
     customerNotifiedAt: { type: String, default: null },
     canNotifyCustomer: { type: Boolean, default: false },
+    canClose: { type: Boolean, default: false },
 })
 
 const { dateTime, date } = useGermanFormat()
@@ -24,6 +27,8 @@ const { confirm } = useConfirm()
 
 const rematch = useForm({})
 const notifyCustomer = useForm({})
+const closeForm = useForm({ reason: '' })
+const closing = ref(false)
 
 const doRematch = async () => {
     const ok = await confirm({
@@ -59,6 +64,43 @@ const doRematch = async () => {
                     Whether the customer knows. A request nobody took and nobody
                     explained is the one state that must never sit unnoticed.
                 -->
+                <!--
+                    Nothing closes a request on a timer any more, so ending one
+                    is a decision somebody makes and signs.
+                -->
+                <section v-if="canClose" class="rounded-card border border-gray-200 bg-white p-5">
+                    <SectionLabel text="Vorgang schließen" tone="muted" />
+                    <p class="measure pt-3 text-sm leading-normal text-gray-600">
+                        Diese Anfrage bleibt offen, bis ein Partner sie übernimmt. Schließen Sie sie, wenn sich die
+                        Sache anderweitig erledigt hat — der Kunde wird dabei benachrichtigt.
+                    </p>
+
+                    <BaseButton v-if="!closing" variant="secondary" size="compact" class="mt-4" @click="closing = true">
+                        Anfrage manuell schließen
+                    </BaseButton>
+
+                    <form
+                        v-else
+                        class="pt-4"
+                        @submit.prevent="closeForm.post(`/admin/anfragen/${request.id}/schliessen`, { preserveScroll: true })"
+                    >
+                        <BaseTextarea
+                            v-model="closeForm.reason"
+                            label="Grund"
+                            hint="Wird im Protokoll festgehalten."
+                            :rows="3"
+                            :error="closeForm.errors.reason"
+                            required
+                        />
+                        <div class="flex flex-wrap gap-3 pt-3">
+                            <BaseButton type="submit" size="compact" variant="danger" :loading="closeForm.processing">
+                                Schließen und Kunde benachrichtigen
+                            </BaseButton>
+                            <BaseButton variant="ghost" size="compact" @click="closing = false">Abbrechen</BaseButton>
+                        </div>
+                    </form>
+                </section>
+
                 <section v-if="canNotifyCustomer" class="rounded-card border border-gray-200 bg-white p-5">
                     <SectionLabel text="Kunde benachrichtigt" tone="muted" />
                     <p v-if="customerNotifiedAt" class="flex items-center gap-2.5 pt-3">

@@ -16,7 +16,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('service_requests', function (Blueprint $table) {
-            $table->timestamp('customer_notified_at')->nullable()->after('accept_deadline_at');
+            $table->timestamp('customer_notified_at')->nullable();
         });
     }
 

@@ -33,7 +33,13 @@ class SystemController extends Controller
                 'cache' => config('cache.default'),
                 'session' => config('session.driver'),
                 'storage_link' => SafeStorage::symlinkWorks(),
-                'smtp_configured' => filled(Settings::get('integrations.smtp_host')),
+                'smtp_configured' => filled(Settings::get('integrations.smtp_host'))
+                    || filled(config('mail.mailers.smtp.host')),
+                'mail_host' => Settings::get('integrations.smtp_host') ?: config('mail.mailers.smtp.host'),
+                'mail_from' => config('mail.from.address'),
+                // The scheduler only leaves a trace once it has actually run;
+                // no trace at all is the signature of a missing cron entry.
+                'scheduler_last_run' => $this->schedulerLastRun(),
                 'maintenance' => Settings::bool('features.maintenance_mode'),
             ],
             'queue' => [
@@ -57,6 +63,19 @@ class SystemController extends Controller
                         'created_at' => $log->created_at,
                     ]),
             ],
+            // The last twenty attempts, whatever their outcome — a panel that
+            // shows only failures cannot tell "nothing sent" from "all fine".
+            'mailLog' => EmailLog::latest('id')->limit(20)->get()
+                ->map(fn (EmailLog $log) => [
+                    'id' => $log->id,
+                    'template_key' => $log->template_key,
+                    'recipient' => $log->recipient,
+                    'subject' => $log->subject,
+                    'status' => $log->status,
+                    'error' => $log->error,
+                    'created_at' => $log->created_at,
+                    'sent_at' => $log->sent_at,
+                ]),
             'storage' => [
                 'free_bytes' => @disk_free_space(base_path()) ?: null,
                 'total_bytes' => @disk_total_space(base_path()) ?: null,
@@ -100,5 +119,46 @@ class SystemController extends Controller
         Artisan::call('queue:retry', ['id' => ['all']]);
 
         return back()->with('success', 'Fehlgeschlagene Aufträge wurden erneut eingereiht.');
+    }
+
+    /**
+     * Drains the queue on demand.
+     *
+     * On shared hosting the scheduler is a cron entry somebody has to add by
+     * hand, and until they do nothing sends while the interface looks healthy.
+     * This makes the difference visible in one click instead of a support call.
+     */
+    public function runQueue(Request $request): RedirectResponse
+    {
+        $this->authorize('viewAny', Setting::class);
+
+        $before = DB::table('jobs')->count();
+
+        Artisan::call('queue:work', [
+            '--stop-when-empty' => true,
+            '--max-time' => 20,
+            '--tries' => 1,
+        ]);
+
+        $processed = max(0, $before - DB::table('jobs')->count());
+
+        return back()->with(
+            'success',
+            $processed === 0
+                ? 'Die Warteschlange war bereits leer.'
+                : "{$processed} Auftrag/Aufträge verarbeitet."
+        );
+    }
+
+    /**
+     * When the scheduler last did anything. Laravel's withoutOverlapping mutex
+     * and the framework schedule cache both leave a mark; absent both, we fall
+     * back to the newest processed mail, which is the best proxy available.
+     */
+    private function schedulerLastRun(): ?string
+    {
+        $latest = EmailLog::whereNotNull('sent_at')->max('sent_at');
+
+        return $latest ? (string) $latest : null;
     }
 }

@@ -13,10 +13,18 @@ defineProps({
     queue: { type: Object, required: true },
     emails: { type: Object, required: true },
     storage: { type: Object, default: () => ({}) },
+    mailLog: { type: Array, default: () => [] },
 })
 
 const { fileSize, dateTime } = useGermanFormat()
 const retry = useForm({})
+const drain = useForm({})
+
+const tone = {
+    sent: 'text-success',
+    queued: 'text-gray-600',
+    failed: 'text-danger',
+}
 </script>
 
 <template>
@@ -91,6 +99,78 @@ const retry = useForm({})
                     <p class="pt-2 font-mono text-xs leading-relaxed break-words text-danger">{{ failure.error }}</p>
                 </li>
             </ul>
+        </section>
+
+        <!--
+            The last twenty attempts, whatever their outcome. A panel that shows
+            only failures cannot distinguish "nothing was ever sent" from "all
+            fine", and on shared hosting the first case is the common one.
+        -->
+        <section class="mt-6 rounded-card border border-gray-200 bg-white">
+            <div class="flex flex-wrap items-start justify-between gap-4 border-b border-gray-200 px-5 py-4">
+                <div class="min-w-0">
+                    <h2 class="text-lead font-semibold text-navy-700">Mail-Zustellung</h2>
+                    <p class="pt-1 text-sm text-gray-600">
+                        Postausgang
+                        <span class="font-mono text-gray-800">{{ health.mail_host || 'nicht konfiguriert' }}</span>
+                        · Absender <span class="font-mono text-gray-800">{{ health.mail_from }}</span>
+                    </p>
+                </div>
+                <BaseButton
+                    variant="secondary"
+                    size="compact"
+                    :loading="drain.processing"
+                    @click="drain.post('/admin/system/warteschlange', { preserveScroll: true })"
+                >Warteschlange jetzt leeren</BaseButton>
+            </div>
+
+            <div v-if="!health.smtp_configured" class="border-b border-gray-200 bg-danger/5 px-5 py-4">
+                <p class="text-base font-medium text-danger">Kein Postausgangsserver hinterlegt</p>
+                <p class="measure pt-1 text-sm leading-normal text-gray-800">
+                    Ohne SMTP-Server verlässt keine E-Mail die Plattform. Die Aufträge sammeln sich in der
+                    Warteschlange, bis ein Server eingetragen ist.
+                </p>
+            </div>
+
+            <div v-else-if="!health.scheduler_last_run" class="border-b border-gray-200 bg-warning/5 px-5 py-4">
+                <p class="text-base font-medium text-warning">Der Zeitplaner hat noch nie ausgeführt</p>
+                <p class="measure pt-1 text-sm leading-normal text-gray-800">
+                    Es wurde noch keine E-Mail versendet. Das deutet darauf hin, dass der Cron-Eintrag auf dem
+                    Server fehlt — ohne ihn läuft keine der geplanten Aufgaben.
+                </p>
+            </div>
+
+            <p v-if="!mailLog.length" class="px-5 py-10 text-center text-sm text-gray-600">
+                Es wurde noch kein Versand protokolliert.
+            </p>
+
+            <div v-else class="overflow-x-auto">
+                <table class="w-full min-w-175">
+                    <thead>
+                        <tr class="border-b border-gray-200">
+                            <th class="px-5 py-2.5 text-left text-eyebrow font-semibold uppercase text-gray-600">Vorlage</th>
+                            <th class="px-3 py-2.5 text-left text-eyebrow font-semibold uppercase text-gray-600">Empfänger</th>
+                            <th class="px-3 py-2.5 text-left text-eyebrow font-semibold uppercase text-gray-600">Status</th>
+                            <th class="px-5 py-2.5 text-left text-eyebrow font-semibold uppercase text-gray-600">Zeitpunkt</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="row in mailLog" :key="row.id" class="border-b border-gray-100 last:border-b-0">
+                            <td class="px-5 py-3 font-mono text-meta text-gray-800">{{ row.template_key }}</td>
+                            <td class="px-3 py-3 text-sm text-gray-800">{{ row.recipient }}</td>
+                            <td class="px-3 py-3 text-sm" :class="tone[row.status] ?? 'text-gray-600'">
+                                {{ row.status }}
+                                <span v-if="row.error" class="block max-w-100 truncate text-xs text-danger" :title="row.error">
+                                    {{ row.error }}
+                                </span>
+                            </td>
+                            <td class="whitespace-nowrap px-5 py-3 font-mono text-meta tabular-nums text-gray-600">
+                                {{ dateTime(row.sent_at ?? row.created_at) }}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </section>
     </AdminLayout>
 </template>

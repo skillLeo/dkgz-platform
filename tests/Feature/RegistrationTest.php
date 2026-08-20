@@ -134,8 +134,16 @@ it('lets an administrator download a submitted proof', function () {
         ->assertDownload('qualifikation.pdf');
 });
 
-it('rejects a postal code that does not exist', function () {
+it('accepts any well-formed five-digit postal code', function () {
+    // Superseded by the client's change request: the seeded table holds a few
+    // hundred of Germany's ~8,200 codes, so checking against it rejected real
+    // addresses. Format is now the only rule.
     $this->post('/registrieren', registrationPayload(['postal_code' => '99999']))
+        ->assertSessionHasNoErrors();
+});
+
+it('still rejects a postal code that is not five digits', function () {
+    $this->post('/registrieren', registrationPayload(['postal_code' => '405']))
         ->assertSessionHasErrors('postal_code');
 });
 
@@ -195,5 +203,59 @@ describe('step autosave', function () {
 
     it('rejects an unknown step', function () {
         $this->post('/registrieren/schritt/9', [])->assertNotFound();
+    });
+});
+
+describe('registration with only the required fields', function () {
+    it('succeeds without certification, without proofs, and with an unlisted postal code', function () {
+        $payload = registrationPayload([
+            'certification_body' => null,
+            'certification_number' => null,
+            // Deliberately a code the seeded table does not hold: the table
+            // covers a fraction of Germany and must never gate registration.
+            'postal_code' => '17033',
+            'city' => 'Neubrandenburg',
+        ]);
+        unset($payload['documents']);
+
+        $this->post('/registrieren', $payload)
+            ->assertSessionHasNoErrors()
+            ->assertRedirect(route('registration.pending'));
+
+        $user = User::firstWhere('email', 'm.reinhardt@kfz-gutachten-d.test');
+
+        expect($user)->not->toBeNull()
+            ->and($user->assessor)->not->toBeNull()
+            ->and($user->assessor->certification_body)->toBeNull()
+            ->and($user->assessor->certification_number)->toBeNull()
+            ->and($user->assessor->postal_code)->toBe('17033')
+            ->and($user->assessor->documents)->toHaveCount(0)
+            ->and($user->assessor->approval_status)->toBe(Assessor::STATUS_PENDING);
+    });
+
+    it('requires the certification number once a body is chosen', function () {
+        $this->post('/registrieren', registrationPayload([
+            'certification_body' => 'tuev',
+            'certification_number' => null,
+        ]))->assertSessionHasErrors('certification_number');
+    });
+
+    it('requires the body once a number is given', function () {
+        $this->post('/registrieren', registrationPayload([
+            'certification_body' => null,
+            'certification_number' => 'TU-12345',
+        ]))->assertSessionHasErrors('certification_body');
+    });
+
+    it('does not treat a partner without proofs as having lapsed cover', function () {
+        $payload = registrationPayload(['certification_body' => null, 'certification_number' => null]);
+        unset($payload['documents']);
+
+        $this->post('/registrieren', $payload);
+
+        $assessor = User::firstWhere('email', 'm.reinhardt@kfz-gutachten-d.test')->assessor;
+
+        expect($assessor->liabilityCoverHasLapsed())->toBeFalse()
+            ->and($assessor->liabilityCoverValidUntil())->toBeNull();
     });
 });

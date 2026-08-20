@@ -71,20 +71,17 @@ describe('the Benachrichtigungen panel', function () {
 
         $this->actingAs($user)->post('/portal/einstellungen/benachrichtigungen', [
             'notify_new_request' => false,
-            'notify_deadline_reminder' => true,
             'notify_commission_statement' => false,
         ])->assertSessionHasNoErrors();
 
         expect($user->assessor->fresh())
             ->notify_new_request->toBeFalse()
-            ->notify_deadline_reminder->toBeTrue()
             ->notify_commission_statement->toBeFalse();
     });
 
     it('defaults every switch on for a new partner', function () {
         expect(settingsPartner()->assessor)
             ->notify_new_request->toBeTrue()
-            ->notify_deadline_reminder->toBeTrue()
             ->notify_commission_statement->toBeTrue();
     });
 });

@@ -7,7 +7,7 @@ use App\Models\Assessor;
 use App\Models\Invitation;
 use App\Models\ServiceType;
 use App\Models\User;
-use App\Rules\ExistingPostalCode;
+use App\Rules\GermanPostalCode;
 use App\Support\Settings;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -63,7 +63,7 @@ class InvitationController extends Controller
             'company_name' => ['required', 'string', 'max:180'],
             'street' => ['required', 'string', 'max:180'],
             'house_number' => ['required', 'string', 'max:20'],
-            'postal_code' => ['required', new ExistingPostalCode],
+            'postal_code' => ['required', new GermanPostalCode],
             'city' => ['required', 'string', 'max:120'],
             'terms' => ['accepted'],
             'privacy' => ['accepted'],

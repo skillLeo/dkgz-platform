@@ -14,7 +14,7 @@ const props = defineProps({
     cover: { type: Object, default: null },
 })
 
-const { money, relativeTime, dateTime, deadline, date } = useGermanFormat()
+const { money, relativeTime, dateTime, date } = useGermanFormat()
 
 const page = usePage()
 
@@ -28,7 +28,7 @@ const cards = computed(() => [
     {
         label: 'Neue Anfragen',
         value: props.stats.open_requests,
-        hint: props.stats.due_today ? `${props.stats.due_today} mit Frist heute` : 'Keine Frist heute',
+        hint: props.stats.open_requests === 1 ? 'wartet auf Ihre Rückmeldung' : 'warten auf Ihre Rückmeldung',
         href: '/portal/anfragen',
     },
     {
@@ -127,9 +127,6 @@ const cards = computed(() => [
                             </span>
                             <span class="block pt-1 text-base text-gray-800">{{ match.service_type }}</span>
                             <span class="block text-sm text-gray-600">{{ match.location }}</span>
-                            <span v-if="match.accept_deadline_at" class="block pt-1 font-mono text-sm tabular-nums text-gray-800">
-                                Frist {{ deadline(match.accept_deadline_at) }}
-                            </span>
                         </Link>
                     </li>
                 </ul>

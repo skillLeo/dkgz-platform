@@ -24,8 +24,7 @@ return new class extends Migration
             // Default on: a partner who never opens settings still gets told
             // about work in their area, which is the point of the platform.
             $table->boolean('notify_new_request')->default(true)->after('is_available');
-            $table->boolean('notify_deadline_reminder')->default(true)->after('notify_new_request');
-            $table->boolean('notify_commission_statement')->default(true)->after('notify_deadline_reminder');
+            $table->boolean('notify_commission_statement')->default(true)->after('notify_new_request');
         });
     }
 
@@ -34,7 +33,7 @@ return new class extends Migration
         Schema::table('assessors', function (Blueprint $table) {
             $table->dropColumn([
                 'bank_account_holder', 'bank_iban', 'bank_bic',
-                'notify_new_request', 'notify_deadline_reminder', 'notify_commission_statement',
+                'notify_new_request', 'notify_commission_statement',
             ]);
         });
     }

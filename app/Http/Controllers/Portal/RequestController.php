@@ -24,7 +24,6 @@ class RequestController extends Controller
         $filters = $request->validate([
             'suche' => ['nullable', 'string', 'max:100'],
             'art' => ['nullable', 'integer', 'exists:service_types,id'],
-            'frist' => ['nullable', 'in:heute,morgen'],
         ]);
 
         $matches = RequestMatch::query()
@@ -47,13 +46,6 @@ class RequestController extends Controller
                     $query->where('service_type_id', $filters['art']);
                 }
 
-                if (($filters['frist'] ?? null) === 'heute') {
-                    $query->whereDate('accept_deadline_at', today());
-                }
-
-                if (($filters['frist'] ?? null) === 'morgen') {
-                    $query->whereDate('accept_deadline_at', today()->addDay());
-                }
             })
             ->with(['serviceRequest.serviceType', 'serviceRequest' => fn ($q) => $q->withCount('images')])
             ->latest('notified_at')
@@ -70,7 +62,6 @@ class RequestController extends Controller
             'filters' => [
                 'suche' => $filters['suche'] ?? '',
                 'art' => $filters['art'] ?? null,
-                'frist' => $filters['frist'] ?? null,
             ],
         ]);
     }

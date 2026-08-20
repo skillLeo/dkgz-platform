@@ -6,9 +6,7 @@ use App\Models\Assessor;
 use App\Models\RequestMatch;
 use App\Models\ServiceRequest;
 use App\Notifications\NewRequestNotification;
-use App\Support\Formatter;
 use App\Support\Mailer;
-use App\Support\Settings;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Support\Str;
@@ -36,22 +34,17 @@ class NotifyMatchedAssessorsJob implements ShouldQueue
             return;
         }
 
-        // Set by MatchRequestAction when the request was matched; the fallback
-        // only covers rows matched before the column existed.
-        $deadline = $request->accept_deadline_at
-            ?? $request->created_at->copy()->addHours(Settings::int('business.request_expiry_hours', 8));
-
         RequestMatch::where('service_request_id', $request->id)
             ->pending()
             ->with('assessor.user')
-            ->chunkById(50, function ($matches) use ($request, $deadline) {
+            ->chunkById(50, function ($matches) use ($request) {
                 foreach ($matches as $match) {
-                    $this->notifyOne($match->assessor, $request, $deadline);
+                    $this->notifyOne($match->assessor, $request);
                 }
             });
     }
 
-    private function notifyOne(?Assessor $assessor, ServiceRequest $request, $deadline): void
+    private function notifyOne(?Assessor $assessor, ServiceRequest $request): void
     {
         if ($assessor?->user === null) {
             return;
@@ -78,7 +71,6 @@ class NotifyMatchedAssessorsJob implements ShouldQueue
             'ort' => $request->city,
             'fahrzeug' => $request->vehicleLabel(),
             'schadenart' => $request->description,
-            'frist' => Formatter::dateTime($deadline),
             // Contact details are deliberately absent until acceptance.
             'mask' => true,
             'dataTitle' => 'Anfragedaten',
@@ -88,7 +80,6 @@ class NotifyMatchedAssessorsJob implements ShouldQueue
                 ['k' => 'Fahrzeug', 'v' => $request->vehicleLabel()],
                 $request->description ? ['k' => 'Schadenart', 'v' => Str::limit($request->description, 120)] : null,
                 $request->urgency ? ['k' => 'Dringlichkeit', 'v' => $this->urgencyLabel($request->urgency)] : null,
-                ['k' => 'Frist zur Annahme', 'v' => Formatter::dateTime($deadline), 'mono' => true],
             ])),
             'cta' => 'Anfrage im Portal ansehen',
             'cta_url' => route('portal.requests.show', $request),

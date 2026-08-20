@@ -67,16 +67,21 @@ class PublicController extends Controller
         ]);
     }
 
-    /** Backs the postal-code field's city lookup. */
+    /**
+     * Backs the postal-code field's city lookup.
+     *
+     * A code the seeded table does not know is not an error — the table covers
+     * a fraction of Germany's codes and exists only to save typing. It answers
+     * 200 with a null city so the field simply does not auto-fill, rather than
+     * a 404 the form might treat as a rejection.
+     */
     public function resolvePostalCode(string $code): JsonResponse
     {
-        $city = PostalCode::cityFor($code);
-
-        if ($city === null) {
-            return response()->json(['message' => 'Diese Postleitzahl kennen wir nicht.'], 404);
-        }
-
-        return response()->json(['code' => $code, 'city' => $city]);
+        return response()->json([
+            'code' => $code,
+            'city' => PostalCode::cityFor($code),
+            'known' => PostalCode::exists($code),
+        ]);
     }
 
     /**

@@ -71,7 +71,7 @@ class RequestMatch extends Model
             self::OUTCOME_ACCEPTED => 'Von mir angenommen',
             self::OUTCOME_DECLINED => 'Von mir abgelehnt',
             self::OUTCOME_CLOSED => 'Von anderem Partner angenommen',
-            self::OUTCOME_EXPIRED => 'Frist abgelaufen',
+            self::OUTCOME_EXPIRED => 'Vorgang geschlossen',
             default => $this->outcome,
         };
     }
