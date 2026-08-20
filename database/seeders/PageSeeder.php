@@ -101,7 +101,7 @@ HTML,
 <p>Für erfolgreich vermittelte und abgeschlossene Aufträge fällt eine Vermittlungsprovision auf das tatsächlich berechnete Netto-Honorar an. Der jeweils gültige Satz ist im Partnerportal ausgewiesen. Für abgelehnte oder nicht zustande gekommene Aufträge entsteht keine Provision.</p>
 
 <h2>Pflichten der Sachverständigen</h2>
-<p>Sachverständige halten ihr Einsatzgebiet und ihre Verfügbarkeit aktuell, melden sich innerhalb der gesetzten Frist auf vermittelte Anfragen zurück und hinterlegen nach Abschluss Gutachten und Rechnung im Portal.</p>
+<p>Sachverständige halten ihr Einsatzgebiet und ihre Verfügbarkeit aktuell, melden sich zeitnah auf vermittelte Anfragen zurück und hinterlegen nach Abschluss Gutachten und Rechnung im Portal.</p>
 
 <h2>Haftung</h2>
 <p>DKGZ haftet nicht für Inhalt, Richtigkeit oder Fristen des Gutachtens. Diese Verantwortung liegt allein beim beauftragten Sachverständigen.</p>

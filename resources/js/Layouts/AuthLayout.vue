@@ -25,7 +25,7 @@ const props = defineProps({
         default: () => [
             { icon: 'branch', title: 'Automatische Vermittlung', text: 'Anfragen nach PLZ, ohne Angebotsvergleich' },
             { icon: 'shield', title: 'Kein Vergleichsportal', text: 'Der erste verfügbare Partner übernimmt' },
-            { icon: 'euro', title: 'Transparente Provision', text: '15 % ausschließlich auf abgeschlossene Aufträge' },
+            { icon: 'euro', title: 'Feste Gebühr je Auftrag', text: 'Vor der Annahme sichtbar, nur bei Abschluss fällig' },
         ],
     },
 })

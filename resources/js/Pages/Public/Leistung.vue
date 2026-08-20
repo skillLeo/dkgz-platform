@@ -1,4 +1,6 @@
 <script setup>
+import { computed } from 'vue'
+
 import { ref } from 'vue'
 import { Head, Link } from '@inertiajs/vue3'
 import { Check, ChevronDown } from 'lucide-vue-next'
@@ -6,13 +8,22 @@ import PublicLayout from '../../Layouts/PublicLayout.vue'
 import SectionLabel from '../../Components/Layout/SectionLabel.vue'
 import BaseButton from '../../Components/Base/BaseButton.vue'
 
-defineProps({
+const props = defineProps({
     serviceType: { type: Object, required: true },
     serviceTypes: { type: Array, default: () => [] },
     faqs: { type: Array, default: () => [] },
 })
 
 const openFaq = ref(null)
+
+/** Only the sections the client has actually filled in. */
+const contentBlocks = computed(() => [
+    { title: 'Was enthalten ist', text: props.serviceType.includes_de },
+    { title: 'Für wen geeignet', text: props.serviceType.target_audience_de },
+    { title: 'Typische Situationen', text: props.serviceType.typical_situations_de },
+    { title: 'Abgrenzung zu anderen Leistungen', text: props.serviceType.differences_de },
+    { title: 'Gut zu wissen', text: props.serviceType.additional_info_de },
+].filter((block) => block.text))
 </script>
 
 <template>
@@ -94,5 +105,22 @@ const openFaq = ref(null)
                 </div>
             </aside>
         </div>
+        <!--
+            The five questions a visitor actually has before choosing. Each is
+            a separate field so the client can revise one without touching the
+            rest, and each is hidden when empty rather than showing a heading
+            over nothing.
+        -->
+        <section class="border-t border-gray-200 bg-white">
+            <div class="mx-auto w-full max-w-(--container-wide) px-4 py-16 md:px-6">
+                <dl class="grid gap-x-12 gap-y-10 md:grid-cols-2">
+                    <div v-for="block in contentBlocks" :key="block.title" class="min-w-0">
+                        <dt class="text-eyebrow font-semibold uppercase text-accent">{{ block.title }}</dt>
+                        <dd class="measure pt-3 text-base leading-relaxed text-gray-800">{{ block.text }}</dd>
+                    </div>
+                </dl>
+            </div>
+        </section>
+
     </PublicLayout>
 </template>

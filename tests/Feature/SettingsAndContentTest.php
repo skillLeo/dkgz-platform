@@ -79,7 +79,7 @@ describe('content blocks', function () {
     });
 
     it('busts its cache when a block is edited', function () {
-        expect(Content::get('startseite.hero.cta'))->toBe('Gutachter anfragen');
+        expect(Content::get('startseite.hero.cta'))->toBe('Anfragen');
 
         ContentBlock::where('page_key', 'startseite')
             ->where('section_key', 'hero')

@@ -17,12 +17,15 @@ class ServiceType extends Model
 
     protected $fillable = [
         'dkgz_fee_cents',
+        'includes_de', 'target_audience_de', 'typical_situations_de',
+        'differences_de', 'additional_info_de', 'content_is_placeholder',
         'slug', 'name_de', 'description_de', 'icon', 'sort_order', 'is_active',
     ];
 
     protected function casts(): array
     {
         return [
+            'content_is_placeholder' => 'boolean',
             'dkgz_fee_cents' => MoneyCast::class,
             'is_active' => 'boolean',
             'sort_order' => 'integer',

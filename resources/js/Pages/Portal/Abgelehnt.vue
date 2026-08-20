@@ -21,7 +21,7 @@ const rows = computed(() => props.requests.data)
 
     <PortalLayout title="Abgelehnte Anfragen">
         <p class="measure-wide pb-4 text-sm leading-normal text-gray-600">
-            Abgelehnte oder abgelaufene Anfragen bleiben {{ visibleDays }} Tage sichtbar. Eine Ablehnung wirkt sich
+            Abgeschlossene und abgelehnte Anfragen bleiben {{ visibleDays }} Tage sichtbar. Eine Ablehnung wirkt sich
             nicht auf die weitere Verteilung aus.
         </p>
 
@@ -29,8 +29,8 @@ const rows = computed(() => props.requests.data)
             <X :size="32" :stroke-width="1.25" class="mx-auto text-gray-300" aria-hidden="true" />
             <p class="pt-4 text-lead font-semibold text-navy-700">Keine abgelehnten Anfragen</p>
             <p class="measure mx-auto pt-2 text-sm leading-normal text-gray-600">
-                Hier erscheinen Anfragen, die Sie abgelehnt haben, die ein anderer Partner übernommen hat oder deren
-                Annahmefrist abgelaufen ist.
+                Hier erscheinen Anfragen, die Sie abgelehnt haben, die ein anderer Partner übernommen hat oder die
+                von der Administration geschlossen wurden.
             </p>
         </div>
 

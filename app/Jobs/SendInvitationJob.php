@@ -5,7 +5,6 @@ namespace App\Jobs;
 use App\Models\Invitation;
 use App\Support\Formatter;
 use App\Support\Mailer;
-use App\Support\Settings;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 
@@ -28,8 +27,6 @@ class SendInvitationJob implements ShouldQueue
             return;
         }
 
-        $rate = Settings::commissionRate();
-
         Mailer::send($invitation->email, 'einladung-partnerschaft', [
             'eyebrow' => 'Einladung',
             'headline' => 'Sie wurden in das DKGZ-Partnernetz eingeladen.',
@@ -37,7 +34,7 @@ class SendInvitationJob implements ShouldQueue
             'admin_nachricht' => $invitation->message ?? '',
             'admin_name' => $invitation->invitedBy?->fullName() ?? 'DKGZ Administration',
             'admin_datum' => Formatter::date($invitation->created_at),
-            'provisionssatz' => Formatter::percent($rate),
+            'provisionssatz' => 'einem festen Betrag je Gutachtenart',
             'ablauf_datum' => Formatter::date($invitation->expires_at),
             'gueltigkeit_tage' => (string) now()->diffInDays($invitation->expires_at),
             'quote' => $invitation->message,
@@ -45,7 +42,7 @@ class SendInvitationJob implements ShouldQueue
                 .' · DKGZ Administration · '.Formatter::date($invitation->created_at)),
             'dataTitle' => 'Konditionen',
             'rows' => [
-                ['k' => 'Vermittlungsprovision', 'v' => Formatter::percent($rate).' auf abgeschlossene Aufträge'],
+                ['k' => 'Vermittlungsprovision', 'v' => 'einem festen Betrag je Gutachtenart'.' auf abgeschlossene Aufträge'],
                 ['k' => 'Grundgebühr', 'v' => 'keine'],
                 ['k' => 'Kosten pro Anfrage', 'v' => 'keine'],
                 ['k' => 'Vertragslaufzeit', 'v' => 'keine'],

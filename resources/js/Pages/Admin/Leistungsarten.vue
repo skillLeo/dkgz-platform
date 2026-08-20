@@ -21,7 +21,7 @@ const createOpen = ref(false)
 const editing = ref(null)
 
 const create = useForm({ name_de: '', description_de: '', icon: '', is_active: true, dkgz_fee_cents: null })
-const edit = useForm({ name_de: '', description_de: '', icon: '', is_active: true, dkgz_fee_cents: null })
+const edit = useForm({ name_de: '', description_de: '', icon: '', is_active: true, dkgz_fee_cents: null, includes_de: '', target_audience_de: '', typical_situations_de: '', differences_de: '', additional_info_de: '' })
 
 const startEdit = (type) => {
     editing.value = type.id
@@ -30,6 +30,11 @@ const startEdit = (type) => {
     edit.icon = type.icon ?? ''
     edit.is_active = type.is_active
     edit.dkgz_fee_cents = type.dkgz_fee_cents
+    edit.includes_de = type.includes_de ?? ''
+    edit.target_audience_de = type.target_audience_de ?? ''
+    edit.typical_situations_de = type.typical_situations_de ?? ''
+    edit.differences_de = type.differences_de ?? ''
+    edit.additional_info_de = type.additional_info_de ?? ''
 }
 
 const remove = async (type) => {
@@ -95,6 +100,9 @@ const remove = async (type) => {
                             </span>
                             <span v-else class="text-danger">noch nicht festgelegt</span>
                         </p>
+                        <p v-if="type.content_is_placeholder" class="pt-1 text-xs text-warning">
+                            Seitentexte noch nicht überprüft
+                        </p>
                         <p v-if="type.fee_missing" class="pt-1 text-xs leading-normal text-danger">
                             Diese Leistung ist aktiv, hat aber keine Gebühr — abgeschlossene Aufträge würden
                             0,00 € buchen.
@@ -118,6 +126,19 @@ const remove = async (type) => {
                             :error="edit.errors.dkgz_fee_cents"
                             required
                         />
+                        <div class="border-t border-gray-200 pt-5">
+                            <p class="text-eyebrow font-semibold uppercase text-gray-600">Inhalte der Leistungsseite</p>
+                            <p v-if="type.content_is_placeholder" class="measure pt-2 text-sm leading-normal text-warning">
+                                Diese Texte sind Platzhalter und sollten überprüft werden. Der Hinweis verschwindet,
+                                sobald Sie gespeichert haben.
+                            </p>
+                        </div>
+                        <BaseTextarea v-model="edit.includes_de" label="Was enthalten ist" :rows="3" :error="edit.errors.includes_de" optional />
+                        <BaseTextarea v-model="edit.target_audience_de" label="Für wen geeignet" :rows="2" :error="edit.errors.target_audience_de" optional />
+                        <BaseTextarea v-model="edit.typical_situations_de" label="Typische Situationen" :rows="3" :error="edit.errors.typical_situations_de" optional />
+                        <BaseTextarea v-model="edit.differences_de" label="Abgrenzung zu anderen Leistungen" :rows="3" :error="edit.errors.differences_de" optional />
+                        <BaseTextarea v-model="edit.additional_info_de" label="Gut zu wissen" :rows="3" :error="edit.errors.additional_info_de" optional />
+
                         <BaseToggle v-model="edit.is_active" label="Aktiv" description="Inaktive Leistungsarten erscheinen nicht im Anfrageformular." on-label="Aktiv" off-label="Inaktiv" />
                     </div>
                     <div class="flex gap-3 pt-5">

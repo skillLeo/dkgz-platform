@@ -6,6 +6,7 @@ use App\Models\Faq;
 use App\Models\PostalCode;
 use App\Models\ServiceType;
 use App\Support\Content;
+use App\Support\CoverageMap;
 use App\Support\Settings;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Storage;
@@ -18,6 +19,7 @@ class PublicController extends Controller
     public function home(): Response
     {
         return Inertia::render('Public/Startseite', [
+            'coverage' => CoverageMap::regions(),
             'content' => Content::page('startseite'),
             'serviceTypes' => $this->activeServiceTypes(),
             'faqs' => Faq::published()->ordered()->get(['id', 'question_de', 'answer_de']),
@@ -37,7 +39,11 @@ class PublicController extends Controller
         abort_unless($serviceType->is_active, 404);
 
         return Inertia::render('Public/Leistung', [
-            'serviceType' => $serviceType->only(['id', 'slug', 'name_de', 'description_de', 'icon']),
+            'serviceType' => $serviceType->only([
+                'id', 'slug', 'name_de', 'description_de', 'icon',
+                'includes_de', 'target_audience_de', 'typical_situations_de',
+                'differences_de', 'additional_info_de',
+            ]),
             'serviceTypes' => $this->activeServiceTypes(),
             'faqs' => Faq::published()->ordered()->limit(4)->get(['id', 'question_de', 'answer_de']),
         ]);

@@ -68,7 +68,7 @@ describe('public pages', function () {
             ->where('content.hero.zeile_1', 'Kfz-Gutachter finden.')
             ->where('content.hero.zeile_2', 'Bundesweit koordiniert.')
             ->where('content.hero.zeile_3', 'Ohne Umwege.')
-            ->where('content.hero.cta', 'Gutachter anfragen'));
+            ->where('content.hero.cta', 'Anfragen'));
     });
 
     it('shows all eight services and all six questions on the homepage', function () {

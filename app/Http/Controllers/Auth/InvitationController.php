@@ -8,7 +8,6 @@ use App\Models\Invitation;
 use App\Models\ServiceType;
 use App\Models\User;
 use App\Rules\GermanPostalCode;
-use App\Support\Settings;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -44,7 +43,6 @@ class InvitationController extends Controller
                 'invited_by' => $invitation->invitedBy?->fullName(),
             ],
             'token' => $token,
-            'commissionRate' => Settings::commissionRate(),
             'serviceTypes' => ServiceType::active()->ordered()->get(['id', 'name_de']),
         ]);
     }

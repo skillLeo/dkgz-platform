@@ -179,6 +179,7 @@ class SeedDemoCommand extends Command
                 'assessor_id' => $assessor->id,
                 'status' => Assignment::STATUS_COMPLETED,
                 'accepted_at' => $request->created_at->copy()->addMinutes(23),
+                'dkgz_fee_snapshot_cents' => $types[$index % $types->count()]->dkgz_fee_cents,
                 'started_at' => $request->created_at->copy()->addHours(4),
                 'completed_at' => $completedAt,
                 'fee_cents' => $feeCents,
@@ -197,14 +198,19 @@ class SeedDemoCommand extends Command
                 ]);
             }
 
-            $commissionCents = (int) round($feeCents * $rate / 100);
+            // The two oldest rows keep the percentage model they were earned
+            // under, so the register demonstrably shows both honestly.
+            $isLegacy = $index >= 4;
+            $dkgzFee = $types[$index % $types->count()]->dkgz_fee_cents ?? 7_900;
 
             Commission::create([
                 'assignment_id' => $assignment->id,
                 'assessor_id' => $assessor->id,
+                'fee_type' => $isLegacy ? Commission::TYPE_PERCENTAGE : Commission::TYPE_FIXED,
+                'dkgz_fee_cents' => $isLegacy ? null : $dkgzFee,
                 'fee_cents' => $feeCents,
-                'rate_percent' => $rate,
-                'commission_cents' => $commissionCents,
+                'rate_percent' => $isLegacy ? $rate : null,
+                'commission_cents' => $isLegacy ? (int) round($feeCents * $rate / 100) : $dkgzFee,
                 'status' => $index < 2 ? Commission::STATUS_OPEN : Commission::STATUS_SETTLED,
                 'created_at' => $completedAt,
                 'updated_at' => $completedAt,
@@ -212,7 +218,7 @@ class SeedDemoCommand extends Command
         }
     }
 
-    /** Two live requests at 40589, matched, with deadlines falling today. */
+    /** Two live requests at 40589, matched and open — nothing expires now. */
     private function openRequests($types): void
     {
         foreach ([[0, 3], [1, 6]] as [$typeIndex, $hoursAgo]) {
@@ -225,10 +231,6 @@ class SeedDemoCommand extends Command
             );
 
             app(MatchRequestAction::class)->execute($request);
-
-            $request->forceFill([
-                'accept_deadline_at' => now()->endOfDay()->subHours(6),
-            ])->save();
         }
     }
 

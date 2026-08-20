@@ -13,11 +13,10 @@ import { useGermanFormat } from '../../Composables/useGermanFormat.js'
 const props = defineProps({
     invitation: { type: Object, required: true },
     token: { type: String, required: true },
-    commissionRate: { type: Number, default: 15 },
     serviceTypes: { type: Array, default: () => [] },
 })
 
-const { date, percent } = useGermanFormat()
+const { date } = useGermanFormat()
 
 const form = useForm({
     first_name: '',
@@ -68,8 +67,8 @@ const labels = {
 
         <dl class="mb-6 border-t border-gray-200">
             <div class="flex items-baseline justify-between gap-4 border-b border-gray-100 py-2.5">
-                <dt class="text-sm text-gray-600">Vermittlungsprovision</dt>
-                <dd class="text-sm text-gray-800">{{ percent(commissionRate) }} auf abgeschlossene Aufträge</dd>
+                <dt class="text-sm text-gray-600">DKGZ-Gebühr</dt>
+                <dd class="text-sm text-gray-800">Fester Betrag je Gutachtenart, nur bei Abschluss</dd>
             </div>
             <div class="flex items-baseline justify-between gap-4 border-b border-gray-100 py-2.5">
                 <dt class="text-sm text-gray-600">Grundgebühr</dt>
@@ -146,7 +145,7 @@ const labels = {
                 <BaseCheckbox id="terms" v-model="form.terms" :error="form.errors.terms">
                     Ich akzeptiere die
                     <a href="/agb" class="border-b border-navy-700 pb-0.5 text-navy-700">Allgemeinen Geschäftsbedingungen</a>
-                    und die Provisionsvereinbarung von {{ percent(commissionRate) }} auf abgeschlossene Aufträge.
+                    und die Gebührenvereinbarung: je vermitteltem und abgeschlossenem Auftrag ein fester Betrag, der von der Gutachtenart abhängt und vor der Annahme angezeigt wird.
                 </BaseCheckbox>
 
                 <BaseCheckbox id="privacy" v-model="form.privacy" :error="form.errors.privacy">

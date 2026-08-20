@@ -21,7 +21,7 @@ const columns = [
     { key: 'reference', label: 'Vorgang', mono: true, cardRole: 'primary' },
     { key: 'status', label: 'Status', cardRole: 'status' },
     { key: 'fee_cents', label: 'Honorar', align: 'right', mono: true, cardRole: 'meta' },
-    { key: 'rate_percent', label: 'Satz', align: 'right', mono: true },
+    { key: 'fee_type', label: 'Modell', cardRole: 'meta' },
     { key: 'commission_cents', label: 'Provision', align: 'right', mono: true, cardRole: 'meta' },
     { key: 'assessor_share_cents', label: 'Ihr Anteil', align: 'right', mono: true },
 ]
@@ -52,7 +52,11 @@ const columns = [
             <template #cell-reference="{ row }"><ReferenceNumber :value="row.reference ?? '—'" /></template>
             <template #cell-status="{ row }"><StatusDot :status="row.status" :label="row.status_label" /></template>
             <template #cell-fee_cents="{ row }"><MoneyValue :cents="row.fee_cents" /></template>
-            <template #cell-rate_percent="{ row }"><span class="font-mono text-sm tabular-nums text-gray-600">{{ percent(row.rate_percent) }}</span></template>
+            <template #cell-fee_type="{ row }">
+                <span class="text-sm text-gray-600">
+                    {{ row.fee_type === 'percentage' ? `Provision ${percent(row.rate_percent)}` : 'Feste Gebühr' }}
+                </span>
+            </template>
             <template #cell-commission_cents="{ row }"><MoneyValue :cents="row.commission_cents" /></template>
             <template #cell-assessor_share_cents="{ row }"><MoneyValue :cents="row.assessor_share_cents" emphasis /></template>
         </DataTable>

@@ -1,11 +1,12 @@
 <script setup>
 import { computed, ref } from 'vue'
-import { Head, Link, router, usePage } from '@inertiajs/vue3'
+import { Head, Link, usePage } from '@inertiajs/vue3'
 import {
     Camera, Car, Check, ChevronDown, ClipboardCheck, Euro, History, Phone, Shield, ShieldCheck, Wrench,
 } from 'lucide-vue-next'
 import PublicLayout from '../../Layouts/PublicLayout.vue'
 import BaseButton from '../../Components/Base/BaseButton.vue'
+import GermanyCoverageMap from '../../Components/Domain/GermanyCoverageMap.vue'
 import ImageSlot from '../../Components/Layout/ImageSlot.vue'
 
 /**
@@ -18,15 +19,14 @@ const props = defineProps({
     content: { type: Object, default: () => ({}) },
     serviceTypes: { type: Array, default: () => [] },
     faqs: { type: Array, default: () => [] },
+    coverage: { type: Array, default: () => [] },
 })
 
 const page = usePage()
-const postalCode = ref('')
 const openFaq = ref(0)
 
 const t = (section, field, fallback = '') => props.content?.[section]?.[field] ?? fallback
 
-const start = () => router.get('/anfrage', postalCode.value ? { plz: postalCode.value } : {})
 
 // The design assigns a specific icon per service; anything the admin adds later
 // falls back to the generic document mark.
@@ -82,26 +82,28 @@ const telHref = computed(() => `tel:${String(page.props.app?.phone ?? '').replac
 
                     <p class="measure-lead text-lead leading-relaxed text-gray-600">{{ t('hero', 'text') }}</p>
 
-                    <form class="mt-10 max-w-(--container-plz) rounded-card border border-gray-300 bg-white p-5" @submit.prevent="start">
-                        <label for="hero-plz" class="block pb-2 text-base font-medium text-gray-800">
-                            {{ t('hero', 'plz_label', 'Ihre Postleitzahl') }}
-                        </label>
-                        <div class="flex gap-3">
-                            <input
-                                id="hero-plz"
-                                v-model="postalCode"
-                                type="text"
-                                inputmode="numeric"
-                                maxlength="5"
-                                :placeholder="t('hero', 'plz_platzhalter', 'z. B. 40589')"
-                                class="h-12 min-w-0 flex-1 rounded-sm border border-gray-300 bg-white px-3.5 text-lead tabular-nums text-gray-800 outline-none transition-colors duration-(--duration-focus) ease-(--ease-dkgz) placeholder:text-gray-400 hover:border-gray-400 focus:border-navy-700 focus:outline-2 focus:outline-navy-500 focus:outline-offset-2"
-                            >
-                            <button
-                                type="submit"
-                                class="h-12 shrink-0 whitespace-nowrap rounded-sm border border-navy-700 bg-navy-700 px-5.5 text-base font-medium text-white transition-colors duration-(--duration-hover) ease-(--ease-dkgz) hover:border-navy-500 hover:bg-navy-500"
-                            >{{ t('hero', 'cta', 'Gutachter anfragen') }}</button>
-                        </div>
-                    </form>
+                    <!--
+                        A button, not a field. The postal code is asked for on
+                        the form itself; asking twice cost a step and gained
+                        nothing. The phone number sits beneath as the quieter
+                        alternative for anyone who would rather speak to someone.
+                    -->
+                    <div class="mt-10">
+                        <BaseButton href="/anfrage" size="cta" class="px-8">
+                            {{ t('hero', 'cta', 'Anfragen') }}
+                        </BaseButton>
+
+                        <p v-if="page.props.app?.phone" class="pt-4 text-base text-gray-600">
+                            Oder rufen Sie an:
+                            <a
+                                :href="`tel:${page.props.app.phone.replace(/\s/g, '')}`"
+                                class="font-mono tabular-nums text-navy-700 underline underline-offset-2"
+                            >{{ page.props.app.phone }}</a>
+                            <span v-if="page.props.app?.office_hours" class="text-gray-400">
+                                · {{ page.props.app.office_hours }}
+                            </span>
+                        </p>
+                    </div>
 
                     <p class="pt-3 text-sm text-gray-400">{{ t('hero', 'hinweis') }}</p>
                 </div>
@@ -146,19 +148,35 @@ const telHref = computed(() => `tel:${String(page.props.app?.phone ?? '').replac
         </section>
 
         <!-- Process -->
-        <section id="ablauf" class="bg-white">
+        <!--
+            The page alternates ground from here down — figures grey, process
+            white, services grey — so each section reads as its own band instead
+            of one continuous scroll.
+        -->
+        <section id="ablauf" class="border-t border-gray-200 bg-white">
             <div class="mx-auto w-full max-w-(--container-shell) px-4 py-16 md:px-6 lg:py-24">
                 <div class="flex flex-wrap items-end justify-between gap-12 pb-14">
                     <h2 class="text-h2 font-semibold text-navy-700">{{ t('ablauf', 'ueberschrift') }}</h2>
                     <p class="measure-hero text-base leading-normal text-gray-600">{{ t('ablauf', 'text') }}</p>
                 </div>
 
-                <ol class="grid grid-cols-1 gap-8 border-t border-gray-200 sm:grid-cols-2 lg:grid-cols-4">
-                    <li v-for="step in steps" :key="step.number">
-                        <span class="grid h-7 w-7 -translate-y-3.5 place-items-center rounded-full bg-navy-700 font-mono text-eyebrow font-medium text-white">
+                <!--
+                    The rule belongs to each step, not to the list. The disc is
+                    lifted onto that rule, and a rule only above the first row
+                    left the discs on every wrapped row floating against nothing
+                    — which is what pushed the text out of alignment on narrow
+                    screens.
+                -->
+                <ol class="grid grid-cols-1 gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-4">
+                    <li
+                        v-for="step in steps"
+                        :key="step.number"
+                        class="border-t border-gray-200 pt-3.5"
+                    >
+                        <span class="grid h-7 w-7 -translate-y-7 place-items-center rounded-full bg-navy-700 font-mono text-eyebrow font-medium text-white">
                             {{ step.number }}
                         </span>
-                        <h3 class="pt-2.5 text-lead font-semibold leading-snug text-navy-700">{{ step.title }}</h3>
+                        <h3 class="-mt-3.5 text-lead font-semibold leading-snug text-navy-700">{{ step.title }}</h3>
                         <p class="pt-2 text-base leading-normal text-gray-600">{{ step.text }}</p>
                     </li>
                 </ol>
@@ -166,7 +184,23 @@ const telHref = computed(() => `tel:${String(page.props.app?.phone ?? '').replac
         </section>
 
         <!-- Services: sticky left column, two-column card grid -->
-        <section id="leistungen" class="border-t border-gray-200 bg-white">
+        <!-- Coverage, between the process and the services grid. -->
+        <section v-if="coverage.length" id="abdeckung" class="border-t border-gray-200 bg-white">
+            <div class="mx-auto w-full max-w-(--container-shell) px-4 py-16 md:px-6 lg:py-24">
+                <div class="flex flex-wrap items-end justify-between gap-12 pb-12">
+                    <h2 class="text-h2 font-semibold text-navy-700">
+                        {{ t('abdeckung', 'ueberschrift', 'Wo wir vermitteln') }}
+                    </h2>
+                    <p class="measure-hero text-base leading-normal text-gray-600">
+                        {{ t('abdeckung', 'text', 'Unser Netz wächst. Diese Karte zeigt den aktuellen Stand.') }}
+                    </p>
+                </div>
+
+                <GermanyCoverageMap :regions="coverage" />
+            </div>
+        </section>
+
+        <section id="leistungen" class="border-t border-gray-200 bg-gray-50">
             <div class="mx-auto grid w-full max-w-(--container-shell) grid-cols-1 items-start gap-16 px-4 py-16 md:px-6 lg:grid-cols-[380px_minmax(0,1fr)] lg:py-24">
                 <div class="lg:sticky lg:top-26">
                     <h2 class="text-h2 font-semibold text-navy-700">{{ t('leistungen', 'ueberschrift') }}</h2>
@@ -219,7 +253,7 @@ const telHref = computed(() => `tel:${String(page.props.app?.phone ?? '').replac
         </section>
 
         <!-- Partner strip -->
-        <section id="sachverstaendige" class="border-b border-gray-200 bg-gray-50">
+        <section id="sachverstaendige" class="border-y border-gray-200 bg-white">
             <div class="mx-auto grid w-full max-w-(--container-shell) grid-cols-1 items-center gap-16 px-4 py-16 md:px-6 lg:grid-cols-[minmax(0,1fr)_420px] lg:py-24">
                 <div>
                     <h2 class="text-h2 font-semibold text-navy-700">{{ t('partner', 'ueberschrift') }}</h2>

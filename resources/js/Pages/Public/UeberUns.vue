@@ -13,6 +13,35 @@ const t = (section, field, fallback = '') => props.content?.[section]?.[field] ?
     <Head title="Über uns" />
 
     <PublicLayout>
+        <!-- The building, then a fuller account of who DKGZ is. -->
+        <section class="border-b border-gray-200 bg-white">
+            <div class="mx-auto w-full max-w-(--container-shell) px-4 py-16 md:px-6 lg:py-24">
+                <figure v-if="t('haus', 'bild')" class="pb-14">
+                    <img
+                        :src="t('haus', 'bild')"
+                        :alt="t('haus', 'bildunterschrift', 'Geschäftsstelle der DKGZ')"
+                        class="w-full rounded-card border border-gray-200 object-cover"
+                    >
+                    <figcaption class="pt-3 text-sm text-gray-600">
+                        {{ t('haus', 'bildunterschrift') }}
+                    </figcaption>
+                </figure>
+
+                <h2 class="text-h2 font-semibold text-navy-700">
+                    {{ t('profil', 'ueberschrift', 'Wer hinter DKGZ steht') }}
+                </h2>
+
+                <div class="grid gap-x-12 gap-y-6 pt-8 md:grid-cols-2">
+                    <p
+                        v-for="key in ['absatz_1', 'absatz_2', 'absatz_3', 'absatz_4']"
+                        v-show="t('profil', key)"
+                        :key="key"
+                        class="measure text-base leading-relaxed text-gray-800"
+                    >{{ t('profil', key) }}</p>
+                </div>
+            </div>
+        </section>
+
         <div class="mx-auto w-full max-w-(--container-shell) px-4 py-20 md:px-6">
             <SectionLabel text="Über DKGZ" />
             <h1 class="pt-6 text-h1 font-bold text-navy-700">{{ t('kopf', 'ueberschrift') }}</h1>
