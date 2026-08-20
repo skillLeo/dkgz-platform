@@ -19,11 +19,11 @@ const props = defineProps({
     documents: { type: Array, default: () => [] },
     timeline: { type: Array, default: () => [] },
     commission: { type: Object, default: null },
-    commissionRate: { type: Number, default: 15 },
+    dkgzFeeLabel: { type: String, default: null },
     feeBounds: { type: Object, default: () => ({}) },
 })
 
-const { percent, stamp } = useGermanFormat()
+const { stamp } = useGermanFormat()
 const { confirm } = useConfirm()
 
 const start = useForm({ status: 'in_progress', note: '' })
@@ -270,7 +270,7 @@ const submitCompletion = () => complete.post(`/portal/auftraege/${props.assignme
                     <dd><MoneyValue :cents="commission.fee_cents" /></dd>
                 </div>
                 <div class="flex items-baseline justify-between gap-4 border-b border-gray-100 py-2.5">
-                    <dt class="text-sm text-gray-600">DKGZ-Vermittlungsprovision {{ percent(commission.rate_percent) }}</dt>
+                    <dt class="text-sm text-gray-600">DKGZ-Gebühr</dt>
                     <dd><MoneyValue :cents="commission.commission_cents" /></dd>
                 </div>
                 <div class="flex items-baseline justify-between gap-4 pt-3">
@@ -290,7 +290,7 @@ const submitCompletion = () => complete.post(`/portal/auftraege/${props.assignme
             v-model="complete.fee_cents"
             :open="completeOpen"
             :reference="request.reference"
-            :rate-percent="commissionRate"
+            :dkgz-fee-label="dkgzFeeLabel"
             :error="complete.errors.fee_cents"
             :processing="complete.processing"
             @close="completeOpen = false"

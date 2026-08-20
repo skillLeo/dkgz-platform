@@ -25,7 +25,11 @@ class SettingsController extends Controller
         return Inertia::render('Admin/Einstellungen', [
             'group' => $group,
             'groups' => $this->groupLabels(),
-            'settings' => $this->settingsFor($group),
+            // The rate is per service now; the row stays for rollback safety.
+            'settings' => collect($this->settingsFor($group))
+                ->reject(fn (array $s) => $s['field'] === 'business.commission_rate')
+                ->values()
+                ->all(),
             'canEdit' => $request->user()->can('updateGroup', [Setting::class, $group]),
             'smtpConfigured' => filled(Settings::get('integrations.smtp_host')),
             'brandingTokens' => $group === 'branding' ? Branding::tokens() : [],

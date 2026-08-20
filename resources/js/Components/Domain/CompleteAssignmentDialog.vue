@@ -17,7 +17,7 @@ import { useGermanFormat } from '../../Composables/useGermanFormat.js'
 const props = defineProps({
     open: { type: Boolean, default: false },
     reference: { type: String, required: true },
-    ratePercent: { type: Number, required: true },
+    dkgzFeeLabel: { type: String, default: null },
     modelValue: { type: [Number, null], default: null },
     error: { type: String, default: '' },
     processing: { type: Boolean, default: false },
@@ -25,7 +25,7 @@ const props = defineProps({
 
 const emit = defineEmits(['update:modelValue', 'close', 'submit'])
 
-const { money, parseMoney, amount, percent } = useGermanFormat()
+const { parseMoney, amount } = useGermanFormat()
 
 const raw = ref(props.modelValue === null ? '' : amount(props.modelValue))
 const confirmed = ref(false)
@@ -38,19 +38,13 @@ watch(() => props.open, (isOpen) => {
 })
 
 const cents = computed(() => parseMoney(raw.value))
-const commissionCents = computed(() => (cents.value === null
-    ? null
-    : Math.round((cents.value * props.ratePercent) / 100)))
-const shareCents = computed(() => (cents.value === null || commissionCents.value === null
-    ? null
-    : cents.value - commissionCents.value))
 
 const onInput = (event) => {
     raw.value = event.target.value
     emit('update:modelValue', parseMoney(raw.value))
 }
 
-const canSubmit = computed(() => confirmed.value && cents.value !== null && !props.processing)
+const canSubmit = computed(() => confirmed.value && !props.processing)
 </script>
 
 <template>
@@ -84,7 +78,8 @@ const canSubmit = computed(() => confirmed.value && cents.value !== null && !pro
 
                 <div class="p-6">
                     <label for="honorar" class="block pb-2 text-sm font-medium text-gray-800">
-                        Tatsächlich berechnetes Honorar (netto) <span class="text-danger" aria-hidden="true">*</span>
+                        Tatsächlich berechnetes Honorar (netto)
+                        <span class="font-normal text-gray-600">· optional</span>
                     </label>
                     <div class="flex h-12 items-center gap-2 rounded-sm border border-navy-700 px-3.5">
                         <input
@@ -92,7 +87,6 @@ const canSubmit = computed(() => confirmed.value && cents.value !== null && !pro
                             :value="raw"
                             type="text"
                             inputmode="decimal"
-                            required
                             class="h-full min-w-0 flex-1 border-none bg-transparent p-0 text-right font-mono text-code tabular-nums text-navy-700 focus:outline-none focus:ring-0"
                             @input="onInput"
                         >
@@ -100,22 +94,25 @@ const canSubmit = computed(() => confirmed.value && cents.value !== null && !pro
                     </div>
                     <FieldError :message="error" />
 
+                    <p class="pt-2 text-sm leading-normal text-gray-600">
+                        Nur für Ihre eigenen Unterlagen. Für den Abschluss wird dieser Betrag nicht benötigt.
+                    </p>
+
+                    <!--
+                        Nothing is calculated here any more. The amount owed was
+                        fixed when the assignment was accepted; showing it again
+                        is a confirmation, not a computation.
+                    -->
                     <div class="mt-5 flex items-baseline justify-between gap-4 border-t border-gray-200 pt-4">
-                        <span class="text-sm text-gray-600">DKGZ-Vermittlungsprovision {{ percent(ratePercent) }}</span>
+                        <span class="text-sm text-gray-600">DKGZ-Gebühr für diesen Auftrag</span>
                         <span class="whitespace-nowrap font-mono text-code font-medium tabular-nums text-navy-700">
-                            {{ commissionCents === null ? '—' : money(commissionCents) }}
-                        </span>
-                    </div>
-                    <div class="flex items-baseline justify-between gap-4 pt-2">
-                        <span class="text-sm text-gray-600">Verbleibt bei Ihnen</span>
-                        <span class="whitespace-nowrap font-mono text-base tabular-nums text-gray-600">
-                            {{ shareCents === null ? '—' : money(shareCents) }}
+                            {{ dkgzFeeLabel ?? '—' }}
                         </span>
                     </div>
 
                     <div class="mt-5 border-t border-gray-200 pt-5">
                         <BaseCheckbox v-model="confirmed">
-                            Ich bestätige, dass die hochgeladenen Unterlagen dem angegebenen Honorar entsprechen.
+                            Ich bestätige, dass Gutachten und Rechnung vollständig hochgeladen sind.
                         </BaseCheckbox>
                     </div>
                 </div>

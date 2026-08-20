@@ -12,10 +12,10 @@ return new class extends Migration
             $table->id();
             $table->foreignId('assignment_id')->unique()->constrained()->cascadeOnDelete();
             $table->foreignId('assessor_id')->constrained()->restrictOnDelete();
-            $table->unsignedBigInteger('fee_cents');
+            $table->unsignedBigInteger('fee_cents')->nullable();
             // SNAPSHOT of business.commission_rate at the moment of calculation.
             // Never read live: editing the rate must not rewrite history.
-            $table->decimal('rate_percent', 5, 2);
+            $table->decimal('rate_percent', 5, 2)->nullable();
             $table->unsignedBigInteger('commission_cents');
             $table->enum('status', ['open', 'invoiced', 'settled', 'waived'])->default('open');
             $table->string('invoice_number')->nullable()->unique();

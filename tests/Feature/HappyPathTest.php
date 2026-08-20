@@ -177,17 +177,23 @@ it('carries a request from the public form all the way to a settled review', fun
         ->and($assignment->fee_cents)->toBe(164_000)
         ->and($request->status)->toBe(ServiceRequest::STATUS_COMPLETED);
 
-    // ---- 7. The commission, at the snapshotted rate ---------------------
+    // ---- 7. The DKGZ fee, fixed at acceptance ---------------------------
     $commission = Commission::where('assignment_id', $assignment->id)->firstOrFail();
 
+    // Superseded by the client's change request: a fixed fee per assessment
+    // type, snapshotted when the partner accepted, rather than a percentage of
+    // whatever the assessor happened to invoice.
+    $expectedFee = $assignment->fresh()->dkgz_fee_snapshot_cents;
+
     expect($commission->fee_cents)->toBe(164_000)
-        ->and((float) $commission->rate_percent)->toBe(15.0)
-        ->and($commission->commission_cents)->toBe(24_600)
-        ->and($commission->assessorShareCents())->toBe(139_400)
+        ->and($commission->fee_type)->toBe(Commission::TYPE_FIXED)
+        ->and($commission->rate_percent)->toBeNull()
+        ->and($commission->dkgz_fee_cents)->toBe($expectedFee)
+        ->and($commission->commission_cents)->toBe($expectedFee)
         ->and($commission->status)->toBe(Commission::STATUS_OPEN);
 
     // German money output, both sides of the wire.
-    expect(Formatter::money($commission->commission_cents))->toBe('246,00 €')
+    expect(Formatter::money($commission->commission_cents))->toBe(Formatter::money($expectedFee))
         ->and(Formatter::money($commission->fee_cents))->toBe('1.640,00 €');
 
     // ---- 8. The review token, and the rating ----------------------------

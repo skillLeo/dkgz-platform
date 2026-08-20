@@ -75,6 +75,7 @@ const countLabel = computed(() => `${props.requests.total} ${props.requests.tota
                         <th class="whitespace-nowrap px-3 py-3 text-left text-eyebrow font-semibold uppercase text-gray-600">Ort / PLZ</th>
                         <th class="whitespace-nowrap px-3 py-3 text-left text-eyebrow font-semibold uppercase text-gray-600">Art des Gutachtens</th>
                         <th class="whitespace-nowrap px-3 py-3 text-left text-eyebrow font-semibold uppercase text-gray-600">Kunde</th>
+                        <th class="whitespace-nowrap px-3 py-3 text-left text-eyebrow font-semibold uppercase text-gray-600">DKGZ-Gebühr</th>
                         <th class="whitespace-nowrap px-3 py-3 text-left text-eyebrow font-semibold uppercase text-gray-600">Eingegangen</th>
                         <th class="px-5 py-3"><span class="sr-only">Aktionen</span></th>
                     </tr>
@@ -97,6 +98,9 @@ const countLabel = computed(() => `${props.requests.total} ${props.requests.tota
                                 <Lock :size="14" :stroke-width="1.5" class="text-gray-400" aria-hidden="true" />
                                 <span class="sr-only">Sichtbar nach Annahme</span>
                             </span>
+                        </td>
+                        <td class="whitespace-nowrap px-3 py-3.5 font-mono text-sm tabular-nums text-navy-700">
+                            {{ row.dkgz_fee_label ?? '—' }}
                         </td>
                         <td class="whitespace-nowrap px-3 py-3.5 font-mono text-sm text-gray-600">{{ relativeTime(row.created_at) }}</td>
                         <td class="whitespace-nowrap px-5 py-3.5 text-right">

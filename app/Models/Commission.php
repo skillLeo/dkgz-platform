@@ -14,6 +14,11 @@ class Commission extends Model
 {
     use HasFactory, LogsActivity;
 
+    /** How this row was calculated. Historical rows keep 'percentage'. */
+    public const TYPE_FIXED = 'fixed';
+
+    public const TYPE_PERCENTAGE = 'percentage';
+
     public const STATUS_OPEN = 'open';
 
     public const STATUS_INVOICED = 'invoiced';
@@ -23,7 +28,8 @@ class Commission extends Model
     public const STATUS_WAIVED = 'waived';
 
     protected $fillable = [
-        'assignment_id', 'assessor_id', 'fee_cents', 'rate_percent', 'commission_cents',
+        'assignment_id', 'assessor_id', 'fee_type', 'dkgz_fee_cents',
+        'fee_cents', 'rate_percent', 'commission_cents',
         'status', 'invoice_number', 'invoice_path', 'invoiced_at',
         'settled_at', 'settled_by', 'notes',
     ];
@@ -34,6 +40,7 @@ class Commission extends Model
     {
         return [
             'fee_cents' => MoneyCast::class,
+            'dkgz_fee_cents' => MoneyCast::class,
             'commission_cents' => MoneyCast::class,
             'rate_percent' => 'decimal:2',
             'invoiced_at' => 'datetime',

@@ -5,6 +5,7 @@ use App\Models\Assignment;
 use App\Models\AssignmentDocument;
 use App\Models\Commission;
 use App\Models\ServiceRequest;
+use App\Models\ServiceType;
 use App\Support\Money;
 use App\Support\Settings;
 use Database\Seeders\RolePermissionSeeder;
@@ -15,14 +16,26 @@ beforeEach(function () {
     $this->seed(SettingsSeeder::class);
 });
 
-function assignmentReadyToComplete(): Assignment
+function assignmentReadyToComplete(?ServiceType $type = null): Assignment
 {
-    $assignment = Assignment::factory()->create(['status' => Assignment::STATUS_IN_PROGRESS]);
+    $type ??= ServiceType::factory()->create(['dkgz_fee_cents' => 7_900]);
+
+    $request = ServiceRequest::factory()->create([
+        'service_type_id' => $type->id,
+        'reference' => ServiceRequest::nextReference(),
+    ]);
+
+    $assignment = Assignment::factory()->create([
+        'service_request_id' => $request->id,
+        'status' => Assignment::STATUS_IN_PROGRESS,
+        // Snapshotted at acceptance in the real flow.
+        'dkgz_fee_snapshot_cents' => $type->dkgz_fee_cents,
+    ]);
 
     AssignmentDocument::factory()->report()->create(['assignment_id' => $assignment->id]);
     AssignmentDocument::factory()->customerInvoice()->create(['assignment_id' => $assignment->id]);
 
-    return $assignment->fresh(['documents', 'assessor', 'serviceRequest']);
+    return $assignment->fresh(['documents', 'assessor', 'serviceRequest.serviceType']);
 }
 
 describe('the arithmetic', function () {
@@ -90,9 +103,12 @@ describe('completion', function () {
 
         $commission = app(CompleteAssignmentAction::class)->execute($assignment, 85_000);
 
+        // Superseded by the client's change request: DKGZ now charges a fixed
+        // fee per assessment type, not a share of the assessor's own invoice.
         expect($commission->fee_cents)->toBe(85_000)
-            ->and($commission->commission_cents)->toBe(12_750)
-            ->and((float) $commission->rate_percent)->toBe(15.0)
+            ->and($commission->fee_type)->toBe(Commission::TYPE_FIXED)
+            ->and($commission->commission_cents)->toBe($assignment->fresh()->dkgz_fee_snapshot_cents ?? 0)
+            ->and($commission->rate_percent)->toBeNull()
             ->and($commission->status)->toBe(Commission::STATUS_OPEN);
 
         $assignment->refresh();
@@ -147,38 +163,55 @@ describe('completion', function () {
     });
 });
 
-describe('rate snapshotting', function () {
-    it('reads the rate from settings rather than a constant', function () {
-        Settings::set('business.commission_rate', '12.5');
+describe('fixed-fee snapshotting', function () {
+    it('books the service type fee that was in force when the partner accepted', function () {
+        $type = ServiceType::factory()->create(['dkgz_fee_cents' => 7_900]);
+        $assignment = assignmentReadyToComplete($type);
 
-        $commission = app(CompleteAssignmentAction::class)->execute(assignmentReadyToComplete(), 85_000);
+        $commission = app(CompleteAssignmentAction::class)->execute($assignment, 85_000);
 
-        expect((float) $commission->rate_percent)->toBe(12.5)
-            ->and($commission->commission_cents)->toBe(10_625);
+        expect($commission->fee_type)->toBe(Commission::TYPE_FIXED)
+            ->and($commission->dkgz_fee_cents)->toBe(7_900)
+            ->and($commission->commission_cents)->toBe(7_900);
     });
 
-    it('never rewrites a historical commission when the rate later changes', function () {
-        $first = app(CompleteAssignmentAction::class)->execute(assignmentReadyToComplete(), 85_000);
+    it('keeps the accepted fee when the admin changes the service later', function () {
+        $type = ServiceType::factory()->create(['dkgz_fee_cents' => 7_900]);
+        $assignment = assignmentReadyToComplete($type);
 
-        expect((float) $first->rate_percent)->toBe(15.0)
-            ->and($first->commission_cents)->toBe(12_750);
+        // The admin raises the fee after this assignment was already accepted.
+        $type->update(['dkgz_fee_cents' => 12_900]);
 
-        Settings::set('business.commission_rate', '25.0');
+        $commission = app(CompleteAssignmentAction::class)->execute($assignment->fresh(), 85_000);
 
-        $second = app(CompleteAssignmentAction::class)->execute(assignmentReadyToComplete(), 85_000);
-
-        // The new record uses the new rate; the old one is untouched.
-        expect((float) $second->rate_percent)->toBe(25.0)
-            ->and($second->commission_cents)->toBe(21_250);
-
-        $first->refresh();
-
-        expect((float) $first->rate_percent)->toBe(15.0)
-            ->and($first->commission_cents)->toBe(12_750);
+        expect($commission->dkgz_fee_cents)->toBe(7_900);
     });
 
-    it('has 15.00 as the seeded default', function () {
-        expect(Settings::commissionRate())->toBe(15.0);
+    it('completes without any fee being entered at all', function () {
+        $type = ServiceType::factory()->create(['dkgz_fee_cents' => 4_900]);
+        $assignment = assignmentReadyToComplete($type);
+
+        $commission = app(CompleteAssignmentAction::class)->execute($assignment, null);
+
+        expect($commission->commission_cents)->toBe(4_900)
+            ->and($commission->fee_cents)->toBeNull();
+    });
+
+    it('leaves historical percentage commissions exactly as they were', function () {
+        $legacy = Commission::factory()->create([
+            'fee_type' => Commission::TYPE_PERCENTAGE,
+            'fee_cents' => 85_000,
+            'rate_percent' => 15.0,
+            'commission_cents' => 12_750,
+        ]);
+
+        app(CompleteAssignmentAction::class)->execute(assignmentReadyToComplete(), 85_000);
+
+        $legacy->refresh();
+
+        expect($legacy->fee_type)->toBe(Commission::TYPE_PERCENTAGE)
+            ->and((float) $legacy->rate_percent)->toBe(15.0)
+            ->and($legacy->commission_cents)->toBe(12_750);
     });
 });
 

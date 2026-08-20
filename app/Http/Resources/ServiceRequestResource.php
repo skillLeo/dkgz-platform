@@ -30,6 +30,15 @@ class ServiceRequestResource extends JsonResource
                 'id' => $this->serviceType->id,
                 'name' => $this->serviceType->name_de,
             ]),
+            // Shown to the partner before they decide — the client's explicit
+            // requirement is that the exact fee is visible immediately.
+            'dkgz_fee_cents' => $this->whenLoaded('serviceType', fn () => $this->serviceType->dkgz_fee_cents),
+            'dkgz_fee_label' => $this->whenLoaded(
+                'serviceType',
+                fn () => $this->serviceType->dkgz_fee_cents === null
+                    ? null
+                    : Formatter::money($this->serviceType->dkgz_fee_cents)
+            ),
             'postal_code' => $this->postal_code,
             'city' => $this->city,
             'location' => $this->locationLabel(),

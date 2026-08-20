@@ -107,7 +107,15 @@ const doAccept = async () => {
 
             <aside class="flex flex-col gap-6 xl:sticky xl:top-6">
                 <div v-if="match.is_open" class="rounded-card border border-gray-200 bg-white p-5">
-                    <p class="text-eyebrow font-semibold uppercase text-gray-600">Ihre Entscheidung</p>
+                    <p class="text-eyebrow font-semibold uppercase text-gray-600">DKGZ-Gebühr</p>
+                    <p class="pt-2 text-h4 font-semibold tabular-nums text-navy-700">
+                        {{ request.dkgz_fee_label ?? 'noch nicht festgelegt' }}
+                    </p>
+                    <p class="pt-1 text-sm leading-normal text-gray-600">
+                        Fester Betrag für diese Gutachtenart, netto. Er ändert sich nach Ihrer Annahme nicht mehr.
+                    </p>
+
+                    <p class="pt-5 text-eyebrow font-semibold uppercase text-gray-600">Ihre Entscheidung</p>
                     <p class="pt-2 text-sm leading-normal text-gray-600">
                         Diese Anfrage bleibt offen, bis ein Partner sie übernimmt. Es läuft keine Frist —
                         eine Ablehnung wirkt sich nicht auf die weitere Verteilung aus.

@@ -10,7 +10,6 @@ use App\Models\Assignment;
 use App\Models\AssignmentDocument;
 use App\Support\Formatter;
 use App\Support\Money;
-use App\Support\Settings;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -118,14 +117,17 @@ class AssignmentController extends Controller
                 'fee_cents' => $assignment->commission->fee_cents,
                 'rate_percent' => (float) $assignment->commission->rate_percent,
                 'commission_cents' => $assignment->commission->commission_cents,
+                'fee_type' => $assignment->commission->fee_type,
                 'assessor_share_cents' => $assignment->commission->assessorShareCents(),
                 'status' => $assignment->commission->status,
                 'status_label' => $assignment->commission->statusLabel(),
             ],
-            // The dialog shows the split live as the fee is typed, so it needs
-            // the current rate; the frozen rate on a settled commission is
-            // separate and comes back on the commission payload above.
-            'commissionRate' => Settings::commissionRate(),
+            // What DKGZ is owed for this assignment, fixed at acceptance.
+            'dkgzFeeLabel' => Formatter::money(
+                $assignment->dkgz_fee_snapshot_cents
+                    ?? $assignment->serviceRequest?->serviceType?->dkgz_fee_cents
+                    ?? 0
+            ),
             'feeBounds' => [
                 'min' => Money::MIN_FEE_CENTS,
                 'max' => Money::MAX_FEE_CENTS,
@@ -223,7 +225,9 @@ class AssignmentController extends Controller
         $this->authorize('complete', $assignment);
 
         $data = $request->validate([
-            'fee_cents' => ['required', 'integer', 'min:'.Money::MIN_FEE_CENTS, 'max:'.Money::MAX_FEE_CENTS],
+            // Optional: it is the assessor's own record of what they charged
+            // their customer and drives no calculation on this platform.
+            'fee_cents' => ['nullable', 'integer', 'min:'.Money::MIN_FEE_CENTS, 'max:'.Money::MAX_FEE_CENTS],
             'notes' => ['nullable', 'string', 'max:1000'],
         ], [
             'fee_cents.min' => 'Das Honorar erscheint zu niedrig. Bitte prüfen Sie die Eingabe.',
@@ -234,7 +238,11 @@ class AssignmentController extends Controller
         ]);
 
         try {
-            $complete->execute($assignment, (int) $data['fee_cents'], $data['notes'] ?? null);
+            $complete->execute(
+                $assignment,
+                isset($data['fee_cents']) ? (int) $data['fee_cents'] : null,
+                $data['notes'] ?? null,
+            );
         } catch (RuntimeException $e) {
             throw ValidationException::withMessages(['fee_cents' => $e->getMessage()]);
         }

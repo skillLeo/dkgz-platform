@@ -5,6 +5,7 @@ import { Wrench } from 'lucide-vue-next'
 import AdminLayout from '../../Layouts/AdminLayout.vue'
 import PageHeader from '../../Components/Layout/PageHeader.vue'
 import BaseInput from '../../Components/Base/BaseInput.vue'
+import BaseCurrencyInput from '../../Components/Base/BaseCurrencyInput.vue'
 import BaseTextarea from '../../Components/Base/BaseTextarea.vue'
 import BaseToggle from '../../Components/Base/BaseToggle.vue'
 import BaseButton from '../../Components/Base/BaseButton.vue'
@@ -19,8 +20,8 @@ const { confirm } = useConfirm()
 const createOpen = ref(false)
 const editing = ref(null)
 
-const create = useForm({ name_de: '', description_de: '', icon: '', is_active: true })
-const edit = useForm({ name_de: '', description_de: '', icon: '', is_active: true })
+const create = useForm({ name_de: '', description_de: '', icon: '', is_active: true, dkgz_fee_cents: null })
+const edit = useForm({ name_de: '', description_de: '', icon: '', is_active: true, dkgz_fee_cents: null })
 
 const startEdit = (type) => {
     editing.value = type.id
@@ -28,6 +29,7 @@ const startEdit = (type) => {
     edit.description_de = type.description_de ?? ''
     edit.icon = type.icon ?? ''
     edit.is_active = type.is_active
+    edit.dkgz_fee_cents = type.dkgz_fee_cents
 }
 
 const remove = async (type) => {
@@ -58,6 +60,13 @@ const remove = async (type) => {
                 <BaseInput v-model="create.name_de" label="Name" :error="create.errors.name_de" required />
                 <BaseTextarea v-model="create.description_de" label="Beschreibung" hint="Erscheint auf der öffentlichen Leistungsseite." :error="create.errors.description_de" optional />
                 <BaseInput v-model="create.icon" label="Symbol" hint="Name eines lucide-Symbols, z. B. file-text." optional />
+                <BaseCurrencyInput
+                    v-model="create.dkgz_fee_cents"
+                    label="DKGZ-Gebühr (netto)"
+                    hint="Fester Betrag, den DKGZ je vermitteltem Auftrag dieser Art berechnet."
+                    :error="create.errors.dkgz_fee_cents"
+                    required
+                />
             </div>
             <div class="flex gap-3 pt-5">
                 <BaseButton type="submit" size="compact" :loading="create.processing">Anlegen</BaseButton>
@@ -79,6 +88,17 @@ const remove = async (type) => {
                         <p class="pt-2 font-mono text-xs text-gray-400">
                             {{ type.slug }} · {{ type.requests_count }} Anfragen · {{ type.assessors_count }} Partner
                         </p>
+                        <p class="pt-2 text-sm">
+                            <span class="text-gray-600">DKGZ-Gebühr</span>
+                            <span v-if="type.dkgz_fee_label" class="font-mono tabular-nums text-navy-700">
+                                {{ type.dkgz_fee_label }}
+                            </span>
+                            <span v-else class="text-danger">noch nicht festgelegt</span>
+                        </p>
+                        <p v-if="type.fee_missing" class="pt-1 text-xs leading-normal text-danger">
+                            Diese Leistung ist aktiv, hat aber keine Gebühr — abgeschlossene Aufträge würden
+                            0,00 € buchen.
+                        </p>
                     </div>
                     <div class="flex shrink-0 gap-3">
                         <BaseButton variant="secondary" size="small" @click="startEdit(type)">Bearbeiten</BaseButton>
@@ -91,6 +111,13 @@ const remove = async (type) => {
                         <BaseInput v-model="edit.name_de" label="Name" :error="edit.errors.name_de" required />
                         <BaseTextarea v-model="edit.description_de" label="Beschreibung" :error="edit.errors.description_de" optional />
                         <BaseInput v-model="edit.icon" label="Symbol" optional />
+                        <BaseCurrencyInput
+                            v-model="edit.dkgz_fee_cents"
+                            label="DKGZ-Gebühr (netto)"
+                            hint="Gilt für neu angenommene Aufträge. Bereits angenommene behalten ihren Betrag."
+                            :error="edit.errors.dkgz_fee_cents"
+                            required
+                        />
                         <BaseToggle v-model="edit.is_active" label="Aktiv" description="Inaktive Leistungsarten erscheinen nicht im Anfrageformular." on-label="Aktiv" off-label="Inaktiv" />
                     </div>
                     <div class="flex gap-3 pt-5">

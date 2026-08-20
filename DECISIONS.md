@@ -116,3 +116,21 @@ zero-match. Never on a timer.
 Manual closure requires a reason, is recorded in the activity log and the
 request's internal notes, and gates on `requests.reassign` rather than plain
 viewing, since it ends the request for everyone it was sent to.
+
+## D-16 · Fixed DKGZ fee per service type (supersedes the 15 % model)
+
+Client change request, section 6. DKGZ charges a fixed amount per assessment
+type, configured in Admin → Leistungsarten, not a share of what the assessor
+invoiced.
+
+- `service_types.dkgz_fee_cents` holds the fee; required once a service is active.
+- `assignments.dkgz_fee_snapshot_cents` freezes it at acceptance, so an admin
+  editing the fee later cannot move the figure under an assignment already taken.
+- `commissions.fee_type` records which model each row was created under.
+  Historical percentage rows keep their `rate_percent` and `commission_cents`
+  untouched — the register shows both honestly rather than pretending old rows
+  were always fixed.
+- The assessor's own invoice amount becomes optional record-keeping. Completion
+  is gated on the two documents only.
+- The global `business.commission_rate` setting is hidden from the UI but the row
+  survives, so a rollback does not lose the configured value.

@@ -46,6 +46,10 @@ class AcceptAssignmentAction
                     'assessor_id' => $assessor->id,
                     'status' => Assignment::STATUS_ACCEPTED,
                     'accepted_at' => now(),
+                    // The fee shown when they accepted is the fee they owe.
+                    // Snapshotted so an admin editing the service type later
+                    // cannot move the figure under an assignment already taken.
+                    'dkgz_fee_snapshot_cents' => $locked->serviceType?->dkgz_fee_cents,
                 ]);
 
                 $locked->update([

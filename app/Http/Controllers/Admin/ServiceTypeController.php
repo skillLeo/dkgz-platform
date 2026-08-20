@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\ServiceType;
+use App\Support\Formatter;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -26,6 +27,11 @@ class ServiceTypeController extends Controller
                     'icon' => $t->icon,
                     'sort_order' => $t->sort_order,
                     'is_active' => $t->is_active,
+                    'dkgz_fee_cents' => $t->dkgz_fee_cents,
+                    'dkgz_fee_label' => $t->dkgz_fee_cents === null ? null : Formatter::money($t->dkgz_fee_cents),
+                    // An active service with no fee would book a zero-euro
+                    // referral on every completion; flagged rather than silent.
+                    'fee_missing' => $t->is_active && $t->dkgz_fee_cents === null,
                     'requests_count' => $t->service_requests_count,
                     'assessors_count' => $t->assessors_count,
                     'can_delete' => $request->user()->can('delete', $t),
@@ -89,9 +95,15 @@ class ServiceTypeController extends Controller
             'description_de' => ['nullable', 'string', 'max:1000'],
             'icon' => ['nullable', 'string', 'max:60'],
             'is_active' => ['boolean'],
-        ], [], [
+            // Required once the service is active, because an active service
+            // without a fee books nothing when an assignment completes.
+            'dkgz_fee_cents' => ['nullable', 'required_if:is_active,true,1', 'integer', 'min:0', 'max:10000000'],
+        ], [
+            'dkgz_fee_cents.required_if' => 'Eine aktive Leistung braucht eine festgelegte DKGZ-Gebühr.',
+        ], [
             'name_de' => 'der Name',
             'description_de' => 'die Beschreibung',
+            'dkgz_fee_cents' => 'die DKGZ-Gebühr',
         ]);
     }
 }

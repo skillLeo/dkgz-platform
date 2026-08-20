@@ -34,6 +34,7 @@ class Assignment extends Model
     public const FEE_REVIEW_THRESHOLD_CENTS = 1_000_000;
 
     protected $fillable = [
+        'dkgz_fee_snapshot_cents',
         'service_request_id', 'assessor_id', 'status',
         'accepted_at', 'started_at', 'completed_at', 'cancelled_at',
         'cancellation_reason', 'fee_cents', 'fee_entered_at', 'assessor_notes',
@@ -42,6 +43,7 @@ class Assignment extends Model
     protected function casts(): array
     {
         return [
+            'dkgz_fee_snapshot_cents' => MoneyCast::class,
             'accepted_at' => 'datetime',
             'started_at' => 'datetime',
             'completed_at' => 'datetime',

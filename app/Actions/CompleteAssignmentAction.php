@@ -24,7 +24,14 @@ use RuntimeException;
  */
 class CompleteAssignmentAction
 {
-    public function execute(Assignment $assignment, int $feeCents, ?string $notes = null): Commission
+    /**
+     * Completes an assignment and books the DKGZ fee.
+     *
+     * The fee the assessor charged their customer is now optional record-keeping
+     * — it drives no calculation. What DKGZ is owed was fixed the moment the
+     * partner accepted, and was snapshotted onto the assignment then.
+     */
+    public function execute(Assignment $assignment, ?int $feeCents = null, ?string $notes = null): Commission
     {
         if (! $assignment->hasRequiredDocuments()) {
             throw new RuntimeException(
@@ -32,19 +39,18 @@ class CompleteAssignmentAction
             );
         }
 
-        if (! Money::isValidFee($feeCents)) {
+        if ($feeCents !== null && ! Money::isValidFee($feeCents)) {
             throw new RuntimeException('Das eingegebene Honorar liegt außerhalb des zulässigen Bereichs.');
         }
 
         $commission = DB::transaction(function () use ($assignment, $feeCents, $notes) {
-            $rate = Settings::commissionRate();
             $previousStatus = $assignment->status;
 
             $assignment->update([
                 'status' => Assignment::STATUS_COMPLETED,
                 'completed_at' => now(),
-                'fee_cents' => $feeCents,
-                'fee_entered_at' => now(),
+                'fee_cents' => $feeCents ?? $assignment->fee_cents,
+                'fee_entered_at' => $feeCents === null ? $assignment->fee_entered_at : now(),
                 'assessor_notes' => $notes ?? $assignment->assessor_notes,
             ]);
 
@@ -57,14 +63,22 @@ class CompleteAssignmentAction
 
             $assignment->serviceRequest->update(['status' => ServiceRequest::STATUS_COMPLETED]);
 
+            // The amount owed was decided at acceptance. Falling back to the
+            // service type's current fee only covers assignments accepted
+            // before snapshotting existed.
+            $dkgzFee = $assignment->dkgz_fee_snapshot_cents
+                ?? $assignment->serviceRequest?->serviceType?->dkgz_fee_cents
+                ?? 0;
+
             $commission = Commission::updateOrCreate(
                 ['assignment_id' => $assignment->id],
                 [
                     'assessor_id' => $assignment->assessor_id,
-                    'fee_cents' => $feeCents,
-                    // Snapshot, never read live afterwards.
-                    'rate_percent' => $rate,
-                    'commission_cents' => Commission::calculateCents($feeCents, $rate),
+                    'fee_type' => Commission::TYPE_FIXED,
+                    'dkgz_fee_cents' => $dkgzFee,
+                    'commission_cents' => $dkgzFee,
+                    'fee_cents' => $feeCents ?? $assignment->fee_cents,
+                    'rate_percent' => null,
                     'status' => Commission::STATUS_OPEN,
                 ]
             );
