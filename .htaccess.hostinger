@@ -23,7 +23,15 @@ Options -Indexes -MultiViews
 </FilesMatch>
 
 # Never serve source, config, dependency or data directories.
-RedirectMatch 404 ^/(app|bootstrap|config|database|design-src|lang|node_modules|resources|routes|storage|tests|vendor)(/|$)
+RedirectMatch 404 ^/(app|bootstrap|config|database|design-src|lang|node_modules|resources|routes|tests|vendor)(/|$)
+
+# /storage is the symlink to storage/app/public, which exists only to serve
+# uploaded pictures. Exactly the two directories the app writes there are
+# reachable; anything else under /storage — logs, framework, private uploads —
+# stays sealed. Blocking /storage outright, as this file used to, also blocked
+# every image an editor uploads.
+RedirectMatch 404 ^/storage/?$
+RedirectMatch 404 ^/storage/(?!(inhalte|branding)/)
 RedirectMatch 404 ^/(\.git|\.github)(/|$)
 RedirectMatch 404 ^/.*\.md$
 
