@@ -116,3 +116,59 @@ those variables cleared, and only a clean run is recorded.
 
 ## Acceptance
 348 tests · 59 page renders · vite clean · pint clean · deployed and verified.
+
+---
+
+# Client change request pass
+
+## B · Priority 1 — functional
+- **B1 Mail.** Diagnosed, not guessed: `MAIL_HOST` is **empty** and `MAIL_SCHEME`
+  was `tls`, which Laravel 13 rejects (only `smtp`/`smtps`). Scheme fixed on the
+  server; the host needs the client's credentials. The queue itself drains — 11
+  jobs processed by hand. Admin → System gains a **Mail-Zustellung** panel with
+  the last 20 attempts and an on-demand drain, plus explicit warnings for "no
+  SMTP host" and "scheduler has never run".
+- **B2/B3 Registration.** Root cause was postal validation: the seeded table
+  holds 179 of Germany's ~8,200 codes and every code was checked against it.
+  Format-only now (D-13). Regression test registers with only required fields.
+- **B4** Certification pair and both proofs optional (D-14). A partner who never
+  supplied a liability date is not treated as lapsed.
+- **B5** Acceptance deadline removed entirely (D-15): column dropped, sweep and
+  `expired` status gone, manual admin close with a required reason added.
+- **B6** Fixed DKGZ fee per service type (D-16), snapshotted at acceptance.
+  Historical percentage rows untouched and marked via `fee_type`.
+- **B7** Admin password change — already built in the previous pass.
+- **B8** Completion mail's button now opens the rating directly.
+
+## C–E
+Reference format `DKGZYYMMXXXX`, monthly sequence. Request flow has its own
+header, no footer, no nav (D-17). Public partner page carries no euro figures
+(D-18).
+
+## F · Priority 2
+- **F1** Five content sections per service, seeded and flagged for review.
+- **F2** Every registration field declares `autocomplete`; only the two password
+  fields use `new-password`. Held by a test.
+- **F3** Assessor portrait, re-encoded (strips EXIF), shown in the customer's
+  acceptance mail with initials as fallback.
+- **F4** Bottom tab bar replaced by a header menu in both shells.
+- **F5** Auth panel hidden on mobile, narrowed to 37 % on desktop.
+
+**Found while building F3:** `StoreRequestImagesAction` called
+`ImageManager::gd()->read()` and `toWebp()` — none exist in the installed
+Intervention, so every customer photo upload would have 500'd. Fixed in both
+actions and covered by a test.
+
+## G · Priority 3
+Hero button plus phone number; alternating section grounds; the step-disc
+layout bug fixed by giving each step its own rule; Germany coverage map from
+real partner ranges; About page image and four paragraphs.
+
+## H–J
+Regression sweep is a test, not a one-off grep. Demo data and DEMO_SCRIPT.md
+updated. FLOW_REPORT.md regenerated with the fee table; all counts reconcile.
+
+## Acceptance
+369 tests · 59 page renders · vite clean · pint clean · deployed and verified.
+**Blocking: SMTP credentials and the hPanel cron.** 16 jobs are queued and
+waiting; nothing sends until both exist.
