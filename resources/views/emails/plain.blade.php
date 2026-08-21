@@ -5,9 +5,6 @@
 @if ($headline){{ $headline }}
 
 @endif
-@if ($salutation){{ $salutation }}
-
-@endif
 {{ $strip($bodyHtml) }}
 @if ($reference)
 

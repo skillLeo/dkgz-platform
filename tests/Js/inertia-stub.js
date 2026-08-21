@@ -11,6 +11,7 @@ import { h, reactive } from 'vue'
  */
 export const LOGO_LIGHT = 'https://dkgz.test/storage/branding/hell-pruefmarke.png'
 export const LOGO_DARK = 'https://dkgz.test/storage/branding/dunkel-pruefmarke.png'
+export const SEAL = 'https://dkgz.test/storage/branding/siegel-kreis.png'
 
 export const page = reactive({
     props: {

@@ -8,11 +8,21 @@ use Symfony\Component\HttpFoundation\Response;
 
 class SecurityHeaders
 {
+    /** Routes the application frames itself; everything else stays DENY. */
+    private const FRAMEABLE = ['admin.emails.preview'];
+
+
     public function handle(Request $request, Closure $next): Response
     {
         $response = $next($request);
 
-        $response->headers->set('X-Frame-Options', 'DENY');
+        // The mail preview is deliberately shown inside a frame on the template
+        // editor, and a blanket DENY made that frame render blank — the editor
+        // looked broken while the preview itself was fine. Only this one route
+        // is allowed to be framed, and only by us.
+        $framedBySelf = $request->routeIs(self::FRAMEABLE);
+
+        $response->headers->set('X-Frame-Options', $framedBySelf ? 'SAMEORIGIN' : 'DENY');
         $response->headers->set('X-Content-Type-Options', 'nosniff');
         $response->headers->set('Referrer-Policy', 'strict-origin-when-cross-origin');
         $response->headers->set(
@@ -24,7 +34,7 @@ class SecurityHeaders
             $response->headers->set('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
         }
 
-        $response->headers->set('Content-Security-Policy', $this->policy());
+        $response->headers->set('Content-Security-Policy', $this->policy($framedBySelf));
 
         return $response;
     }
@@ -34,13 +44,13 @@ class SecurityHeaders
      * 'self' — any CDN font request would be both a CSP violation and, under
      * German case law, a GDPR one.
      */
-    private function policy(): string
+    private function policy(bool $framedBySelf = false): string
     {
         $directives = [
             "default-src 'self'",
             "base-uri 'self'",
             "form-action 'self'",
-            "frame-ancestors 'none'",
+            $framedBySelf ? "frame-ancestors 'self'" : "frame-ancestors 'none'",
             "object-src 'none'",
             "img-src 'self' data: blob:",
             "font-src 'self'",

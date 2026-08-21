@@ -9,7 +9,7 @@
  * that stops at "the page renders" would have noticed, so this one searches the
  * rendered markup for the file itself.
  */
-it('shows the uploaded logo on every shell that carries the wordmark', function () {
+it('shows the uploaded logo and seal on every shell that carries the wordmark', function () {
     exec('node --version 2>/dev/null', $out, $code);
 
     if ($code !== 0) {
@@ -32,4 +32,7 @@ it('shows the uploaded logo on every shell that carries the wordmark', function 
 
     expect($exitCode)->toBe(0, $report);
     expect($report)->toContain('0 ohne Logo');
+
+    // The seal replaces only the round mark; the wordmark has to survive it.
+    expect($report)->toContain('0 ohne Siegel');
 })->group('js');

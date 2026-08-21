@@ -11,6 +11,7 @@ use App\Support\SafeStorage;
 use App\Support\Settings;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -66,7 +67,10 @@ class SettingsController extends Controller
                         [$field => 'die Datei']
                     );
 
+                    $previous = Settings::get($key);
                     $payload[$key] = $request->file($field)->store('branding', 'public');
+
+                    $this->forgetFile($previous);
                 }
 
                 continue;
@@ -90,6 +94,45 @@ class SettingsController extends Controller
         Settings::setMany($payload);
 
         return back()->with('success', 'Die Einstellungen wurden gespeichert.');
+    }
+
+    /**
+     * Removes an uploaded file and falls the site back to its designed default.
+     *
+     * Uploading was one-way before this: having put a logo in, there was no way
+     * to take it out again short of editing the database. The file goes with the
+     * setting, because a picture nobody can reach any more should not sit on the
+     * disk for ever.
+     */
+    public function destroyFile(Request $request, string $group, string $field): RedirectResponse
+    {
+        $this->authorize('updateGroup', [Setting::class, $group]);
+
+        $key = str_replace('__', '.', $field);
+
+        $setting = Setting::where('group', $group)->where('key', $key)->first();
+
+        abort_if($setting === null || $setting->type !== 'file', 404);
+
+        $this->forgetFile(Settings::get($key));
+
+        Settings::setMany([$key => null]);
+
+        return back()->with('success', 'Die Datei wurde entfernt.');
+    }
+
+    /** Deletes a stored branding file, tolerating one that is already gone. */
+    private function forgetFile(mixed $path): void
+    {
+        if (blank($path) || ! is_string($path)) {
+            return;
+        }
+
+        $disk = Storage::disk('public');
+
+        if ($disk->exists($path)) {
+            $disk->delete($path);
+        }
     }
 
     /**

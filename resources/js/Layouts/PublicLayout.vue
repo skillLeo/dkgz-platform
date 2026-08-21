@@ -4,6 +4,7 @@ import { computed, onMounted, onUnmounted, ref } from 'vue'
 import { Link, usePage } from '@inertiajs/vue3'
 import { Menu, X } from 'lucide-vue-next'
 import BrandLogo from '../Components/Layout/BrandLogo.vue'
+import BrandSeal from '../Components/Layout/BrandSeal.vue'
 import FlagRule from '../Components/Layout/FlagRule.vue'
 import BaseButton from '../Components/Base/BaseButton.vue'
 import FlashMessage from '../Components/Feedback/FlashMessage.vue'
@@ -65,14 +66,16 @@ onUnmounted(() => window.removeEventListener('scroll', onScroll))
             <div class="mx-auto flex h-18 w-full max-w-(--container-shell) items-center justify-between gap-8 px-4 md:px-6">
                 <Link href="/" class="flex items-center gap-3.5" aria-label="Zur Startseite">
                     <BrandLogo height="h-10">
-                    <span class="grid h-10 w-10 shrink-0 place-items-center rounded-full border border-navy-700" aria-hidden="true">
-                        <span
-                            class="grid h-(--spacing-seal-ring) w-(--spacing-seal-ring) place-items-center rounded-full border"
-                            style="border-color: var(--dkgz-accent)"
-                        >
-                            <span class="text-seal-3xs font-bold tracking-label text-navy-700">DKGZ</span>
+                    <BrandSeal :size="40">
+                        <span class="grid h-10 w-10 shrink-0 place-items-center rounded-full border border-navy-700" aria-hidden="true">
+                            <span
+                                class="grid h-(--spacing-seal-ring) w-(--spacing-seal-ring) place-items-center rounded-full border"
+                                style="border-color: var(--dkgz-accent)"
+                            >
+                                <span class="text-seal-3xs font-bold tracking-label text-navy-700">DKGZ</span>
+                            </span>
                         </span>
-                    </span>
+                    </BrandSeal>
                     <span class="text-mark font-bold leading-none tracking-wordmark text-navy-700">DKGZ</span>
                     <span class="h-(--spacing-mark-rule) w-px shrink-0" style="background: var(--dkgz-accent)" aria-hidden="true" />
                     <span class="hidden text-seal font-semibold uppercase leading-[1.5] text-gray-600 sm:block">

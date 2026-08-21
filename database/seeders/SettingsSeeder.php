@@ -51,9 +51,9 @@ class SettingsSeeder extends Seeder
         $branding = [
             ['group' => 'branding', 'key' => 'branding.platform_name', 'type' => 'string', 'value' => 'DKGZ', 'label_de' => 'Name der Plattform', 'help_de' => 'Wortmarke im Kopfbereich und in E-Mails.'],
             ['group' => 'branding', 'key' => 'branding.platform_subtitle', 'type' => 'string', 'value' => 'Deutsche KFZ-Gutachterzentrale', 'label_de' => 'Zusatz zur Wortmarke'],
-            ['group' => 'branding', 'key' => 'branding.logo_light', 'type' => 'file', 'label_de' => 'Logo für helle Flächen', 'help_de' => 'PNG oder SVG. Ohne Angabe wird die gesetzte Wortmarke verwendet.'],
-            ['group' => 'branding', 'key' => 'branding.logo_dark', 'type' => 'file', 'label_de' => 'Logo für dunkle Flächen'],
-            ['group' => 'branding', 'key' => 'branding.seal', 'type' => 'file', 'label_de' => 'Siegelmarke'],
+            ['group' => 'branding', 'key' => 'branding.logo_light', 'type' => 'file', 'label_de' => 'Logo für helle Flächen', 'help_de' => 'Ersetzt die komplette Wortmarke auf hellem Grund. PNG oder SVG. Ohne Angabe bleibt die gestaltete Wortmarke stehen.'],
+            ['group' => 'branding', 'key' => 'branding.logo_dark', 'type' => 'file', 'label_de' => 'Logo für dunkle Flächen', 'help_de' => 'Dasselbe für dunklen Grund — Fußzeile, Menü und Seitenleiste. Ohne Angabe wird das helle Logo verwendet.'],
+            ['group' => 'branding', 'key' => 'branding.seal', 'type' => 'file', 'label_de' => 'Siegelmarke (nur der Kreis)', 'help_de' => 'Ersetzt nur den runden Kreis links im Logo. Der Schriftzug DKGZ und der Untertitel bleiben unverändert. Am besten quadratisch mit transparentem Hintergrund.'],
             ['group' => 'branding', 'key' => 'branding.favicon', 'type' => 'file', 'label_de' => 'Favicon'],
         ];
 

@@ -79,10 +79,6 @@
                             <h1 style="margin:20px 0 0;font-size:24px;line-height:1.22;font-weight:600;letter-spacing:-0.016em;color:{{ $navy700 }};">{{ $headline }}</h1>
                         @endif
 
-                        @if ($salutation)
-                            <p style="margin:16px 0 0;font-size:15px;line-height:1.7;color:{{ $gray800 }};">{{ $salutation }}</p>
-                        @endif
-
                         {{-- Admin-editable body --}}
                         @if ($bodyHtml)
                             <div style="font-size:15px;line-height:1.7;color:{{ $gray800 }};">{!! $bodyHtml !!}</div>

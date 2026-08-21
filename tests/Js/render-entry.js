@@ -4,7 +4,7 @@
  */
 import { createSSRApp, h } from 'vue'
 import { renderToString } from '@vue/server-renderer'
-import { LOGO_LIGHT, LOGO_DARK } from '@inertiajs/vue3'
+import { LOGO_LIGHT, LOGO_DARK, SEAL, page as stubPage } from '@inertiajs/vue3'
 
 const modules = import.meta.glob('../../resources/js/Pages/**/*.vue')
 
@@ -125,6 +125,47 @@ export async function runBrandingCheck () {
 
     return results
 }
+
+/**
+ * The seal replaces only the round mark, leaving the wordmark in place, so it
+ * is checked with no full logo set — a logo would replace the whole lockup and
+ * prove nothing about the circle.
+ */
+export async function runSealCheck () {
+    const results = []
+    const restore = stubPage.props.branding
+
+    // usePage() reads the stub's own props, so the swap has to happen there.
+    stubPage.props.branding = { platform_name: 'DKGZ', logo_light: null, logo_dark: null, seal: SEAL }
+
+    for (const [path, load] of Object.entries(modules)) {
+        const name = path.replace(/^.*\/Pages\//, '').replace(/\.vue$/, '')
+
+        if (! SEAL_PAGES.includes(name)) continue
+
+        const mod = await load()
+        const app = createSSRApp({ render: () => h(mod.default, propsFor(mod.default)) })
+
+        app.config.warnHandler = () => {}
+        app.config.globalProperties.$page = { props: stubPage.props, url: '/', component: name }
+        app.config.globalProperties.$inertia = { post () {}, get () {}, visit () {}, delete () {} }
+
+        const html = await renderToString(app)
+
+        results.push({
+            name,
+            // The circle is swapped and the wordmark survives it.
+            found: html.includes(SEAL) && html.includes('DKGZ'),
+        })
+    }
+
+    stubPage.props.branding = restore
+
+    return results
+}
+
+/** The two shells that actually draw the round mark. */
+const SEAL_PAGES = ['Public/Startseite', 'Auth/Anmelden']
 
 /** One page per shell, chosen because each renders a different lockup. */
 const BRAND_PAGES = ['Public/Startseite', 'Admin/Dashboard', 'Portal/Dashboard', 'Auth/Anmelden']

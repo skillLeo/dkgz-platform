@@ -110,6 +110,7 @@ class EmailTemplateController extends Controller
         $samples = [
             'anrede' => 'Frau',
             'nachname' => 'Reinhardt',
+            'kunde' => 'Martina Reinhardt',
             'sv_nachname' => 'Ohlsen',
             'sv_name' => 'Jan Ohlsen',
             'sv_firma' => 'Kfz-Sachverständigenbüro Ohlsen',

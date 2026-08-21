@@ -26,6 +26,9 @@ use Illuminate\Queue\SerializesModels;
  */
 class TemplateMail extends Mailable implements ShouldQueue
 {
+    /** False until looked up; null once looked up and absent. */
+    private EmailTemplate|null|false $resolvedTemplate = false;
+
     use Queueable, SerializesModels;
 
     public int $tries = 3;
@@ -133,16 +136,24 @@ class TemplateMail extends Mailable implements ShouldQueue
             ->all();
     }
 
+    /**
+     * The template behind this message, looked up once per message.
+     *
+     * This used to memoise into a `static` array, which lives as long as the
+     * PHP process rather than as long as the mail: a queue worker that had once
+     * rendered a template kept sending that same copy after an admin edited it,
+     * and a worker that met the key before it existed cached the absence and
+     * sent every later message with an empty body. Both are invisible from the
+     * admin panel, where the preview reads from the database and looks right.
+     */
     private function template(): ?EmailTemplate
     {
-        static $cache = [];
-
-        if (! array_key_exists($this->templateKey, $cache)) {
-            $cache[$this->templateKey] = EmailTemplate::where('key', $this->templateKey)
+        if ($this->resolvedTemplate === false) {
+            $this->resolvedTemplate = EmailTemplate::where('key', $this->templateKey)
                 ->where('is_active', true)
                 ->first();
         }
 
-        return $cache[$this->templateKey];
+        return $this->resolvedTemplate;
     }
 }

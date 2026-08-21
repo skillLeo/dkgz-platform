@@ -1,7 +1,7 @@
 <script setup>
 import { computed, reactive, ref } from 'vue'
 import { Head, Link, router, useForm } from '@inertiajs/vue3'
-import { AlertTriangle, Lock } from 'lucide-vue-next'
+import { AlertTriangle, Lock, Trash2 } from 'lucide-vue-next'
 import AdminLayout from '../../Layouts/AdminLayout.vue'
 import PageHeader from '../../Components/Layout/PageHeader.vue'
 import BaseInput from '../../Components/Base/BaseInput.vue'
@@ -10,6 +10,7 @@ import BaseToggle from '../../Components/Base/BaseToggle.vue'
 import BaseButton from '../../Components/Base/BaseButton.vue'
 import MailDeliverabilityPanel from '../../Components/Domain/MailDeliverabilityPanel.vue'
 import ErrorSummary from '../../Components/Feedback/ErrorSummary.vue'
+import { useConfirm } from '../../Composables/useConfirm.js'
 
 /**
  * One screen drives every settings group. Secrets are never rendered back: the
@@ -40,6 +41,28 @@ const applyPreset = (preset) => {
     if ('integrations.smtp_host' in form) form['integrations.smtp_host'] = preset.host
     if ('integrations.smtp_port' in form) form['integrations.smtp_port'] = String(preset.port)
     if ('integrations.smtp_encryption' in form) form['integrations.smtp_encryption'] = preset.encryption
+}
+
+const { confirm } = useConfirm()
+const removing = ref(null)
+
+/** Removing deletes the file, so it is asked about rather than just done. */
+async function removeFile (setting) {
+    const ok = await confirm({
+        title: `${setting.label} entfernen?`,
+        message: 'Die Datei wird gelöscht und die Seite verwendet wieder die gestaltete Vorgabe.',
+        confirmLabel: 'Entfernen',
+        tone: 'danger',
+    })
+
+    if (! ok) return
+
+    removing.value = setting.field
+
+    router.delete(`/admin/einstellungen/${props.group}/datei/${setting.field}`, {
+        preserveScroll: true,
+        onFinish: () => { removing.value = null },
+    })
 }
 
 const submit = () => form.post(`/admin/einstellungen/${props.group}`, {
@@ -104,7 +127,30 @@ const submit = () => form.post(`/admin/einstellungen/${props.group}`, {
 
                             <div v-else-if="setting.type === 'file'">
                                 <label class="block pb-2 text-sm font-medium text-gray-800">{{ setting.label }}</label>
-                                <img v-if="setting.preview_url" :src="setting.preview_url" :alt="setting.label" class="mb-3 h-12 w-auto">
+
+                                <div v-if="setting.preview_url" class="mb-3 flex flex-wrap items-center gap-4">
+                                    <!--
+                                        Checked ground: most of these are logos
+                                        on a transparent background, which is
+                                        invisible against a white panel.
+                                    -->
+                                    <img
+                                        :src="setting.preview_url"
+                                        :alt="setting.label"
+                                        class="h-12 w-auto max-w-40 rounded-xs border border-gray-200 bg-[repeating-conic-gradient(#f4f4f5_0_25%,#fff_0_50%)] bg-[length:12px_12px] object-contain p-1"
+                                    >
+                                    <BaseButton
+                                        v-if="canEdit"
+                                        variant="secondary"
+                                        size="compact"
+                                        :loading="removing === setting.field"
+                                        @click="removeFile(setting)"
+                                    >
+                                        <Trash2 :size="15" :stroke-width="1.5" aria-hidden="true" />
+                                        Entfernen
+                                    </BaseButton>
+                                </div>
+
                                 <input
                                     type="file"
                                     accept="image/png,image/jpeg,image/svg+xml,image/webp,image/x-icon"

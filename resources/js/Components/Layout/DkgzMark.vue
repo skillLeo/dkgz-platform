@@ -2,6 +2,7 @@
 import { computed } from 'vue'
 import { usePage } from '@inertiajs/vue3'
 import BrandLogo from './BrandLogo.vue'
+import BrandSeal from './BrandSeal.vue'
 
 /**
  * The wordmark lockup: seal ring, "DKGZ", a 1px gold rule, then the two-line
@@ -33,20 +34,21 @@ const ringColour = computed(() => (props.inverted ? 'border-white/55' : 'border-
     <span class="flex items-center gap-2.5">
         <BrandLogo :inverted="inverted" height="h-9">
         <template #default>
-            <span
-                class="grid shrink-0 place-items-center rounded-full border"
-                :class="ringColour"
-                :style="{ width: `${s.seal}px`, height: `${s.seal}px` }"
-                aria-hidden="true"
-            >
+            <BrandSeal :size="s.seal">
                 <span
-                    class="grid place-items-center rounded-full border"
-                    style="border-color: var(--dkgz-accent)"
-                    :style="{ width: `${s.inner}px`, height: `${s.inner}px` }"
+                    class="grid shrink-0 place-items-center rounded-full border"
+                    :class="ringColour"
+                    :style="{ width: `${s.seal}px`, height: `${s.seal}px` }"
+                    aria-hidden="true"
                 >
-                    <span class="text-seal-2xs font-bold" :class="wordColour">DKGZ</span>
+                    <span
+                        class="grid place-items-center rounded-full border"
+                        :style="{ width: `${s.inner}px`, height: `${s.inner}px`, borderColor: 'var(--dkgz-accent)' }"
+                    >
+                        <span class="text-seal-2xs font-bold" :class="wordColour">DKGZ</span>
+                    </span>
                 </span>
-            </span>
+            </BrandSeal>
             <span class="font-bold leading-none tracking-wordmark" :class="[s.word, wordColour]">
                 {{ branding.platform_name ?? 'DKGZ' }}
             </span>

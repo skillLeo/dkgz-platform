@@ -55,7 +55,7 @@ class NotifyCustomerNoResponseJob implements ShouldQueue
         Mailer::send($request->customer_email, 'anfrage-keine-rueckmeldung', [
             'eyebrow' => 'Ihre Anfrage',
             'headline' => 'Wir haben Ihre Anfrage noch nicht vermitteln können.',
-            'salutation' => 'Guten Tag '.$request->customer_name.',',
+            'kunde' => $request->customer_name,
             'referenz' => $request->reference,
             'gutachtenart' => $request->serviceType?->name_de,
             'plz' => $request->postal_code,

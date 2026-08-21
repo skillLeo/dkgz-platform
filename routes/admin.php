@@ -167,6 +167,8 @@ Route::prefix('admin')
             ->middleware('can:settings.view')->name('settings');
         Route::post('/einstellungen/{group}', [SettingsController::class, 'update'])
             ->middleware('can:settings.view')->name('settings.update');
+        Route::delete('/einstellungen/{group}/datei/{field}', [SettingsController::class, 'destroyFile'])
+            ->middleware('can:settings.view')->name('settings.file.destroy');
 
         // Users and roles
         Route::middleware('can:users.view')->group(function () {
