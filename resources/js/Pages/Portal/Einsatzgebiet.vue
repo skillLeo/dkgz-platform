@@ -3,7 +3,7 @@ import { computed } from 'vue'
 import { Head, useForm } from '@inertiajs/vue3'
 import { MapPin, X } from 'lucide-vue-next'
 import PortalLayout from '../../Layouts/PortalLayout.vue'
-import CoverageGrid from '../../Components/Domain/CoverageGrid.vue'
+import ServiceAreaMap from '../../Components/Domain/ServiceAreaMap.vue'
 import BaseInput from '../../Components/Base/BaseInput.vue'
 import BaseButton from '../../Components/Base/BaseButton.vue'
 import ErrorSummary from '../../Components/Feedback/ErrorSummary.vue'
@@ -85,7 +85,7 @@ const remove = async (area) => {
                 </ul>
 
                 <div class="border-t border-gray-200 pt-4">
-                    <CoverageGrid :areas="areas" />
+                    <ServiceAreaMap :areas="areas" />
                 </div>
             </section>
 

@@ -4,6 +4,7 @@ use App\Http\Controllers\ContactController;
 use App\Http\Controllers\LegalPageController;
 use App\Http\Controllers\PublicController;
 use App\Http\Controllers\RequestController;
+use App\Http\Controllers\RequestOfferController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\SitemapController;
 use Illuminate\Support\Facades\Route;
@@ -54,3 +55,12 @@ Route::get('/api/plz/{code}', [PublicController::class, 'resolvePostalCode'])
 Route::get('/medien/{path}', [PublicController::class, 'media'])
     ->where('path', '.*')
     ->name('media.show');
+
+/*
+ * A request offered by hand to somebody who has no account yet. Public by
+ * necessity — the recipient cannot log in — and guarded by the token alone,
+ * which is why the page carries no customer contact data.
+ */
+Route::get('/auftrag-angebot/{token}', [RequestOfferController::class, 'show'])->name('offer.show');
+Route::post('/auftrag-angebot/{token}/annehmen', [RequestOfferController::class, 'accept'])->name('offer.accept');
+Route::post('/auftrag-angebot/{token}/ablehnen', [RequestOfferController::class, 'decline'])->name('offer.decline');

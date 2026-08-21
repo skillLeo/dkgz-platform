@@ -13,8 +13,11 @@ const props = defineProps({
 
 const tones = {
     // requests
-    new: { dot: 'bg-gray-400', text: 'text-gray-600', label: 'Neu' },
-    matched: { dot: 'bg-navy-500', text: 'text-navy-700', label: 'Vermittelt' },
+    // Neither state has been accepted by anybody yet, and both used to read
+    // as if the work were placed — "Vermittelt" for a request still sitting
+    // unanswered. "In Vermittlung" says what is actually true.
+    new: { dot: 'bg-gray-400', text: 'text-gray-600', label: 'In Vermittlung' },
+    matched: { dot: 'bg-navy-500', text: 'text-navy-700', label: 'In Vermittlung' },
     assigned: { dot: 'bg-navy-700', text: 'text-navy-700', label: 'Vergeben' },
     completed: { dot: 'bg-success', text: 'text-success', label: 'Abgeschlossen' },
     cancelled: { dot: 'bg-gray-400', text: 'text-gray-600', label: 'Storniert' },

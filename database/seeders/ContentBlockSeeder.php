@@ -45,6 +45,7 @@ class ContentBlockSeeder extends Seeder
             $this->confirmationPage(),
             $this->partnerPage(),
             $this->processPage(),
+            $this->servicesPage(),
             $this->aboutPage(),
             $this->contactPage(),
             $this->reviewPages(),
@@ -211,6 +212,39 @@ class ContentBlockSeeder extends Seeder
         return [
             ['page_key' => 'ablauf', 'section_key' => 'kopf', 'field_key' => 'ueberschrift', 'value' => 'So funktioniert die Vermittlung', 'label_de' => 'Überschrift'],
             ['page_key' => 'ablauf', 'section_key' => 'kopf', 'field_key' => 'text', 'value' => 'Von der Anfrage bis zum fertigen Gutachten — ohne Angebotsvergleich und ohne Kundenkonto.', 'label_de' => 'Fließtext'],
+            ['page_key' => 'ablauf', 'section_key' => 'danach', 'field_key' => 'ueberschrift', 'value' => 'Was danach passiert', 'label_de' => 'Abschlussblock — Überschrift'],
+            ['page_key' => 'ablauf', 'section_key' => 'danach', 'field_key' => 'text', 'type' => 'richtext', 'value' => 'Ab der Annahme läuft die Abstimmung unmittelbar zwischen Ihnen und dem Sachverständigen. Er nimmt den Schaden auf, erstellt das Gutachten und rechnet direkt mit Ihnen oder Ihrer Versicherung ab. DKGZ tritt dabei nicht mehr dazwischen.', 'label_de' => 'Abschlussblock — Fließtext'],
+            ['page_key' => 'ablauf', 'section_key' => 'danach', 'field_key' => 'button', 'value' => 'Anfrage starten', 'label_de' => 'Abschlussblock — Schaltfläche'],
+        ];
+    }
+
+    /**
+     * The services index and every service detail page.
+     *
+     * The index used to read the homepage's blocks and the detail page read
+     * none at all, so editing either one in the admin panel changed nothing on
+     * the site. Both now address their own copy here.
+     *
+     * @return list<array<string, string>>
+     */
+    private function servicesPage(): array
+    {
+        return [
+            ['page_key' => 'leistungen', 'section_key' => 'kopf', 'field_key' => 'ueberschrift', 'value' => 'Welches Gutachten benötigen Sie?', 'label_de' => 'Überschrift'],
+            ['page_key' => 'leistungen', 'section_key' => 'kopf', 'field_key' => 'text', 'type' => 'richtext', 'value' => 'Wir vermitteln für jede dieser Leistungen einen geprüften Sachverständigen aus Ihrer Region. Die Anfrage ist in jedem Fall kostenfrei.', 'label_de' => 'Fließtext'],
+            ['page_key' => 'leistungen', 'section_key' => 'liste', 'field_key' => 'link', 'value' => 'Gutachter finden', 'label_de' => 'Kachel — Linktext'],
+            ['page_key' => 'leistungen', 'section_key' => 'hilfe', 'field_key' => 'ueberschrift', 'value' => 'Nicht sicher, was Sie brauchen?', 'label_de' => 'Hinweisblock — Überschrift'],
+            ['page_key' => 'leistungen', 'section_key' => 'hilfe', 'field_key' => 'text', 'type' => 'richtext', 'value' => 'Beschreiben Sie in der Anfrage kurz, was passiert ist. Der vermittelte Sachverständige ordnet den Fall ein und sagt Ihnen, welches Gutachten in Ihrem Fall das richtige ist.', 'label_de' => 'Hinweisblock — Fließtext'],
+            ['page_key' => 'leistungen', 'section_key' => 'hilfe', 'field_key' => 'button', 'value' => 'Anfrage starten', 'label_de' => 'Hinweisblock — Schaltfläche'],
+
+            ['page_key' => 'leistungen', 'section_key' => 'detail', 'field_key' => 'button_oben', 'value' => 'Gutachter finden', 'label_de' => 'Detailseite — Schaltfläche oben'],
+            ['page_key' => 'leistungen', 'section_key' => 'detail', 'field_key' => 'ablauf_ueberschrift', 'value' => 'So läuft die Vermittlung', 'label_de' => 'Detailseite — Überschrift Ablauf'],
+            ['page_key' => 'leistungen', 'section_key' => 'detail', 'field_key' => 'faq_ueberschrift', 'value' => 'Häufige Fragen', 'label_de' => 'Detailseite — Überschrift Fragen'],
+            ['page_key' => 'leistungen', 'section_key' => 'detail', 'field_key' => 'punkt_1', 'value' => 'Anfrage und Vermittlung kostenfrei', 'label_de' => 'Detailseite — Zusicherung 1'],
+            ['page_key' => 'leistungen', 'section_key' => 'detail', 'field_key' => 'punkt_2', 'value' => 'Keine Registrierung nötig', 'label_de' => 'Detailseite — Zusicherung 2'],
+            ['page_key' => 'leistungen', 'section_key' => 'detail', 'field_key' => 'punkt_3', 'value' => 'Geprüfte Partner bundesweit', 'label_de' => 'Detailseite — Zusicherung 3'],
+            ['page_key' => 'leistungen', 'section_key' => 'detail', 'field_key' => 'button_seite', 'value' => 'Anfrage starten', 'label_de' => 'Detailseite — Schaltfläche Seitenspalte'],
+            ['page_key' => 'leistungen', 'section_key' => 'detail', 'field_key' => 'weitere', 'value' => 'Weitere Leistungen', 'label_de' => 'Detailseite — Überschrift weitere Leistungen'],
         ];
     }
 

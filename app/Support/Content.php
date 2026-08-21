@@ -112,6 +112,7 @@ class Content
             'bestaetigung' => 'Bestätigungsseite',
             'partner' => 'Für Sachverständige',
             'ablauf' => 'Ablauf',
+            'leistungen' => 'Leistungen',
             'ueber-uns' => 'Über uns',
             'kontakt' => 'Kontakt',
             'bewertung' => 'Bewertung',

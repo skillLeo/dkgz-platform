@@ -3,6 +3,7 @@ import CookieConsent from '../Components/Feedback/CookieConsent.vue'
 import { computed, onMounted, onUnmounted, ref } from 'vue'
 import { Link, usePage } from '@inertiajs/vue3'
 import { Menu, X } from 'lucide-vue-next'
+import BrandLogo from '../Components/Layout/BrandLogo.vue'
 import FlagRule from '../Components/Layout/FlagRule.vue'
 import BaseButton from '../Components/Base/BaseButton.vue'
 import FlashMessage from '../Components/Feedback/FlashMessage.vue'
@@ -63,6 +64,7 @@ onUnmounted(() => window.removeEventListener('scroll', onScroll))
         <header class="sticky top-0 z-30 border-b border-gray-200 bg-white">
             <div class="mx-auto flex h-18 w-full max-w-(--container-shell) items-center justify-between gap-8 px-4 md:px-6">
                 <Link href="/" class="flex items-center gap-3.5" aria-label="Zur Startseite">
+                    <BrandLogo height="h-10">
                     <span class="grid h-10 w-10 shrink-0 place-items-center rounded-full border border-navy-700" aria-hidden="true">
                         <span
                             class="grid h-(--spacing-seal-ring) w-(--spacing-seal-ring) place-items-center rounded-full border"
@@ -76,6 +78,7 @@ onUnmounted(() => window.removeEventListener('scroll', onScroll))
                     <span class="hidden text-seal font-semibold uppercase leading-[1.5] text-gray-600 sm:block">
                         Deutsche<br>KFZ-Gutachterzentrale
                     </span>
+                    </BrandLogo>
                 </Link>
 
                 <nav class="hidden items-center gap-7 lg:flex" aria-label="Hauptnavigation">
@@ -106,9 +109,11 @@ onUnmounted(() => window.removeEventListener('scroll', onScroll))
             <div v-if="menuOpen" class="fixed inset-0 z-50 flex flex-col bg-navy-900 lg:hidden" role="dialog" aria-modal="true" aria-label="Menü">
                 <div class="flex h-18 shrink-0 items-center justify-between px-4 pt-[env(safe-area-inset-top)]">
                     <span class="flex items-center gap-3">
+                        <BrandLogo inverted height="h-9">
                         <span class="text-h3 font-bold leading-none tracking-wordmark text-white">DKGZ</span>
                         <span class="h-6 w-px" style="background: var(--dkgz-accent)" aria-hidden="true" />
                         <span class="text-seal font-semibold uppercase leading-[1.5] text-white/72">Deutsche<br>KFZ-Gutachterzentrale</span>
+                        </BrandLogo>
                     </span>
                     <button type="button" class="grid h-11 w-11 place-items-center text-white" aria-label="Menü schließen" @click="menuOpen = false">
                         <X :size="24" :stroke-width="1.5" aria-hidden="true" />
@@ -150,9 +155,11 @@ onUnmounted(() => window.removeEventListener('scroll', onScroll))
                 <div class="grid grid-cols-1 gap-12 sm:grid-cols-2 lg:grid-cols-[minmax(0,1.6fr)_repeat(3,minmax(0,1fr))]">
                     <div>
                         <div class="flex items-center gap-3">
+                            <BrandLogo inverted height="h-9">
                             <span class="text-h3 font-bold leading-none tracking-wordmark text-white">DKGZ</span>
                             <span class="h-6 w-px shrink-0" style="background: var(--dkgz-accent)" aria-hidden="true" />
                             <span class="text-seal font-semibold uppercase leading-[1.5] text-white/72">Deutsche<br>KFZ-Gutachterzentrale</span>
+                            </BrandLogo>
                         </div>
                         <p class="measure-brand pt-5 text-sm leading-relaxed text-white/60">
                             {{ t('fuss', 'beschreibung', 'Bundesweite Vermittlung von Kfz-Sachverständigen. Eine Anfrage, ein Ansprechpartner, geprüfte Partner in allen PLZ-Gebieten.') }}

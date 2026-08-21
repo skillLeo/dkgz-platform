@@ -2,9 +2,13 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Actions\AcceptAssignmentAction;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\RequestOfferController;
 use App\Models\Assessor;
 use App\Models\AssessorDocument;
+use App\Models\Assignment;
+use App\Models\RequestOffer;
 use App\Models\ServiceType;
 use App\Models\User;
 use App\Rules\GermanPostalCode;
@@ -14,6 +18,8 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
+use Throwable;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
@@ -157,6 +163,15 @@ class RegistrationController extends Controller
         auth()->login($user);
         $user->sendEmailVerificationNotification();
 
+        // Somebody who accepted a hand-sent offer before registering has a
+        // request reserved for them; this is the moment it becomes theirs.
+        $claimed = $this->claimReservedOffer($request, $user);
+
+        if ($claimed !== null) {
+            return redirect()->route('portal.assignments.show', $claimed)
+                ->with('success', 'Ihre Registrierung liegt zur Prüfung vor. Der Auftrag ist Ihnen zugeteilt.');
+        }
+
         return redirect()->route('registration.pending');
     }
 
@@ -266,5 +281,49 @@ class RegistrationController extends Controller
             'service_type_ids' => 'die Leistungen',
             'service_areas' => 'das Einsatzgebiet',
         ];
+    }
+
+    /**
+     * Turns an accepted offer into a real assignment now that the invitee has
+     * an assessor record to hang it on.
+     *
+     * Failure here is survivable and must not cost them their registration: the
+     * account exists either way, and an admin can place the request by hand.
+     * The reservation is what protected them while they filled in the form; if
+     * it ran out or somebody else got there first, they are told so rather than
+     * shown a broken screen.
+     */
+    private function claimReservedOffer(Request $request, User $user): ?Assignment
+    {
+        $token = $request->session()->pull(RequestOfferController::SESSION_KEY);
+
+        if (blank($token)) {
+            return null;
+        }
+
+        $offer = RequestOffer::with('serviceRequest')
+            ->where('token', $token)
+            ->where('email', mb_strtolower($user->email))
+            ->first();
+
+        if ($offer === null || ! $offer->holdsRequest()) {
+            return null;
+        }
+
+        try {
+            $assignment = app(AcceptAssignmentAction::class)
+                ->execute($offer->serviceRequest, $user->assessor, $offer);
+        } catch (Throwable $e) {
+            Log::warning('Reservierter Auftrag konnte nach der Registrierung nicht zugeteilt werden.', [
+                'offer_id' => $offer->id,
+                'exception' => $e,
+            ]);
+
+            return null;
+        }
+
+        $offer->update(['assessor_id' => $user->assessor->id, 'hold_until' => null]);
+
+        return $assignment;
     }
 }

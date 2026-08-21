@@ -74,6 +74,11 @@ class ServiceRequest extends Model
         return $this->hasMany(RequestImage::class);
     }
 
+    public function offers(): HasMany
+    {
+        return $this->hasMany(RequestOffer::class);
+    }
+
     public function matches(): HasMany
     {
         return $this->hasMany(RequestMatch::class);

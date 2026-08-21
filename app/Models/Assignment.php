@@ -38,6 +38,8 @@ class Assignment extends Model
         'service_request_id', 'assessor_id', 'status',
         'accepted_at', 'started_at', 'completed_at', 'cancelled_at',
         'cancellation_reason', 'fee_cents', 'fee_entered_at', 'assessor_notes',
+        'confirmed_at', 'customer_invoice_cents', 'customer_invoice_recipient',
+        'customer_invoice_number',
     ];
 
     protected function casts(): array
@@ -45,11 +47,13 @@ class Assignment extends Model
         return [
             'dkgz_fee_snapshot_cents' => MoneyCast::class,
             'accepted_at' => 'datetime',
+            'confirmed_at' => 'datetime',
             'started_at' => 'datetime',
             'completed_at' => 'datetime',
             'cancelled_at' => 'datetime',
             'fee_entered_at' => 'datetime',
             'fee_cents' => MoneyCast::class,
+            'customer_invoice_cents' => MoneyCast::class,
         ];
     }
 

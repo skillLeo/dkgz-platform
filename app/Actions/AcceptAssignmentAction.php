@@ -7,6 +7,7 @@ use App\Jobs\NotifyAssignmentAcceptedJob;
 use App\Models\Assessor;
 use App\Models\Assignment;
 use App\Models\RequestMatch;
+use App\Models\RequestOffer;
 use App\Models\ServiceRequest;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\DB;
@@ -29,15 +30,40 @@ use Illuminate\Support\Facades\DB;
  */
 class AcceptAssignmentAction
 {
-    public function execute(ServiceRequest $request, Assessor $assessor): Assignment
+    /**
+     * @param  RequestOffer|null  $viaOffer  The hand-sent offer being redeemed,
+     *                                       when the assessor got here by being
+     *                                       invited to this one request.
+     */
+    public function execute(ServiceRequest $request, Assessor $assessor, ?RequestOffer $viaOffer = null): Assignment
     {
         try {
-            $assignment = DB::transaction(function () use ($request, $assessor) {
+            $assignment = DB::transaction(function () use ($request, $assessor, $viaOffer) {
                 $locked = ServiceRequest::whereKey($request->id)
                     ->lockForUpdate()
                     ->firstOrFail();
 
-                if ($locked->status !== ServiceRequest::STATUS_MATCHED) {
+                // A hand-sent offer usually goes out precisely because nobody
+                // was matched, so the request is still 'new'; for everybody
+                // else, being matched is what earns the right to accept.
+                $acceptable = $viaOffer !== null
+                    ? $locked->isOpen()
+                    : $locked->status === ServiceRequest::STATUS_MATCHED;
+
+                if (! $acceptable) {
+                    throw new RequestAlreadyAssignedException;
+                }
+
+                // Somebody the admin invited by hand has already said yes and
+                // is partway through registering. Their acceptance came first,
+                // so it wins — the same rule as everywhere else, applied to
+                // somebody who does not have an account to accept from yet.
+                $held = RequestOffer::where('service_request_id', $locked->id)
+                    ->holding()
+                    ->when($viaOffer !== null, fn ($q) => $q->whereKeyNot($viaOffer->id))
+                    ->exists();
+
+                if ($held) {
                     throw new RequestAlreadyAssignedException;
                 }
 

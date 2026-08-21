@@ -70,7 +70,7 @@ class CompleteAssignmentAction
                 ?? $assignment->serviceRequest?->serviceType?->dkgz_fee_cents
                 ?? 0;
 
-            $commission = Commission::updateOrCreate(
+            $commission = Commission::firstOrCreate(
                 ['assignment_id' => $assignment->id],
                 [
                     'assessor_id' => $assignment->assessor_id,
@@ -82,6 +82,11 @@ class CompleteAssignmentAction
                     'status' => Commission::STATUS_OPEN,
                 ]
             );
+
+            // Confirming the job already booked and invoiced this fee. Only the
+            // assessor's own fee is news at completion — rewriting the rest
+            // would reopen an invoice that has already gone out.
+            $commission->update(['fee_cents' => $feeCents ?? $assignment->fee_cents]);
 
             if (Settings::bool('features.review_flow', true)) {
                 CustomerReview::firstOrCreate(

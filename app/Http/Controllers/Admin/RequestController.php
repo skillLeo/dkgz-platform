@@ -3,15 +3,19 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Actions\MatchRequestAction;
+use App\Actions\OfferRequestExternallyAction;
 use App\Http\Controllers\Controller;
 use App\Jobs\NotifyCustomerNoResponseJob;
 use App\Models\RequestMatch;
+use App\Models\RequestOffer;
 use App\Models\ServiceRequest;
 use App\Models\ServiceType;
 use App\Support\Formatter;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
+use RuntimeException;
 use Inertia\Inertia;
 use Inertia\Response;
 use League\Csv\Writer;
@@ -19,6 +23,9 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class RequestController extends Controller
 {
+    /** Filter value covering every request no assessor has accepted yet. */
+    private const FILTER_IN_PLACEMENT = 'in_vermittlung';
+
     public function index(Request $request): Response
     {
         $this->authorize('viewAny', ServiceRequest::class);
@@ -33,7 +40,16 @@ class RequestController extends Controller
                     ->orWhere('city', 'like', $term)
                     ->orWhere('postal_code', 'like', $term);
             }))
-            ->when($request->filled('status'), fn ($q) => $q->where('status', $request->string('status')))
+            ->when($request->filled('status'), function ($q) use ($request) {
+                $status = $request->string('status')->toString();
+
+                // "In Vermittlung" is one thing to an operator and two rows in
+                // the table — a request nobody has been sent yet and one sent
+                // but unanswered. The filter follows the operator's meaning.
+                return $status === self::FILTER_IN_PLACEMENT
+                    ? $q->whereIn('status', [ServiceRequest::STATUS_NEW, ServiceRequest::STATUS_MATCHED])
+                    : $q->where('status', $status);
+            })
             ->when($request->filled('leistungsart'), fn ($q) => $q->where('service_type_id', $request->integer('leistungsart')))
             ->when($request->boolean('nicht_vermittelt'), fn ($q) => $q->needsAttention())
             ->orderBy(
@@ -71,6 +87,7 @@ class RequestController extends Controller
             'images',
             'assignment.assessor.user',
             'matches.assessor.user',
+            'offers',
         ]);
 
         return Inertia::render('Admin/Anfrage', [
@@ -132,6 +149,27 @@ class RequestController extends Controller
                     'responded_at_label' => $match->responded_at ? Formatter::dateTime($match->responded_at) : null,
                     'decline_reason' => $match->decline_reason,
                 ]),
+            // Hand-sent offers to people who are not partners yet, shown
+            // alongside the matching trail because to an operator they are the
+            // same question: who has this request reached?
+            'offers' => $serviceRequest->offers
+                ->sortByDesc('sent_at')
+                ->values()
+                ->map(fn (RequestOffer $offer) => [
+                    'id' => $offer->id,
+                    'email' => $offer->email,
+                    'name' => $offer->name,
+                    'status' => $offer->statusTone(),
+                    'status_label' => $offer->statusLabel(),
+                    'sent_at_label' => Formatter::dateTime($offer->sent_at),
+                    'viewed_at_label' => $offer->viewed_at ? Formatter::dateTime($offer->viewed_at) : null,
+                    'answered_at_label' => $offer->accepted_at || $offer->declined_at
+                        ? Formatter::dateTime($offer->accepted_at ?? $offer->declined_at)
+                        : null,
+                    'decline_reason' => $offer->decline_reason,
+                    'link' => route('offer.show', $offer->token),
+                ]),
+            'canOffer' => $serviceRequest->isOpen(),
             'assignment' => $serviceRequest->assignment === null ? null : [
                 'id' => $serviceRequest->assignment->id,
                 'status' => $serviceRequest->assignment->status,
@@ -202,11 +240,48 @@ class RequestController extends Controller
     }
 
     /** @return array<string, string> */
+    /**
+     * Sends this request to an assessor who has no account yet.
+     *
+     * The route exists because matching can only reach people who registered,
+     * and a request in an uncovered region otherwise has nowhere to go.
+     */
+    public function offerExternally(
+        Request $request,
+        ServiceRequest $serviceRequest,
+        OfferRequestExternallyAction $offer,
+    ): RedirectResponse {
+        $this->authorize('reassign', $serviceRequest);
+
+        $data = $request->validate([
+            'email' => ['required', 'email:rfc', 'max:190'],
+            'name' => ['nullable', 'string', 'max:120'],
+            'message' => ['nullable', 'string', 'max:1000'],
+        ], [], [
+            'email' => 'die E-Mail-Adresse',
+            'name' => 'der Name',
+            'message' => 'die Nachricht',
+        ]);
+
+        try {
+            $offer->execute(
+                $serviceRequest,
+                $data['email'],
+                $data['name'] ?? null,
+                $data['message'] ?? null,
+                $request->user(),
+            );
+        } catch (RuntimeException $e) {
+            throw ValidationException::withMessages(['email' => $e->getMessage()]);
+        }
+
+        return back()->with('success', 'Die Anfrage wurde an '.$data['email'].' gesendet.');
+    }
+
     private function statusOptions(): array
     {
         return [
-            ServiceRequest::STATUS_NEW => 'Neu',
-            ServiceRequest::STATUS_MATCHED => 'Vermittelt',
+            self::FILTER_IN_PLACEMENT => 'In Vermittlung',
             ServiceRequest::STATUS_ASSIGNED => 'Vergeben',
             ServiceRequest::STATUS_COMPLETED => 'Abgeschlossen',
             ServiceRequest::STATUS_CANCELLED => 'Storniert',

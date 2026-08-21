@@ -1,5 +1,6 @@
 <script setup>
 import { computed } from 'vue'
+import { OUTLINE, VIEW_BOX, ZONES } from '../../Support/germany.js'
 
 /**
  * Where DKGZ currently has partners, drawn on Germany.
@@ -14,37 +15,9 @@ const props = defineProps({
     regions: { type: Array, default: () => [] },
 })
 
-/**
- * Approximate centre of each postal zone in the outline's coordinate space.
- * Zone 0 is Saxony, 2 the north coast, 8 Bavaria — the German postal zones run
- * roughly west-to-east and north-to-south in that order.
- */
-const positions = {
-    0: { x: 76, y: 63, label: 'Dresden' },
-    1: { x: 75, y: 41, label: 'Berlin' },
-    2: { x: 41, y: 18, label: 'Hamburg' },
-    3: { x: 41, y: 44, label: 'Hannover' },
-    4: { x: 19, y: 53, label: 'Düsseldorf' },
-    5: { x: 16, y: 66, label: 'Köln' },
-    6: { x: 31, y: 77, label: 'Frankfurt' },
-    7: { x: 33, y: 97, label: 'Stuttgart' },
-    8: { x: 57, y: 101, label: 'München' },
-    9: { x: 52, y: 82, label: 'Nürnberg' },
-}
-
-/** A simplified outline of Germany, traced clockwise from the Danish border. */
-const OUTLINE = `
-  M46,3 L52,2 L55,8 L60,7 L63,11 L70,9 L74,13 L72,18 L78,20 L82,26
-  L80,32 L85,36 L84,42 L88,47 L86,53 L90,58 L88,64 L83,68 L85,74
-  L80,79 L83,86 L79,92 L73,95 L68,101 L64,108 L57,112 L50,110
-  L44,113 L38,110 L34,112 L30,106 L26,99 L22,95 L25,88 L20,84
-  L16,78 L12,72 L9,65 L6,58 L10,52 L8,45 L12,39 L17,34 L15,27
-  L20,21 L27,17 L33,13 L39,11 L43,6 Z
-`.trim().replace(/\s+/g, ' ')
-
 const cells = computed(() => props.regions
-    .filter((region) => positions[region.digit])
-    .map((region) => ({ ...region, ...positions[region.digit] })))
+    .filter((region) => ZONES[region.digit])
+    .map((region) => ({ ...region, ...ZONES[region.digit] })))
 
 const coveredCount = computed(() => props.regions.filter((r) => r.covered).length)
 </script>
@@ -53,7 +26,7 @@ const coveredCount = computed(() => props.regions.filter((r) => r.covered).lengt
     <div class="flex flex-col gap-10 md:flex-row md:items-start md:gap-14">
         <figure class="w-full max-w-88 shrink-0">
             <svg
-                viewBox="0 0 100 120"
+                :viewBox="VIEW_BOX"
                 class="h-auto w-full"
                 role="img"
                 :aria-label="`Abdeckung in Deutschland: ${coveredCount} von ${regions.length} Postleitregionen`"

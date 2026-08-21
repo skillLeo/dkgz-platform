@@ -3,11 +3,13 @@
 namespace App\Http\Controllers\Portal;
 
 use App\Actions\CompleteAssignmentAction;
+use App\Actions\ConfirmAssignmentAction;
 use App\Actions\StoreAssignmentDocumentAction;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ServiceRequestResource;
 use App\Models\Assignment;
 use App\Models\AssignmentDocument;
+use App\Models\Commission;
 use App\Support\Formatter;
 use App\Support\Money;
 use Illuminate\Http\RedirectResponse;
@@ -94,6 +96,11 @@ class AssignmentController extends Controller
                 'assessor_notes' => $assignment->assessor_notes,
                 'can_complete' => $assignment->hasRequiredDocuments() && $assignment->isOpen(),
                 'is_open' => $assignment->isOpen(),
+                'confirmed_at' => $assignment->confirmed_at,
+                'can_confirm' => $assignment->status === Assignment::STATUS_ACCEPTED,
+                'customer_invoice_cents' => $assignment->customer_invoice_cents,
+                'customer_invoice_recipient' => $assignment->customer_invoice_recipient,
+                'customer_invoice_number' => $assignment->customer_invoice_number,
             ],
             'request' => (new ServiceRequestResource($assignment->serviceRequest))->toArray($request),
             'documents' => $assignment->documents->map(fn (AssignmentDocument $doc) => [
@@ -122,6 +129,23 @@ class AssignmentController extends Controller
                 'status' => $assignment->commission->status,
                 'status_label' => $assignment->commission->statusLabel(),
             ],
+            // Every invoice DKGZ has issued for this job, readable from inside
+            // the job itself — an assessor should not have to hunt through a
+            // separate register to find out what they were billed and why.
+            'dkgzInvoices' => $assignment->commission === null || blank($assignment->commission->invoice_number)
+                ? []
+                : [[
+                    'id' => $assignment->commission->id,
+                    'invoice_number' => $assignment->commission->invoice_number,
+                    'issued_at' => $assignment->commission->invoiced_at,
+                    'issued_at_label' => Formatter::dateTime($assignment->commission->invoiced_at),
+                    'amount_cents' => $assignment->commission->commission_cents,
+                    'status' => $assignment->commission->status,
+                    'status_label' => $assignment->commission->statusLabel(),
+                    'download_url' => filled($assignment->commission->invoice_path)
+                        ? route('portal.commissions.invoice', $assignment->commission)
+                        : null,
+                ]],
             // What DKGZ is owed for this assignment, fixed at acceptance.
             'dkgzFeeLabel' => Formatter::money(
                 $assignment->dkgz_fee_snapshot_cents
@@ -161,6 +185,71 @@ class AssignmentController extends Controller
         );
 
         return back()->with('success', 'Der Status wurde aktualisiert.');
+    }
+
+    /**
+     * "Zustande gekommen": the customer engaged this assessor after all.
+     *
+     * This is the billable moment, so it books the fee and sends the invoice
+     * rather than merely moving a label — see ConfirmAssignmentAction.
+     */
+    public function confirm(
+        Request $request,
+        Assignment $assignment,
+        ConfirmAssignmentAction $confirm,
+    ): RedirectResponse {
+        $this->authorize('work', $assignment);
+
+        $data = $request->validate([
+            'note' => ['nullable', 'string', 'max:500'],
+        ]);
+
+        try {
+            $commission = $confirm->execute($assignment, $data['note'] ?? null);
+        } catch (RuntimeException $e) {
+            throw ValidationException::withMessages(['status' => $e->getMessage()]);
+        }
+
+        return back()->with(
+            'success',
+            'Der Auftrag ist als zustande gekommen bestätigt. Die Rechnung '
+            .$commission->invoice_number.' wurde Ihnen per E-Mail zugestellt.'
+        );
+    }
+
+    /** The assessor's own invoice to the customer or their insurer. */
+    public function updateCustomerInvoice(Request $request, Assignment $assignment): RedirectResponse
+    {
+        $this->authorize('work', $assignment);
+
+        $data = $request->validate([
+            'customer_invoice_cents' => ['nullable', 'integer', 'min:0', 'max:'.Money::MAX_FEE_CENTS],
+            'customer_invoice_recipient' => ['nullable', Rule::in(['kunde', 'versicherung'])],
+            'customer_invoice_number' => ['nullable', 'string', 'max:60'],
+        ], [], [
+            'customer_invoice_cents' => 'der Rechnungsbetrag',
+            'customer_invoice_recipient' => 'der Rechnungsempfänger',
+            'customer_invoice_number' => 'die Rechnungsnummer',
+        ]);
+
+        $assignment->update($data);
+
+        return back()->with('success', 'Die Rechnungsangaben wurden gespeichert.');
+    }
+
+    /** The DKGZ invoice PDF for one commission, from inside the job. */
+    public function downloadCommissionInvoice(Request $request, Commission $commission): StreamedResponse
+    {
+        $this->authorize('downloadInvoice', $commission);
+
+        $disk = Storage::disk('private');
+
+        abort_unless($disk->exists($commission->invoice_path), 404);
+
+        return $disk->download(
+            $commission->invoice_path,
+            'DKGZ-Rechnung-'.$commission->invoice_number.'.pdf',
+        );
     }
 
     public function storeDocument(

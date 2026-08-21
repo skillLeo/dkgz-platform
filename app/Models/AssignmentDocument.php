@@ -45,7 +45,7 @@ class AssignmentDocument extends Model
     {
         return match ($this->type) {
             self::TYPE_REPORT => 'Gutachten',
-            self::TYPE_CUSTOMER_INVOICE => 'Rechnung an den Kunden',
+            self::TYPE_CUSTOMER_INVOICE => 'Rechnung an den Kunden / Versicherung',
             self::TYPE_OTHER => 'Weitere Unterlage',
             default => $this->type,
         };

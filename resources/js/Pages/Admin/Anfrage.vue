@@ -9,6 +9,7 @@ import StatusDot from '../../Components/Data/StatusDot.vue'
 import ReferenceNumber from '../../Components/Data/ReferenceNumber.vue'
 import MoneyValue from '../../Components/Data/MoneyValue.vue'
 import BaseButton from '../../Components/Base/BaseButton.vue'
+import BaseInput from '../../Components/Base/BaseInput.vue'
 import BaseTextarea from '../../Components/Base/BaseTextarea.vue'
 import { useGermanFormat } from '../../Composables/useGermanFormat.js'
 import { useConfirm } from '../../Composables/useConfirm.js'
@@ -16,11 +17,22 @@ import { useConfirm } from '../../Composables/useConfirm.js'
 const props = defineProps({
     request: { type: Object, required: true },
     trail: { type: Array, default: () => [] },
+    offers: { type: Array, default: () => [] },
+    canOffer: { type: Boolean, default: false },
     assignment: { type: Object, default: null },
     customerNotifiedAt: { type: String, default: null },
     canNotifyCustomer: { type: Boolean, default: false },
     canClose: { type: Boolean, default: false },
 })
+
+const offerForm = useForm({ email: '', name: '', message: '' })
+
+function sendOffer() {
+    offerForm.post(`/admin/anfragen/${props.request.id}/externer-sachverstaendiger`, {
+        preserveScroll: true,
+        onSuccess: () => offerForm.reset(),
+    })
+}
 
 const { dateTime, date } = useGermanFormat()
 const { confirm } = useConfirm()
@@ -155,7 +167,9 @@ const doRematch = async () => {
                                         <a :href="`/admin/sachverstaendige/${entry.assessor.id}`" class="text-sm font-medium text-navy-700 hover:text-navy-500">
                                             {{ entry.assessor.company_name }}
                                         </a>
-                                        <span class="block text-xs text-gray-600">{{ entry.assessor.city }}</span>
+                                        <span class="block text-xs text-gray-600">
+                                            {{ [entry.assessor.contact, entry.assessor.city].filter(Boolean).join(' · ') }}
+                                        </span>
                                     </td>
                                     <td class="px-5 py-3.5 font-mono text-sm tabular-nums text-gray-800">{{ entry.notified_at_label ?? '—' }}</td>
                                     <td class="px-5 py-3.5 font-mono text-sm tabular-nums" :class="entry.viewed_at_label ? 'text-gray-800' : 'text-gray-400'">
@@ -172,6 +186,80 @@ const doRematch = async () => {
                             </tbody>
                         </table>
                     </div>
+                </section>
+
+                <!--
+                    Matching only reaches partners who already registered, so a
+                    request nobody covers used to have nowhere to go. An admin
+                    can send it straight to somebody they know of; that person
+                    accepts from the e-mail and registers afterwards.
+                -->
+                <section class="border border-gray-200 bg-white">
+                    <div class="border-b border-gray-200 p-5">
+                        <SectionLabel text="Externe Sachverständige" tone="muted" />
+                        <p class="measure pt-2 text-sm text-gray-600">
+                            Senden Sie diese Anfrage an einen Sachverständigen, der noch keinen Zugang
+                            hat. Er kann den Auftrag direkt annehmen und sich danach registrieren.
+                        </p>
+                    </div>
+
+                    <ul v-if="offers.length" class="px-5">
+                        <li
+                            v-for="offer in offers"
+                            :key="offer.id"
+                            class="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1.5 border-b border-gray-100 py-3.5 last:border-b-0"
+                        >
+                            <span class="min-w-0">
+                                <span class="block text-sm font-medium text-navy-700">
+                                    {{ offer.name || offer.email }}
+                                </span>
+                                <span v-if="offer.name" class="block text-xs text-gray-600">{{ offer.email }}</span>
+                                <span class="block pt-0.5 text-xs text-gray-600">
+                                    Gesendet {{ offer.sent_at_label }}
+                                    <template v-if="offer.viewed_at_label"> · geöffnet {{ offer.viewed_at_label }}</template>
+                                    <template v-if="offer.answered_at_label"> · beantwortet {{ offer.answered_at_label }}</template>
+                                </span>
+                                <span v-if="offer.decline_reason" class="block pt-0.5 text-xs text-gray-600">
+                                    Grund: {{ offer.decline_reason }}
+                                </span>
+                            </span>
+                            <StatusDot :status="offer.status" :label="offer.status_label" />
+                        </li>
+                    </ul>
+
+                    <form v-if="canOffer" class="grid gap-4 p-5 sm:grid-cols-2" @submit.prevent="sendOffer">
+                        <BaseInput
+                            v-model="offerForm.email"
+                            label="E-Mail-Adresse"
+                            type="email"
+                            required
+                            :error="offerForm.errors.email"
+                        />
+                        <BaseInput
+                            v-model="offerForm.name"
+                            label="Name oder Firma"
+                            optional
+                            :error="offerForm.errors.name"
+                        />
+                        <div class="sm:col-span-2">
+                            <BaseTextarea
+                                v-model="offerForm.message"
+                                label="Persönliche Nachricht"
+                                optional
+                                :rows="3"
+                                :error="offerForm.errors.message"
+                            />
+                        </div>
+                        <div class="sm:col-span-2">
+                            <BaseButton size="compact" type="submit" :loading="offerForm.processing">
+                                Anfrage senden
+                            </BaseButton>
+                        </div>
+                    </form>
+
+                    <p v-else-if="!offers.length" class="p-5 text-sm text-gray-600">
+                        Diese Anfrage ist bereits vergeben; es können keine weiteren Einladungen versendet werden.
+                    </p>
                 </section>
 
                 <section v-if="assignment" class="border border-gray-200 bg-white p-5">

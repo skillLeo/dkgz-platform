@@ -37,10 +37,13 @@ Route::prefix('portal')
         Route::post('/auftraege/{assignment}/dokumente', [AssignmentController::class, 'storeDocument'])->name('assignments.documents.store');
         Route::delete('/auftraege/{assignment}/dokumente/{document}', [AssignmentController::class, 'destroyDocument'])->name('assignments.documents.destroy');
         Route::get('/auftraege/{assignment}/dokumente/{document}/download', [AssignmentController::class, 'downloadDocument'])->name('assignments.documents.download');
+        Route::post('/auftraege/{assignment}/zustande-gekommen', [AssignmentController::class, 'confirm'])->name('assignments.confirm');
+        Route::post('/auftraege/{assignment}/kundenrechnung', [AssignmentController::class, 'updateCustomerInvoice'])->name('assignments.customer-invoice');
         Route::post('/auftraege/{assignment}/abschliessen', [AssignmentController::class, 'complete'])->name('assignments.complete');
 
         // Commissions, read-only for the partner
         Route::get('/provisionen', [ProfileController::class, 'commissions'])->name('commissions');
+        Route::get('/provisionen/{commission}/rechnung', [AssignmentController::class, 'downloadCommissionInvoice'])->name('commissions.invoice');
 
         // Service areas and services
         Route::get('/einsatzgebiet', [ServiceAreaController::class, 'index'])->name('service-areas');

@@ -1,4 +1,5 @@
 <script setup>
+import BrandLogo from './BrandLogo.vue'
 import { computed } from 'vue'
 import { Link, usePage } from '@inertiajs/vue3'
 import { LogOut } from 'lucide-vue-next'
@@ -40,11 +41,13 @@ const isActive = (item) => {
 <template>
     <aside class="hidden w-60 shrink-0 flex-col bg-navy-900 md:flex">
         <div class="flex h-16 shrink-0 items-center gap-2.5 border-b border-white/10 px-5">
-            <span class="text-h4 font-bold leading-none tracking-wordmark text-white">DKGZ</span>
-            <span class="h-5 w-px bg-accent" aria-hidden="true" />
-            <span class="text-seal-sm font-semibold uppercase leading-snug tracking-rail text-white/60">
-                <template v-for="(part, i) in subtitle" :key="part">{{ part }}<br v-if="i < subtitle.length - 1" ></template>
-            </span>
+            <BrandLogo inverted height="h-8">
+                <span class="text-h4 font-bold leading-none tracking-wordmark text-white">DKGZ</span>
+                <span class="h-5 w-px bg-accent" aria-hidden="true" />
+                <span class="text-seal-sm font-semibold uppercase leading-snug tracking-rail text-white/60">
+                    <template v-for="(part, i) in subtitle" :key="part">{{ part }}<br v-if="i < subtitle.length - 1" ></template>
+                </span>
+            </BrandLogo>
         </div>
 
         <nav class="min-h-0 flex-1 overflow-y-auto py-4" aria-label="Bereichsnavigation">

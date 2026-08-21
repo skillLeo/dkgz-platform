@@ -5,6 +5,13 @@
  */
 import { h, reactive } from 'vue'
 
+/**
+ * Distinctive enough that finding either in rendered markup proves the uploaded
+ * logo actually reached the template, rather than some other image doing so.
+ */
+export const LOGO_LIGHT = 'https://dkgz.test/storage/branding/hell-pruefmarke.png'
+export const LOGO_DARK = 'https://dkgz.test/storage/branding/dunkel-pruefmarke.png'
+
 export const page = reactive({
     props: {
         auth: {
@@ -31,6 +38,11 @@ export const page = reactive({
         errors: {},
         filters: {},
         content: {},
+        branding: {
+            platform_name: 'DKGZ',
+            logo_light: LOGO_LIGHT,
+            logo_dark: LOGO_DARK,
+        },
     },
     url: '/',
     component: 'Test',

@@ -2,13 +2,11 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Actions\IssueCommissionInvoiceAction;
 use App\Http\Controllers\Controller;
-use App\Jobs\SendCommissionInvoiceJob;
 use App\Models\Assessor;
 use App\Models\Commission;
 use App\Support\Formatter;
-use App\Support\Settings;
-use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -123,38 +121,13 @@ class CommissionController extends Controller
     }
 
     /** Generates the commission invoice PDF and stores it privately. */
-    public function invoice(Request $request, Commission $commission): RedirectResponse
+    public function invoice(Request $request, Commission $commission, IssueCommissionInvoiceAction $issue): RedirectResponse
     {
         $this->authorize('invoice', $commission);
 
-        $commission->load(['assessor.user', 'assignment.serviceRequest.serviceType']);
+        $issue->execute($commission);
 
-        $number = Commission::nextInvoiceNumber();
-        $path = null;
-
-        // Some operators invoice from their own accounting system; then the
-        // platform still records the number and the status, but produces no PDF.
-        if (Settings::bool('business.generate_commission_invoices', true)) {
-            $pdf = Pdf::loadView('pdf.commission-invoice', [
-                'commission' => $commission,
-                'invoiceNumber' => $number,
-                'issuedAt' => now(),
-            ])->setPaper('a4');
-
-            $path = "provisionen/{$commission->id}/{$number}.pdf";
-            Storage::disk('private')->put($path, $pdf->output());
-        }
-
-        $commission->update([
-            'status' => Commission::STATUS_INVOICED,
-            'invoice_number' => $number,
-            'invoice_path' => $path,
-            'invoiced_at' => now(),
-        ]);
-
-        SendCommissionInvoiceJob::dispatch($commission->id);
-
-        return back()->with('success', "Die Abrechnung {$number} wurde erzeugt und versendet.");
+        return back()->with('success', "Die Abrechnung {$commission->refresh()->invoice_number} wurde erzeugt und versendet.");
     }
 
     public function downloadInvoice(Request $request, Commission $commission): StreamedResponse

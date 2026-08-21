@@ -27,7 +27,7 @@ class SettingsController extends Controller
             'groups' => $this->groupLabels(),
             // The rate is per service now; the row stays for rollback safety.
             'settings' => collect($this->settingsFor($group))
-                ->reject(fn (array $s) => $s['field'] === 'business.commission_rate')
+                ->reject(fn (array $s) => $s['field'] === 'business__commission_rate')
                 ->values()
                 ->all(),
             'canEdit' => $request->user()->can('updateGroup', [Setting::class, $group]),

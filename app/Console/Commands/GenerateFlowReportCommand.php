@@ -34,7 +34,6 @@ class GenerateFlowReportCommand extends Command
     /** Who each template is written to, keyed by template. */
     private const RECIPIENTS = [
         'anfrage-eingegangen' => ['Kunde', 'Anfrage abgesendet'],
-        'anfrage-keine-rueckmeldung' => ['Kunde', 'Frist abgelaufen, alle abgelehnt oder kein Partner im Gebiet'],
         'neue-anfrage-im-gebiet' => ['Partner', 'Anfrage wurde vermittelt'],
         'auftrag-bestaetigt' => ['Kunde', 'Partner hat angenommen'],
         'auftrag-vergeben' => ['Partner', 'Ein anderer Partner hat angenommen'],
@@ -48,6 +47,7 @@ class GenerateFlowReportCommand extends Command
         'registrierung-abgelehnt' => ['Partner', 'Administration hat abgelehnt'],
         'konto-gesperrt' => ['Partner', 'Administration hat gesperrt'],
         'einladung-partnerschaft' => ['Eingeladene Person', 'Administration versendet Einladung'],
+        'anfrage-angebot' => ['Externe Person ohne Zugang', 'Administration sendet eine Anfrage von Hand'],
         'email-bestaetigen' => ['Nutzer', 'Adresse muss bestätigt werden'],
         'passwort-zuruecksetzen' => ['Nutzer', 'Zurücksetzen angefordert'],
         'provisionsabrechnung' => ['Partner', 'Monatliche Abrechnung'],

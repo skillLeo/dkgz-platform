@@ -9,12 +9,21 @@ import SectionLabel from '../../Components/Layout/SectionLabel.vue'
 import BaseButton from '../../Components/Base/BaseButton.vue'
 
 const props = defineProps({
+    content: { type: Object, default: () => ({}) },
     serviceType: { type: Object, required: true },
     serviceTypes: { type: Array, default: () => [] },
     faqs: { type: Array, default: () => [] },
 })
 
+const t = (section, field, fallback = '') => props.content?.[section]?.[field] ?? fallback
+
 const openFaq = ref(null)
+
+const reassurances = computed(() => [
+    t('detail', 'punkt_1', 'Anfrage und Vermittlung kostenfrei'),
+    t('detail', 'punkt_2', 'Keine Registrierung nötig'),
+    t('detail', 'punkt_3', 'Geprüfte Partner bundesweit'),
+].filter(Boolean))
 
 /** Only the sections the client has actually filled in. */
 const contentBlocks = computed(() => [
@@ -35,13 +44,13 @@ const contentBlocks = computed(() => [
                 <SectionLabel text="Leistung" />
                 <h1 class="pt-6 text-h1 font-bold text-navy-700">{{ serviceType.name_de }}</h1>
                 <p class="measure-lead pt-4 text-lead leading-relaxed text-gray-600">{{ serviceType.description_de }}</p>
-                <BaseButton href="/anfrage" size="cta" class="mt-8">Gutachter finden</BaseButton>
+                <BaseButton href="/anfrage" size="cta" class="mt-8">{{ t('detail', 'button_oben', 'Gutachter finden') }}</BaseButton>
             </div>
         </section>
 
         <div class="mx-auto grid w-full max-w-(--container-shell) grid-cols-1 gap-12 px-4 py-16 md:px-6 lg:grid-cols-[minmax(0,1fr)_300px] lg:items-start">
             <div class="min-w-0">
-                <h2 class="text-h2 font-semibold text-navy-700">So läuft die Vermittlung</h2>
+                <h2 class="text-h2 font-semibold text-navy-700">{{ t('detail', 'ablauf_ueberschrift', 'So läuft die Vermittlung') }}</h2>
                 <ol class="border-t border-gray-200 pt-2">
                     <li v-for="(step, index) in [
                         { title: 'Kostenlose Anfrage stellen', text: 'Sie nennen uns Art des Gutachtens, den Standort des Fahrzeugs und Ihre Kontaktdaten.' },
@@ -57,7 +66,7 @@ const contentBlocks = computed(() => [
                 </ol>
 
                 <section v-if="faqs.length" class="pt-12">
-                    <h2 class="text-h2 font-semibold text-navy-700">Häufige Fragen</h2>
+                    <h2 class="text-h2 font-semibold text-navy-700">{{ t('detail', 'faq_ueberschrift', 'Häufige Fragen') }}</h2>
                     <dl class="border-t border-gray-200 pt-2">
                         <div v-for="faq in faqs" :key="faq.id" class="border-b border-gray-200">
                             <dt>
@@ -87,16 +96,16 @@ const contentBlocks = computed(() => [
                 <div class="rounded-card border border-navy-700 p-6">
                     <h2 class="text-h4 font-semibold text-navy-700">{{ serviceType.name_de }} anfragen</h2>
                     <ul class="flex flex-col gap-3 pt-4">
-                        <li v-for="point in ['Anfrage und Vermittlung kostenfrei', 'Keine Registrierung nötig', 'Geprüfte Partner bundesweit']" :key="point" class="flex gap-2.5">
+                        <li v-for="point in reassurances" :key="point" class="flex gap-2.5">
                             <Check :size="18" :stroke-width="1.5" class="mt-0.5 shrink-0 text-navy-700" aria-hidden="true" />
                             <span class="text-sm leading-normal text-gray-800">{{ point }}</span>
                         </li>
                     </ul>
-                    <BaseButton href="/anfrage" size="cta" block class="mt-5">Anfrage starten</BaseButton>
+                    <BaseButton href="/anfrage" size="cta" block class="mt-5">{{ t('detail', 'button_seite', 'Anfrage starten') }}</BaseButton>
                 </div>
 
                 <div class="pt-6">
-                    <p class="text-eyebrow font-semibold uppercase text-gray-600">Weitere Leistungen</p>
+                    <p class="text-eyebrow font-semibold uppercase text-gray-600">{{ t('detail', 'weitere', 'Weitere Leistungen') }}</p>
                     <ul class="flex flex-col gap-2 pt-3">
                         <li v-for="other in serviceTypes.filter((t) => t.slug !== serviceType.slug).slice(0, 6)" :key="other.id">
                             <Link :href="`/leistungen/${other.slug}`" class="text-sm text-gray-600 hover:text-navy-700">{{ other.name_de }}</Link>

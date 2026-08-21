@@ -1,6 +1,7 @@
 <script setup>
 import { computed } from 'vue'
 import { usePage } from '@inertiajs/vue3'
+import BrandLogo from './BrandLogo.vue'
 
 /**
  * The wordmark lockup: seal ring, "DKGZ", a 1px gold rule, then the two-line
@@ -30,20 +31,8 @@ const ringColour = computed(() => (props.inverted ? 'border-white/55' : 'border-
 
 <template>
     <span class="flex items-center gap-2.5">
-        <img
-            v-if="!inverted && branding.logo_light"
-            :src="branding.logo_light"
-            :alt="branding.platform_name ?? 'DKGZ'"
-            class="block h-9 w-auto"
-        >
-        <img
-            v-else-if="inverted && branding.logo_dark"
-            :src="branding.logo_dark"
-            :alt="branding.platform_name ?? 'DKGZ'"
-            class="block h-9 w-auto"
-        >
-
-        <template v-else>
+        <BrandLogo :inverted="inverted" height="h-9">
+        <template #default>
             <span
                 class="grid shrink-0 place-items-center rounded-full border"
                 :class="ringColour"
@@ -68,5 +57,6 @@ const ringColour = computed(() => (props.inverted ? 'border-white/55' : 'border-
                 </span>
             </template>
         </template>
+        </BrandLogo>
     </span>
 </template>

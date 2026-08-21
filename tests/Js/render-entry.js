@@ -4,6 +4,7 @@
  */
 import { createSSRApp, h } from 'vue'
 import { renderToString } from '@vue/server-renderer'
+import { LOGO_LIGHT, LOGO_DARK } from '@inertiajs/vue3'
 
 const modules = import.meta.glob('../../resources/js/Pages/**/*.vue')
 
@@ -83,7 +84,50 @@ const shared = {
     errors: {},
     filters: {},
     content: {},
+    branding: {
+        platform_name: 'DKGZ',
+        logo_light: LOGO_LIGHT,
+        logo_dark: LOGO_DARK,
+    },
 }
+
+/**
+ * Renders the shells that carry the wordmark and reports whether the uploaded
+ * logo appears in each.
+ *
+ * The public site, the admin panel and the partner portal each built their own
+ * DKGZ lockup and none of them consulted the branding settings, so an operator
+ * could upload a logo, watch it save, and see it nowhere. Rendering is not
+ * enough to catch that — the markup has to be searched for the file.
+ */
+export async function runBrandingCheck () {
+    const results = []
+
+    for (const [path, load] of Object.entries(modules)) {
+        const name = path.replace(/^.*\/Pages\//, '').replace(/\.vue$/, '')
+
+        if (! BRAND_PAGES.includes(name)) continue
+
+        const mod = await load()
+        const app = createSSRApp({ render: () => h(mod.default, propsFor(mod.default)) })
+
+        app.config.warnHandler = () => {}
+        app.config.globalProperties.$page = { props: shared, url: '/', component: name }
+        app.config.globalProperties.$inertia = { post () {}, get () {}, visit () {}, delete () {} }
+
+        const html = await renderToString(app)
+
+        results.push({
+            name,
+            found: html.includes(LOGO_LIGHT) || html.includes(LOGO_DARK),
+        })
+    }
+
+    return results
+}
+
+/** One page per shell, chosen because each renders a different lockup. */
+const BRAND_PAGES = ['Public/Startseite', 'Admin/Dashboard', 'Portal/Dashboard', 'Auth/Anmelden']
 
 export async function run () {
     const failures = []

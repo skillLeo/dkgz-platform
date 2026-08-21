@@ -33,13 +33,15 @@ const h = (section, field, fallback = '') => props.homeContent?.[section]?.[fiel
             </ol>
 
             <div class="mt-12 border border-navy-700 p-8">
-                <h2 class="text-h2 font-semibold text-navy-700">Was danach passiert</h2>
+                <h2 class="text-h2 font-semibold text-navy-700">
+                    {{ t('danach', 'ueberschrift', 'Was danach passiert') }}
+                </h2>
                 <p class="measure pt-3 text-base leading-normal text-gray-600">
-                    Ab der Annahme läuft die Abstimmung unmittelbar zwischen Ihnen und dem Sachverständigen. Er nimmt
-                    den Schaden auf, erstellt das Gutachten und rechnet direkt mit Ihnen oder Ihrer Versicherung ab.
-                    DKGZ tritt dabei nicht mehr dazwischen.
+                    {{ t('danach', 'text', 'Ab der Annahme läuft die Abstimmung unmittelbar zwischen Ihnen und dem Sachverständigen. Er nimmt den Schaden auf, erstellt das Gutachten und rechnet direkt mit Ihnen oder Ihrer Versicherung ab. DKGZ tritt dabei nicht mehr dazwischen.') }}
                 </p>
-                <BaseButton href="/anfrage" size="cta" class="mt-6">Anfrage starten</BaseButton>
+                <BaseButton href="/anfrage" size="cta" class="mt-6">
+                    {{ t('danach', 'button', 'Anfrage starten') }}
+                </BaseButton>
             </div>
         </div>
     </PublicLayout>

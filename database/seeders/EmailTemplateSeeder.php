@@ -133,6 +133,14 @@ class EmailTemplateSeeder extends Seeder
                 'body_html' => '<p>Guten Tag {{ anrede }} {{ nachname }},</p><p>die Deutsche KFZ-Gutachterzentrale möchte Sie als Sachverständigen in ihr bundesweites Partnernetz aufnehmen. Richten Sie dazu Ihren Zugang ein und ergänzen Sie Einsatzgebiet und Leistungen.</p>',
             ],
             [
+                'key' => 'anfrage-angebot',
+                'name_de' => 'Anfrage an externen Sachverständigen',
+                'subject_de' => 'Auftrag {{ vorgang }} in Ihrer Region',
+                'preheader_de' => 'Ein vermittelter Auftrag der DKGZ. Annahme direkt möglich, Registrierung danach.',
+                'available_variables' => ['nachricht', 'vorgang', 'cta_url', 'gueltigkeit_tage'],
+                'body_html' => '<p>Guten Tag,</p><p>die Deutsche KFZ-Gutachterzentrale vermittelt Aufträge an geprüfte Sachverständige. Für den folgenden Auftrag suchen wir jemanden in Ihrer Region und möchten ihn Ihnen anbieten. Sie können ihn direkt annehmen; Ihre Registrierung als Partner schließen Sie danach an.</p>',
+            ],
+            [
                 'key' => 'passwort-zuruecksetzen',
                 'name_de' => 'Passwort zurücksetzen',
                 'subject_de' => 'Passwort zurücksetzen',

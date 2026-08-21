@@ -30,6 +30,8 @@ Route::prefix('admin')
         Route::middleware('can:requests.view')->group(function () {
             Route::get('/anfragen', [RequestController::class, 'index'])->name('requests');
             Route::get('/anfragen/{serviceRequest}', [RequestController::class, 'show'])->name('requests.show');
+            Route::post('/anfragen/{serviceRequest}/externer-sachverstaendiger', [RequestController::class, 'offerExternally'])
+                ->name('requests.offer');
             Route::post('/anfragen/{serviceRequest}/kunde-benachrichtigen', [RequestController::class, 'notifyCustomer'])
                 ->name('requests.notify-customer');
             Route::post('/anfragen/{serviceRequest}/schliessen', [RequestController::class, 'close'])

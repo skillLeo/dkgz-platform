@@ -27,7 +27,7 @@ const columns = [
     { key: 'status', label: 'Status', sortable: true, cardRole: 'status' },
     { key: 'service_type', label: 'Art des Gutachtens', cardRole: 'meta' },
     { key: 'location', label: 'Standort', cardRole: 'meta' },
-    { key: 'matched_count', label: 'Vermittelt an', align: 'right', mono: true },
+    { key: 'matched_count', label: 'Gesendet an', align: 'right', mono: true },
     { key: 'created_at_label', label: 'Eingegangen', mono: true, sortable: true, cardRole: 'meta' },
 ]
 

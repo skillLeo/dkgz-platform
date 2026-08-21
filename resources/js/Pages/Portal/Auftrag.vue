@@ -1,7 +1,7 @@
 <script setup>
 import { computed, ref } from 'vue'
 import { Head, Link, useForm } from '@inertiajs/vue3'
-import { ChevronLeft, Download, FileText, Mail, Phone, Upload } from 'lucide-vue-next'
+import { Check, ChevronLeft, Download, FileText, Mail, Phone, Upload } from 'lucide-vue-next'
 import PortalLayout from '../../Layouts/PortalLayout.vue'
 import StatusRail from '../../Components/Data/StatusRail.vue'
 import StatusDot from '../../Components/Data/StatusDot.vue'
@@ -10,6 +10,9 @@ import AssignmentTimeline from '../../Components/Domain/AssignmentTimeline.vue'
 import CompleteAssignmentDialog from '../../Components/Domain/CompleteAssignmentDialog.vue'
 import BaseButton from '../../Components/Base/BaseButton.vue'
 import BaseFileUpload from '../../Components/Base/BaseFileUpload.vue'
+import BaseCurrencyInput from '../../Components/Base/BaseCurrencyInput.vue'
+import BaseInput from '../../Components/Base/BaseInput.vue'
+import BaseSelect from '../../Components/Base/BaseSelect.vue'
 import { useGermanFormat } from '../../Composables/useGermanFormat.js'
 import { useConfirm } from '../../Composables/useConfirm.js'
 
@@ -19,6 +22,7 @@ const props = defineProps({
     documents: { type: Array, default: () => [] },
     timeline: { type: Array, default: () => [] },
     commission: { type: Object, default: null },
+    dkgzInvoices: { type: Array, default: () => [] },
     dkgzFeeLabel: { type: String, default: null },
     feeBounds: { type: Object, default: () => ({}) },
 })
@@ -26,11 +30,34 @@ const props = defineProps({
 const { stamp } = useGermanFormat()
 const { confirm } = useConfirm()
 
-const start = useForm({ status: 'in_progress', note: '' })
+const confirmForm = useForm({ note: '' })
+const customerInvoice = useForm({
+    customer_invoice_cents: props.assignment.customer_invoice_cents ?? null,
+    customer_invoice_recipient: props.assignment.customer_invoice_recipient ?? '',
+    customer_invoice_number: props.assignment.customer_invoice_number ?? '',
+})
 const report = useForm({ type: 'report', document: null })
 const invoice = useForm({ type: 'customer_invoice', document: null })
 const complete = useForm({ fee_cents: null, notes: '' })
 const completeOpen = ref(false)
+
+const RECIPIENTS = [
+    { value: 'kunde', label: 'Kunde' },
+    { value: 'versicherung', label: 'Versicherung' },
+]
+
+async function submitConfirmation() {
+    const ok = await confirm({
+        title: 'Auftrag als zustande gekommen bestätigen?',
+        message: 'Damit bestätigen Sie, dass der Kunde Sie beauftragt hat. Der Auftrag geht in '
+            + 'die Bearbeitung über und Sie erhalten unsere Rechnung über die DKGZ-Gebühr per E-Mail.',
+        confirmLabel: 'Ja, zustande gekommen',
+    })
+
+    if (ok) {
+        confirmForm.post(`/portal/auftraege/${props.assignment.id}/zustande-gekommen`, { preserveScroll: true })
+    }
+}
 
 const reportDoc = computed(() => props.documents.find((d) => d.type === 'report'))
 const invoiceDoc = computed(() => props.documents.find((d) => d.type === 'customer_invoice'))
@@ -213,17 +240,89 @@ const submitCompletion = () => complete.post(`/portal/auftraege/${props.assignme
             </section>
         </div>
 
-        <section v-if="assignment.status === 'accepted'" class="mt-6 rounded-card border border-gray-200 bg-white p-5">
-            <h2 class="text-eyebrow font-semibold uppercase text-gray-600">Bearbeitung</h2>
-            <p class="pt-3 text-sm leading-normal text-gray-600">
-                Markieren Sie den Auftrag als in Bearbeitung, sobald Sie begonnen haben.
+        <!--
+            The single most important thing a partner does on this screen, and
+            for a long time the easiest to miss: it read "Bearbeitung beginnen"
+            in a grey panel among five others. It is now the loudest element on
+            the page while it is pending, because until it is pressed nothing
+            downstream — billing, completion, the customer's expectation — can
+            move.
+        -->
+        <section
+            v-if="assignment.can_confirm"
+            class="mt-6 rounded-card border-2 border-navy-700 bg-navy-900 p-5 md:p-6"
+        >
+            <h2 class="text-eyebrow font-semibold uppercase text-accent">Nächster Schritt</h2>
+            <p class="pt-2 text-h3 font-bold leading-tight text-white">
+                Ist der Auftrag zustande gekommen?
             </p>
+            <p class="measure pt-3 text-sm leading-normal text-white/72">
+                Sobald der Kunde Sie tatsächlich beauftragt hat, bestätigen Sie das hier. Der Auftrag
+                wechselt dann in den Status „In Bearbeitung“ und Sie erhalten unsere Rechnung über die
+                DKGZ-Gebühr von {{ dkgzFeeLabel }} per E-Mail.
+            </p>
+
             <BaseButton
+                size="cta"
+                class="mt-5 w-full sm:w-auto"
+                :loading="confirmForm.processing"
+                @click="submitConfirmation"
+            >
+                <Check :size="18" :stroke-width="2" aria-hidden="true" />
+                Zustande gekommen
+            </BaseButton>
+
+            <p v-if="confirmForm.errors.status" class="pt-3 text-sm text-white">
+                {{ confirmForm.errors.status }}
+            </p>
+        </section>
+
+        <p
+            v-else-if="assignment.confirmed_at"
+            class="mt-6 flex items-center gap-2.5 rounded-card border border-gray-200 bg-white p-5 text-sm text-gray-800"
+        >
+            <Check :size="16" :stroke-width="2" class="shrink-0 text-success" aria-hidden="true" />
+            Als zustande gekommen bestätigt am {{ stamp(assignment.confirmed_at) }}.
+        </p>
+
+        <!-- What the partner billed their own customer or the insurer. -->
+        <section class="mt-6 rounded-card border border-gray-200 bg-white p-5">
+            <h2 class="text-eyebrow font-semibold uppercase text-gray-600">
+                Rechnung an den Kunden / Versicherung
+            </h2>
+            <p class="measure pt-3 text-sm leading-normal text-gray-600">
+                Ihre eigene Rechnung für diesen Auftrag. Die Angaben dienen Ihrer Übersicht und
+                haben keinen Einfluss auf die DKGZ-Gebühr.
+            </p>
+
+            <div class="grid gap-4 pt-4 sm:grid-cols-2 lg:grid-cols-3">
+                <BaseCurrencyInput
+                    v-model="customerInvoice.customer_invoice_cents"
+                    label="Rechnungsbetrag"
+                    :error="customerInvoice.errors.customer_invoice_cents"
+                />
+                <BaseSelect
+                    v-model="customerInvoice.customer_invoice_recipient"
+                    label="Empfänger"
+                    :options="RECIPIENTS"
+                    optional
+                    :error="customerInvoice.errors.customer_invoice_recipient"
+                />
+                <BaseInput
+                    v-model="customerInvoice.customer_invoice_number"
+                    label="Rechnungsnummer"
+                    optional
+                    :error="customerInvoice.errors.customer_invoice_number"
+                />
+            </div>
+
+            <BaseButton
+                variant="secondary"
                 size="compact"
                 class="mt-4"
-                :loading="start.processing"
-                @click="start.post(`/portal/auftraege/${assignment.id}/status`, { preserveScroll: true })"
-            >Bearbeitung beginnen</BaseButton>
+                :loading="customerInvoice.processing"
+                @click="customerInvoice.post(`/portal/auftraege/${assignment.id}/kundenrechnung`, { preserveScroll: true })"
+            >Angaben speichern</BaseButton>
         </section>
 
         <section v-if="assignment.is_open" class="mt-6 rounded-card border border-gray-200 bg-white p-5">
@@ -279,6 +378,39 @@ const submitCompletion = () => complete.post(`/portal/auftraege/${props.assignme
                 </div>
             </dl>
             <p class="pt-3"><StatusDot :status="commission.status" :label="commission.status_label" /></p>
+        </section>
+
+        <!-- Our invoices for this job, inside the job. -->
+        <section v-if="dkgzInvoices.length" class="mt-6 rounded-card border border-gray-200 bg-white p-5">
+            <h2 class="text-eyebrow font-semibold uppercase text-gray-600">Rechnungen der DKGZ</h2>
+            <ul class="pt-3">
+                <li
+                    v-for="doc in dkgzInvoices"
+                    :key="doc.id"
+                    class="flex flex-wrap items-center justify-between gap-x-5 gap-y-2 border-b border-gray-100 py-3 last:border-b-0"
+                >
+                    <span class="flex min-w-0 items-center gap-3">
+                        <FileText :size="18" :stroke-width="1.5" class="shrink-0 text-gray-400" aria-hidden="true" />
+                        <span class="min-w-0">
+                            <span class="block font-mono text-sm text-gray-800">{{ doc.invoice_number }}</span>
+                            <span class="block text-xs text-gray-600">{{ doc.issued_at_label }}</span>
+                        </span>
+                    </span>
+                    <span class="flex items-center gap-4">
+                        <MoneyValue :cents="doc.amount_cents" />
+                        <StatusDot :status="doc.status" :label="doc.status_label" />
+                        <BaseButton
+                            v-if="doc.download_url"
+                            variant="secondary"
+                            size="compact"
+                            :href="doc.download_url"
+                        >
+                            <Download :size="16" :stroke-width="1.5" aria-hidden="true" />
+                            PDF
+                        </BaseButton>
+                    </span>
+                </li>
+            </ul>
         </section>
 
         <section class="mt-6 rounded-card border border-gray-200 bg-white p-5">

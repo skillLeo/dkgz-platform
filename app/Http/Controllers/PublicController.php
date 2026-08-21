@@ -29,7 +29,7 @@ class PublicController extends Controller
     public function services(): Response
     {
         return Inertia::render('Public/Leistungen', [
-            'content' => Content::page('startseite'),
+            'content' => Content::page('leistungen'),
             'serviceTypes' => $this->activeServiceTypes(),
         ]);
     }
@@ -39,6 +39,7 @@ class PublicController extends Controller
         abort_unless($serviceType->is_active, 404);
 
         return Inertia::render('Public/Leistung', [
+            'content' => Content::page('leistungen'),
             'serviceType' => $serviceType->only([
                 'id', 'slug', 'name_de', 'description_de', 'icon',
                 'includes_de', 'target_audience_de', 'typical_situations_de',
