@@ -117,6 +117,7 @@ class Content
             'kontakt' => 'Kontakt',
             'bewertung' => 'Bewertung',
             'fehler' => 'Fehlerseiten',
+            'rechnung' => 'Rechnung (PDF)',
         ];
     }
 }

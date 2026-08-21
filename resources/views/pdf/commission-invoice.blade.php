@@ -37,16 +37,24 @@
 </head>
 <body>
 
+@php
+    // Every visible sentence on this invoice comes from the admin panel under
+    // Seiteninhalte → Rechnung, so wording, payment terms and the VAT note can
+    // be changed without a deployment.
+    $rechnung = \App\Support\Content::page('rechnung');
+    $t = fn (string $section, string $field, ?string $fallback = null) => $rechnung[$section][$field] ?? $fallback;
+@endphp
+
 <table>
     <tr>
         <td style="vertical-align: top;">
             <div style="font-size: 15pt; font-weight: bold; color: {{ $navy700 }}; letter-spacing: -0.5pt;">
                 {{ Settings::get('branding.platform_name', 'DKGZ') }}
             </div>
-            <div class="small muted">Deutsche KFZ-Gutachterzentrale</div>
+            <div class="small muted">{{ Settings::get('branding.platform_subtitle', 'Deutsche KFZ-Gutachterzentrale') }}</div>
         </td>
         <td class="num" style="vertical-align: top;">
-            <div class="eyebrow">Provisionsabrechnung</div>
+            <div class="eyebrow">{{ $t('kopf', 'titel', 'Provisionsabrechnung') }}</div>
             <div style="font-size: 12pt; color: {{ $navy700 }}; padding-top: 4pt;">{{ $invoiceNumber }}</div>
             <div class="small muted">{{ Formatter::date($issuedAt) }}</div>
         </td>
@@ -85,7 +93,11 @@
 
 <div style="height: 22pt;"></div>
 
-<div class="eyebrow">Abgerechneter Vorgang</div>
+@if ($t('kopf', 'einleitung'))
+    <p style="padding-bottom: 14pt;">{{ $t('kopf', 'einleitung') }}</p>
+@endif
+
+<div class="eyebrow">{{ $t('vorgang', 'ueberschrift', 'Abgerechneter Vorgang') }}</div>
 <table class="data" style="margin-top: 8pt; border-top: 0.5pt solid {{ $gray200 }};">
     <tr>
         <td class="label">Vorgangsnummer</td>
@@ -107,34 +119,31 @@
 
 <div style="height: 22pt;"></div>
 
-<div class="eyebrow">Berechnung</div>
+<div class="eyebrow">{{ $t('posten', 'ueberschrift', 'Leistung') }}</div>
 <table class="data" style="margin-top: 8pt; border-top: 0.5pt solid {{ $gray200 }};">
     <tr>
-        <td class="label">Berechnetes Honorar (netto)</td>
-        <td class="num">{{ Formatter::money($commission->fee_cents) }}</td>
-    </tr>
-    <tr>
-        <td class="label">Vermittlungsprovision</td>
-        <td class="num">{{ Formatter::percent((float) $commission->rate_percent) }}</td>
-    </tr>
-    <tr>
-        <td class="label">Ihr Anteil</td>
-        <td class="num">{{ Formatter::money($commission->assessorShareCents()) }}</td>
+        <td class="label">{{ $t('posten', 'bezeichnung', 'Vermittlungsgebühr') }}</td>
+        <td class="num">{{ Formatter::money($commission->commission_cents) }}</td>
     </tr>
 </table>
 
 <table class="total">
     <tr>
-        <td>Provisionsbetrag</td>
+        <td>{{ $t('posten', 'summe', 'Rechnungsbetrag') }}</td>
         <td class="num">{{ Formatter::money($commission->commission_cents) }}</td>
     </tr>
 </table>
 
-<div style="height: 8pt;"></div>
-<p class="small muted">
-    Der Provisionssatz von {{ Formatter::percent((float) $commission->rate_percent) }} entspricht dem zum Zeitpunkt des
-    Abschlusses vereinbarten Satz und bleibt für diese Abrechnung unverändert.
-</p>
+@if ($t('steuer', 'hinweis'))
+    <div style="height: 8pt;"></div>
+    <p class="small muted">{{ $t('steuer', 'hinweis') }}</p>
+@endif
+
+@if ($t('zahlung', 'hinweis'))
+    <div style="height: 14pt;"></div>
+    <div class="eyebrow">{{ $t('zahlung', 'ueberschrift', 'Zahlung') }}</div>
+    <p class="small" style="padding-top: 6pt;">{{ $t('zahlung', 'hinweis') }}</p>
+@endif
 
 <div style="height: 22pt;"></div>
 <div class="foot">

@@ -14,7 +14,7 @@ class ContentBlock extends Model
     use HasFactory;
 
     protected $fillable = [
-        'page_key', 'section_key', 'field_key', 'type', 'value', 'label_de', 'sort_order',
+        'page_key', 'section_key', 'field_key', 'type', 'value', 'label_de', 'help_de', 'sort_order',
     ];
 
     protected function casts(): array

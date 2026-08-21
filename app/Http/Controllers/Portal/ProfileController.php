@@ -22,6 +22,9 @@ use RuntimeException;
 
 class ProfileController extends Controller
 {
+    /** Generous on purpose: the file is re-encoded to 512px either way. */
+    private const PHOTO_MAX_KB = 12288;
+
     public function edit(Request $request): Response
     {
         $assessor = $request->user()->assessor;
@@ -151,6 +154,12 @@ class ProfileController extends Controller
 
         return Inertia::render('Portal/Einstellungen', [
             'email' => $user->email,
+            // Moved here from the profile page: it is a setting about how the
+            // partner appears, and nobody looked for it under "Profil".
+            'photo' => [
+                'url' => $assessor->photoUrl(),
+                'initials' => $assessor->initials(),
+            ],
             'company' => [
                 'company_name' => $assessor->company_name,
                 'vat_id' => $assessor->vat_id,
@@ -290,8 +299,14 @@ class ProfileController extends Controller
     public function updatePhoto(Request $request, StoreAssessorPhotoAction $store): RedirectResponse
     {
         $request->validate(
-            ['photo' => ['required', 'file', 'mimes:jpg,jpeg,png,webp', 'max:4096']],
-            [],
+            ['photo' => ['required', 'file', 'mimes:jpg,jpeg,png,webp', 'max:'.self::PHOTO_MAX_KB]],
+            [
+                'photo.max' => 'Das Bild ist zu groß. Bitte höchstens '
+                    .(self::PHOTO_MAX_KB / 1024).' MB.',
+                'photo.mimes' => 'Bitte ein Bild im Format JPG, PNG oder WebP. '
+                    .'Fotos vom iPhone sind oft HEIC — stellen Sie in den Kameraeinstellungen '
+                    .'auf „Maximale Kompatibilität" um oder speichern Sie das Bild vorher als JPG.',
+            ],
             ['photo' => 'das Profilbild']
         );
 

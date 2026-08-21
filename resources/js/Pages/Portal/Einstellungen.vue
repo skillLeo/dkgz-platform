@@ -2,6 +2,7 @@
 import { computed, ref } from 'vue'
 import { Head, useForm } from '@inertiajs/vue3'
 import PortalLayout from '../../Layouts/PortalLayout.vue'
+import AssessorPhotoField from '../../Components/Domain/AssessorPhotoField.vue'
 import TabBar from '../../Components/Data/TabBar.vue'
 import BaseInput from '../../Components/Base/BaseInput.vue'
 import BaseToggle from '../../Components/Base/BaseToggle.vue'
@@ -11,6 +12,7 @@ import ErrorSummary from '../../Components/Feedback/ErrorSummary.vue'
 
 const props = defineProps({
     email: { type: String, default: '' },
+    photo: { type: Object, default: () => ({}) },
     company: { type: Object, default: () => ({}) },
     bank: { type: Object, default: null },
     collectsBankDetails: { type: Boolean, default: false },
@@ -39,6 +41,13 @@ const passwordForm = useForm({ current_password: '', password: '', password_conf
         <TabBar :tabs="tabs" :current="current" @select="current = $event" />
 
         <div class="max-w-3xl pt-6">
+            <section
+                v-if="current === 'firma'"
+                class="mb-5 rounded-card border border-gray-200 bg-white p-5"
+            >
+                <AssessorPhotoField :photo-url="photo.url" :initials="photo.initials" />
+            </section>
+
             <form
                 v-if="current === 'firma'"
                 class="rounded-card border border-gray-200 bg-white p-5"

@@ -15,24 +15,41 @@ use Illuminate\Database\Seeder;
  */
 class ContentBlockSeeder extends Seeder
 {
+    /**
+     * Adds blocks that are missing and refreshes what belongs to the developer,
+     * never what belongs to the operator.
+     *
+     * This used to overwrite `value` on every run, so each deployment silently
+     * reset the site to the seeded copy — the hero photograph somebody uploaded
+     * reverted to the placeholder, and the only clue was that it kept coming
+     * back. Labels, help text and ordering are ours to change; the words and
+     * pictures on the site are theirs.
+     */
     public function run(): void
     {
         $order = 0;
 
         foreach ($this->blocks() as $block) {
-            ContentBlock::updateOrCreate(
-                [
-                    'page_key' => $block['page_key'],
-                    'section_key' => $block['section_key'],
-                    'field_key' => $block['field_key'],
-                ],
-                [
-                    'type' => $block['type'] ?? 'text',
-                    'value' => $block['value'],
-                    'label_de' => $block['label_de'],
-                    'sort_order' => $order++,
-                ]
-            );
+            $content = ContentBlock::firstOrNew([
+                'page_key' => $block['page_key'],
+                'section_key' => $block['section_key'],
+                'field_key' => $block['field_key'],
+            ]);
+
+            $content->fill([
+                'type' => $block['type'] ?? 'text',
+                'label_de' => $block['label_de'],
+                'help_de' => $block['help_de'] ?? $content->help_de,
+                'sort_order' => $order++,
+            ]);
+
+            // Only ever the seeded default, and only for a block nobody has
+            // seen yet.
+            if (! $content->exists) {
+                $content->value = $block['value'];
+            }
+
+            $content->save();
         }
     }
 
@@ -46,6 +63,7 @@ class ContentBlockSeeder extends Seeder
             $this->partnerPage(),
             $this->processPage(),
             $this->servicesPage(),
+            $this->invoiceDocument(),
             $this->aboutPage(),
             $this->contactPage(),
             $this->reviewPages(),
@@ -215,6 +233,30 @@ class ContentBlockSeeder extends Seeder
             ['page_key' => 'ablauf', 'section_key' => 'danach', 'field_key' => 'ueberschrift', 'value' => 'Was danach passiert', 'label_de' => 'Abschlussblock — Überschrift'],
             ['page_key' => 'ablauf', 'section_key' => 'danach', 'field_key' => 'text', 'type' => 'richtext', 'value' => 'Ab der Annahme läuft die Abstimmung unmittelbar zwischen Ihnen und dem Sachverständigen. Er nimmt den Schaden auf, erstellt das Gutachten und rechnet direkt mit Ihnen oder Ihrer Versicherung ab. DKGZ tritt dabei nicht mehr dazwischen.', 'label_de' => 'Abschlussblock — Fließtext'],
             ['page_key' => 'ablauf', 'section_key' => 'danach', 'field_key' => 'button', 'value' => 'Anfrage starten', 'label_de' => 'Abschlussblock — Schaltfläche'],
+        ];
+    }
+
+    /**
+     * The wording on the DKGZ invoice.
+     *
+     * The PDF was fixed text in a Blade file, so changing a payment term or the
+     * VAT sentence meant a deployment. It is a document a business has to be
+     * able to correct itself.
+     *
+     * @return list<array<string, string>>
+     */
+    private function invoiceDocument(): array
+    {
+        return [
+            ['page_key' => 'rechnung', 'section_key' => 'kopf', 'field_key' => 'titel', 'value' => 'Provisionsabrechnung', 'label_de' => 'Titel oben rechts'],
+            ['page_key' => 'rechnung', 'section_key' => 'kopf', 'field_key' => 'einleitung', 'type' => 'richtext', 'value' => 'für die Vermittlung des unten genannten Vorgangs berechnen wir die vereinbarte Vermittlungsgebühr.', 'label_de' => 'Einleitungssatz', 'help_de' => 'Steht über den Angaben zum Vorgang. Leer lassen, um ihn wegzulassen.'],
+            ['page_key' => 'rechnung', 'section_key' => 'vorgang', 'field_key' => 'ueberschrift', 'value' => 'Abgerechneter Vorgang', 'label_de' => 'Überschrift Vorgangsdaten'],
+            ['page_key' => 'rechnung', 'section_key' => 'posten', 'field_key' => 'ueberschrift', 'value' => 'Leistung', 'label_de' => 'Überschrift Leistung'],
+            ['page_key' => 'rechnung', 'section_key' => 'posten', 'field_key' => 'bezeichnung', 'value' => 'Vermittlungsgebühr', 'label_de' => 'Bezeichnung der Leistung'],
+            ['page_key' => 'rechnung', 'section_key' => 'posten', 'field_key' => 'summe', 'value' => 'Rechnungsbetrag', 'label_de' => 'Bezeichnung der Summe'],
+            ['page_key' => 'rechnung', 'section_key' => 'steuer', 'field_key' => 'hinweis', 'type' => 'richtext', 'value' => 'Der Betrag ist umsatzsteuerfrei nach § 19 UStG (Kleinunternehmerregelung).', 'label_de' => 'Steuerhinweis', 'help_de' => 'Bitte an Ihre tatsächliche steuerliche Situation anpassen. Leer lassen, um ihn wegzulassen.'],
+            ['page_key' => 'rechnung', 'section_key' => 'zahlung', 'field_key' => 'ueberschrift', 'value' => 'Zahlung', 'label_de' => 'Überschrift Zahlungshinweis'],
+            ['page_key' => 'rechnung', 'section_key' => 'zahlung', 'field_key' => 'hinweis', 'type' => 'richtext', 'value' => 'Zahlbar innerhalb von 14 Tagen ohne Abzug.', 'label_de' => 'Zahlungshinweis', 'help_de' => 'Zahlungsziel und Bankverbindung. Leer lassen, um den Abschnitt wegzulassen.'],
         ];
     }
 

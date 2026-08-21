@@ -6,6 +6,9 @@ use App\Listeners\RecordMailDelivery;
 use App\Models\ContentBlock;
 use App\Models\Setting;
 use App\Observers\CacheBustingObserver;
+use App\Support\Branding;
+use App\Support\SafeStorage;
+use App\Support\Settings;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Mail\Events\MessageSent;
@@ -13,6 +16,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Vite;
 use Illuminate\Support\ServiceProvider;
 
@@ -33,6 +37,17 @@ class AppServiceProvider extends ServiceProvider
 
         Setting::observe(CacheBustingObserver::class);
         ContentBlock::observe(CacheBustingObserver::class);
+
+        // The root document reached for both of these and nothing ever supplied
+        // them, so an uploaded favicon and every colour set under
+        // "Erscheinungsbild" were saved, shown back in the form, and had no
+        // effect on the site whatsoever.
+        View::composer('app', function ($view) {
+            $view->with([
+                'faviconUrl' => SafeStorage::url(Settings::get('branding.favicon')),
+                'brandCss' => Branding::cssCustomProperties(),
+            ]);
+        });
 
         $this->registerRateLimiters();
     }
