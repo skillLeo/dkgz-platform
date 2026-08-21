@@ -163,7 +163,9 @@
                             <p style="margin:28px 0 0;padding-top:16px;border-top:1px solid {{ $gray200 }};font-size:13.5px;line-height:1.6;color:{{ $gray600 }};">{{ $note }}</p>
                         @endif
 
-                        <p style="margin:24px 0 0;font-size:15px;line-height:1.7;color:{{ $gray800 }};">Mit freundlichen Grüßen<br />Deutsche KFZ-Gutachterzentrale</p>
+                        @if ($signoff)
+                            <p style="margin:24px 0 0;font-size:15px;line-height:1.7;color:{{ $gray800 }};">{!! nl2br(e($signoff)) !!}</p>
+                        @endif
                     </td>
                 </tr>
 

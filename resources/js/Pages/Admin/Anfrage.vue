@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { Head, router, useForm } from '@inertiajs/vue3'
 import { Lock } from 'lucide-vue-next'
 import AdminLayout from '../../Layouts/AdminLayout.vue'
@@ -10,6 +10,7 @@ import ReferenceNumber from '../../Components/Data/ReferenceNumber.vue'
 import MoneyValue from '../../Components/Data/MoneyValue.vue'
 import BaseButton from '../../Components/Base/BaseButton.vue'
 import BaseInput from '../../Components/Base/BaseInput.vue'
+import BaseSelect from '../../Components/Base/BaseSelect.vue'
 import BaseTextarea from '../../Components/Base/BaseTextarea.vue'
 import { useGermanFormat } from '../../Composables/useGermanFormat.js'
 import { useConfirm } from '../../Composables/useConfirm.js'
@@ -18,6 +19,7 @@ const props = defineProps({
     request: { type: Object, required: true },
     trail: { type: Array, default: () => [] },
     matching: { type: Object, default: null },
+    assessorOptions: { type: Array, default: () => [] },
     offers: { type: Array, default: () => [] },
     canOffer: { type: Boolean, default: false },
     assignment: { type: Object, default: null },
@@ -44,6 +46,26 @@ async function sendTo (entry) {
     router.post(`/admin/anfragen/${props.request.id}/senden/${entry.id}`, {}, {
         preserveScroll: true,
         onFinish: () => { sendingTo.value = null },
+    })
+}
+
+const directForm = useForm({ assessor: '' })
+
+const chosenAssessor = computed(() => props.assessorOptions
+    .find((option) => String(option.value) === String(directForm.assessor)) ?? null)
+
+async function sendDirect () {
+    const ok = await confirm({
+        title: `Anfrage an ${chosenAssessor.value?.label} senden?`,
+        message: 'Der Sachverständige erhält die Anfrage per E-Mail und im Portal.',
+        confirmLabel: 'Senden',
+    })
+
+    if (! ok) return
+
+    directForm.post(`/admin/anfragen/${props.request.id}/senden/${directForm.assessor}`, {
+        preserveScroll: true,
+        onSuccess: () => directForm.reset(),
     })
 }
 
@@ -259,6 +281,44 @@ const doRematch = async () => {
                     can send it straight to somebody they know of; that person
                     accepts from the e-mail and registers afterwards.
                 -->
+                <!--
+                    Sending to a registered partner by hand. The engine decides
+                    who is written to automatically; this is for the office
+                    placing a request itself, including one nobody's postal range
+                    covers, which is exactly the request that needs a person.
+                -->
+                <section v-if="assessorOptions.length" class="border border-gray-200 bg-white p-5">
+                    <SectionLabel text="An Sachverständigen senden" tone="muted" />
+                    <p class="measure pt-2 text-sm text-gray-600">
+                        Wählen Sie einen registrierten Sachverständigen aus. Er erhält die Anfrage
+                        wie bei einer regulären Vermittlung und kann sie annehmen oder ablehnen.
+                    </p>
+
+                    <div class="flex flex-wrap items-end gap-3 pt-4">
+                        <div class="min-w-0 flex-1" style="min-width: 16rem">
+                            <BaseSelect
+                                v-model="directForm.assessor"
+                                label="Sachverständiger"
+                                :options="assessorOptions"
+                                placeholder="Bitte wählen"
+                            />
+                        </div>
+                        <BaseButton
+                            :disabled="!directForm.assessor"
+                            :loading="directForm.processing"
+                            @click="sendDirect"
+                        >Anfrage senden</BaseButton>
+                    </div>
+
+                    <p v-if="chosenAssessor && !chosenAssessor.available" class="pt-3 text-sm text-warning">
+                        Dieser Sachverständige ist derzeit als nicht verfügbar markiert. Er erhält die
+                        Anfrage trotzdem.
+                    </p>
+                    <p v-else-if="chosenAssessor && chosenAssessor.notified" class="pt-3 text-sm text-gray-600">
+                        Dieser Sachverständige wurde bereits angeschrieben — er erhält die Anfrage erneut.
+                    </p>
+                </section>
+
                 <section class="border border-gray-200 bg-white">
                     <div class="border-b border-gray-200 p-5">
                         <SectionLabel text="Externe Sachverständige" tone="muted" />

@@ -97,8 +97,8 @@ const telHref = computed(() => `tel:${String(page.props.app?.phone ?? '').replac
                             <ArrowRight :size="20" :stroke-width="1.75" aria-hidden="true" />
                         </BaseButton>
 
-                        <p class="pt-3 text-sm text-gray-600">
-                            Kostenlos und unverbindlich · Antwort in der Regel innerhalb von 24 Stunden
+                        <p v-if="t('hero', 'cta_hinweis', 'x')" class="pt-3 text-sm text-gray-600">
+                            {{ t('hero', 'cta_hinweis', 'Kostenlos und unverbindlich · Antwort in der Regel innerhalb von 24 Stunden') }}
                         </p>
 
                         <p v-if="page.props.app?.phone" class="pt-4 text-base text-gray-600">
@@ -268,7 +268,7 @@ const telHref = computed(() => `tel:${String(page.props.app?.phone ?? '').replac
         </section>
 
         <!-- Partner strip -->
-        <section id="sachverstaendige" class="border-y border-gray-200 bg-white">
+        <section id="sachverstaendige" class="border-y border-gray-200 bg-gray-50">
             <div class="mx-auto grid w-full max-w-(--container-shell) grid-cols-1 items-center gap-16 px-4 py-16 md:px-6 lg:grid-cols-[minmax(0,1fr)_420px] lg:py-24">
                 <div>
                     <h2 class="text-h2 font-semibold text-navy-700">{{ t('partner', 'ueberschrift') }}</h2>

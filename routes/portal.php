@@ -38,7 +38,7 @@ Route::prefix('portal')
         Route::delete('/auftraege/{assignment}/dokumente/{document}', [AssignmentController::class, 'destroyDocument'])->name('assignments.documents.destroy');
         Route::get('/auftraege/{assignment}/dokumente/{document}/download', [AssignmentController::class, 'downloadDocument'])->name('assignments.documents.download');
         Route::post('/auftraege/{assignment}/zustande-gekommen', [AssignmentController::class, 'confirm'])->name('assignments.confirm');
-        Route::post('/auftraege/{assignment}/kundenrechnung', [AssignmentController::class, 'updateCustomerInvoice'])->name('assignments.customer-invoice');
+        Route::post('/auftraege/{assignment}/nicht-zustande-gekommen', [AssignmentController::class, 'declineAssignment'])->name('assignments.decline');
         Route::post('/auftraege/{assignment}/abschliessen', [AssignmentController::class, 'complete'])->name('assignments.complete');
 
         // Commissions, read-only for the partner

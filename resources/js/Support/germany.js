@@ -109,3 +109,104 @@ function mergeRanges(ranges) {
 
     return merged
 }
+
+/**
+ * Germany's border as real coordinates, traced clockwise from Flensburg.
+ *
+ * The outline used to be hand-drawn in the SVG's own coordinate space, which
+ * meant it looked approximately like Germany and the markers sat wherever they
+ * had been nudged to. These are longitude/latitude pairs, so the country and
+ * every point on it are projected from the same numbers and cannot disagree.
+ *
+ * @type {Array<[number, number]>}
+ */
+export const BORDER = [
+    // Baltic coast, west to east
+    [9.43, 54.83], [9.90, 54.78], [10.13, 54.45], [10.75, 54.31], [11.10, 54.42],
+    [11.45, 54.10], [12.10, 54.18], [12.45, 54.44], [13.10, 54.32], [13.44, 54.68],
+    [13.72, 54.57], [14.25, 53.93],
+    // Polish border, north to south
+    [14.41, 53.28], [14.14, 52.96], [14.55, 52.35], [14.72, 52.09], [14.60, 51.80],
+    [14.99, 51.15],
+    // Czech border
+    [14.31, 51.05], [13.55, 50.73], [12.95, 50.40], [12.55, 50.39], [12.10, 50.32],
+    [12.30, 50.10], [12.48, 49.94], [12.50, 49.63], [13.20, 49.12], [13.83, 48.77],
+    // Austrian border, east to west
+    [13.45, 48.57], [13.00, 48.27], [12.76, 48.12], [13.00, 47.85], [13.00, 47.63],
+    [12.20, 47.70], [11.60, 47.58], [11.10, 47.42], [10.45, 47.55], [10.28, 47.38],
+    // Switzerland
+    [9.68, 47.55], [9.18, 47.66], [8.60, 47.80], [8.20, 47.62], [7.59, 47.58],
+    // France, up the Rhine
+    [7.55, 48.05], [7.80, 48.58], [8.23, 48.97], [7.60, 49.05], [7.05, 49.11],
+    [6.95, 49.20], [6.35, 49.45],
+    // Luxembourg and Belgium
+    [6.13, 49.97], [6.35, 50.32], [6.02, 50.75],
+    // Netherlands
+    [6.05, 51.20], [6.10, 51.85], [6.72, 52.24], [7.07, 52.43], [6.70, 53.12],
+    // North Sea coast, west to east
+    [7.05, 53.30], [7.20, 53.37], [8.11, 53.52], [8.30, 53.72], [8.58, 53.55],
+    [8.70, 53.87], [9.00, 53.90], [8.60, 54.32], [8.30, 54.90], [8.66, 54.90],
+]
+
+/** Real centres of the ten postal zones, as longitude/latitude. */
+export const ZONE_COORDINATES = {
+    0: [13.74, 51.05],
+    1: [13.40, 52.52],
+    2: [9.99, 53.55],
+    3: [9.73, 52.37],
+    4: [6.78, 51.23],
+    5: [6.96, 50.94],
+    6: [8.68, 50.11],
+    7: [9.18, 48.78],
+    8: [11.58, 48.14],
+    9: [11.08, 49.45],
+}
+
+/** Web Mercator, which is what every map of Germany people have seen uses. */
+const mercatorY = (lat) => Math.log(Math.tan(Math.PI / 4 + (lat * Math.PI / 180) / 2))
+
+const BOUNDS = (() => {
+    const xs = BORDER.map(([lon]) => lon)
+    const ys = BORDER.map(([, lat]) => mercatorY(lat))
+
+    return {
+        minX: Math.min(...xs),
+        maxX: Math.max(...xs),
+        minY: Math.min(...ys),
+        maxY: Math.max(...ys),
+    }
+})()
+
+/** The drawing area the projection fills, with a little room for the markers. */
+export const MAP = { width: 200, height: 260, pad: 10 }
+
+/**
+ * Longitude/latitude to a point in the map's coordinate space.
+ *
+ * @param {[number, number]} coordinate
+ * @returns {{x: number, y: number}}
+ */
+export function project ([lon, lat]) {
+    const { minX, maxX, minY, maxY } = BOUNDS
+    const inner = { w: MAP.width - MAP.pad * 2, h: MAP.height - MAP.pad * 2 }
+
+    return {
+        x: MAP.pad + ((lon - minX) / (maxX - minX)) * inner.w,
+        // Screen y grows downward; latitude grows upward.
+        y: MAP.pad + ((maxY - mercatorY(lat)) / (maxY - minY)) * inner.h,
+    }
+}
+
+/** The border as an SVG path, projected once. */
+export const BORDER_PATH = BORDER
+    .map((coordinate, index) => {
+        const { x, y } = project(coordinate)
+
+        return `${index === 0 ? 'M' : 'L'}${x.toFixed(2)},${y.toFixed(2)}`
+    })
+    .join(' ') + ' Z'
+
+/** Each postal zone at its real position, ready to draw. */
+export const ZONE_POINTS = Object.fromEntries(
+    Object.entries(ZONE_COORDINATES).map(([digit, coordinate]) => [digit, project(coordinate)])
+)

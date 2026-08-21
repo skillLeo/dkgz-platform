@@ -6,6 +6,10 @@
 
 @endif
 {{ $strip($bodyHtml) }}
+@if ($signoff)
+
+{{ $signoff }}
+@endif
 @if ($reference)
 
 {{ $referenceLabel }}: {{ $reference }}

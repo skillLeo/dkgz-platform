@@ -64,7 +64,16 @@ class ContentController extends Controller
         foreach ($data['blocks'] as $submitted) {
             $block = $blocks->get($submitted['id']);
 
-            $block?->update(['value' => $submitted['value']]);
+            // An image block holds a path written by the upload endpoint, and
+            // the form still carries whatever path it was rendered with. Saving
+            // any text on the page therefore wrote the old picture back over
+            // the new one — the upload worked and then undid itself. Pictures
+            // are changed by uploading or removing them, never by this form.
+            if ($block === null || $block->type === 'image') {
+                continue;
+            }
+
+            $block->update(['value' => $submitted['value']]);
         }
 
         Content::flush($pageKey);

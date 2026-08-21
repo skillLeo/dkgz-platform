@@ -1,15 +1,15 @@
 <script setup>
 import { computed, ref } from 'vue'
 import { Head, Link, useForm } from '@inertiajs/vue3'
-import { Check, ChevronLeft, Download, FileText, Mail, Phone } from 'lucide-vue-next'
+import { Check, ChevronLeft, Download, FileText, Mail, Phone, X } from 'lucide-vue-next'
 import PortalLayout from '../../Layouts/PortalLayout.vue'
 import StatusRail from '../../Components/Data/StatusRail.vue'
 import StatusDot from '../../Components/Data/StatusDot.vue'
 import MoneyValue from '../../Components/Data/MoneyValue.vue'
 import AssignmentTimeline from '../../Components/Domain/AssignmentTimeline.vue'
 import CompleteAssignmentDialog from '../../Components/Domain/CompleteAssignmentDialog.vue'
+import DeclineAssignmentDialog from '../../Components/Domain/DeclineAssignmentDialog.vue'
 import BaseButton from '../../Components/Base/BaseButton.vue'
-import BaseFileUpload from '../../Components/Base/BaseFileUpload.vue'
 import BaseCurrencyInput from '../../Components/Base/BaseCurrencyInput.vue'
 import BaseInput from '../../Components/Base/BaseInput.vue'
 import BaseSelect from '../../Components/Base/BaseSelect.vue'
@@ -19,7 +19,6 @@ import { useConfirm } from '../../Composables/useConfirm.js'
 const props = defineProps({
     assignment: { type: Object, required: true },
     request: { type: Object, required: true },
-    documents: { type: Array, default: () => [] },
     timeline: { type: Array, default: () => [] },
     commission: { type: Object, default: null },
     dkgzInvoices: { type: Array, default: () => [] },
@@ -30,20 +29,10 @@ const { stamp } = useGermanFormat()
 const { confirm } = useConfirm()
 
 const confirmForm = useForm({ note: '' })
-const customerInvoice = useForm({
-    customer_invoice_cents: props.assignment.customer_invoice_cents ?? null,
-    customer_invoice_recipient: props.assignment.customer_invoice_recipient ?? '',
-    customer_invoice_number: props.assignment.customer_invoice_number ?? '',
-})
-const report = useForm({ type: 'report', document: null })
-const invoice = useForm({ type: 'customer_invoice', document: null })
+const declineForm = useForm({ reason: '', note: '' })
 const complete = useForm({ notes: '' })
 const completeOpen = ref(false)
-
-const RECIPIENTS = [
-    { value: 'kunde', label: 'Kunde' },
-    { value: 'versicherung', label: 'Versicherung' },
-]
+const declineOpen = ref(false)
 
 async function submitConfirmation() {
     const ok = await confirm({
@@ -58,9 +47,13 @@ async function submitConfirmation() {
     }
 }
 
-const reportDoc = computed(() => props.documents.find((d) => d.type === 'report'))
-const invoiceDoc = computed(() => props.documents.find((d) => d.type === 'customer_invoice'))
-const documentCount = computed(() => [reportDoc.value, invoiceDoc.value].filter(Boolean).length)
+const declineReasons = computed(() => Object.entries(props.assignment.decline_reasons ?? {})
+    .map(([value, label]) => ({ value, label })))
+
+const submitDecline = () => declineForm.post(
+    `/portal/auftraege/${props.assignment.id}/nicht-zustande-gekommen`,
+    { onSuccess: () => { declineOpen.value = false } },
+)
 
 const steps = computed(() => {
     const accepted = props.assignment.accepted_at
@@ -70,32 +63,15 @@ const steps = computed(() => {
         { label: 'Vermittelt', done: true, stamp: stamp(props.request.created_at) },
         { label: 'Angenommen', done: Boolean(accepted), stamp: accepted ? stamp(accepted) : 'offen' },
         {
-            label: 'Unterlagen vollständig',
-            done: documentCount.value === 2,
-            stamp: `${documentCount.value} von 2`,
+            label: 'Zustande gekommen',
+            done: Boolean(props.assignment.confirmed_at),
+            stamp: props.assignment.confirmed_at ? stamp(props.assignment.confirmed_at) : 'offen',
         },
         { label: 'Abgeschlossen', done: Boolean(completed), stamp: completed ? stamp(completed) : 'offen' },
     ]
 })
 
 const doneCount = computed(() => steps.value.filter((step) => step.done).length)
-
-const upload = (form) => form.post(`/portal/auftraege/${props.assignment.id}/dokumente`, {
-    forceFormData: true,
-    preserveScroll: true,
-    onSuccess: () => form.reset('document'),
-})
-
-const removeDoc = async (doc) => {
-    const ok = await confirm({
-        title: 'Unterlage entfernen?',
-        message: `${doc.original_name} wird dauerhaft gelöscht.`,
-        confirmLabel: 'Entfernen',
-        tone: 'danger',
-    })
-
-    if (ok) useForm({}).delete(`/portal/auftraege/${props.assignment.id}/dokumente/${doc.id}`, { preserveScroll: true })
-}
 
 const submitCompletion = () => complete.post(`/portal/auftraege/${props.assignment.id}/abschliessen`, {
     onSuccess: () => { completeOpen.value = false },
@@ -160,74 +136,6 @@ const submitCompletion = () => complete.post(`/portal/auftraege/${props.assignme
                     Standort: {{ request.location }}
                 </p>
             </section>
-
-            <section class="rounded-card border border-gray-200 bg-white p-5 lg:col-span-2 xl:col-span-1">
-                <div v-if="assignment.is_open" class="flex flex-col gap-6">
-                    <div>
-                        <BaseFileUpload
-                            v-model="report.document"
-                            label="Gutachten hochladen"
-                            required
-                            accept-label="max. 10 MB"
-                            :existing="reportDoc ? [reportDoc] : []"
-                            :error="report.errors.document"
-                            @remove-existing="removeDoc"
-                        />
-                        <BaseButton
-                            v-if="report.document"
-                            size="compact"
-                            class="mt-3"
-                            :loading="report.processing"
-                            @click="upload(report)"
-                        >Gutachten hochladen</BaseButton>
-                    </div>
-
-                    <div>
-                        <BaseFileUpload
-                            v-model="invoice.document"
-                            label="Rechnung an den Kunden"
-                            required
-                            accept-label="max. 10 MB"
-                            :existing="invoiceDoc ? [invoiceDoc] : []"
-                            :error="invoice.errors.document"
-                            @remove-existing="removeDoc"
-                        />
-                        <BaseButton
-                            v-if="invoice.document"
-                            size="compact"
-                            class="mt-3"
-                            :loading="invoice.processing"
-                            @click="upload(invoice)"
-                        >Rechnung hochladen</BaseButton>
-                    </div>
-                </div>
-
-                <div v-else>
-                    <h2 class="text-eyebrow font-semibold uppercase text-gray-600">Unterlagen</h2>
-                    <ul class="pt-3">
-                        <li
-                            v-for="doc in documents"
-                            :key="doc.id"
-                            class="flex items-center gap-3 border-b border-gray-100 py-3 last:border-b-0"
-                        >
-                            <FileText :size="20" :stroke-width="1.5" class="shrink-0 text-gray-600" aria-hidden="true" />
-                            <span class="min-w-0 flex-1">
-                                <span class="block truncate text-sm font-medium text-gray-800">{{ doc.original_name }}</span>
-                                <span class="block font-mono text-meta text-gray-400">
-                                    {{ doc.size_label }} · {{ doc.type_label }}
-                                </span>
-                            </span>
-                            <a
-                                :href="doc.download_url"
-                                class="shrink-0 text-gray-600 hover:text-navy-700"
-                                :aria-label="`${doc.original_name} herunterladen`"
-                            >
-                                <Download :size="18" :stroke-width="1.5" aria-hidden="true" />
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </section>
         </div>
 
         <!--
@@ -252,15 +160,26 @@ const submitCompletion = () => complete.post(`/portal/auftraege/${props.assignme
                 DKGZ-Gebühr von {{ dkgzFeeLabel }} per E-Mail.
             </p>
 
-            <BaseButton
-                size="cta"
-                class="mt-5 w-full sm:w-auto"
-                :loading="confirmForm.processing"
-                @click="submitConfirmation"
-            >
-                <Check :size="18" :stroke-width="2" aria-hidden="true" />
-                Zustande gekommen
-            </BaseButton>
+            <div class="flex flex-col gap-3 pt-5 sm:flex-row">
+                <BaseButton
+                    size="cta"
+                    class="w-full sm:w-auto"
+                    :loading="confirmForm.processing"
+                    @click="submitConfirmation"
+                >
+                    <Check :size="18" :stroke-width="2" aria-hidden="true" />
+                    Ja, zustande gekommen
+                </BaseButton>
+                <BaseButton
+                    variant="outlineInverted"
+                    size="cta"
+                    class="w-full sm:w-auto"
+                    @click="declineOpen = true"
+                >
+                    <X :size="18" :stroke-width="2" aria-hidden="true" />
+                    Nein
+                </BaseButton>
+            </div>
 
             <p v-if="confirmForm.errors.status" class="pt-3 text-sm text-white">
                 {{ confirmForm.errors.status }}
@@ -274,46 +193,6 @@ const submitCompletion = () => complete.post(`/portal/auftraege/${props.assignme
             <Check :size="16" :stroke-width="2" class="shrink-0 text-success" aria-hidden="true" />
             Als zustande gekommen bestätigt am {{ stamp(assignment.confirmed_at) }}.
         </p>
-
-        <!-- What the partner billed their own customer or the insurer. -->
-        <section class="mt-6 rounded-card border border-gray-200 bg-white p-5">
-            <h2 class="text-eyebrow font-semibold uppercase text-gray-600">
-                Rechnung an den Kunden / Versicherung
-            </h2>
-            <p class="measure pt-3 text-sm leading-normal text-gray-600">
-                Ihre eigene Rechnung für diesen Auftrag. Die Angaben dienen Ihrer Übersicht und
-                haben keinen Einfluss auf die DKGZ-Gebühr.
-            </p>
-
-            <div class="grid gap-4 pt-4 sm:grid-cols-2 lg:grid-cols-3">
-                <BaseCurrencyInput
-                    v-model="customerInvoice.customer_invoice_cents"
-                    label="Rechnungsbetrag"
-                    :error="customerInvoice.errors.customer_invoice_cents"
-                />
-                <BaseSelect
-                    v-model="customerInvoice.customer_invoice_recipient"
-                    label="Empfänger"
-                    :options="RECIPIENTS"
-                    optional
-                    :error="customerInvoice.errors.customer_invoice_recipient"
-                />
-                <BaseInput
-                    v-model="customerInvoice.customer_invoice_number"
-                    label="Rechnungsnummer"
-                    optional
-                    :error="customerInvoice.errors.customer_invoice_number"
-                />
-            </div>
-
-            <BaseButton
-                variant="secondary"
-                size="compact"
-                class="mt-4"
-                :loading="customerInvoice.processing"
-                @click="customerInvoice.post(`/portal/auftraege/${assignment.id}/kundenrechnung`, { preserveScroll: true })"
-            >Angaben speichern</BaseButton>
-        </section>
 
         <section v-if="assignment.is_open" class="mt-6 rounded-card border border-gray-200 bg-white p-5">
             <h2 class="text-eyebrow font-semibold uppercase text-gray-600">Abschluss</h2>
@@ -394,6 +273,18 @@ const submitCompletion = () => complete.post(`/portal/auftraege/${props.assignme
             <h2 class="text-eyebrow font-semibold uppercase text-gray-600">Verlauf</h2>
             <AssignmentTimeline :events="timeline" class="pt-4" />
         </section>
+
+        <DeclineAssignmentDialog
+            v-model:reason="declineForm.reason"
+            v-model:note="declineForm.note"
+            :open="declineOpen"
+            :reference="request.reference"
+            :reasons="declineReasons"
+            :error="declineForm.errors.reason"
+            :processing="declineForm.processing"
+            @close="declineOpen = false"
+            @submit="submitDecline"
+        />
 
         <CompleteAssignmentDialog
             :open="completeOpen"

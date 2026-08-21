@@ -89,6 +89,7 @@ class SettingsSeeder extends Seeder
             ['group' => 'email', 'key' => 'email.dkim_selector', 'type' => 'string', 'label_de' => 'DKIM-Selector', 'help_de' => 'Vom Versanddienst vorgegeben, zum Beispiel „mail“ oder „brevo1“. Wird nur zur Prüfung des DNS-Eintrags benötigt.'],
             ['group' => 'email', 'key' => 'email.unsubscribe_address', 'type' => 'string', 'label_de' => 'Abmeldeadresse für Rundmails', 'help_de' => 'Erscheint als List-Unsubscribe in nicht-transaktionalen E-Mails wie der Provisionsabrechnung.'],
             ['group' => 'email', 'key' => 'email.footer_text', 'type' => 'text', 'value' => 'Diese E-Mail wurde automatisch versendet. Bitte antworten Sie nicht auf diese Adresse.', 'label_de' => 'Fußzeile in allen E-Mails'],
+            ['group' => 'email', 'key' => 'email.signoff', 'type' => 'text', 'value' => "Mit freundlichen Grüßen\nDeutsche KFZ-Gutachterzentrale", 'label_de' => 'Grußformel am Ende jeder Mail', 'help_de' => 'Steht unter dem Text jeder E-Mail. Zeilenumbrüche werden übernommen. Leer lassen, um sie wegzulassen.'],
             ['group' => 'email', 'key' => 'email.admin_recipient', 'type' => 'string', 'value' => 'info@dkgz.de', 'label_de' => 'Interne Empfängeradresse', 'help_de' => 'Erhält Registrierungen, Kontaktanfragen und Meldungen ohne Treffer.'],
 
             ['group' => 'integrations', 'key' => 'integrations.smtp_host', 'type' => 'string', 'label_de' => 'SMTP-Server', 'help_de' => 'Ohne Angabe wird der in der .env hinterlegte Mailer verwendet.'],

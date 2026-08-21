@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Portal;
 
 use App\Actions\CompleteAssignmentAction;
 use App\Actions\ConfirmAssignmentAction;
+use App\Actions\DeclineAssignmentAction;
 use App\Actions\StoreAssignmentDocumentAction;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ServiceRequestResource;
@@ -11,7 +12,6 @@ use App\Models\Assignment;
 use App\Models\AssignmentDocument;
 use App\Models\Commission;
 use App\Support\Formatter;
-use App\Support\Money;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -96,9 +96,7 @@ class AssignmentController extends Controller
                 'is_open' => $assignment->isOpen(),
                 'confirmed_at' => $assignment->confirmed_at,
                 'can_confirm' => $assignment->status === Assignment::STATUS_ACCEPTED,
-                'customer_invoice_cents' => $assignment->customer_invoice_cents,
-                'customer_invoice_recipient' => $assignment->customer_invoice_recipient,
-                'customer_invoice_number' => $assignment->customer_invoice_number,
+                'decline_reasons' => DeclineAssignmentAction::REASONS,
             ],
             'request' => (new ServiceRequestResource($assignment->serviceRequest))->toArray($request),
             'documents' => $assignment->documents->map(fn (AssignmentDocument $doc) => [
@@ -207,39 +205,39 @@ class AssignmentController extends Controller
         );
     }
 
-    /** The assessor's own invoice to the customer or their insurer. */
-    public function updateCustomerInvoice(Request $request, Assignment $assignment): RedirectResponse
-    {
+    /**
+     * "Nein" to the question of whether the job came about.
+     *
+     * A reason is required, and it is not a formality: it separates a job that
+     * quietly died from one that was settled privately, which is the thing the
+     * platform cannot otherwise see.
+     */
+    public function declineAssignment(
+        Request $request,
+        Assignment $assignment,
+        DeclineAssignmentAction $decline,
+    ): RedirectResponse {
         $this->authorize('work', $assignment);
 
         $data = $request->validate([
-            'customer_invoice_cents' => ['nullable', 'integer', 'min:0', 'max:'.Money::MAX_FEE_CENTS],
-            'customer_invoice_recipient' => ['nullable', Rule::in(['kunde', 'versicherung'])],
-            'customer_invoice_number' => ['nullable', 'string', 'max:60'],
-        ], [], [
-            'customer_invoice_cents' => 'der Rechnungsbetrag',
-            'customer_invoice_recipient' => 'der Rechnungsempfänger',
-            'customer_invoice_number' => 'die Rechnungsnummer',
+            'reason' => ['required', Rule::in(array_keys(DeclineAssignmentAction::REASONS))],
+            'note' => ['nullable', 'string', 'max:500'],
+        ], [
+            'reason.required' => 'Bitte wählen Sie aus, warum der Auftrag nicht zustande gekommen ist.',
+        ], [
+            'reason' => 'der Grund',
+            'note' => 'die Anmerkung',
         ]);
 
-        $assignment->update($data);
+        try {
+            $decline->execute($assignment, $data['reason'], $data['note'] ?? null);
+        } catch (RuntimeException $e) {
+            throw ValidationException::withMessages(['reason' => $e->getMessage()]);
+        }
 
-        return back()->with('success', 'Die Rechnungsangaben wurden gespeichert.');
-    }
-
-    /** The DKGZ invoice PDF for one commission, from inside the job. */
-    public function downloadCommissionInvoice(Request $request, Commission $commission): StreamedResponse
-    {
-        $this->authorize('downloadInvoice', $commission);
-
-        $disk = Storage::disk('private');
-
-        abort_unless($disk->exists($commission->invoice_path), 404);
-
-        return $disk->download(
-            $commission->invoice_path,
-            'DKGZ-Rechnung-'.$commission->invoice_number.'.pdf',
-        );
+        return redirect()
+            ->route('portal.assignments')
+            ->with('success', 'Danke — die Anfrage geht zurück in die Vermittlung.');
     }
 
     public function storeDocument(

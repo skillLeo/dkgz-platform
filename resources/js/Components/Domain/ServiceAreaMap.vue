@@ -1,6 +1,6 @@
 <script setup>
 import { computed } from 'vue'
-import { OUTLINE, VIEW_BOX, zoneCoverage } from '../../Support/germany.js'
+import { BORDER_PATH, MAP, ZONE_POINTS, zoneCoverage } from '../../Support/germany.js'
 
 /**
  * Where this partner works, drawn on Germany.
@@ -16,7 +16,8 @@ const props = defineProps({
     areas: { type: Array, default: () => [] },
 })
 
-const zones = computed(() => zoneCoverage(props.areas))
+const zones = computed(() => zoneCoverage(props.areas)
+    .map((zone) => ({ ...zone, ...ZONE_POINTS[zone.digit] })))
 
 const fullCount = computed(() => zones.value.filter((z) => z.tone === 'full').length)
 const partialCount = computed(() => zones.value.filter((z) => z.tone === 'partial').length)
@@ -30,9 +31,9 @@ const summary = computed(() => {
 })
 
 const fillFor = (tone) => ({
-    full: 'fill-navy-700 stroke-navy-700',
+    full: 'fill-navy-700 stroke-white',
     partial: 'fill-navy-500/40 stroke-navy-500',
-    none: 'fill-white stroke-gray-300',
+    none: 'fill-white stroke-gray-400',
 }[tone])
 </script>
 
@@ -46,15 +47,15 @@ const fillFor = (tone) => ({
         <div class="flex flex-col gap-8 sm:flex-row sm:items-start sm:gap-8">
             <figure class="mx-auto w-full max-w-56 shrink-0 sm:mx-0 sm:max-w-44">
                 <svg
-                    :viewBox="VIEW_BOX"
+                    :viewBox="`0 0 ${MAP.width} ${MAP.height}`"
                     class="h-auto w-full"
                     role="img"
                     :aria-label="`Ihr Einsatzgebiet: ${summary}`"
                 >
                     <path
-                        :d="OUTLINE"
+                        :d="BORDER_PATH"
                         class="fill-gray-50 stroke-gray-300"
-                        stroke-width="0.8"
+                        stroke-width="1.2"
                         stroke-linejoin="round"
                     />
 
@@ -63,16 +64,16 @@ const fillFor = (tone) => ({
                         <circle
                             :cx="zone.x"
                             :cy="zone.y"
-                            r="5.2"
+                            r="6.5"
                             :class="fillFor(zone.tone)"
-                            stroke-width="0.8"
+                            stroke-width="1.4"
                         />
                         <text
                             :x="zone.x"
-                            :y="zone.y + 1.9"
+                            :y="zone.y + 2.4"
                             text-anchor="middle"
-                            class="font-mono"
-                            style="font-size: 5px"
+                            class="font-mono font-semibold"
+                            style="font-size: 7px"
                             :class="zone.tone === 'full' ? 'fill-white' : zone.tone === 'partial' ? 'fill-navy-900' : 'fill-gray-400'"
                         >{{ zone.digit }}</text>
                     </g>

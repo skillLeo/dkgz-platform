@@ -95,32 +95,52 @@ it('lets the assessor confirm from the portal', function () {
     expect($assignment->fresh()->status)->toBe(Assignment::STATUS_IN_PROGRESS);
 });
 
-it('records the assessor\'s own invoice to the customer or insurer', function () {
+it('asks why when the job did not come about, and insists on an answer', function () {
     $assignment = acceptedAssignment();
 
     $this->actingAs($assignment->assessor->user)
-        ->post("/portal/auftraege/{$assignment->id}/kundenrechnung", [
-            'customer_invoice_cents' => 84_500,
-            'customer_invoice_recipient' => 'versicherung',
-            'customer_invoice_number' => 'RE-2026-0042',
+        ->post("/portal/auftraege/{$assignment->id}/nicht-zustande-gekommen", ['reason' => ''])
+        ->assertSessionHasErrors('reason');
+
+    expect($assignment->fresh()->status)->toBe(Assignment::STATUS_ACCEPTED);
+});
+
+it('releases the request back into placement when the job fell through', function () {
+    $assignment = acceptedAssignment();
+
+    $this->actingAs($assignment->assessor->user)
+        ->post("/portal/auftraege/{$assignment->id}/nicht-zustande-gekommen", [
+            'reason' => 'kunde_abgesagt',
+            'note' => 'Kunde hat den Schaden selbst reguliert.',
         ])
         ->assertRedirect();
 
     $assignment->refresh();
 
-    expect($assignment->customer_invoice_cents)->toBe(84_500)
-        ->and($assignment->customer_invoice_recipient)->toBe('versicherung')
-        ->and($assignment->customer_invoice_number)->toBe('RE-2026-0042');
+    expect($assignment->status)->toBe(Assignment::STATUS_CANCELLED)
+        ->and($assignment->cancellation_reason)->toBe('Kunde hat abgesagt')
+        ->and($assignment->serviceRequest->fresh()->status)->toBe(ServiceRequest::STATUS_NEW);
 });
 
-it('rejects an invoice recipient it does not recognise', function () {
+it('bills nothing for a job that never happened', function () {
     $assignment = acceptedAssignment();
 
     $this->actingAs($assignment->assessor->user)
-        ->post("/portal/auftraege/{$assignment->id}/kundenrechnung", [
-            'customer_invoice_recipient' => 'schwiegermutter',
+        ->post("/portal/auftraege/{$assignment->id}/nicht-zustande-gekommen", [
+            'reason' => 'kunde_nicht_erreichbar',
+        ]);
+
+    expect(Commission::where('assignment_id', $assignment->id)->exists())->toBeFalse();
+});
+
+it('rejects a reason it does not recognise', function () {
+    $assignment = acceptedAssignment();
+
+    $this->actingAs($assignment->assessor->user)
+        ->post("/portal/auftraege/{$assignment->id}/nicht-zustande-gekommen", [
+            'reason' => 'keine-lust',
         ])
-        ->assertSessionHasErrors('customer_invoice_recipient');
+        ->assertSessionHasErrors('reason');
 });
 
 it('shows the DKGZ invoice inside the job it belongs to', function () {

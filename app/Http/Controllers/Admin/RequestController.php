@@ -129,6 +129,22 @@ class RequestController extends Controller
                 'can_rematch' => $request->user()->can('reassign', $serviceRequest),
             ],
             'matching' => $this->matchingDiagnosis($serviceRequest),
+            // Every partner the office could send this to by hand, whether or
+            // not their postal range covers it — a request nobody covers is
+            // exactly the one that needs placing by a person.
+            'assessorOptions' => $serviceRequest->assignment !== null ? [] : Assessor::query()
+                ->approved()
+                ->with('user:id,is_active')
+                ->orderBy('company_name')
+                ->get(['id', 'company_name', 'city', 'postal_code', 'is_available'])
+                ->map(fn (Assessor $a) => [
+                    'value' => $a->id,
+                    'label' => $a->company_name.($a->city ? ' · '.$a->city : ''),
+                    'available' => (bool) $a->is_available,
+                    'notified' => $serviceRequest->matches->contains('assessor_id', $a->id),
+                ])
+                ->values()
+                ->all(),
             // The forensic trail: who was notified, when they looked, how they
             // answered. This is what the admin screen exists to show.
             'trail' => $serviceRequest->matches

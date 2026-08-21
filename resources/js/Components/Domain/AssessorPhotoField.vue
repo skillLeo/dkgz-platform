@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from 'vue'
 import { router, useForm } from '@inertiajs/vue3'
-import { Trash2, Upload } from 'lucide-vue-next'
+import { Trash2 } from 'lucide-vue-next'
 import BaseButton from '../Base/BaseButton.vue'
 import FieldError from '../Feedback/FieldError.vue'
 import { useConfirm } from '../../Composables/useConfirm.js'
@@ -24,16 +24,29 @@ const input = ref(null)
 const preview = ref(null)
 const form = useForm({ photo: null })
 
-const pick = (file) => {
-    if (!file) return
+const saved = ref(false)
+
+const pick = (event) => {
+    const file = event.target.files?.[0]
+
+    if (! file) return
 
     preview.value = URL.createObjectURL(file)
+    saved.value = false
     form.photo = file
+
     form.post('/portal/profil/bild', {
         forceFormData: true,
         preserveScroll: true,
-        onSuccess: () => { form.reset('photo'); preview.value = null },
+        onSuccess: () => {
+            form.reset('photo')
+            preview.value = null
+            saved.value = true
+        },
         onError: () => { preview.value = null },
+        // Always clear the input: without this, picking the same file again
+        // fires no change event and the second attempt looks like a dead button.
+        onFinish: () => { if (input.value) input.value.value = '' },
     })
 }
 
@@ -71,37 +84,34 @@ const remove = async () => {
             <div class="min-w-0">
                 <p class="measure text-sm leading-normal text-gray-600">
                     Wird Kundinnen und Kunden zusammen mit Ihren Kontaktdaten angezeigt, sobald Sie einen Auftrag
-                    annehmen. Quadratisch, JPG, PNG oder WebP, höchstens 4 MB.
+                    annehmen. Quadratisch, JPG, PNG oder WebP, höchstens 12 MB.
                 </p>
 
-                <div class="flex flex-wrap gap-2 pt-3">
-                    <BaseButton
-                        variant="secondary"
-                        size="small"
+                <div class="flex flex-wrap items-center gap-3 pt-3">
+                    <input
+                        ref="input"
+                        type="file"
+                        accept="image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp"
+                        autocomplete="off"
                         :disabled="form.processing"
-                        @click="input?.click()"
+                        class="block max-w-full text-sm text-gray-600 file:mr-3 file:cursor-pointer file:rounded-sm file:border file:border-navy-700 file:bg-white file:px-3 file:py-2 file:text-sm file:text-navy-700 hover:file:bg-navy-100"
+                        :aria-label="photoUrl ? 'Profilbild ersetzen' : 'Profilbild auswählen'"
+                        @change="pick"
                     >
-                        <Upload :size="14" :stroke-width="1.5" aria-hidden="true" />
-                        {{ photoUrl ? 'Bild ersetzen' : 'Bild auswählen' }}
-                    </BaseButton>
                     <BaseButton v-if="photoUrl" variant="ghost" size="small" @click="remove">
                         <Trash2 :size="14" :stroke-width="1.5" aria-hidden="true" />
                         Entfernen
                     </BaseButton>
                 </div>
 
-                <p v-if="form.processing" class="pt-2 text-sm text-gray-600">Wird hochgeladen…</p>
+                <p v-if="form.processing" class="pt-2 text-sm text-gray-600" aria-live="polite">
+                    Wird hochgeladen…
+                </p>
+                <p v-else-if="saved" class="pt-2 text-sm text-success" aria-live="polite">
+                    Gespeichert.
+                </p>
                 <FieldError :message="form.errors.photo" />
             </div>
         </div>
-
-        <input
-            ref="input"
-            type="file"
-            accept=".jpg,.jpeg,.png,.webp"
-            autocomplete="off"
-            class="sr-only"
-            @change="pick($event.target.files?.[0])"
-        >
     </div>
 </template>

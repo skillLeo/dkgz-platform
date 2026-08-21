@@ -10,7 +10,6 @@ use App\Support\Formatter;
 use App\Support\Mailer;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
-use Illuminate\Support\Str;
 
 /**
  * Notifies every matched partner. Chunked, because a broad postal range can
@@ -37,7 +36,7 @@ class NotifyMatchedAssessorsJob implements ShouldQueue
 
     public function handle(): void
     {
-        $request = ServiceRequest::with('serviceType')->find($this->serviceRequestId);
+        $request = ServiceRequest::with(['serviceType', 'images'])->find($this->serviceRequestId);
 
         if ($request === null || $request->status !== ServiceRequest::STATUS_MATCHED) {
             return;
@@ -99,9 +98,10 @@ class NotifyMatchedAssessorsJob implements ShouldQueue
                 ['k' => 'Standort', 'v' => $request->locationLabel()],
                 ['k' => 'Fahrzeug', 'v' => $request->vehicleLabel()],
                 $request->vehicle_plate ? ['k' => 'Kennzeichen', 'v' => $request->vehicle_plate, 'mono' => true] : null,
-                $request->description ? ['k' => 'Schadenart', 'v' => Str::limit($request->description, 160)] : null,
+                $request->description ? ['k' => 'Schilderung', 'v' => $request->description] : null,
                 $request->urgency ? ['k' => 'Dringlichkeit', 'v' => $this->urgencyLabel($request->urgency)] : null,
                 $request->preferred_date ? ['k' => 'Wunschtermin', 'v' => Formatter::date($request->preferred_date), 'mono' => true] : null,
+                $request->images->isNotEmpty() ? ['k' => 'Fotos', 'v' => $request->images->count().' beigefügt'] : null,
                 ['k' => 'Eingegangen am', 'v' => Formatter::dateTime($request->created_at), 'mono' => true],
                 ['k' => 'DKGZ-Gebühr bei Annahme', 'v' => Formatter::money($request->serviceType?->dkgz_fee_cents ?? 0), 'mono' => true],
             ])),

@@ -205,3 +205,52 @@ describe('sending a request by hand', function () {
                 ->where('matching.excluded.0.reasons.0', 'Als nicht verfügbar markiert'));
     });
 });
+
+describe('the admin sidebar subtitle', function () {
+    // The prop accepts a string as well as an array, and the template iterated
+    // the raw prop — so "Administration" was walked one character at a time and
+    // came out stacked letter by letter down the sidebar.
+    it('does not split a string subtitle into single letters', function () {
+        exec('node --version 2>/dev/null', $out, $code);
+
+        if ($code !== 0) {
+            $this->markTestSkipped('Node ist auf diesem System nicht verfügbar.');
+        }
+
+        $source = file_get_contents(resource_path('js/Components/Layout/Sidebar.vue'));
+
+        expect($source)->toContain('in subtitleLines')
+            ->and($source)->not->toContain('in subtitle"');
+    });
+});
+
+describe('the homepage image survives a text save', function () {
+    // Uploading wrote the new path, and saving any text on the page wrote the
+    // old one back over it, because the form carried every block including the
+    // picture. The upload worked and then undid itself.
+    it('leaves image blocks alone when text is saved', function () {
+        $admin = User::factory()->create();
+        $admin->assignRole('admin');
+
+        $image = ContentBlock::where('page_key', 'startseite')
+            ->where('type', 'image')
+            ->firstOrFail();
+
+        $image->update(['value' => 'inhalte/neues-foto.webp']);
+
+        $text = ContentBlock::where('page_key', 'startseite')
+            ->where('type', '!=', 'image')
+            ->firstOrFail();
+
+        // Exactly what the form posts: every block, with the picture's old path.
+        $this->actingAs($admin)->post('/admin/inhalte/startseite', [
+            'blocks' => [
+                ['id' => $text->id, 'value' => 'Neue Überschrift'],
+                ['id' => $image->id, 'value' => '/images/hero-institutionell.svg'],
+            ],
+        ])->assertRedirect();
+
+        expect($image->fresh()->value)->toBe('inhalte/neues-foto.webp')
+            ->and($text->fresh()->value)->toBe('Neue Überschrift');
+    });
+});

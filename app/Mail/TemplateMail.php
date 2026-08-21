@@ -124,6 +124,10 @@ class TemplateMail extends Mailable implements ShouldQueue
                 'portraitInitials' => $this->data['sv_initialen'] ?? null,
                 'note' => $template?->renderNote($this->data) ?? ($this->data['note'] ?? null),
                 'footnote' => $this->data['footnote'] ?? Settings::get('email.footer_text'),
+                // The sign-off is one setting for every message: it was fixed
+                // text in the layout, so the one line every mail ends with was
+                // the one line nobody could change.
+                'signoff' => Settings::get('email.signoff', "Mit freundlichen Grüßen\nDeutsche KFZ-Gutachterzentrale"),
                 'vars' => $this->data,
             ],
         );

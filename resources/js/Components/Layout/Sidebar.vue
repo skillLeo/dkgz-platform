@@ -45,7 +45,13 @@ const isActive = (item) => {
                 <span class="text-h4 font-bold leading-none tracking-wordmark text-white">DKGZ</span>
                 <span class="h-5 w-px bg-accent" aria-hidden="true" />
                 <span class="text-seal-sm font-semibold uppercase leading-snug tracking-rail text-white/60">
-                    <template v-for="(part, i) in subtitle" :key="part">{{ part }}<br v-if="i < subtitle.length - 1" ></template>
+                    <!--
+                        subtitleLines, not subtitle: the prop accepts a string as
+                        well as an array, and iterating the string walked it one
+                        character at a time — "Administration" came out stacked
+                        letter by letter down the sidebar.
+                    -->
+                    <template v-for="(part, i) in subtitleLines" :key="part">{{ part }}<br v-if="i < subtitleLines.length - 1" ></template>
                 </span>
             </BrandLogo>
         </div>
