@@ -155,3 +155,31 @@ model: a fixed fee per assessment type, shown to the partner when a request
 arrives, varying by service. The figure is still shown to the assessor once they
 are looking at an actual request — that is an authenticated context and a
 different question.
+
+## D-18 · Das eigene Honorar verschwindet, die Kundenrechnung bleibt
+
+Der Kunde wünscht: „Completely remove the section where experts can enter their
+own fee/honorarium. Throughout the portal, only the DKGZ fee / commission
+should be displayed." Eine Nachricht zuvor wünschte derselbe Kunde ein Feld
+„Rechnung an den Kunden / Versicherung", das ebenfalls einen Betrag aufnimmt.
+
+Gemeint ist das Honorarfeld beim Abschluss („Honorar netto") samt der daraus
+abgeleiteten Anzeige „Verbleibt bei Ihnen" — es trieb seit dem Wechsel auf die
+feste DKGZ-Gebühr ohnehin keine Berechnung mehr und legte nur noch offen, was
+der Partner verdient. Das Feld „Rechnung an den Kunden / Versicherung" bleibt:
+es wurde ausdrücklich angefordert, dient der Übersicht des Partners über seine
+eigene Rechnungsstellung und ist kein Honorar, das DKGZ erhebt oder anzeigt.
+
+## D-19 · Abschluss ohne Unterlagen und ohne Versand an den Kunden
+
+Der Kunde wünscht: der Kunde erhält Gutachten und Rechnung nicht mehr von DKGZ,
+der Partner muss das Gutachten nicht hochladen, sondern nur bestätigen, dass es
+fertig ist.
+
+Der Upload bleibt bestehen, verliert aber seine sperrende Wirkung: wer Gutachten
+oder Rechnung freiwillig hinterlegt, kann das weiterhin tun, und die
+Administration sieht die Unterlagen wie bisher. Entfernt ist allein die
+Bedingung, ohne die nicht abgeschlossen werden konnte, und der Anhang an den
+Kunden. Die Abschlussmail an den Kunden bleibt — ohne Anhänge —, weil sie die
+Bewertungsanfrage trägt und der Kunde sonst gar nicht erfährt, dass der Vorgang
+zu Ende ist.

@@ -75,46 +75,33 @@ describe('the arithmetic', function () {
 });
 
 describe('completion', function () {
-    it('is blocked without both documents', function () {
+    // The document gate and the fee entry are both gone: the assessor sends the
+    // report to their own customer and confirms here that it is finished. See
+    // DECISIONS.md D-19.
+    it('closes the job without any documents on file', function () {
         $assignment = Assignment::factory()->create();
 
-        expect(fn () => app(CompleteAssignmentAction::class)->execute($assignment, 85_000))
-            ->toThrow(RuntimeException::class, 'Gutachten und Rechnung');
+        $commission = app(CompleteAssignmentAction::class)->execute($assignment);
+
+        expect($assignment->fresh()->status)->toBe(Assignment::STATUS_COMPLETED)
+            ->and($assignment->fresh()->documents)->toBeEmpty()
+            ->and($commission)->not->toBeNull();
     });
 
-    it('is blocked with only the report', function () {
-        $assignment = Assignment::factory()->create();
-        AssignmentDocument::factory()->report()->create(['assignment_id' => $assignment->id]);
-
-        expect(fn () => app(CompleteAssignmentAction::class)->execute($assignment->fresh(), 85_000))
-            ->toThrow(RuntimeException::class);
-    });
-
-    it('is blocked with only the invoice', function () {
-        $assignment = Assignment::factory()->create();
-        AssignmentDocument::factory()->customerInvoice()->create(['assignment_id' => $assignment->id]);
-
-        expect(fn () => app(CompleteAssignmentAction::class)->execute($assignment->fresh(), 85_000))
-            ->toThrow(RuntimeException::class);
-    });
-
-    it('succeeds once both are on file and writes the commission', function () {
+    it('books the fixed DKGZ fee and never the assessor\'s own', function () {
         $assignment = assignmentReadyToComplete();
 
-        $commission = app(CompleteAssignmentAction::class)->execute($assignment, 85_000);
+        $commission = app(CompleteAssignmentAction::class)->execute($assignment);
 
-        // Superseded by the client's change request: DKGZ now charges a fixed
-        // fee per assessment type, not a share of the assessor's own invoice.
-        expect($commission->fee_cents)->toBe(85_000)
-            ->and($commission->fee_type)->toBe(Commission::TYPE_FIXED)
+        expect($commission->fee_type)->toBe(Commission::TYPE_FIXED)
             ->and($commission->commission_cents)->toBe($assignment->fresh()->dkgz_fee_snapshot_cents ?? 0)
             ->and($commission->rate_percent)->toBeNull()
+            ->and($commission->fee_cents)->toBeNull()
             ->and($commission->status)->toBe(Commission::STATUS_OPEN);
 
         $assignment->refresh();
 
         expect($assignment->status)->toBe(Assignment::STATUS_COMPLETED)
-            ->and($assignment->fee_cents)->toBe(85_000)
             ->and($assignment->completed_at)->not->toBeNull()
             ->and($assignment->serviceRequest->fresh()->status)->toBe(ServiceRequest::STATUS_COMPLETED);
     });
@@ -122,7 +109,7 @@ describe('completion', function () {
     it('records the completion on the timeline', function () {
         $assignment = assignmentReadyToComplete();
 
-        app(CompleteAssignmentAction::class)->execute($assignment, 85_000);
+        app(CompleteAssignmentAction::class)->execute($assignment);
 
         expect($assignment->statusEvents()->where('to_status', Assignment::STATUS_COMPLETED)->exists())->toBeTrue();
     });
@@ -130,7 +117,7 @@ describe('completion', function () {
     it('opens a review token when the review flow is on', function () {
         $assignment = assignmentReadyToComplete();
 
-        app(CompleteAssignmentAction::class)->execute($assignment, 85_000);
+        app(CompleteAssignmentAction::class)->execute($assignment);
 
         expect($assignment->fresh()->review)->not->toBeNull()
             ->and(strlen($assignment->fresh()->review->token))->toBe(64);
@@ -140,27 +127,11 @@ describe('completion', function () {
         Settings::set('features.review_flow', false);
         $assignment = assignmentReadyToComplete();
 
-        app(CompleteAssignmentAction::class)->execute($assignment, 85_000);
+        app(CompleteAssignmentAction::class)->execute($assignment);
 
         expect($assignment->fresh()->review)->toBeNull();
     });
 
-    it('refuses a fee below the floor and above the ceiling', function () {
-        $assignment = assignmentReadyToComplete();
-
-        expect(fn () => app(CompleteAssignmentAction::class)->execute($assignment, Money::MIN_FEE_CENTS - 1))
-            ->toThrow(RuntimeException::class)
-            ->and(fn () => app(CompleteAssignmentAction::class)->execute($assignment, Money::MAX_FEE_CENTS + 1))
-            ->toThrow(RuntimeException::class);
-    });
-
-    it('accepts an unusually large fee but flags it for review', function () {
-        $assignment = assignmentReadyToComplete();
-
-        $commission = app(CompleteAssignmentAction::class)->execute($assignment, 2_000_000);
-
-        expect($commission->needsReview())->toBeTrue();
-    });
 });
 
 describe('fixed-fee snapshotting', function () {
@@ -168,7 +139,7 @@ describe('fixed-fee snapshotting', function () {
         $type = ServiceType::factory()->create(['dkgz_fee_cents' => 7_900]);
         $assignment = assignmentReadyToComplete($type);
 
-        $commission = app(CompleteAssignmentAction::class)->execute($assignment, 85_000);
+        $commission = app(CompleteAssignmentAction::class)->execute($assignment);
 
         expect($commission->fee_type)->toBe(Commission::TYPE_FIXED)
             ->and($commission->dkgz_fee_cents)->toBe(7_900)

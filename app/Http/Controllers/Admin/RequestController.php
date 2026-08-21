@@ -6,6 +6,7 @@ use App\Actions\MatchRequestAction;
 use App\Actions\OfferRequestExternallyAction;
 use App\Http\Controllers\Controller;
 use App\Jobs\NotifyCustomerNoResponseJob;
+use App\Models\Assessor;
 use App\Models\RequestMatch;
 use App\Models\RequestOffer;
 use App\Models\ServiceRequest;
@@ -126,6 +127,7 @@ class RequestController extends Controller
                 'image_count' => $serviceRequest->images->count(),
                 'can_rematch' => $request->user()->can('reassign', $serviceRequest),
             ],
+            'matching' => $this->matchingDiagnosis($serviceRequest),
             // The forensic trail: who was notified, when they looked, how they
             // answered. This is what the admin screen exists to show.
             'trail' => $serviceRequest->matches
@@ -276,6 +278,97 @@ class RequestController extends Controller
         }
 
         return back()->with('success', 'Die Anfrage wurde an '.$data['email'].' gesendet.');
+    }
+
+    /**
+     * Why the assessors who cover this postal code did not all receive it.
+     *
+     * "The postal code matching is unreliable" is almost always this: the range
+     * is right and something else disqualified the partner — unavailable, the
+     * assessment type not offered, cover lapsed. Without this the office can
+     * only see who was contacted, never who nearly was and why not.
+     *
+     * @return array<string, mixed>
+     */
+    private function matchingDiagnosis(ServiceRequest $serviceRequest): array
+    {
+        $covering = Assessor::covering($serviceRequest->postal_code)
+            ->with(['user:id,is_active', 'serviceTypes:id'])
+            ->get();
+
+        $eligible = app(MatchRequestAction::class)->matchingAssessorIds($serviceRequest);
+
+        return [
+            'postal_code' => $serviceRequest->postal_code,
+            'covering_count' => $covering->count(),
+            'eligible_count' => $eligible->count(),
+            'excluded' => $covering
+                ->reject(fn (Assessor $a) => $eligible->contains($a->id))
+                ->map(fn (Assessor $a) => [
+                    'id' => $a->id,
+                    'company_name' => $a->company_name,
+                    'reasons' => array_values(array_filter([
+                        $a->approval_status !== Assessor::STATUS_APPROVED ? 'Nicht freigegeben' : null,
+                        ! $a->is_available ? 'Als nicht verfügbar markiert' : null,
+                        ! ($a->user?->is_active) ? 'Zugang gesperrt' : null,
+                        ! $a->serviceTypes->contains('id', $serviceRequest->service_type_id)
+                            ? 'Bietet diese Leistungsart nicht an' : null,
+                    ])) ?: ['Nachweis der Haftpflicht fehlt oder ist abgelaufen'],
+                ])
+                ->values()
+                ->all(),
+        ];
+    }
+
+    /**
+     * Everything still waiting for an assessor to say yes.
+     *
+     * These are the requests the office has to push: they were sent out and
+     * nobody has taken them, or nobody could be found to send them to. They
+     * were previously mixed into the full list, where a request quietly going
+     * nowhere looked exactly like one that had already been placed.
+     */
+    public function inPlacement(Request $request): Response
+    {
+        $this->authorize('viewAny', ServiceRequest::class);
+
+        $requests = ServiceRequest::query()
+            ->with('serviceType')
+            ->whereIn('status', [ServiceRequest::STATUS_NEW, ServiceRequest::STATUS_MATCHED])
+            ->when($request->filled('suche'), function ($q) use ($request) {
+                $term = '%'.$request->string('suche')->toString().'%';
+                $q->where(fn ($inner) => $inner
+                    ->where('reference', 'like', $term)
+                    ->orWhere('customer_name', 'like', $term)
+                    ->orWhere('city', 'like', $term)
+                    ->orWhere('postal_code', 'like', $term));
+            })
+            ->orderBy('created_at')
+            ->paginate(20)
+            ->withQueryString();
+
+        return Inertia::render('Admin/InVermittlung', [
+            'requests' => $requests->through(fn (ServiceRequest $r) => [
+                'id' => $r->id,
+                'reference' => $r->reference,
+                'service_type' => $r->serviceType?->name_de,
+                'location' => $r->locationLabel(),
+                'customer_name' => $r->customer_name,
+                'matched_count' => $r->matched_count,
+                // Nobody has answered yet; how long that has been true is the
+                // one number that decides whether this needs a person.
+                'waiting_since' => $r->created_at,
+                'waiting_label' => Formatter::dateTime($r->created_at),
+                'open_matches' => $r->matches()->where('outcome', RequestMatch::OUTCOME_PENDING)->count(),
+                'needs_attention' => $r->isUnmatched() || $r->isFullyDeclined(),
+            ]),
+            'filters' => ['suche' => $request->string('suche')->toString()],
+            'counts' => [
+                'total' => ServiceRequest::whereIn('status', [ServiceRequest::STATUS_NEW, ServiceRequest::STATUS_MATCHED])->count(),
+                'unmatched' => ServiceRequest::where('status', ServiceRequest::STATUS_NEW)
+                    ->where('matched_count', 0)->count(),
+            ],
+        ]);
     }
 
     private function statusOptions(): array

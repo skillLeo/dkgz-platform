@@ -122,7 +122,7 @@ class TemplateMail extends Mailable implements ShouldQueue
                 'ctaUrl' => $this->data['cta_url'] ?? null,
                 'portrait' => $this->data['sv_bild'] ?? null,
                 'portraitInitials' => $this->data['sv_initialen'] ?? null,
-                'note' => $this->data['note'] ?? null,
+                'note' => $template?->renderNote($this->data) ?? ($this->data['note'] ?? null),
                 'footnote' => $this->data['footnote'] ?? Settings::get('email.footer_text'),
                 'vars' => $this->data,
             ],

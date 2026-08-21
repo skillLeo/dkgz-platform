@@ -41,6 +41,7 @@ class EmailTemplateController extends Controller
                 'subject_de' => $emailTemplate->subject_de,
                 'preheader_de' => $emailTemplate->preheader_de,
                 'body_html' => $emailTemplate->body_html,
+                'note_de' => $emailTemplate->note_de,
                 'is_active' => $emailTemplate->is_active,
             ],
             // The variable reference panel: what this template may use.
@@ -61,12 +62,14 @@ class EmailTemplateController extends Controller
             'subject_de' => ['required', 'string', 'max:180'],
             'preheader_de' => ['nullable', 'string', 'max:200'],
             'body_html' => ['required', 'string', 'max:60000'],
+            'note_de' => ['nullable', 'string', 'max:600'],
             'is_active' => ['boolean'],
         ], [], [
             'name_de' => 'der Name',
             'subject_de' => 'der Betreff',
             'preheader_de' => 'der Vorschautext',
             'body_html' => 'der Inhalt',
+            'note_de' => 'der Schlusshinweis',
         ]);
 
         $emailTemplate->update($data);

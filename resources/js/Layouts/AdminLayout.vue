@@ -3,7 +3,7 @@ import { computed, ref } from 'vue'
 import { usePage } from '@inertiajs/vue3'
 import {
     Bell, Building2, Euro, FileText, FileType, Home, Inbox, LayoutGrid, Mail, Settings,
-    ShieldCheck, Sliders, User, UserPlus, Users, Wrench,
+    Send, ShieldCheck, Sliders, User, UserPlus, Users, Wrench,
 } from 'lucide-vue-next'
 import Sidebar from '../Components/Layout/Sidebar.vue'
 import TopBar from '../Components/Layout/TopBar.vue'
@@ -38,6 +38,7 @@ const sections = computed(() => [
         items: [
             { href: '/admin', label: 'Übersicht', icon: Home, exact: true },
             can('requests.view') ? { href: '/admin/anfragen', label: 'Anfragen', icon: Inbox } : null,
+            can('requests.view') ? { href: '/admin/in-vermittlung', label: 'In Vermittlung', icon: Send, badge: page.props.requestsInPlacement || null } : null,
             can('assignments.view') ? { href: '/admin/auftraege', label: 'Aufträge', icon: FileText } : null,
             can('assessors.view') ? { href: '/admin/sachverstaendige', label: 'Sachverständige', icon: Building2, badge: props.pendingAssessors || null } : null,
             can('invitations.view') ? { href: '/admin/einladungen', label: 'Einladungen', icon: UserPlus } : null,

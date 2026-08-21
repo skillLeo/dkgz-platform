@@ -140,33 +140,15 @@ it('carries a request from the public form all the way to a settled review', fun
             ->where('request.contact_released', true)
             ->where('request.customer.name', 'Martina Reinhardt'));
 
-    // ---- 5. Completion is refused until both documents are on file ------
-    $this->actingAs($this->winner->user)
-        ->post("/portal/auftraege/{$assignment->id}/abschliessen", ['fee_cents' => 164_000])
-        ->assertForbidden();
-
+    // ---- 5. Documents are optional now, but still accepted --------------
     $this->actingAs($this->winner->user)->post("/portal/auftraege/{$assignment->id}/dokumente", [
         'type' => 'report',
         'document' => UploadedFile::fake()->create('Gutachten.pdf', 400, 'application/pdf'),
     ])->assertRedirect();
 
-    // Still refused with only the report.
-    $this->actingAs($this->winner->user)
-        ->post("/portal/auftraege/{$assignment->id}/abschliessen", ['fee_cents' => 164_000])
-        ->assertForbidden();
-
-    $this->actingAs($this->winner->user)->post("/portal/auftraege/{$assignment->id}/dokumente", [
-        'type' => 'customer_invoice',
-        'document' => UploadedFile::fake()->create('Rechnung.pdf', 120, 'application/pdf'),
-    ])->assertRedirect();
-
-    expect($assignment->fresh()->hasRequiredDocuments())->toBeTrue()
-        ->and($assignment->fresh()->status)->toBe(Assignment::STATUS_DOCUMENTS_UPLOADED);
-
-    // ---- 6. Completion with the actual fee ------------------------------
+    // ---- 6. Completion is a confirmation, not a form --------------------
     $this->actingAs($this->winner->user)
         ->post("/portal/auftraege/{$assignment->id}/abschliessen", [
-            'fee_cents' => 164_000,
             'notes' => 'Gutachten per Post versendet.',
         ])->assertRedirect();
 
@@ -174,27 +156,24 @@ it('carries a request from the public form all the way to a settled review', fun
     $request->refresh();
 
     expect($assignment->status)->toBe(Assignment::STATUS_COMPLETED)
-        ->and($assignment->fee_cents)->toBe(164_000)
+        ->and($assignment->completed_at)->not->toBeNull()
         ->and($request->status)->toBe(ServiceRequest::STATUS_COMPLETED);
 
     // ---- 7. The DKGZ fee, fixed at acceptance ---------------------------
     $commission = Commission::where('assignment_id', $assignment->id)->firstOrFail();
 
-    // Superseded by the client's change request: a fixed fee per assessment
-    // type, snapshotted when the partner accepted, rather than a percentage of
-    // whatever the assessor happened to invoice.
+    // A fixed fee per assessment type, snapshotted when the partner accepted.
+    // What the assessor charged their own customer is not recorded at all.
     $expectedFee = $assignment->fresh()->dkgz_fee_snapshot_cents;
 
-    expect($commission->fee_cents)->toBe(164_000)
-        ->and($commission->fee_type)->toBe(Commission::TYPE_FIXED)
+    expect($commission->fee_type)->toBe(Commission::TYPE_FIXED)
         ->and($commission->rate_percent)->toBeNull()
+        ->and($commission->fee_cents)->toBeNull()
         ->and($commission->dkgz_fee_cents)->toBe($expectedFee)
         ->and($commission->commission_cents)->toBe($expectedFee)
         ->and($commission->status)->toBe(Commission::STATUS_OPEN);
 
-    // German money output, both sides of the wire.
-    expect(Formatter::money($commission->commission_cents))->toBe(Formatter::money($expectedFee))
-        ->and(Formatter::money($commission->fee_cents))->toBe('1.640,00 €');
+    expect(Formatter::money($commission->commission_cents))->toBe(Formatter::money($expectedFee));
 
     // ---- 8. The review token, and the rating ----------------------------
     $review = CustomerReview::where('assignment_id', $assignment->id)->firstOrFail();

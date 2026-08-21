@@ -29,6 +29,7 @@ Route::prefix('admin')
         // Requests, including the full matching trail
         Route::middleware('can:requests.view')->group(function () {
             Route::get('/anfragen', [RequestController::class, 'index'])->name('requests');
+            Route::get('/in-vermittlung', [RequestController::class, 'inPlacement'])->name('requests.in-placement');
             Route::get('/anfragen/{serviceRequest}', [RequestController::class, 'show'])->name('requests.show');
             Route::post('/anfragen/{serviceRequest}/externer-sachverstaendiger', [RequestController::class, 'offerExternally'])
                 ->name('requests.offer');

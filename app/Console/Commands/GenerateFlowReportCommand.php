@@ -35,7 +35,8 @@ class GenerateFlowReportCommand extends Command
     private const RECIPIENTS = [
         'anfrage-eingegangen' => ['Kunde', 'Anfrage abgesendet'],
         'neue-anfrage-im-gebiet' => ['Partner', 'Anfrage wurde vermittelt'],
-        'auftrag-bestaetigt' => ['Kunde', 'Partner hat angenommen'],
+        'auftrag-bestaetigt' => ['Partner', 'Der Partner hat die Anfrage angenommen'],
+        'sachverstaendiger-steht-fest' => ['Kunde', 'Ein Partner hat die Anfrage angenommen'],
         'auftrag-vergeben' => ['Partner', 'Ein anderer Partner hat angenommen'],
         'auftrag-abgeschlossen' => ['Kunde', 'Auftrag abgeschlossen — mit Gutachten und Rechnung'],
         'keine-sachverstaendigen-gefunden' => ['Büro', 'Kein Partner im Gebiet'],

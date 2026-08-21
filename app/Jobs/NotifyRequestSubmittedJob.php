@@ -48,8 +48,8 @@ class NotifyRequestSubmittedJob implements ShouldQueue
                 $request->vehicle_plate ? ['k' => 'Kennzeichen', 'v' => $request->vehicle_plate, 'mono' => true] : null,
                 ['k' => 'Eingegangen am', 'v' => Formatter::dateTime($request->created_at), 'mono' => true],
             ])),
-            'cta' => 'Status Ihrer Anfrage',
-            'cta_url' => route('request.confirmation', $request->reference),
+            // No button: the page behind it tells the customer nothing they
+            // are not already reading in this message.
             'note' => 'Die Vermittlung ist für Sie kostenfrei. Die Kosten des Gutachtens rechnet der Sachverständige direkt mit Ihnen oder Ihrer Versicherung ab.',
         ], related: $request);
     }

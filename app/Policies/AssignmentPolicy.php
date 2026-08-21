@@ -45,11 +45,16 @@ class AssignmentPolicy
      * Completion is blocked until the report and the customer invoice are both
      * on file. Enforced here so the rule cannot be bypassed by any caller.
      */
+    /**
+     * Completing needs an open job and its owner — nothing else.
+     *
+     * Uploaded documents used to be a precondition here as well as in the
+     * action. They are not any more: the assessor sends their report to their
+     * own customer and tells us it is finished. See DECISIONS.md D-19.
+     */
     public function complete(User $user, Assignment $assignment): bool
     {
-        return $this->owns($user, $assignment)
-            && $assignment->isOpen()
-            && $assignment->hasRequiredDocuments();
+        return $this->owns($user, $assignment) && $assignment->isOpen();
     }
 
     public function downloadDocument(User $user, Assignment $assignment): bool

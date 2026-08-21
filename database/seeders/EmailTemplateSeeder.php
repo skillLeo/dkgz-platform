@@ -41,8 +41,9 @@ class EmailTemplateSeeder extends Seeder
                 'name_de' => 'Neue Anfrage in Ihrem Gebiet',
                 'subject_de' => 'Neue Anfrage in Ihrem Gebiet — {{ gutachtenart }}, {{ plz }}',
                 'preheader_de' => 'Annahme bis {{ frist }}. Der erste verfügbare Partner übernimmt.',
-                'available_variables' => ['sv_nachname', 'referenz', 'gutachtenart', 'plz', 'ort', 'fahrzeug', 'schadenart', 'frist', 'cta_url'],
-                'body_html' => '<p>Guten Tag {{ sv_nachname }},</p><p>für Ihr Einsatzgebiet liegt eine neue Anfrage vor. Sie können sie im Portal annehmen oder ablehnen — eine Ablehnung wirkt sich nicht auf die weitere Verteilung aus.</p><p>Die Anfrage wurde gleichzeitig an weitere Partner im Gebiet gesendet. Der erste verfügbare Partner übernimmt den Auftrag.</p>',
+                'available_variables' => ['sv_nachname', 'referenz', 'gutachtenart', 'plz', 'ort', 'fahrzeug', 'kennzeichen', 'schadenart', 'dringlichkeit', 'wunschtermin', 'dkgz_gebuehr', 'eingang_datum', 'cta_url'],
+                'body_html' => '<p>Guten Tag {{ sv_nachname }},</p><p>für Ihr Einsatzgebiet liegt eine neue Anfrage vor: <strong>{{ gutachtenart }}</strong> in {{ plz }} {{ ort }}, {{ fahrzeug }}. Alle Angaben finden Sie unten.</p><p>Die Anfrage ging gleichzeitig an weitere Partner im Gebiet — der erste, der annimmt, übernimmt den Auftrag. Eine Ablehnung wirkt sich nicht auf die weitere Verteilung aus.</p>',
+                'note_de' => 'Die Kontaktdaten der anfragenden Person werden erst nach der Annahme freigegeben.',
             ],
             [
                 'key' => 'auftrag-vergeben',
@@ -53,20 +54,35 @@ class EmailTemplateSeeder extends Seeder
                 'body_html' => '<p>Guten Tag {{ sv_nachname }},</p><p>die Anfrage {{ referenz }} wurde inzwischen von einem anderen Sachverständigen übernommen. Sie müssen nichts weiter tun.</p><p>Ihre Verfügbarkeit bleibt unverändert. Die nächste passende Anfrage in Ihrem Gebiet erreicht Sie wie gewohnt.</p>',
             ],
             [
+                // The customer used to receive 'auftrag-vergeben', which is
+                // written for the partners who lost the race — they read that
+                // their request "wurde inzwischen von einem anderen
+                // Sachverständigen übernommen" and that they need do nothing.
+                'key' => 'sachverstaendiger-steht-fest',
+                'name_de' => 'Sachverständiger steht fest (Kunde)',
+                'subject_de' => 'Ihr Sachverständiger steht fest — {{ referenz }}',
+                'preheader_de' => 'Ihr Sachverständiger meldet sich in Kürze bei Ihnen.',
+                'available_variables' => ['kunde', 'referenz', 'sv_firma', 'sv_name', 'sv_telefon', 'sv_email', 'gutachtenart', 'angenommen_am'],
+                'body_html' => '<p>Guten Tag {{ kunde }},</p><p>für Ihre Anfrage {{ referenz }} steht der Sachverständige fest: {{ sv_firma }} übernimmt die Begutachtung.</p><p>Sie werden in Kürze direkt kontaktiert, um den Termin abzustimmen. Sie können sich aber auch selbst melden — die Kontaktdaten stehen unten.</p>',
+                'note_de' => 'Der Sachverständige erbringt die Begutachtung in eigener Verantwortung und rechnet direkt mit Ihnen oder Ihrer Versicherung ab. DKGZ hat ausschließlich vermittelt.',
+            ],
+            [
                 'key' => 'auftrag-bestaetigt',
                 'name_de' => 'Auftrag bestätigt',
                 'subject_de' => 'Auftrag bestätigt — {{ referenz }}',
                 'preheader_de' => 'Die Kontaktdaten der anfragenden Person sind jetzt freigegeben.',
                 'available_variables' => ['sv_nachname', 'referenz', 'gutachtenart', 'kunde_name', 'kunde_telefon', 'kunde_email', 'plz', 'ort', 'fahrzeug', 'cta_url'],
-                'body_html' => '<p>Guten Tag {{ sv_nachname }},</p><p>Sie haben den Auftrag {{ referenz }} übernommen. Die Kontaktdaten der anfragenden Person sind ab sofort für Sie sichtbar.</p><p>Bitte nehmen Sie zeitnah Kontakt auf und stimmen Sie den Termin direkt ab. Nach Abschluss hinterlegen Sie Gutachten und Rechnung im Portal.</p>',
+                'body_html' => '<p>Guten Tag {{ sv_nachname }},</p><p>Sie haben den Auftrag {{ referenz }} übernommen — {{ gutachtenart }} in {{ plz }} {{ ort }}.</p><p><strong>{{ kunde_name }}</strong><br>Telefon: {{ kunde_telefon }}<br>E-Mail: {{ kunde_email }}<br>Fahrzeug: {{ fahrzeug }}</p><p>Bitte nehmen Sie zeitnah Kontakt auf und stimmen Sie den Termin direkt ab. Sie müssen sich dafür nicht einloggen.</p>',
+                'note_de' => 'Sobald der Auftrag zustande gekommen ist, bestätigen Sie das im Portal. Erst dann stellen wir die DKGZ-Gebühr in Rechnung.',
             ],
             [
                 'key' => 'auftrag-abgeschlossen',
                 'name_de' => 'Auftrag abgeschlossen',
                 'subject_de' => 'Ihr Gutachten liegt vor — {{ referenz }}',
                 'preheader_de' => 'Gutachten und Rechnung sind hinterlegt. Der Vorgang ist damit abgeschlossen.',
-                'available_variables' => ['anrede', 'nachname', 'referenz', 'sv_firma', 'gutachtenart', 'abschluss_zeit', 'honorar', 'cta_url'],
-                'body_html' => '<p>Guten Tag {{ anrede }} {{ nachname }},</p><p>der Sachverständige hat die Begutachtung abgeschlossen und die Unterlagen hinterlegt. Gutachten und Rechnung finden Sie im Anhang dieser E-Mail.</p><p>Bei Rückfragen zum Inhalt des Gutachtens wenden Sie sich bitte direkt an den Sachverständigen.</p>',
+                'available_variables' => ['kunde', 'referenz', 'sv_firma', 'gutachtenart', 'abschluss_zeit', 'bewertung_url'],
+                'body_html' => '<p>Guten Tag {{ kunde }},</p><p>der Sachverständige hat die Begutachtung zu Ihrem Vorgang {{ referenz }} abgeschlossen.</p><p>Das Gutachten und die Rechnung erhalten Sie direkt von {{ sv_firma }}. Bei Rückfragen zum Inhalt wenden Sie sich bitte ebenfalls dorthin.</p>',
+                'note_de' => 'Die Rechnung stellt der Sachverständige. DKGZ ist nicht Vertragspartner der Begutachtung und stellt Ihnen keine Kosten in Rechnung.',
             ],
             [
                 'key' => 'bewertungsanfrage',

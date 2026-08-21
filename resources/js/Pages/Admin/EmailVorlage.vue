@@ -73,6 +73,15 @@ const insert = (variable) => {
                             :disabled="!canEdit"
                             required
                         />
+                        <BaseTextarea
+                            v-model="form.note_de"
+                            label="Schlusshinweis"
+                            hint="Kleiner Text unter der Trennlinie am Ende der Mail. Leer lassen, um ihn wegzulassen."
+                            :rows="3"
+                            :error="form.errors.note_de"
+                            :disabled="!canEdit"
+                            optional
+                        />
                         <BaseToggle v-model="form.is_active" label="Vorlage aktiv" description="Ist sie inaktiv, greift die eingebaute Ersatzvorlage." :disabled="!canEdit" on-label="Aktiv" off-label="Inaktiv" />
                     </div>
 

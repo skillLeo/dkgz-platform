@@ -5,7 +5,6 @@ import { FileText } from 'lucide-vue-next'
 import PortalLayout from '../../Layouts/PortalLayout.vue'
 import SegmentedFilter from '../../Components/Data/SegmentedFilter.vue'
 import StatusDot from '../../Components/Data/StatusDot.vue'
-import MoneyValue from '../../Components/Data/MoneyValue.vue'
 import TablePagination from '../../Components/Data/TablePagination.vue'
 import { useGermanFormat } from '../../Composables/useGermanFormat.js'
 
@@ -54,7 +53,6 @@ const rows = computed(() => props.assignments.data)
                         <th class="whitespace-nowrap px-3 py-3 text-left text-eyebrow font-semibold uppercase text-gray-600">Art</th>
                         <th class="whitespace-nowrap px-3 py-3 text-left text-eyebrow font-semibold uppercase text-gray-600">Angenommen</th>
                         <th class="whitespace-nowrap px-3 py-3 text-left text-eyebrow font-semibold uppercase text-gray-600">Status</th>
-                        <th class="whitespace-nowrap px-5 py-3 text-right text-eyebrow font-semibold uppercase text-gray-600">Honorar</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -75,10 +73,6 @@ const rows = computed(() => props.assignments.data)
                         </td>
                         <td class="whitespace-nowrap px-3 py-3.5">
                             <StatusDot :status="row.status" :label="row.status_label" />
-                        </td>
-                        <td class="whitespace-nowrap px-5 py-3.5 text-right">
-                            <MoneyValue v-if="row.fee_cents" :cents="row.fee_cents" />
-                            <span v-else class="font-mono text-sm text-gray-400">offen</span>
                         </td>
                     </tr>
                 </tbody>
@@ -101,10 +95,8 @@ const rows = computed(() => props.assignments.data)
                     <p class="pt-0.5 text-sm text-gray-600">
                         {{ row.request.customer_initial ?? '—' }} · {{ row.request.location }}
                     </p>
-                    <div class="flex items-center justify-between gap-3 pt-3">
+                    <div class="pt-3">
                         <StatusDot :status="row.status" :label="row.status_label" />
-                        <MoneyValue v-if="row.fee_cents" :cents="row.fee_cents" />
-                        <span v-else class="font-mono text-sm text-gray-400">offen</span>
                     </div>
                 </Link>
             </li>

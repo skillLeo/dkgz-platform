@@ -293,14 +293,26 @@ class Assessor extends Model
             );
     }
 
-    /** Assessors whose service areas numerically span the given postal code. */
+    /**
+     * Assessors whose service areas numerically span the given postal code.
+     *
+     * Numeric rather than textual, so 01067 is a number between 01000 and
+     * 09999 and not a string sorted beside "1". Either endpoint may hold the
+     * larger value: both entry points reject a reversed range, but a row that
+     * got in some other way should still cover the ground it names rather than
+     * silently covering nothing.
+     */
     public function scopeCovering(Builder $query, string $postalCode): Builder
     {
         $numeric = (int) $postalCode;
 
         return $query->whereHas('serviceAreas', function (Builder $q) use ($numeric) {
-            $q->whereRaw('CAST(postal_code_from AS UNSIGNED) <= ?', [$numeric])
-                ->whereRaw('CAST(postal_code_to AS UNSIGNED) >= ?', [$numeric]);
+            $q->where(fn (Builder $ascending) => $ascending
+                ->whereRaw('CAST(postal_code_from AS UNSIGNED) <= ?', [$numeric])
+                ->whereRaw('CAST(postal_code_to AS UNSIGNED) >= ?', [$numeric]))
+                ->orWhere(fn (Builder $reversed) => $reversed
+                    ->whereRaw('CAST(postal_code_to AS UNSIGNED) <= ?', [$numeric])
+                    ->whereRaw('CAST(postal_code_from AS UNSIGNED) >= ?', [$numeric]));
         });
     }
 

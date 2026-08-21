@@ -57,7 +57,6 @@ class AssignmentController extends Controller
                 'status_label' => $assignment->statusLabel(),
                 'accepted_at' => $assignment->accepted_at,
                 'completed_at' => $assignment->completed_at,
-                'fee_cents' => $assignment->fee_cents,
                 'request' => [
                     'reference' => $assignment->serviceRequest->reference,
                     'location' => $assignment->serviceRequest->locationLabel(),
@@ -92,9 +91,8 @@ class AssignmentController extends Controller
                 'accepted_at' => $assignment->accepted_at,
                 'started_at' => $assignment->started_at,
                 'completed_at' => $assignment->completed_at,
-                'fee_cents' => $assignment->fee_cents,
                 'assessor_notes' => $assignment->assessor_notes,
-                'can_complete' => $assignment->hasRequiredDocuments() && $assignment->isOpen(),
+                'can_complete' => $assignment->isOpen(),
                 'is_open' => $assignment->isOpen(),
                 'confirmed_at' => $assignment->confirmed_at,
                 'can_confirm' => $assignment->status === Assignment::STATUS_ACCEPTED,
@@ -121,11 +119,8 @@ class AssignmentController extends Controller
                 'created_at' => $event->created_at,
             ]),
             'commission' => $assignment->commission === null ? null : [
-                'fee_cents' => $assignment->commission->fee_cents,
-                'rate_percent' => (float) $assignment->commission->rate_percent,
                 'commission_cents' => $assignment->commission->commission_cents,
                 'fee_type' => $assignment->commission->fee_type,
-                'assessor_share_cents' => $assignment->commission->assessorShareCents(),
                 'status' => $assignment->commission->status,
                 'status_label' => $assignment->commission->statusLabel(),
             ],
@@ -152,11 +147,6 @@ class AssignmentController extends Controller
                     ?? $assignment->serviceRequest?->serviceType?->dkgz_fee_cents
                     ?? 0
             ),
-            'feeBounds' => [
-                'min' => Money::MIN_FEE_CENTS,
-                'max' => Money::MAX_FEE_CENTS,
-                'review_threshold' => Money::REVIEW_THRESHOLD_CENTS,
-            ],
         ]);
     }
 
@@ -313,32 +303,23 @@ class AssignmentController extends Controller
     ): RedirectResponse {
         $this->authorize('complete', $assignment);
 
-        $data = $request->validate([
-            // Optional: it is the assessor's own record of what they charged
-            // their customer and drives no calculation on this platform.
-            'fee_cents' => ['nullable', 'integer', 'min:'.Money::MIN_FEE_CENTS, 'max:'.Money::MAX_FEE_CENTS],
-            'notes' => ['nullable', 'string', 'max:1000'],
-        ], [
-            'fee_cents.min' => 'Das Honorar erscheint zu niedrig. Bitte prüfen Sie die Eingabe.',
-            'fee_cents.max' => 'Das Honorar erscheint zu hoch. Bitte prüfen Sie die Eingabe.',
-        ], [
-            'fee_cents' => 'das Honorar',
-            'notes' => 'die Anmerkung',
-        ]);
+        // Confirming the report is finished is the whole of it: no fee to type
+        // and no documents to produce first.
+        $data = $request->validate(
+            ['notes' => ['nullable', 'string', 'max:1000']],
+            [],
+            ['notes' => 'die Anmerkung']
+        );
 
         try {
-            $complete->execute(
-                $assignment,
-                isset($data['fee_cents']) ? (int) $data['fee_cents'] : null,
-                $data['notes'] ?? null,
-            );
+            $complete->execute($assignment, $data['notes'] ?? null);
         } catch (RuntimeException $e) {
-            throw ValidationException::withMessages(['fee_cents' => $e->getMessage()]);
+            throw ValidationException::withMessages(['notes' => $e->getMessage()]);
         }
 
         return redirect()
             ->route('portal.assignments.show', $assignment)
-            ->with('success', 'Der Auftrag ist abgeschlossen. Die Provision wurde berechnet.');
+            ->with('success', 'Der Auftrag ist abgeschlossen.');
     }
 
     private function timelineLabel(string $status): string

@@ -17,6 +17,7 @@ import { useConfirm } from '../../Composables/useConfirm.js'
 const props = defineProps({
     request: { type: Object, required: true },
     trail: { type: Array, default: () => [] },
+    matching: { type: Object, default: null },
     offers: { type: Array, default: () => [] },
     canOffer: { type: Boolean, default: false },
     assignment: { type: Object, default: null },
@@ -132,6 +133,34 @@ const doRematch = async () => {
                         :loading="notifyCustomer.processing"
                         @click="notifyCustomer.post(`/admin/anfragen/${request.id}/kunde-benachrichtigen`, { preserveScroll: true })"
                     >Kunde erneut benachrichtigen</BaseButton>
+                </section>
+
+                <!--
+                    Why the partners who cover this postal code did not all get
+                    it. "The postal code matching is unreliable" is almost always
+                    a partner who is unavailable or does not offer this
+                    assessment type, and without this the office cannot tell the
+                    two apart.
+                -->
+                <section v-if="matching && matching.excluded.length" class="border border-gray-200 bg-white p-5">
+                    <SectionLabel text="Nicht angeschrieben" tone="muted" />
+                    <p class="measure pt-2 text-sm text-gray-600">
+                        {{ matching.covering_count }} Sachverständige decken die PLZ {{ matching.postal_code }} ab,
+                        {{ matching.eligible_count }} davon kamen für diese Anfrage infrage. Die übrigen wurden aus
+                        diesen Gründen nicht angeschrieben:
+                    </p>
+                    <ul class="flex flex-col gap-2 pt-4">
+                        <li
+                            v-for="entry in matching.excluded"
+                            :key="`aus-${entry.id}`"
+                            class="flex flex-wrap items-baseline justify-between gap-x-5 gap-y-1 border-b border-gray-100 pb-2 last:border-b-0"
+                        >
+                            <a :href="`/admin/sachverstaendige/${entry.id}`" class="text-sm text-navy-700 hover:text-navy-500">
+                                {{ entry.company_name }}
+                            </a>
+                            <span class="text-sm text-gray-600">{{ entry.reasons.join(' · ') }}</span>
+                        </li>
+                    </ul>
                 </section>
 
                 <!-- The forensic trail -->

@@ -3,7 +3,6 @@
 namespace App\Jobs;
 
 use App\Models\Assignment;
-use App\Models\AssignmentDocument;
 use App\Support\Formatter;
 use App\Support\Mailer;
 use App\Support\Settings;
@@ -40,11 +39,6 @@ class NotifyAssignmentCompletedJob implements ShouldQueue
 
         $request = $assignment->serviceRequest;
 
-        $attachments = $assignment->documents
-            ->whereIn('type', [AssignmentDocument::TYPE_REPORT, AssignmentDocument::TYPE_CUSTOMER_INVOICE])
-            ->pluck('path')
-            ->all();
-
         // Available immediately: the token is created at completion, so the
         // customer can rate straight from this mail rather than waiting for the
         // separate reminder.
@@ -52,38 +46,32 @@ class NotifyAssignmentCompletedJob implements ShouldQueue
             ? route('review.show', $assignment->review->token)
             : null;
 
+        // Neither the report nor any invoice travels with this message. The
+        // assessor delivers their own work to their own customer and bills them
+        // directly; DKGZ vermittelt and says so. Sending the documents on made
+        // it look as though the gutachten came from us.
         Mailer::send($request->customer_email, 'auftrag-abgeschlossen', [
             'eyebrow' => 'Vorgang abgeschlossen',
-            'headline' => 'Ihr Gutachten liegt vor.',
-            'salutation' => 'Guten Tag '.$request->customer_name.',',
-            'nachname' => $request->customer_name,
+            'headline' => 'Ihr Gutachten ist fertiggestellt.',
+            'kunde' => $request->customer_name,
             'referenz' => $request->reference,
             'refLabel' => 'Ihre Vorgangsnummer',
             'sv_firma' => $assignment->assessor?->company_name,
             'gutachtenart' => $request->serviceType?->name_de,
             'abschluss_zeit' => Formatter::dateTime($assignment->completed_at),
-            'honorar' => Formatter::money($assignment->fee_cents),
             'dataTitle' => 'Abschluss',
             'rows' => array_values(array_filter([
                 ['k' => 'Sachverständiger', 'v' => $assignment->assessor?->company_name],
                 ['k' => 'Art des Gutachtens', 'v' => $request->serviceType?->name_de],
                 ['k' => 'Abgeschlossen am', 'v' => Formatter::dateTime($assignment->completed_at), 'mono' => true],
-                ...$assignment->documents->map(fn (AssignmentDocument $d) => [
-                    'k' => $d->typeLabel(),
-                    'v' => $d->original_name.' · '.Formatter::fileSize($d->size_bytes),
-                ])->all(),
-                ['k' => 'Honorar netto', 'v' => Formatter::money($assignment->fee_cents), 'mono' => true],
             ])),
             // The rating is the one thing we actually want the customer to do
             // next, so it is the button — not a sentence mentioning a link that
             // arrives separately days later.
-            'cta' => $reviewUrl !== null ? 'Jetzt bewerten' : 'Vorgang ansehen',
-            'cta_url' => $reviewUrl ?? route('request.confirmation', $request->reference),
+            'cta' => $reviewUrl !== null ? 'Jetzt bewerten' : null,
+            'cta_url' => $reviewUrl,
             'bewertung_url' => $reviewUrl,
-            'note' => $reviewUrl !== null
-                ? 'Ihre Rückmeldung hilft uns, das Netz geprüfter Sachverständiger zu verbessern — sie dauert weniger als eine Minute. Die Rechnung stellt der Sachverständige. DKGZ ist nicht Vertragspartner der Begutachtung und stellt Ihnen keine Kosten in Rechnung.'
-                : 'Die Rechnung stellt der Sachverständige. DKGZ ist nicht Vertragspartner der Begutachtung und stellt Ihnen keine Kosten in Rechnung.',
-        ], attachments: $attachments, related: $assignment);
+        ], related: $assignment);
 
         if (Settings::bool('features.review_flow', true) && $assignment->review !== null) {
             SendReviewRequestJob::dispatch($assignment->id)

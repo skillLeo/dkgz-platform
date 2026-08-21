@@ -12,7 +12,7 @@ class EmailTemplate extends Model
     use HasFactory, LogsActivity;
 
     protected $fillable = [
-        'key', 'name_de', 'subject_de', 'preheader_de', 'body_html',
+        'key', 'name_de', 'subject_de', 'preheader_de', 'body_html', 'note_de',
         'available_variables', 'is_active',
     ];
 
@@ -39,7 +39,11 @@ class EmailTemplate extends Model
      */
     public function render(string $field, array $data): string
     {
-        $source = $field === 'subject' ? $this->subject_de : $this->body_html;
+        $source = match ($field) {
+            'subject' => $this->subject_de,
+            'note' => $this->note_de,
+            default => $this->body_html,
+        };
 
         return preg_replace_callback(
             '/\{\{\s*([a-z0-9_]+)\s*\}\}/i',
@@ -59,6 +63,20 @@ class EmailTemplate extends Model
     public function renderBody(array $data): string
     {
         return $this->render('body', $data);
+    }
+
+    /**
+     * The closing note under the separator, or null when the template has none.
+     *
+     * Plain text like the subject, so the entities e() introduced come back out.
+     */
+    public function renderNote(array $data): ?string
+    {
+        if (blank($this->note_de)) {
+            return null;
+        }
+
+        return html_entity_decode($this->render('note', $data), ENT_QUOTES, 'UTF-8');
     }
 
     public function getRouteKeyName(): string

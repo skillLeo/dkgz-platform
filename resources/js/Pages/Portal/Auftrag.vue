@@ -1,7 +1,7 @@
 <script setup>
 import { computed, ref } from 'vue'
 import { Head, Link, useForm } from '@inertiajs/vue3'
-import { Check, ChevronLeft, Download, FileText, Mail, Phone, Upload } from 'lucide-vue-next'
+import { Check, ChevronLeft, Download, FileText, Mail, Phone } from 'lucide-vue-next'
 import PortalLayout from '../../Layouts/PortalLayout.vue'
 import StatusRail from '../../Components/Data/StatusRail.vue'
 import StatusDot from '../../Components/Data/StatusDot.vue'
@@ -24,7 +24,6 @@ const props = defineProps({
     commission: { type: Object, default: null },
     dkgzInvoices: { type: Array, default: () => [] },
     dkgzFeeLabel: { type: String, default: null },
-    feeBounds: { type: Object, default: () => ({}) },
 })
 
 const { stamp } = useGermanFormat()
@@ -38,7 +37,7 @@ const customerInvoice = useForm({
 })
 const report = useForm({ type: 'report', document: null })
 const invoice = useForm({ type: 'customer_invoice', document: null })
-const complete = useForm({ fee_cents: null, notes: '' })
+const complete = useForm({ notes: '' })
 const completeOpen = ref(false)
 
 const RECIPIENTS = [
@@ -62,15 +61,6 @@ async function submitConfirmation() {
 const reportDoc = computed(() => props.documents.find((d) => d.type === 'report'))
 const invoiceDoc = computed(() => props.documents.find((d) => d.type === 'customer_invoice'))
 const documentCount = computed(() => [reportDoc.value, invoiceDoc.value].filter(Boolean).length)
-
-/** What is still missing, named exactly — "fast fertig" helps nobody. */
-const missingLabel = computed(() => {
-    if (!reportDoc.value && !invoiceDoc.value) return 'Gutachten und Rechnung fehlen noch'
-    if (!reportDoc.value) return 'Gutachten fehlt noch'
-    if (!invoiceDoc.value) return 'Rechnung fehlt noch'
-
-    return null
-})
 
 const steps = computed(() => {
     const accepted = props.assignment.accepted_at
@@ -328,12 +318,8 @@ const submitCompletion = () => complete.post(`/portal/auftraege/${props.assignme
         <section v-if="assignment.is_open" class="mt-6 rounded-card border border-gray-200 bg-white p-5">
             <h2 class="text-eyebrow font-semibold uppercase text-gray-600">Abschluss</h2>
             <p class="measure pt-3 text-sm leading-normal text-gray-600">
-                Nach dem Hochladen beider Dokumente erfassen Sie das tatsächlich berechnete Honorar.
-            </p>
-
-            <p v-if="missingLabel" class="flex items-center gap-2.5 pt-4">
-                <Upload :size="16" :stroke-width="1.5" class="shrink-0 text-warning" aria-hidden="true" />
-                <span class="text-sm text-warning">{{ missingLabel }}</span>
+                Sobald das Gutachten fertig ist, schließen Sie den Auftrag hier ab. Ihre Unterlagen
+                senden Sie direkt an Ihren Kunden — hochladen müssen Sie sie hier nicht.
             </p>
 
             <BaseButton
@@ -341,7 +327,7 @@ const submitCompletion = () => complete.post(`/portal/auftraege/${props.assignme
                 class="mt-4 hidden md:inline-flex"
                 :disabled="!assignment.can_complete"
                 @click="completeOpen = true"
-            >Auftrag abschließen</BaseButton>
+            >Gutachten fertiggestellt</BaseButton>
         </section>
 
         <!--
@@ -352,29 +338,20 @@ const submitCompletion = () => complete.post(`/portal/auftraege/${props.assignme
             v-if="assignment.is_open"
             class="fixed inset-x-0 bottom-0 z-30 border-t border-gray-200 bg-white px-4 pb-[calc(env(safe-area-inset-bottom)+0.75rem)] pt-3 md:hidden"
         >
-            <p v-if="missingLabel" class="pb-2 text-center text-sm text-warning">{{ missingLabel }}</p>
             <BaseButton
                 size="cta"
                 block
                 :disabled="!assignment.can_complete"
                 @click="completeOpen = true"
-            >Auftrag abschließen</BaseButton>
+            >Gutachten fertiggestellt</BaseButton>
         </div>
 
         <section v-if="commission" class="mt-6 rounded-card border border-gray-200 bg-white p-5">
-            <h2 class="text-eyebrow font-semibold uppercase text-gray-600">Provision</h2>
+            <h2 class="text-eyebrow font-semibold uppercase text-gray-600">DKGZ-Gebühr</h2>
             <dl class="max-w-lg pt-3">
-                <div class="flex items-baseline justify-between gap-4 border-b border-gray-100 py-2.5">
-                    <dt class="text-sm text-gray-600">Honorar netto</dt>
-                    <dd><MoneyValue :cents="commission.fee_cents" /></dd>
-                </div>
-                <div class="flex items-baseline justify-between gap-4 border-b border-gray-100 py-2.5">
-                    <dt class="text-sm text-gray-600">DKGZ-Gebühr</dt>
-                    <dd><MoneyValue :cents="commission.commission_cents" /></dd>
-                </div>
-                <div class="flex items-baseline justify-between gap-4 pt-3">
-                    <dt class="text-sm font-medium text-navy-700">Verbleibt bei Ihnen</dt>
-                    <dd><MoneyValue :cents="commission.assessor_share_cents" emphasis /></dd>
+                <div class="flex items-baseline justify-between gap-4 pt-1">
+                    <dt class="text-sm font-medium text-navy-700">DKGZ-Gebühr</dt>
+                    <dd><MoneyValue :cents="commission.commission_cents" emphasis /></dd>
                 </div>
             </dl>
             <p class="pt-3"><StatusDot :status="commission.status" :label="commission.status_label" /></p>
@@ -419,11 +396,9 @@ const submitCompletion = () => complete.post(`/portal/auftraege/${props.assignme
         </section>
 
         <CompleteAssignmentDialog
-            v-model="complete.fee_cents"
             :open="completeOpen"
             :reference="request.reference"
             :dkgz-fee-label="dkgzFeeLabel"
-            :error="complete.errors.fee_cents"
             :processing="complete.processing"
             @close="completeOpen = false"
             @submit="submitCompletion"

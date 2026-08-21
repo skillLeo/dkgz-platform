@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use App\Support\Branding;
 use App\Support\Permissions;
+use App\Models\ServiceRequest;
 use App\Support\Settings;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
@@ -64,6 +65,16 @@ class HandleInertiaRequests extends Middleware
             // Branding is resolved lazily: it only costs a lookup on the first
             // request after a cache bust.
             'branding' => fn () => Branding::forInertia(),
+
+            // How many requests nobody has accepted yet, for the sidebar badge.
+            // Lazy and admin-only: a partner never sees it and never pays for
+            // the query.
+            'requestsInPlacement' => fn () => $user?->can('requests.view')
+                ? ServiceRequest::whereIn('status', [
+                    ServiceRequest::STATUS_NEW,
+                    ServiceRequest::STATUS_MATCHED,
+                ])->count()
+                : null,
 
             'app' => [
                 'analytics_configured' => filled(Settings::get('integrations.analytics_id')),

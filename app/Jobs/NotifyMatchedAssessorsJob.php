@@ -6,6 +6,7 @@ use App\Models\Assessor;
 use App\Models\RequestMatch;
 use App\Models\ServiceRequest;
 use App\Notifications\NewRequestNotification;
+use App\Support\Formatter;
 use App\Support\Mailer;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
@@ -74,16 +75,29 @@ class NotifyMatchedAssessorsJob implements ShouldQueue
             // Contact details are deliberately absent until acceptance.
             'mask' => true,
             'dataTitle' => 'Anfragedaten',
+            'kennzeichen' => $request->vehicle_plate,
+            'wunschtermin' => $request->preferred_date ? Formatter::date($request->preferred_date) : null,
+            'dringlichkeit' => $request->urgency ? $this->urgencyLabel($request->urgency) : null,
+            'dkgz_gebuehr' => Formatter::money($request->serviceType?->dkgz_fee_cents ?? 0),
+            'eingang_datum' => Formatter::dateTime($request->created_at),
+            'refLabel' => 'Referenz',
+            'dataTitle' => 'Anfragedaten',
+            // Everything an assessor needs to decide without opening the
+            // portal — except the contact details, which stay behind acceptance.
             'rows' => array_values(array_filter([
+                ['k' => 'Referenz', 'v' => $request->reference, 'mono' => true],
                 ['k' => 'Art des Gutachtens', 'v' => $request->serviceType?->name_de],
                 ['k' => 'Standort', 'v' => $request->locationLabel()],
                 ['k' => 'Fahrzeug', 'v' => $request->vehicleLabel()],
-                $request->description ? ['k' => 'Schadenart', 'v' => Str::limit($request->description, 120)] : null,
+                $request->vehicle_plate ? ['k' => 'Kennzeichen', 'v' => $request->vehicle_plate, 'mono' => true] : null,
+                $request->description ? ['k' => 'Schadenart', 'v' => Str::limit($request->description, 160)] : null,
                 $request->urgency ? ['k' => 'Dringlichkeit', 'v' => $this->urgencyLabel($request->urgency)] : null,
+                $request->preferred_date ? ['k' => 'Wunschtermin', 'v' => Formatter::date($request->preferred_date), 'mono' => true] : null,
+                ['k' => 'Eingegangen am', 'v' => Formatter::dateTime($request->created_at), 'mono' => true],
+                ['k' => 'DKGZ-Gebühr bei Annahme', 'v' => Formatter::money($request->serviceType?->dkgz_fee_cents ?? 0), 'mono' => true],
             ])),
-            'cta' => 'Anfrage im Portal ansehen',
+            'cta' => 'Anfrage annehmen',
             'cta_url' => route('portal.requests.show', $request),
-            'note' => 'Nach Ablauf der Frist wird die Anfrage an weitere Partner im Gebiet weitergegeben.',
         ], related: $request);
     }
 

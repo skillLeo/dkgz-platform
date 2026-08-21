@@ -25,7 +25,7 @@ class DashboardController extends Controller
 
         $commissionThisMonth = Commission::where('assessor_id', $assessor->id)
             ->where('created_at', '>=', $monthStart)
-            ->selectRaw('COALESCE(SUM(commission_cents), 0) AS commission, COALESCE(SUM(fee_cents), 0) AS fee')
+            ->selectRaw('COALESCE(SUM(commission_cents), 0) AS commission')
             ->first();
 
         return Inertia::render('Portal/Dashboard', [
@@ -42,7 +42,6 @@ class DashboardController extends Controller
                     ->where('status', Assignment::STATUS_COMPLETED)
                     ->whereBetween('completed_at', [$previousMonth, $monthStart])->count(),
                 'commission_this_month_cents' => (int) $commissionThisMonth->commission,
-                'fee_this_month_cents' => (int) $commissionThisMonth->fee,
                 'open_commission_cents' => (int) Commission::where('assessor_id', $assessor->id)
                     ->open()->sum('commission_cents'),
                 'month_label' => Formatter::monthName($monthStart),

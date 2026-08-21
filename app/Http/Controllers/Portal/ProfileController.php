@@ -99,8 +99,8 @@ class ProfileController extends Controller
             ->whereExists(fn ($sub) => $sub->selectRaw('1')
                 ->from('assessor_service_areas')
                 ->where('assessor_service_areas.assessor_id', $assessor->id)
-                ->whereColumn('service_requests.postal_code', '>=', 'assessor_service_areas.postal_code_from')
-                ->whereColumn('service_requests.postal_code', '<=', 'assessor_service_areas.postal_code_to'))
+                ->whereRaw('CAST(service_requests.postal_code AS UNSIGNED) >= CAST(assessor_service_areas.postal_code_from AS UNSIGNED)')
+                ->whereRaw('CAST(service_requests.postal_code AS UNSIGNED) <= CAST(assessor_service_areas.postal_code_to AS UNSIGNED)'))
             ->selectRaw('service_type_id, COUNT(*) AS total')
             ->groupBy('service_type_id')
             ->pluck('total', 'service_type_id');
@@ -271,10 +271,8 @@ class ProfileController extends Controller
             'commissions' => $commissions->through(fn (Commission $commission) => [
                 'id' => $commission->id,
                 'reference' => $commission->assignment?->serviceRequest?->reference,
-                'fee_cents' => $commission->fee_cents,
                 'rate_percent' => (float) $commission->rate_percent,
                 'commission_cents' => $commission->commission_cents,
-                'assessor_share_cents' => $commission->assessorShareCents(),
                 'status' => $commission->status,
                 'status_label' => $commission->statusLabel(),
                 'invoice_number' => $commission->invoice_number,

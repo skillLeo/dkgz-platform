@@ -88,14 +88,18 @@ class NotifyAssignmentAcceptedJob implements ShouldQueue
             return;
         }
 
-        Mailer::send($request->customer_email, 'auftrag-vergeben', [
+        Mailer::send($request->customer_email, 'sachverstaendiger-steht-fest', [
             'eyebrow' => 'Auftrag angenommen',
             'headline' => 'Ihr Sachverständiger steht fest.',
-            'salutation' => 'Guten Tag '.$request->customer_name.',',
-            'nachname' => $request->customer_name,
+            'kunde' => $request->customer_name,
             'referenz' => $request->reference,
             'refLabel' => 'Ihre Vorgangsnummer',
+            'gutachtenart' => $request->serviceType?->name_de,
+            'angenommen_am' => Formatter::dateTime($assignment->accepted_at),
             'sv_firma' => $assessor->company_name,
+            'sv_name' => $assessor->user?->fullName(),
+            'sv_telefon' => Formatter::phone($assessor->user?->phone),
+            'sv_email' => $assessor->user?->email,
             // A name and a phone number is a stranger; a face is the person
             // about to inspect the customer's car.
             'sv_bild' => $assessor->photoUrl(),
@@ -108,9 +112,6 @@ class NotifyAssignmentAcceptedJob implements ShouldQueue
                 ['k' => 'E-Mail', 'v' => $assessor->user?->email],
                 ['k' => 'Angenommen am', 'v' => Formatter::dateTime($assignment->accepted_at), 'mono' => true],
             ])),
-            'cta' => 'Vorgang ansehen',
-            'cta_url' => route('request.confirmation', $request->reference),
-            'note' => 'Der Sachverständige erbringt die Begutachtung in eigener Verantwortung. DKGZ hat ausschließlich vermittelt.',
         ], related: $assignment);
     }
 

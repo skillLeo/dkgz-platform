@@ -7,50 +7,35 @@ use App\Models\Assignment;
 use App\Models\Commission;
 use App\Models\CustomerReview;
 use App\Models\ServiceRequest;
-use App\Support\Money;
 use App\Support\Settings;
 use Illuminate\Support\Facades\DB;
-use RuntimeException;
 
 /**
- * Completion, fee capture and commission calculation in one transaction.
+ * Completion and the DKGZ fee in one transaction.
  *
- * Two rules are enforced here rather than in a controller, so no caller can
- * route around them:
- *   · completion is blocked unless the report and the customer invoice are both
- *     on file — the client's fraud control;
- *   · the commission rate is read from settings once and snapshotted onto the
- *     row, so editing the rate later never rewrites history.
+ * What DKGZ is owed was decided when the partner accepted and snapshotted onto
+ * the assignment then, so editing the price list afterwards can never rewrite
+ * a job that is already running. That snapshot is the only figure this reads.
  */
 class CompleteAssignmentAction
 {
     /**
      * Completes an assignment and books the DKGZ fee.
      *
-     * The fee the assessor charged their customer is now optional record-keeping
-     * — it drives no calculation. What DKGZ is owed was fixed the moment the
-     * partner accepted, and was snapshotted onto the assignment then.
+     * Completion used to require the report and the customer's invoice on file
+     * and the fee the assessor charged. None of that is asked for any more: the
+     * assessor confirms the report is finished and the job closes. What DKGZ is
+     * owed was fixed the moment the partner accepted and snapshotted then, so
+     * nothing here depends on a figure the assessor types.
      */
-    public function execute(Assignment $assignment, ?int $feeCents = null, ?string $notes = null): Commission
+    public function execute(Assignment $assignment, ?string $notes = null): Commission
     {
-        if (! $assignment->hasRequiredDocuments()) {
-            throw new RuntimeException(
-                'Der Auftrag kann erst abgeschlossen werden, wenn Gutachten und Rechnung hinterlegt sind.'
-            );
-        }
-
-        if ($feeCents !== null && ! Money::isValidFee($feeCents)) {
-            throw new RuntimeException('Das eingegebene Honorar liegt außerhalb des zulässigen Bereichs.');
-        }
-
-        $commission = DB::transaction(function () use ($assignment, $feeCents, $notes) {
+        $commission = DB::transaction(function () use ($assignment, $notes) {
             $previousStatus = $assignment->status;
 
             $assignment->update([
                 'status' => Assignment::STATUS_COMPLETED,
                 'completed_at' => now(),
-                'fee_cents' => $feeCents ?? $assignment->fee_cents,
-                'fee_entered_at' => $feeCents === null ? $assignment->fee_entered_at : now(),
                 'assessor_notes' => $notes ?? $assignment->assessor_notes,
             ]);
 
@@ -77,16 +62,10 @@ class CompleteAssignmentAction
                     'fee_type' => Commission::TYPE_FIXED,
                     'dkgz_fee_cents' => $dkgzFee,
                     'commission_cents' => $dkgzFee,
-                    'fee_cents' => $feeCents ?? $assignment->fee_cents,
                     'rate_percent' => null,
                     'status' => Commission::STATUS_OPEN,
                 ]
             );
-
-            // Confirming the job already booked and invoiced this fee. Only the
-            // assessor's own fee is news at completion — rewriting the rest
-            // would reopen an invoice that has already gone out.
-            $commission->update(['fee_cents' => $feeCents ?? $assignment->fee_cents]);
 
             if (Settings::bool('features.review_flow', true)) {
                 CustomerReview::firstOrCreate(

@@ -44,9 +44,9 @@ const cards = computed(() => [
         href: '/portal/auftraege',
     },
     {
-        label: `Provision im ${props.stats.month_label}`,
+        label: `DKGZ-Gebühren im ${props.stats.month_label}`,
         value: money(props.stats.commission_this_month_cents),
-        hint: `auf ${money(props.stats.fee_this_month_cents)} Honorar`,
+        hint: 'aus bestätigten Aufträgen',
         href: '/portal/provisionen',
     },
 ])
