@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\DrainQueueAfterResponse;
 use App\Http\Middleware\EnsureAssessorIsApproved;
 use App\Http\Middleware\EnsureMaintenanceMode;
 use App\Http\Middleware\HandleInertiaRequests;
@@ -39,6 +40,7 @@ return Application::configure(basePath: dirname(__DIR__))
             HandleInertiaRequests::class,
             RequirePasswordChange::class,
             AddLinkHeadersForPreloadedAssets::class,
+            DrainQueueAfterResponse::class,
         ]);
 
         $middleware->alias([

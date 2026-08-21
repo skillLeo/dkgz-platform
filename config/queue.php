@@ -4,6 +4,19 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Warteschlange nach der Antwort leeren
+    |--------------------------------------------------------------------------
+    |
+    | Auf Shared Hosting ohne Cron-Eintrag würde die Warteschlange nie laufen
+    | und E-Mails blieben liegen. Ist dies aktiv, wird nach dem Ausliefern einer
+    | Antwort kurz nachgearbeitet. Mit einem echten Cron kann es aus bleiben.
+    |
+    */
+
+    'drain_after_response' => env('QUEUE_DRAIN_AFTER_RESPONSE', true),
+
+    /*
+    |--------------------------------------------------------------------------
     | Default Queue Connection Name
     |--------------------------------------------------------------------------
     |
