@@ -6,6 +6,7 @@ use App\Actions\MatchRequestAction;
 use App\Actions\OfferRequestExternallyAction;
 use App\Http\Controllers\Controller;
 use App\Jobs\NotifyCustomerNoResponseJob;
+use App\Jobs\NotifyMatchedAssessorsJob;
 use App\Models\Assessor;
 use App\Models\RequestMatch;
 use App\Models\RequestOffer;
@@ -281,6 +282,60 @@ class RequestController extends Controller
     }
 
     /**
+     * Sends the request to one assessor the matching engine passed over.
+     *
+     * The engine is deliberately strict — unavailable partners and lapsed cover
+     * are excluded for good reasons — but the office knows things it does not:
+     * that somebody is free again, or will take this one as a favour. This is
+     * the manual override, and it is recorded like any other notification so
+     * the trail stays complete.
+     */
+    public function notifyAssessor(
+        Request $request,
+        ServiceRequest $serviceRequest,
+        Assessor $assessor,
+    ): RedirectResponse {
+        $this->authorize('reassign', $serviceRequest);
+
+        abort_if($serviceRequest->assignment !== null, 409);
+
+        $existing = RequestMatch::where('service_request_id', $serviceRequest->id)
+            ->where('assessor_id', $assessor->id)
+            ->first();
+
+        if ($existing !== null && $existing->outcome === RequestMatch::OUTCOME_PENDING) {
+            return back()->with('info', 'Dieser Sachverständige hat die Anfrage bereits offen.');
+        }
+
+        DB::transaction(function () use ($serviceRequest, $assessor, $existing) {
+            $existing === null
+                ? RequestMatch::create([
+                    'service_request_id' => $serviceRequest->id,
+                    'assessor_id' => $assessor->id,
+                    'outcome' => RequestMatch::OUTCOME_PENDING,
+                    'notified_at' => now(),
+                ])
+                // Somebody who declined can be asked again; the earlier answer
+                // is superseded rather than duplicated.
+                : $existing->update([
+                    'outcome' => RequestMatch::OUTCOME_PENDING,
+                    'notified_at' => now(),
+                    'responded_at' => null,
+                    'decline_reason' => null,
+                ]);
+
+            $serviceRequest->update([
+                'status' => ServiceRequest::STATUS_MATCHED,
+                'matched_count' => $serviceRequest->matches()->count(),
+            ]);
+        });
+
+        NotifyMatchedAssessorsJob::dispatch($serviceRequest->id, [$assessor->id]);
+
+        return back()->with('success', "Die Anfrage wurde an {$assessor->company_name} gesendet.");
+    }
+
+    /**
      * Why the assessors who cover this postal code did not all receive it.
      *
      * "The postal code matching is unreliable" is almost always this: the range
@@ -307,6 +362,8 @@ class RequestController extends Controller
                 ->map(fn (Assessor $a) => [
                     'id' => $a->id,
                     'company_name' => $a->company_name,
+                    'already_notified' => $serviceRequest->matches
+                        ->contains('assessor_id', $a->id),
                     'reasons' => array_values(array_filter([
                         $a->approval_status !== Assessor::STATUS_APPROVED ? 'Nicht freigegeben' : null,
                         ! $a->is_available ? 'Als nicht verfügbar markiert' : null,

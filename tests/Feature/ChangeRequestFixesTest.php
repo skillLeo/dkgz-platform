@@ -139,3 +139,69 @@ describe('requests in placement', function () {
                 ->where('requests.data.0.reference', $waiting->reference));
     });
 });
+
+describe('sending a request by hand', function () {
+    // The matching engine is strict on purpose, but the office knows things it
+    // does not — that somebody is free again, or will take this one anyway.
+    it('notifies an assessor the engine passed over', function () {
+        $admin = User::factory()->create();
+        $admin->assignRole('admin');
+
+        $type = ServiceType::factory()->create();
+
+        // Covers the area but is marked unavailable, so matching skipped them.
+        $assessor = Assessor::factory()->create([
+            'approval_status' => Assessor::STATUS_APPROVED,
+            'is_available' => false,
+        ]);
+        $assessor->serviceAreas()->create([
+            'postal_code_from' => '40000',
+            'postal_code_to' => '49999',
+        ]);
+        $assessor->serviceTypes()->sync([$type->id]);
+
+        $serviceRequest = ServiceRequest::factory()->create([
+            'service_type_id' => $type->id,
+            'postal_code' => '40589',
+            'status' => ServiceRequest::STATUS_NEW,
+        ]);
+
+        $this->actingAs($admin)
+            ->post("/admin/anfragen/{$serviceRequest->id}/senden/{$assessor->id}")
+            ->assertRedirect();
+
+        expect($serviceRequest->fresh()->matches()->where('assessor_id', $assessor->id)->exists())
+            ->toBeTrue()
+            ->and($serviceRequest->fresh()->status)->toBe(ServiceRequest::STATUS_MATCHED);
+    });
+
+    it('names them among the partners it did not write to', function () {
+        $admin = User::factory()->create();
+        $admin->assignRole('admin');
+
+        $type = ServiceType::factory()->create();
+
+        $assessor = Assessor::factory()->create([
+            'approval_status' => Assessor::STATUS_APPROVED,
+            'is_available' => false,
+        ]);
+        $assessor->serviceAreas()->create([
+            'postal_code_from' => '40000',
+            'postal_code_to' => '49999',
+        ]);
+        $assessor->serviceTypes()->sync([$type->id]);
+
+        $serviceRequest = ServiceRequest::factory()->create([
+            'service_type_id' => $type->id,
+            'postal_code' => '40589',
+            'status' => ServiceRequest::STATUS_NEW,
+        ]);
+
+        $this->actingAs($admin)
+            ->get("/admin/anfragen/{$serviceRequest->id}")
+            ->assertOk()
+            ->assertInertia(fn ($page) => $page
+                ->has('matching.excluded', 1)
+                ->where('matching.excluded.0.reasons.0', 'Als nicht verfügbar markiert'));
+    });
+});

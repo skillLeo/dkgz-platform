@@ -776,7 +776,7 @@
     "src": "node_modules/@fontsource/ibm-plex-sans/files/ibm-plex-sans-vietnamese-700-normal.woff2"
   },
   "resources/css/app.css": {
-    "file": "assets/app-CBCPjglt.css",
+    "file": "assets/app-C-P_Qbnk.css",
     "name": "app",
     "names": [
       "app.css"
@@ -855,7 +855,7 @@
     ]
   },
   "resources/js/Pages/Admin/Anfrage.vue": {
-    "file": "assets/Anfrage-4XQO2mW9.js",
+    "file": "assets/Anfrage-BGXwcsLa.js",
     "name": "Anfrage",
     "src": "resources/js/Pages/Admin/Anfrage.vue",
     "isDynamicEntry": true,
@@ -1839,7 +1839,7 @@
     ]
   },
   "resources/js/app.js": {
-    "file": "assets/app-C1wPfBa_.js",
+    "file": "assets/app-DaOrTRfF.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true,

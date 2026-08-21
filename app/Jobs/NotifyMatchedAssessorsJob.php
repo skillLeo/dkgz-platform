@@ -25,7 +25,15 @@ class NotifyMatchedAssessorsJob implements ShouldQueue
     /** @var array<int, int> */
     public array $backoff = [60, 300, 900];
 
-    public function __construct(private readonly int $serviceRequestId) {}
+    /**
+     * @param  array<int, int>|null  $onlyAssessorIds  Limits the run to these
+     *   partners, for a request the office sends by hand to somebody the
+     *   matching engine passed over. Null notifies everyone still pending.
+     */
+    public function __construct(
+        private readonly int $serviceRequestId,
+        private readonly ?array $onlyAssessorIds = null,
+    ) {}
 
     public function handle(): void
     {
@@ -37,6 +45,7 @@ class NotifyMatchedAssessorsJob implements ShouldQueue
 
         RequestMatch::where('service_request_id', $request->id)
             ->pending()
+            ->when($this->onlyAssessorIds !== null, fn ($q) => $q->whereIn('assessor_id', $this->onlyAssessorIds))
             ->with('assessor.user')
             ->chunkById(50, function ($matches) use ($request) {
                 foreach ($matches as $match) {

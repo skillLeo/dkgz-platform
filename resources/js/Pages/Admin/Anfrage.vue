@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue'
-import { Head, useForm } from '@inertiajs/vue3'
+import { Head, router, useForm } from '@inertiajs/vue3'
 import { Lock } from 'lucide-vue-next'
 import AdminLayout from '../../Layouts/AdminLayout.vue'
 import PageHeader from '../../Components/Layout/PageHeader.vue'
@@ -25,6 +25,27 @@ const props = defineProps({
     canNotifyCustomer: { type: Boolean, default: false },
     canClose: { type: Boolean, default: false },
 })
+
+const sendingTo = ref(null)
+
+/** Sends this request to one partner the matching engine passed over. */
+async function sendTo (entry) {
+    const ok = await confirm({
+        title: `Anfrage an ${entry.company_name} senden?`,
+        message: 'Der Sachverständige erhält die Anfrage wie bei einer regulären Vermittlung '
+            + 'und kann sie annehmen oder ablehnen.',
+        confirmLabel: 'Senden',
+    })
+
+    if (! ok) return
+
+    sendingTo.value = entry.id
+
+    router.post(`/admin/anfragen/${props.request.id}/senden/${entry.id}`, {}, {
+        preserveScroll: true,
+        onFinish: () => { sendingTo.value = null },
+    })
+}
 
 const offerForm = useForm({ email: '', name: '', message: '' })
 
@@ -153,12 +174,27 @@ const doRematch = async () => {
                         <li
                             v-for="entry in matching.excluded"
                             :key="`aus-${entry.id}`"
-                            class="flex flex-wrap items-baseline justify-between gap-x-5 gap-y-1 border-b border-gray-100 pb-2 last:border-b-0"
+                            class="flex flex-wrap items-center justify-between gap-x-5 gap-y-2 border-b border-gray-100 pb-2.5 last:border-b-0"
                         >
-                            <a :href="`/admin/sachverstaendige/${entry.id}`" class="text-sm text-navy-700 hover:text-navy-500">
-                                {{ entry.company_name }}
-                            </a>
-                            <span class="text-sm text-gray-600">{{ entry.reasons.join(' · ') }}</span>
+                            <span class="min-w-0">
+                                <a :href="`/admin/sachverstaendige/${entry.id}`" class="text-sm text-navy-700 hover:text-navy-500">
+                                    {{ entry.company_name }}
+                                </a>
+                                <span class="block text-sm text-gray-600">{{ entry.reasons.join(' · ') }}</span>
+                            </span>
+                            <!--
+                                The override: the engine is strict on purpose,
+                                but the office knows who is free again.
+                            -->
+                            <BaseButton
+                                v-if="request.can_rematch && !assignment"
+                                variant="secondary"
+                                size="compact"
+                                :loading="sendingTo === entry.id"
+                                @click="sendTo(entry)"
+                            >
+                                {{ entry.already_notified ? 'Erneut senden' : 'Trotzdem senden' }}
+                            </BaseButton>
                         </li>
                     </ul>
                 </section>

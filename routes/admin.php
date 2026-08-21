@@ -33,6 +33,8 @@ Route::prefix('admin')
             Route::get('/anfragen/{serviceRequest}', [RequestController::class, 'show'])->name('requests.show');
             Route::post('/anfragen/{serviceRequest}/externer-sachverstaendiger', [RequestController::class, 'offerExternally'])
                 ->name('requests.offer');
+            Route::post('/anfragen/{serviceRequest}/senden/{assessor}', [RequestController::class, 'notifyAssessor'])
+                ->middleware('can:requests.reassign')->name('requests.notify-assessor');
             Route::post('/anfragen/{serviceRequest}/kunde-benachrichtigen', [RequestController::class, 'notifyCustomer'])
                 ->name('requests.notify-customer');
             Route::post('/anfragen/{serviceRequest}/schliessen', [RequestController::class, 'close'])
