@@ -98,6 +98,8 @@ class NotifyMatchedAssessorsJob implements ShouldQueue
                 ['k' => 'Standort', 'v' => $request->locationLabel()],
                 ['k' => 'Fahrzeug', 'v' => $request->vehicleLabel()],
                 $request->vehicle_plate ? ['k' => 'Kennzeichen', 'v' => $request->vehicle_plate, 'mono' => true] : null,
+                $request->vehicle_vin ? ['k' => 'Fahrgestellnummer', 'v' => $request->vehicle_vin, 'mono' => true] : null,
+                $request->vehicle_year ? ['k' => 'Baujahr', 'v' => (string) $request->vehicle_year, 'mono' => true] : null,
                 $request->description ? ['k' => 'Schilderung', 'v' => $request->description] : null,
                 $request->urgency ? ['k' => 'Dringlichkeit', 'v' => $this->urgencyLabel($request->urgency)] : null,
                 $request->preferred_date ? ['k' => 'Wunschtermin', 'v' => Formatter::date($request->preferred_date), 'mono' => true] : null,

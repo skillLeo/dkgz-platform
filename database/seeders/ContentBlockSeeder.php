@@ -249,7 +249,11 @@ class ContentBlockSeeder extends Seeder
     private function invoiceDocument(): array
     {
         return [
-            ['page_key' => 'rechnung', 'section_key' => 'kopf', 'field_key' => 'titel', 'value' => 'Provisionsabrechnung', 'label_de' => 'Titel oben rechts'],
+            ['page_key' => 'rechnung', 'section_key' => 'absender', 'field_key' => 'ueberschrift', 'value' => 'Rechnungssteller', 'label_de' => 'Überschrift Absenderblock'],
+            ['page_key' => 'rechnung', 'section_key' => 'absender', 'field_key' => 'anschrift', 'type' => 'richtext', 'value' => '', 'label_de' => 'Absenderanschrift', 'help_de' => 'Firma, Straße, PLZ und Ort — je Zeile eine Angabe. Leer lassen, um die Angaben aus Einstellungen → Kontakt zu verwenden.'],
+            ['page_key' => 'rechnung', 'section_key' => 'absender', 'field_key' => 'steuer', 'value' => '', 'label_de' => 'Steuernummer / USt-IdNr.', 'help_de' => 'Erscheint klein unter der Anschrift. Leer lassen, um die USt-IdNr. aus Einstellungen → Kontakt zu verwenden.'],
+            ['page_key' => 'rechnung', 'section_key' => 'fuss', 'field_key' => 'zeile', 'type' => 'richtext', 'value' => '', 'label_de' => 'Fußzeile mit Rechtsangaben', 'help_de' => 'Geschäftsführung, Registergericht, Registernummer, Bankverbindung. Leer lassen, um die Angaben aus Einstellungen → Kontakt zu verwenden.'],
+                        ['page_key' => 'rechnung', 'section_key' => 'kopf', 'field_key' => 'titel', 'value' => 'Provisionsabrechnung', 'label_de' => 'Titel oben rechts'],
             ['page_key' => 'rechnung', 'section_key' => 'kopf', 'field_key' => 'einleitung', 'type' => 'richtext', 'value' => 'für die Vermittlung des unten genannten Vorgangs berechnen wir die vereinbarte Vermittlungsgebühr.', 'label_de' => 'Einleitungssatz', 'help_de' => 'Steht über den Angaben zum Vorgang. Leer lassen, um ihn wegzulassen.'],
             ['page_key' => 'rechnung', 'section_key' => 'vorgang', 'field_key' => 'ueberschrift', 'value' => 'Abgerechneter Vorgang', 'label_de' => 'Überschrift Vorgangsdaten'],
             ['page_key' => 'rechnung', 'section_key' => 'posten', 'field_key' => 'ueberschrift', 'value' => 'Leistung', 'label_de' => 'Überschrift Leistung'],

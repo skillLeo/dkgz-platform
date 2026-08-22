@@ -120,6 +120,7 @@ const alignClass = (column) => ({
                             </button>
                             <template v-else>{{ column.label }}</template>
                         </th>
+                    <th v-if="rowHref" scope="col" class="w-px px-4 py-3"><span class="sr-only">Detailansicht</span></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -142,6 +143,22 @@ const alignClass = (column) => ({
                                 >{{ row[column.key] }}</Link>
                                 <template v-else>{{ row[column.key] ?? '—' }}</template>
                             </slot>
+                        </td>
+                        <!--
+                            The row was openable only through its first cell,
+                            which is a target you have to know is there. On a
+                            list of orders somebody is scanning for one, that
+                            reads as "you cannot open these".
+                        -->
+                        <td v-if="rowHref" class="w-px whitespace-nowrap px-4 py-3.5 text-right">
+                            <Link
+                                :href="rowHref(row)"
+                                class="inline-flex items-center gap-1 text-sm text-navy-700 hover:text-navy-500"
+                                :aria-label="`Detailansicht öffnen`"
+                            >
+                                Öffnen
+                                <ChevronRight :size="14" :stroke-width="1.5" aria-hidden="true" />
+                            </Link>
                         </td>
                     </tr>
                 </tbody>

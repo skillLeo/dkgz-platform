@@ -14,6 +14,7 @@ use App\Rules\Iban;
 use App\Support\Settings;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 use Inertia\Inertia;
@@ -310,11 +311,32 @@ class ProfileController extends Controller
             ['photo' => 'das Profilbild']
         );
 
+        $file = $request->file('photo');
+
         try {
-            $store->execute($request->user()->assessor, $request->file('photo'));
+            $path = $store->execute($request->user()->assessor, $file);
         } catch (RuntimeException $e) {
+            Log::warning('Profilbild konnte nicht gespeichert werden.', [
+                'assessor_id' => $request->user()->assessor?->id,
+                'original_name' => $file?->getClientOriginalName(),
+                'mime' => $file?->getMimeType(),
+                'bytes' => $file?->getSize(),
+                'reason' => $e->getMessage(),
+            ]);
+
             return back()->withErrors(['photo' => $e->getMessage()]);
         }
+
+        // Reported as broken three times while every test passed, so the
+        // successful path says so too: without a record there is no way to tell
+        // a request that failed from one that never arrived.
+        Log::info('Profilbild gespeichert.', [
+            'assessor_id' => $request->user()->assessor?->id,
+            'path' => $path,
+            'original_name' => $file?->getClientOriginalName(),
+            'mime' => $file?->getMimeType(),
+            'bytes' => $file?->getSize(),
+        ]);
 
         return back()->with('success', 'Ihr Profilbild wurde gespeichert.');
     }

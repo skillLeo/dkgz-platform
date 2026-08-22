@@ -139,28 +139,38 @@
                         @endif
 
 
-                                {{-- The assessor's portrait, where one was supplied.
-                                     Table-based and with a hard width so Outlook
-                                     lays it out; initials stand in otherwise, so
-                                     the block is never a broken image icon. --}}
-                                @if ($portrait || $portraitInitials)
-                                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="padding-bottom:16px;">
-                                        <tr>
-                                            <td width="64" style="width:64px;vertical-align:middle;">
-                                                @if ($portrait)
-                                                    <img src="{{ $portrait }}" width="64" height="64" alt="Ihr Sachverständiger"
-                                                         style="display:block;width:64px;height:64px;border-radius:32px;border:1px solid {{ $gray200 }};" />
-                                                @else
-                                                    <div style="width:64px;height:64px;border-radius:32px;background:{{ $navy100 }};color:{{ $navy700 }};font-size:20px;font-weight:600;line-height:64px;text-align:center;">{{ $portraitInitials }}</div>
-                                                @endif
+                        {{--
+                            The assessor's portrait, where one was supplied.
+                            Table-based and with a hard width so Outlook lays it
+                            out; initials stand in otherwise, so the block is
+                            never a broken image icon.
+
+                            This block closes itself. It used to hand its own
+                            </td></tr></table> to the data-rows branch below,
+                            which meant a message with a portrait and no rows
+                            left a table open and every following element —
+                            including the footer — drifted inside it.
+                        --}}
+                        @if ($portrait || $portraitInitials)
+                            <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin-top:24px;">
+                                <tr>
+                                    <td width="64" style="width:64px;vertical-align:middle;">
+                                        @if ($portrait)
+                                            <img src="{{ $portrait }}" width="64" height="64" alt="Ihr Sachverständiger"
+                                                 style="display:block;width:64px;height:64px;border-radius:32px;border:1px solid {{ $gray200 }};" />
+                                        @else
+                                            <div style="width:64px;height:64px;border-radius:32px;background:{{ $navy100 }};color:{{ $navy700 }};font-size:20px;font-weight:600;line-height:64px;text-align:center;">{{ $portraitInitials }}</div>
+                                        @endif
+                                    </td>
+                                    @if ($portraitCaption)
+                                        <td style="padding-left:14px;vertical-align:middle;font-size:14px;line-height:1.5;color:{{ $gray800 }};">{{ $portraitCaption }}</td>
+                                    @endif
+                                </tr>
+                            </table>
+                        @endif
 
                         @if (! empty($rows))
                             <div style="padding-top:24px;">
-                                            </td>
-                                        </tr>
-                                    </table>
-                                @endif
-
                                 @if ($dataTitle)
                                     <div style="padding-bottom:12px;font-size:11.5px;font-weight:600;letter-spacing:0.09em;text-transform:uppercase;color:{{ $gray600 }};">{{ $dataTitle }}</div>
                                 @endif

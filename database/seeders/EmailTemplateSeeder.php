@@ -189,6 +189,15 @@ class EmailTemplateSeeder extends Seeder
                 'body_html' => '<p>Guten Tag,</p><p>für die Anfrage {{ referenz }} ({{ gutachtenart }}, {{ plz }} {{ ort }}) konnte kein passender Sachverständiger ermittelt werden.</p><p>Die Anfrage steht in der Administration unter „Nicht vermittelt“ und wartet auf eine manuelle Zuordnung.</p>',
             ],
             [
+                'key' => 'anfrage-storniert',
+                'name_de' => 'Anfrage storniert',
+                'subject_de' => 'Ihre Begutachtung findet nicht statt — {{ referenz }}',
+                'preheader_de' => 'Der Sachverständige hat den Auftrag zurückgegeben. So geht es weiter.',
+                'available_variables' => ['kunde', 'referenz', 'gutachtenart', 'telefon', 'email', 'oeffnungszeiten', 'cta_url'],
+                'body_html' => '<p>Guten Tag {{ kunde }},</p><p>der für Ihre Anfrage {{ referenz }} vorgesehene Sachverständige hat den Auftrag leider zurückgegeben — die Begutachtung findet daher nicht statt.</p><p>Sie können jederzeit eine neue Anfrage stellen; wir vermitteln Ihnen dann einen anderen Sachverständigen. Wenn es eilt, erreichen Sie uns direkt unter {{ telefon }} ({{ oeffnungszeiten }}) oder per E-Mail an {{ email }}.</p>',
+                'note_de' => 'Es sind Ihnen keine Kosten entstanden. Die Vermittlung ist für Sie kostenfrei.',
+            ],
+            [
                 'key' => 'anfrage-keine-rueckmeldung',
                 'name_de' => 'Anfrage ohne Rückmeldung (Kunde)',
                 'subject_de' => 'Ihre Anfrage {{ referenz }} — unser Zwischenstand',

@@ -66,14 +66,23 @@
 <table>
     <tr>
         <td style="width: 50%; vertical-align: top;">
-            <div class="eyebrow">Rechnungssteller</div>
+            <div class="eyebrow">{{ $t('absender', 'ueberschrift', 'Rechnungssteller') }}</div>
             <div class="rule"></div>
             <div style="padding-top: 8pt;">
-                {{ Settings::get('contact.company_name', 'DKGZ Deutsche KFZ-Gutachterzentrale') }}<br>
-                {{ Settings::get('contact.street', '') }}<br>
-                {{ Settings::get('contact.postal_code', '') }} {{ Settings::get('contact.city', '') }}<br>
-                @if (Settings::get('contact.vat_id'))
-                    <span class="small muted">USt-IdNr. {{ Settings::get('contact.vat_id') }}</span>
+                {{-- Free text, so a legal form, an addition or a second address
+                     line all fit. Falls back to the contact settings, which is
+                     what most operators will want to keep it in step with. --}}
+                @if ($t('absender', 'anschrift'))
+                    {!! nl2br(e($t('absender', 'anschrift'))) !!}
+                @else
+                    {{ Settings::get('contact.company_name', 'DKGZ Deutsche KFZ-Gutachterzentrale') }}<br>
+                    {{ Settings::get('contact.street', '') }}<br>
+                    {{ Settings::get('contact.postal_code', '') }} {{ Settings::get('contact.city', '') }}
+                @endif
+                @if ($t('absender', 'steuer'))
+                    <br><span class="small muted">{{ $t('absender', 'steuer') }}</span>
+                @elseif (Settings::get('contact.vat_id'))
+                    <br><span class="small muted">USt-IdNr. {{ Settings::get('contact.vat_id') }}</span>
                 @endif
             </div>
         </td>
@@ -147,12 +156,16 @@
 
 <div style="height: 22pt;"></div>
 <div class="foot">
-    {{ Settings::get('contact.company_name', 'DKGZ Deutsche KFZ-Gutachterzentrale') }} ·
-    {{ Settings::get('contact.street', '') }} ·
-    {{ Settings::get('contact.postal_code', '') }} {{ Settings::get('contact.city', '') }}
-    @if (Settings::get('contact.phone')) · Telefon {{ Settings::get('contact.phone') }} @endif
-    @if (Settings::get('contact.managing_director')) <br>Geschäftsführung: {{ Settings::get('contact.managing_director') }} @endif
-    @if (Settings::get('contact.register_court')) · {{ Settings::get('contact.register_court') }} {{ Settings::get('contact.register_number') }} @endif
+    @if ($t('fuss', 'zeile'))
+        {!! nl2br(e($t('fuss', 'zeile'))) !!}
+    @else
+        {{ Settings::get('contact.company_name', 'DKGZ Deutsche KFZ-Gutachterzentrale') }} ·
+        {{ Settings::get('contact.street', '') }} ·
+        {{ Settings::get('contact.postal_code', '') }} {{ Settings::get('contact.city', '') }}
+        @if (Settings::get('contact.phone')) · Telefon {{ Settings::get('contact.phone') }} @endif
+        @if (Settings::get('contact.managing_director')) <br>Geschäftsführung: {{ Settings::get('contact.managing_director') }} @endif
+        @if (Settings::get('contact.register_court')) · {{ Settings::get('contact.register_court') }} {{ Settings::get('contact.register_number') }} @endif
+    @endif
 </div>
 
 </body>

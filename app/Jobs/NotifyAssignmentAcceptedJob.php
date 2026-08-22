@@ -104,6 +104,16 @@ class NotifyAssignmentAcceptedJob implements ShouldQueue
             // about to inspect the customer's car.
             'sv_bild' => $assessor->photoUrl(),
             'sv_initialen' => $assessor->initials(),
+            'sv_bildunterschrift' => $assessor->company_name,
+            'dataTitle' => 'Ihr Sachverständiger',
+            'rows' => array_values(array_filter([
+                ['k' => 'Büro', 'v' => $assessor->company_name],
+                ['k' => 'Ansprechpartner', 'v' => $assessor->user?->fullName()],
+                $assessor->user?->phone ? ['k' => 'Telefon', 'v' => Formatter::phone($assessor->user->phone), 'mono' => true] : null,
+                ['k' => 'E-Mail', 'v' => $assessor->user?->email],
+                ['k' => 'Art des Gutachtens', 'v' => $request->serviceType?->name_de],
+                ['k' => 'Angenommen am', 'v' => Formatter::dateTime($assignment->accepted_at), 'mono' => true],
+            ])),
             'dataTitle' => 'Ihr Sachverständiger',
             'rows' => array_values(array_filter([
                 ['k' => 'Büro', 'v' => $assessor->company_name],

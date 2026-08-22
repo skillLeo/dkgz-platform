@@ -54,6 +54,7 @@ class GenerateFlowReportCommand extends Command
         'provisionsabrechnung' => ['Partner', 'Monatliche Abrechnung'],
         'haftpflicht-laeuft-ab' => ['Partner', '30, 14 und 3 Tage vor Ablauf sowie am Ablauftag'],
         'anfrage-keine-rueckmeldung' => ['Kunde', 'Alle Partner abgelehnt, manuell geschlossen oder kein Partner im Gebiet'],
+        'anfrage-storniert' => ['Kunde', 'Der Partner hat den Auftrag zurückgegeben'],
         'kontaktanfrage' => ['Büro', 'Kontaktformular abgesendet'],
         'testmail' => ['Gewählte Adresse', 'Administration prüft den Versand'],
     ];

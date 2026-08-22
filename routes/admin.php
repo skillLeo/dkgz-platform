@@ -111,8 +111,13 @@ Route::prefix('admin')
             Route::get('/leistungsarten', [ServiceTypeController::class, 'index'])->name('service-types');
             Route::post('/leistungsarten', [ServiceTypeController::class, 'store'])->name('service-types.store');
             Route::post('/leistungsarten/reihenfolge', [ServiceTypeController::class, 'reorder'])->name('service-types.reorder');
-            Route::post('/leistungsarten/{serviceType}', [ServiceTypeController::class, 'update'])->name('service-types.update');
-            Route::delete('/leistungsarten/{serviceType}', [ServiceTypeController::class, 'destroy'])->name('service-types.destroy');
+            // Bound by id, not by the slug the model prefers: the public URL
+            // wants a readable slug, but the slug is rebuilt from the name on
+            // every save, so an admin renaming a service would be editing a row
+            // that no longer answers to the key they arrived with. Posting the
+            // id at a route expecting a slug is why saving returned 404.
+            Route::post('/leistungsarten/{serviceType:id}', [ServiceTypeController::class, 'update'])->name('service-types.update');
+            Route::delete('/leistungsarten/{serviceType:id}', [ServiceTypeController::class, 'destroy'])->name('service-types.destroy');
         });
 
         // Content, pages, FAQ

@@ -1,6 +1,7 @@
 <?php
 
 use App\Actions\ConfirmAssignmentAction;
+use App\Jobs\NotifyRequestCancelledJob;
 use App\Models\Assessor;
 use App\Models\Assignment;
 use App\Models\Commission;
@@ -9,6 +10,7 @@ use App\Models\ServiceType;
 use Database\Seeders\EmailTemplateSeeder;
 use Database\Seeders\RolePermissionSeeder;
 use Database\Seeders\SettingsSeeder;
+use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\Facades\Storage;
 
 /**
@@ -105,7 +107,7 @@ it('asks why when the job did not come about, and insists on an answer', functio
     expect($assignment->fresh()->status)->toBe(Assignment::STATUS_ACCEPTED);
 });
 
-it('releases the request back into placement when the job fell through', function () {
+it('cancels the request outright when the job fell through', function () {
     $assignment = acceptedAssignment();
 
     $this->actingAs($assignment->assessor->user)
@@ -119,7 +121,20 @@ it('releases the request back into placement when the job fell through', functio
 
     expect($assignment->status)->toBe(Assignment::STATUS_CANCELLED)
         ->and($assignment->cancellation_reason)->toBe('Kunde hat abgesagt')
-        ->and($assignment->serviceRequest->fresh()->status)->toBe(ServiceRequest::STATUS_NEW);
+        ->and($assignment->serviceRequest->fresh()->status)->toBe(ServiceRequest::STATUS_CANCELLED);
+});
+
+it('tells the customer their assessment is not happening', function () {
+    Queue::fake();
+
+    $assignment = acceptedAssignment();
+
+    $this->actingAs($assignment->assessor->user)
+        ->post("/portal/auftraege/{$assignment->id}/nicht-zustande-gekommen", [
+            'reason' => 'kunde_abgesagt',
+        ]);
+
+    Queue::assertPushed(NotifyRequestCancelledJob::class);
 });
 
 it('bills nothing for a job that never happened', function () {

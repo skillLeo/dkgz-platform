@@ -122,6 +122,7 @@ class TemplateMail extends Mailable implements ShouldQueue
                 'ctaUrl' => $this->data['cta_url'] ?? null,
                 'portrait' => $this->data['sv_bild'] ?? null,
                 'portraitInitials' => $this->data['sv_initialen'] ?? null,
+                'portraitCaption' => $this->data['sv_bildunterschrift'] ?? null,
                 'note' => $template?->renderNote($this->data) ?? ($this->data['note'] ?? null),
                 'footnote' => $this->data['footnote'] ?? Settings::get('email.footer_text'),
                 // The sign-off is one setting for every message: it was fixed

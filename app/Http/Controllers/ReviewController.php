@@ -31,6 +31,13 @@ class ReviewController extends Controller
             'review' => [
                 'rating' => $review->rating,
                 'submitted' => $review->isSubmitted(),
+                // Said plainly by the server, which is the only place that
+                // knows the configured threshold. The page used to infer it
+                // from a flash key that was never shared and a hardcoded 8.
+                'needs_feedback' => $review->isSubmitted()
+                    && $review->feedback_category === null
+                    && $review->rating !== null
+                    && $review->rating < Settings::int('business.review_min_rating', 8),
             ],
             'context' => [
                 'reference' => $review->assignment?->serviceRequest?->reference,

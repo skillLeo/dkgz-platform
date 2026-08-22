@@ -20,7 +20,7 @@ const { date } = useGermanFormat()
 const t = (section, field, fallback = '') => props.content?.[section]?.[field] ?? fallback
 
 // The server flashes this once a low rating has been recorded.
-const feedbackStep = ref(Boolean(page.props.flash?.feedback_step) || (props.review.submitted && props.review.rating !== null && props.review.rating < 8))
+const feedbackStep = ref(Boolean(props.review.needs_feedback))
 
 const rating = useForm({ rating: props.review.rating ?? null, feedback: '' })
 const feedback = useForm({ feedback_category: '', feedback: '', may_contact: true })

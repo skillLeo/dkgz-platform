@@ -17,11 +17,16 @@ beforeEach(function () {
     $this->admin->assignRole('admin');
 });
 
+/*
+ * The admin editor addresses a service type by id, not by the slug the model
+ * prefers for public URLs: the slug is rebuilt from the name on every save, so
+ * an admin renaming a service would be posting to a key that no longer exists.
+ */
 describe('the admin fee editor', function () {
     it('stores a fee per service type', function () {
         $type = ServiceType::factory()->create(['dkgz_fee_cents' => null, 'is_active' => true]);
 
-        $this->actingAs($this->admin)->post("/admin/leistungsarten/{$type->slug}", [
+        $this->actingAs($this->admin)->post("/admin/leistungsarten/{$type->id}", [
             'name_de' => $type->name_de,
             'description_de' => $type->description_de,
             'icon' => $type->icon,
@@ -35,7 +40,7 @@ describe('the admin fee editor', function () {
     it('refuses to activate a service with no fee', function () {
         $type = ServiceType::factory()->create(['dkgz_fee_cents' => null]);
 
-        $this->actingAs($this->admin)->post("/admin/leistungsarten/{$type->slug}", [
+        $this->actingAs($this->admin)->post("/admin/leistungsarten/{$type->id}", [
             'name_de' => $type->name_de,
             'is_active' => true,
             'dkgz_fee_cents' => null,

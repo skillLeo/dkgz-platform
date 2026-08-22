@@ -2,6 +2,7 @@
 
 namespace App\Actions;
 
+use App\Jobs\NotifyRequestCancelledJob;
 use App\Models\Assignment;
 use App\Models\ServiceRequest;
 use Illuminate\Support\Facades\DB;
@@ -12,11 +13,12 @@ use RuntimeException;
  *
  * Accepting a request only says the assessor wants it; the customer still has
  * to engage them, and sometimes does not. Recording that honestly matters more
- * than it looks: it releases the request so somebody else can take it, and it
- * is the only way to tell a job that quietly died from one that was settled
- * privately outside the platform — which is what the reasons are for.
+ * than it looks: it is the only way to tell a job that quietly died from one
+ * that was settled privately outside the platform, which is what the reasons
+ * are for.
  *
- * No fee is booked and no invoice goes out. Nothing was earned.
+ * The request is cancelled and the customer is told. No fee is booked and no
+ * invoice goes out — nothing was earned.
  */
 class DeclineAssignmentAction
 {
@@ -42,7 +44,7 @@ class DeclineAssignmentAction
             throw new RuntimeException('Bitte wählen Sie einen Grund aus.');
         }
 
-        return DB::transaction(function () use ($assignment, $reason, $note) {
+        $assignment = DB::transaction(function () use ($assignment, $reason, $note) {
             $previous = $assignment->status;
 
             $assignment->update([
@@ -60,14 +62,21 @@ class DeclineAssignmentAction
                 $note,
             );
 
-            // Back into placement rather than closed: the customer still wants
-            // an assessment, and the office can send it out again.
+            // The request is closed, not quietly reopened. A customer whose
+            // assessment fell through is owed an answer, and an office that
+            // wants to place it again can rematch it deliberately.
             $assignment->serviceRequest?->update([
-                'status' => ServiceRequest::STATUS_NEW,
+                'status' => ServiceRequest::STATUS_CANCELLED,
                 'assigned_at' => null,
             ]);
 
             return $assignment;
         });
+
+        // Outside the transaction: the customer is told what happened, because
+        // silence after handing over their details is the worst outcome here.
+        NotifyRequestCancelledJob::dispatch($assignment->service_request_id);
+
+        return $assignment;
     }
 }
