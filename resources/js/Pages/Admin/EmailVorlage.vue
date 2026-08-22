@@ -1,6 +1,7 @@
 <script setup>
 import { ref } from 'vue'
 import { Head, useForm } from '@inertiajs/vue3'
+import { Monitor, Smartphone } from 'lucide-vue-next'
 import AdminLayout from '../../Layouts/AdminLayout.vue'
 import PageHeader from '../../Components/Layout/PageHeader.vue'
 import SectionLabel from '../../Components/Layout/SectionLabel.vue'
@@ -21,6 +22,12 @@ const props = defineProps({
 const form = useForm({ ...props.template })
 const test = useForm({ email: '' })
 const previewKey = ref(0)
+const previewWidth = ref('desktop')
+
+const previewWidths = [
+    { value: 'desktop', label: 'Desktop', icon: Monitor },
+    { value: 'handy', label: 'Handy', icon: Smartphone },
+]
 
 const save = () => form.post(`/admin/email-vorlagen/${props.template.key}`, {
     preserveScroll: true,
@@ -123,13 +130,39 @@ const insert = (variable) => {
 
             <!-- Live preview, rendered by the server in the real mail layout -->
             <div class="xl:sticky xl:top-6 xl:self-start">
-                <SectionLabel text="Vorschau" tone="muted" />
-                <div class="mt-3 overflow-hidden border border-gray-200 bg-gray-100">
+                <div class="flex flex-wrap items-center justify-between gap-3">
+                    <SectionLabel text="Vorschau" tone="muted" />
+                    <!--
+                        A mail that looks right in a wide frame can still arrive
+                        zoomed out on a phone, and most of these are read on one.
+                        The narrow setting is 375px — an iPhone — so the layout
+                        can be checked here rather than discovered in an inbox.
+                    -->
+                    <div class="flex items-center gap-1 rounded-sm border border-gray-300 bg-white p-0.5">
+                        <button
+                            v-for="option in previewWidths"
+                            :key="option.value"
+                            type="button"
+                            class="inline-flex items-center gap-1.5 rounded-xs px-2.5 py-1 text-sm"
+                            :class="previewWidth === option.value
+                                ? 'bg-navy-700 text-white'
+                                : 'text-gray-600 hover:text-navy-700'"
+                            :aria-pressed="previewWidth === option.value"
+                            @click="previewWidth = option.value"
+                        >
+                            <component :is="option.icon" :size="14" :stroke-width="1.5" aria-hidden="true" />
+                            {{ option.label }}
+                        </button>
+                    </div>
+                </div>
+
+                <div class="mt-3 overflow-hidden border border-gray-200 bg-gray-100 p-3">
                     <iframe
                         :key="previewKey"
                         :src="previewUrl"
                         title="Vorschau der E-Mail"
-                        class="h-(--size-mail-preview) w-full border-0 bg-gray-100"
+                        class="mx-auto block h-(--size-mail-preview) border-0 bg-white transition-[width] duration-(--duration-hover) ease-(--ease-dkgz)"
+                        :style="{ width: previewWidth === 'handy' ? '375px' : '100%', maxWidth: '100%' }"
                     />
                 </div>
             </div>
