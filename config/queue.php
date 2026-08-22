@@ -15,6 +15,9 @@ return [
 
     'drain_after_response' => env('QUEUE_DRAIN_AFTER_RESPONSE', true),
 
+    // Daily maintenance off ordinary traffic, for hosts without cron.
+    'run_maintenance_after_response' => env('QUEUE_RUN_MAINTENANCE', true),
+
     /*
     |--------------------------------------------------------------------------
     | Default Queue Connection Name
