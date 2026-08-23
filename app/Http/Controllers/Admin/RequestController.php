@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Actions\CreateServiceRequestAction;
 use App\Actions\MatchRequestAction;
 use App\Actions\OfferRequestExternallyAction;
 use App\Http\Controllers\Controller;
 use App\Jobs\NotifyCustomerNoResponseJob;
 use App\Jobs\NotifyMatchedAssessorsJob;
+use App\Http\Requests\StoreServiceRequestRequest;
 use App\Models\Assessor;
 use App\Models\RequestMatch;
 use App\Models\RequestOffer;
@@ -391,6 +393,62 @@ class RequestController extends Controller
                 ->values()
                 ->all(),
         ];
+    }
+
+    /** The form for a request taken over the telephone. */
+    public function create(Request $request): Response
+    {
+        $this->authorize('create', ServiceRequest::class);
+
+        return Inertia::render('Admin/AnfrageAnlegen', [
+            'serviceTypes' => ServiceType::active()->ordered()->get(['id', 'name_de', 'description_de']),
+        ]);
+    }
+
+    /**
+     * Creates a request by hand, exactly as the public form does.
+     *
+     * The office takes requests by telephone, and a customer who rings rather
+     * than types must end up in the same place: same confirmation e-mail, same
+     * matching run, same partners notified. That is why this calls the same
+     * action rather than writing its own row — the two cannot drift apart.
+     *
+     * The honeypot and the timing check do not apply here: an operator typing
+     * into the admin panel is already authenticated, and a three-second floor
+     * would only punish somebody who types quickly.
+     */
+    public function store(
+        Request $request,
+        CreateServiceRequestAction $create,
+    ): RedirectResponse {
+        $this->authorize('create', ServiceRequest::class);
+
+        $data = $request->validate(
+            (new StoreServiceRequestRequest)->rulesForOperator(),
+            [],
+            [
+                'service_type_id' => 'die Leistungsart',
+                'postal_code' => 'die Postleitzahl',
+                'city' => 'der Standort',
+                'customer_name' => 'der Name',
+                'customer_phone' => 'die Telefonnummer',
+                'customer_email' => 'die E-Mail-Adresse',
+                'vehicle_make' => 'die Marke',
+                'vehicle_model' => 'das Modell',
+            ]
+        );
+
+        // No IP and no user agent: the request came down a telephone line, and
+        // recording the office's own address as the customer's would be a lie
+        // in the one field that exists to answer where this came from.
+        $serviceRequest = $create->execute($data, $request->file('images'));
+
+        activity()->performedOn($serviceRequest)
+            ->log('Anfrage telefonisch aufgenommen.');
+
+        return redirect()
+            ->route('admin.requests.show', $serviceRequest)
+            ->with('success', "Die Anfrage {$serviceRequest->reference} wurde angelegt und vermittelt.");
     }
 
     /**

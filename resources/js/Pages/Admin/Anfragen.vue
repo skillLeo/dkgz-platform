@@ -40,6 +40,9 @@ const statusSelectOptions = Object.entries(props.statusOptions).map(([value, lab
     <AdminLayout title="Anfragen">
         <PageHeader title="Anfragen" description="Alle eingegangenen Kundenanfragen und ihr Vermittlungsstand.">
             <template #actions>
+                <BaseButton v-if="can('requests.create')" size="compact" href="/admin/anfragen/neu">
+                    Anfrage aufnehmen
+                </BaseButton>
                 <BaseButton v-if="can('requests.export')" variant="secondary" size="compact" href="/admin/anfragen-export">
                     Export
                 </BaseButton>

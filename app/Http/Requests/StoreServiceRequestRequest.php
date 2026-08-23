@@ -19,6 +19,25 @@ class StoreServiceRequestRequest extends FormRequest
         return true;
     }
 
+    /**
+     * The same fields, minus the checks that only make sense for a stranger.
+     *
+     * An operator typing into the admin panel is authenticated, so the honeypot
+     * and the three-second floor would catch nobody and punish anyone who types
+     * quickly. Consent is confirmed on the telephone rather than by ticking a
+     * box, so it is recorded rather than validated.
+     *
+     * @return array<string, mixed>
+     */
+    public function rulesForOperator(): array
+    {
+        $rules = $this->rules();
+
+        unset($rules['consent'], $rules['website'], $rules['rendered_at']);
+
+        return $rules;
+    }
+
     public function rules(): array
     {
         $maxImages = Settings::int('business.max_images_per_request', 5);

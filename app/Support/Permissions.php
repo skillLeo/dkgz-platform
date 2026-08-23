@@ -20,6 +20,7 @@ class Permissions
                 'label' => 'Anfragen',
                 'permissions' => [
                     'requests.view' => 'Anfragen einsehen',
+                    'requests.create' => 'Anfragen telefonisch aufnehmen',
                     'requests.export' => 'Anfragen exportieren',
                     'requests.delete' => 'Anfragen löschen',
                     'requests.reassign' => 'Anfragen erneut vermitteln',
@@ -158,7 +159,7 @@ class Permissions
             'manager' => [
                 'label' => 'Vermittlung',
                 'permissions' => [
-                    'requests.view', 'requests.export', 'requests.reassign',
+                    'requests.view', 'requests.create', 'requests.export', 'requests.reassign',
                     'assignments.view', 'assignments.edit', 'assignments.cancel', 'assignments.export',
                     'assessors.view', 'assessors.create', 'assessors.edit',
                     'assessors.approve', 'assessors.reject', 'assessors.suspend', 'assessors.export',

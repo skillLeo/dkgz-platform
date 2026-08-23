@@ -30,7 +30,13 @@ Route::prefix('admin')
         Route::middleware('can:requests.view')->group(function () {
             Route::get('/anfragen', [RequestController::class, 'index'])->name('requests');
             Route::get('/in-vermittlung', [RequestController::class, 'inPlacement'])->name('requests.in-placement');
+            Route::get('/anfragen/neu', [RequestController::class, 'create'])
+                ->middleware('can:requests.create')->name('requests.create');
             Route::get('/anfragen/{serviceRequest}', [RequestController::class, 'show'])->name('requests.show');
+        });
+        Route::post('/anfragen', [RequestController::class, 'store'])
+            ->middleware('can:requests.create')->name('requests.store');
+        Route::middleware('can:requests.view')->group(function () {
             Route::post('/anfragen/{serviceRequest}/externer-sachverstaendiger', [RequestController::class, 'offerExternally'])
                 ->name('requests.offer');
             Route::post('/anfragen/{serviceRequest}/senden/{assessor}', [RequestController::class, 'notifyAssessor'])

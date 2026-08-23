@@ -7,6 +7,12 @@ use App\Models\User;
 
 class ServiceRequestPolicy
 {
+    /** Taking a request over the telephone on a customer's behalf. */
+    public function create(User $user): bool
+    {
+        return $user->can('requests.create');
+    }
+
     public function viewAny(User $user): bool
     {
         return $user->can('requests.view');
