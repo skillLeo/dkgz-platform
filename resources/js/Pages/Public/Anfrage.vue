@@ -298,10 +298,23 @@ const submit = () => form.post('/anfrage', { forceFormData: true })
                         <p v-if="step === STEPS.length" class="measure pt-3 text-sm leading-normal text-gray-600">
                             {{ t('formular', 'datenschutzhinweis') }}
                         </p>
+                        <p
+                            v-else
+                            class="flex items-center gap-2 pt-3 text-sm text-gray-600 lg:hidden"
+                        >
+                            <Check :size="15" :stroke-width="2" class="shrink-0 text-navy-700" aria-hidden="true" />
+                            {{ t('formular', 'kurzhinweis', 'Kostenlos und unverbindlich') }}
+                        </p>
                     </form>
                 </div>
 
-                <aside class="rounded-card border border-gray-200 bg-white p-6 lg:sticky lg:top-24">
+                <!--
+                    Beside the form on a wide screen, gone on a phone: stacked
+                    below the fields it is a screenful of reassurance somebody
+                    has to scroll past after they have already started. The one
+                    line that still earns its place moves under the button.
+                -->
+                <aside class="hidden rounded-card border border-gray-200 bg-white p-6 lg:sticky lg:top-24 lg:block">
                     <ul class="flex flex-col gap-4">
                         <li v-for="key in ['punkt_1', 'punkt_2', 'punkt_3']" :key="key" class="flex gap-2.5">
                             <Check :size="18" :stroke-width="1.5" class="mt-0.5 shrink-0 text-navy-700" aria-hidden="true" />

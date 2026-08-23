@@ -5,6 +5,7 @@ import {
     ArrowRight, Camera, Car, Check, ChevronDown, ClipboardCheck, Euro, History, Phone, Shield, ShieldCheck, Wrench,
 } from 'lucide-vue-next'
 import PublicLayout from '../../Layouts/PublicLayout.vue'
+import BrandSeal from '../../Components/Layout/BrandSeal.vue'
 import SealMark from '../../Components/Layout/SealMark.vue'
 import BaseButton from '../../Components/Base/BaseButton.vue'
 import GermanyCoverageMap from '../../Components/Domain/GermanyCoverageMap.vue'
@@ -133,7 +134,9 @@ const telHref = computed(() => `tel:${String(page.props.app?.phone ?? '').replac
                         />
                     </div>
                     <div class="absolute bottom-0 left-0 flex items-center gap-3.5 rounded-card border border-gray-200 bg-white px-5 py-4 shadow-(--shadow-1)">
-                        <SealMark :size="44" />
+                        <BrandSeal :size="44">
+                            <SealMark :size="44" />
+                        </BrandSeal>
                         <span>
                             <span class="block text-base font-semibold leading-snug text-navy-700">{{ t('hero', 'siegel_titel') }}</span>
                             <span class="block text-sm leading-snug text-gray-600">{{ t('hero', 'siegel_text') }}</span>

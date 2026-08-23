@@ -108,3 +108,28 @@ it('releases the request when the hold runs out', function () {
 
     expect($assignment->assessor_id)->toBe($rival->id);
 });
+
+it('carries the invited address into the registration form', function () {
+    // The reservation is claimed by matching that exact address, so asking for
+    // it again invites a typo that would quietly cost them the job they just
+    // accepted.
+    $offer = App\Models\RequestOffer::create([
+        'service_request_id' => App\Models\ServiceRequest::factory()->create([
+            'status' => App\Models\ServiceRequest::STATUS_MATCHED,
+        ])->id,
+        'email' => 'extern@beispiel.test',
+        'token' => Illuminate\Support\Str::random(48),
+        'invited_by' => App\Models\User::factory()->create()->id,
+        'sent_at' => now(),
+        'expires_at' => now()->addDays(7),
+    ]);
+
+    $this->post("/auftrag-angebot/{$offer->token}/annehmen")
+        ->assertRedirect(route('register'));
+
+    $this->get('/registrieren')
+        ->assertOk()
+        ->assertInertia(fn ($page) => $page
+            ->where('draft.email', 'extern@beispiel.test')
+            ->where('invitedEmail', 'extern@beispiel.test'));
+});

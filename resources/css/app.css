@@ -157,8 +157,8 @@
    * floor on a short window. svh rather than vh so a mobile browser's
    * collapsing address bar cannot push the panel past the fold. */
   --size-auth-shell:   max(100svh, 760px);
-  --size-hero-image:   340px;  /* partner hero image column */
-  --size-hero-image-min: 280px;
+  --size-hero-image:   280px;  /* partner hero image column */
+  --size-hero-image-min: 230px;
   --size-mail-preview: 860px;  /* e-mail template preview frame */
   --size-sheet-max:    85vh;   /* confirmation sheet on mobile */
   --size-filter-sheet-max: 80vh;

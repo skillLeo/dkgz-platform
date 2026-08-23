@@ -176,6 +176,7 @@ class ContentBlockSeeder extends Seeder
             ['page_key' => 'anfrage', 'section_key' => 'formular', 'field_key' => 'abschnitt_kontakt', 'value' => 'Ihre Kontaktdaten', 'label_de' => 'Abschnitt · Kontaktdaten'],
             ['page_key' => 'anfrage', 'section_key' => 'formular', 'field_key' => 'abschnitt_optional', 'value' => 'Optional', 'label_de' => 'Abschnitt · Optional'],
             ['page_key' => 'anfrage', 'section_key' => 'formular', 'field_key' => 'cta', 'value' => 'Anfrage absenden', 'label_de' => 'Schaltfläche'],
+            ['page_key' => 'anfrage', 'section_key' => 'formular', 'field_key' => 'kurzhinweis', 'value' => 'Kostenlos und unverbindlich', 'label_de' => 'Kurzhinweis unter der Schaltfläche (mobil)', 'help_de' => 'Erscheint auf dem Handy unter „Weiter". Leer lassen, um ihn wegzulassen.'],
             ['page_key' => 'anfrage', 'section_key' => 'formular', 'field_key' => 'datenschutzhinweis', 'value' => 'Ihre Daten werden ausschließlich an den Sachverständigen übermittelt, der den Auftrag annimmt. Es entstehen keine Kosten und keine Verpflichtung.', 'label_de' => 'Hinweis unter der Schaltfläche'],
             ['page_key' => 'anfrage', 'section_key' => 'seitenleiste', 'field_key' => 'punkt_1', 'value' => 'Anfrage und Vermittlung kostenfrei', 'label_de' => 'Seitenleiste · Punkt 1'],
             ['page_key' => 'anfrage', 'section_key' => 'seitenleiste', 'field_key' => 'punkt_2', 'value' => 'Keine Registrierung, kein Kundenkonto', 'label_de' => 'Seitenleiste · Punkt 2'],

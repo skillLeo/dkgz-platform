@@ -22,6 +22,7 @@ import { useGermanFormat } from '../../Composables/useGermanFormat.js'
  */
 const props = defineProps({
     draft: { type: Object, default: () => ({}) },
+    invitedEmail: { type: String, default: null },
     step: { type: Number, default: 1 },
     serviceTypes: { type: Array, default: () => [] },
     legalForms: { type: Object, default: () => ({}) },
@@ -178,7 +179,9 @@ const stepErrors = computed(() =>
                         <BaseInput id="first_name" v-model="form.first_name" label="Vorname" :error="form.errors.first_name" autocomplete="given-name" required />
                         <BaseInput id="last_name" v-model="form.last_name" label="Nachname" :error="form.errors.last_name" autocomplete="family-name" required />
                     </div>
-                    <BaseInput id="email" v-model="form.email" label="E-Mail-Adresse" type="email" :error="form.errors.email" autocomplete="username" placeholder="name@buero.de" hint="Diese Adresse wird für alle Anfragebenachrichtigungen verwendet." required />
+                    <BaseInput id="email" v-model="form.email" label="E-Mail-Adresse" type="email" :error="form.errors.email" autocomplete="username" placeholder="name@buero.de" :hint="invitedEmail
+                        ? `An diese Adresse wurde der Auftrag gesendet — bitte so belassen, damit die Reservierung erhalten bleibt.`
+                        : 'Diese Adresse wird für alle Anfragebenachrichtigungen verwendet.'" required />
                     <BaseInput id="phone" v-model="form.phone" label="Telefonnummer" :error="form.errors.phone" autocomplete="tel" placeholder="+49 179 0000000" numeric required />
                     <BasePasswordInput id="password" v-model="form.password" label="Passwort" autocomplete="new-password" :error="form.errors.password" show-meter show-checklist required />
                     <BasePasswordInput id="password_confirmation" v-model="form.password_confirmation" label="Passwort wiederholen" autocomplete="new-password" :error="form.errors.password_confirmation" required />

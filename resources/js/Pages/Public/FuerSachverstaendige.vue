@@ -41,8 +41,8 @@ const requirements = ['punkt_1', 'punkt_2', 'punkt_3', 'punkt_4', 'punkt_5', 'pu
                         <BaseButton href="/anmelden" variant="outlineInverted" size="cta">{{ t('hero', 'cta_sekundaer') }}</BaseButton>
                     </div>
                 </div>
-                <div class="hidden min-h-(--size-hero-image) items-center py-10 lg:flex">
-                    <div class="h-full min-h-(--size-hero-image-min) w-full border border-white/14">
+                <div class="hidden min-h-(--size-hero-image) items-center justify-end py-10 lg:flex">
+                    <div class="h-full min-h-(--size-hero-image-min) w-full max-w-88 border border-white/14">
                         <img v-if="t('hero', 'bild')" :src="t('hero', 'bild')" alt="Sachverständiger bei der Schadenaufnahme" class="h-full w-full object-cover">
                     </div>
                 </div>

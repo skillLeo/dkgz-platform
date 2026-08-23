@@ -43,13 +43,39 @@ class RegistrationController extends Controller
 
         $draft = $request->session()->get(self::SESSION_KEY, []);
 
+        // Somebody who arrived by accepting a hand-sent offer already told us
+        // their address — it is the one the invitation went to. Asking for it
+        // again invites a typo, and the reservation is claimed by matching that
+        // exact address, so a typo would quietly cost them the job they just
+        // accepted.
+        $reserved = $this->reservedOffer($request);
+
+        if ($reserved !== null) {
+            $draft['email'] ??= $reserved->email;
+        }
+
         return Inertia::render('Auth/Registrieren', [
             'draft' => $draft,
+            'invitedEmail' => $reserved?->email,
             'step' => (int) ($draft['_step'] ?? 1),
             'serviceTypes' => ServiceType::active()->ordered()->get(['id', 'name_de', 'description_de']),
             'legalForms' => $this->legalForms(),
             'certificationBodies' => $this->certificationBodies(),
         ]);
+    }
+
+    /** The offer this visitor accepted, if they arrived from one. */
+    private function reservedOffer(Request $request): ?RequestOffer
+    {
+        $token = $request->session()->get(RequestOfferController::SESSION_KEY);
+
+        if (blank($token)) {
+            return null;
+        }
+
+        $offer = RequestOffer::where('token', $token)->first();
+
+        return $offer?->holdsRequest() ? $offer : null;
     }
 
     /** Autosave for one step. Validates that step only. */

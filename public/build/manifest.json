@@ -767,7 +767,7 @@
     "src": "node_modules/@fontsource/ibm-plex-sans/files/ibm-plex-sans-vietnamese-700-normal.woff2"
   },
   "resources/css/app.css": {
-    "file": "assets/app-qNKxYnKO.css",
+    "file": "assets/app-CYcBe1XS.css",
     "name": "app",
     "names": [
       "app.css"
@@ -1378,7 +1378,7 @@
     ]
   },
   "resources/js/Pages/Auth/Registrieren.vue": {
-    "file": "assets/Registrieren-BtJRyDtw.js",
+    "file": "assets/Registrieren-DSHUO2Lo.js",
     "name": "Registrieren",
     "src": "resources/js/Pages/Auth/Registrieren.vue",
     "isDynamicEntry": true,
@@ -1645,7 +1645,7 @@
     ]
   },
   "resources/js/Pages/Public/Anfrage.vue": {
-    "file": "assets/Anfrage-CKQy2LRJ.js",
+    "file": "assets/Anfrage-n0Ftv0TM.js",
     "name": "Anfrage",
     "src": "resources/js/Pages/Public/Anfrage.vue",
     "isDynamicEntry": true,
@@ -1730,7 +1730,7 @@
     ]
   },
   "resources/js/Pages/Public/FuerSachverstaendige.vue": {
-    "file": "assets/FuerSachverstaendige-CbqLpdzv.js",
+    "file": "assets/FuerSachverstaendige-5yiEsoSx.js",
     "name": "FuerSachverstaendige",
     "src": "resources/js/Pages/Public/FuerSachverstaendige.vue",
     "isDynamicEntry": true,
@@ -1800,7 +1800,7 @@
     ]
   },
   "resources/js/Pages/Public/Startseite.vue": {
-    "file": "assets/Startseite-73XICrWJ.js",
+    "file": "assets/Startseite-CjqmKA3t.js",
     "name": "Startseite",
     "src": "resources/js/Pages/Public/Startseite.vue",
     "isDynamicEntry": true,
@@ -1832,7 +1832,7 @@
     ]
   },
   "resources/js/app.js": {
-    "file": "assets/app-Rxr-8XO8.js",
+    "file": "assets/app-DoSRE7at.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true,

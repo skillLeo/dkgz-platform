@@ -21,10 +21,6 @@ const emit = defineEmits(['go'])
 
 <template>
     <div>
-        <p class="pb-3 text-eyebrow font-semibold uppercase text-gray-600">
-            {{ steps[current - 1]?.label }}
-        </p>
-
         <ol class="flex gap-2">
             <li v-for="step in steps" :key="step.number" class="min-w-0 flex-1">
                 <component
