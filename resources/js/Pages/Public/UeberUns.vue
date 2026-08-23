@@ -20,7 +20,7 @@ const t = (section, field, fallback = '') => props.content?.[section]?.[field] ?
                     <img
                         :src="t('haus', 'bild')"
                         :alt="t('haus', 'bildunterschrift', 'Geschäftsstelle der DKGZ')"
-                        class="w-full rounded-card border border-gray-200 object-cover"
+                        class="aspect-3/2 w-full max-w-160 rounded-card border border-gray-200 object-cover"
                     >
                     <figcaption class="pt-3 text-sm text-gray-600">
                         {{ t('haus', 'bildunterschrift') }}
@@ -58,13 +58,14 @@ const t = (section, field, fallback = '') => props.content?.[section]?.[field] ?
                 </div>
             </div>
 
-            <div class="mt-16 border border-navy-700 p-8">
-                <h2 class="text-h2 font-semibold text-navy-700">Sie sind Kfz-Sachverständiger?</h2>
-                <p class="measure pt-3 text-base leading-normal text-gray-600">
-                    Werden Sie Teil des Partnernetzes und erhalten Sie passende Anfragen aus Ihrem Einsatzgebiet — ohne
-                    Grundgebühr und ohne Vertragslaufzeit.
+            <div v-if="t('partner', 'ueberschrift')" class="mt-16 border border-navy-700 p-8">
+                <h2 class="text-h2 font-semibold text-navy-700">{{ t('partner', 'ueberschrift') }}</h2>
+                <p v-if="t('partner', 'text')" class="measure pt-3 text-base leading-normal text-gray-600">
+                    {{ t('partner', 'text') }}
                 </p>
-                <BaseButton href="/fuer-sachverstaendige" size="cta" class="mt-6">Zum Partnerbereich</BaseButton>
+                <BaseButton href="/fuer-sachverstaendige" size="cta" class="mt-6">
+                    {{ t('partner', 'button', 'Zum Partnerbereich') }}
+                </BaseButton>
             </div>
         </div>
     </PublicLayout>

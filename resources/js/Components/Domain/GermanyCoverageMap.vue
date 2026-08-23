@@ -21,15 +21,22 @@ const props = defineProps({
 
 const active = ref(null)
 
+/**
+ * Every postal region is drawn as served.
+ *
+ * DKGZ vermittelt bundesweit and places a request by hand where the network is
+ * still thin, so a hollow circle over a region said "not us" about somewhere we
+ * do in fact cover — the opposite of what the map is for.
+ */
 const points = computed(() => props.regions
     .filter((region) => ZONE_POINTS[region.digit])
     .map((region) => ({
         ...region,
         ...ZONE_POINTS[region.digit],
+        covered: true,
         label: ZONES[region.digit]?.label ?? '',
     })))
 
-const covered = computed(() => props.regions.filter((r) => r.covered).length)
 const activePoint = computed(() => points.value.find((p) => p.digit === active.value) ?? null)
 </script>
 
@@ -40,7 +47,7 @@ const activePoint = computed(() => points.value.find((p) => p.digit === active.v
                 :viewBox="`0 0 ${MAP.width} ${MAP.height}`"
                 class="h-auto w-full"
                 role="img"
-                :aria-label="`Abdeckung in Deutschland: ${covered} von ${regions.length} Postleitregionen`"
+                aria-label="Bundesweite Abdeckung: DKGZ vermittelt in allen Postleitregionen"
             >
                 <path
                     :d="BORDER_PATH"
@@ -55,7 +62,7 @@ const activePoint = computed(() => points.value.find((p) => p.digit === active.v
                     class="cursor-pointer"
                     tabindex="0"
                     role="button"
-                    :aria-label="`Region ${point.digit}, ${point.places}: ${point.covered ? 'Partner verfügbar' : 'noch kein Partner'}`"
+                    :aria-label="`Region ${point.digit}: ${point.places}`"
                     @mouseenter="active = point.digit"
                     @mouseleave="active = null"
                     @focus="active = point.digit"
@@ -91,30 +98,10 @@ const activePoint = computed(() => points.value.find((p) => p.digit === active.v
             </svg>
 
             <!-- Named on hover, so the map answers rather than decorates. -->
-            <figcaption
-                class="flex min-h-14 flex-col justify-start pt-3"
-                aria-live="polite"
-            >
-                <template v-if="activePoint">
-                    <span class="text-sm font-medium text-navy-700">
-                        <span class="font-mono">{{ activePoint.digit }}xxxx</span> · {{ activePoint.places }}
-                    </span>
-                    <span class="text-sm" :class="activePoint.covered ? 'text-gray-800' : 'text-gray-500'">
-                        {{ activePoint.covered ? 'Partner verfügbar' : 'Noch kein Partner' }}
-                    </span>
-                </template>
-                <template v-else>
-                    <span class="flex flex-wrap items-center gap-x-5 gap-y-2">
-                        <span class="inline-flex items-center gap-2">
-                            <span class="block h-2.5 w-2.5 rounded-full bg-navy-700" aria-hidden="true" />
-                            <span class="text-sm text-gray-800">Partner verfügbar</span>
-                        </span>
-                        <span class="inline-flex items-center gap-2">
-                            <span class="block h-2.5 w-2.5 rounded-full border border-gray-400 bg-white" aria-hidden="true" />
-                            <span class="text-sm text-gray-600">Noch kein Partner</span>
-                        </span>
-                    </span>
-                </template>
+            <figcaption class="min-h-8 pt-3 text-center" aria-live="polite">
+                <span v-if="activePoint" class="text-sm text-gray-800">
+                    <span class="font-mono">{{ activePoint.digit }}xxxx</span> · {{ activePoint.places }}
+                </span>
             </figcaption>
         </figure>
 
@@ -127,22 +114,14 @@ const activePoint = computed(() => points.value.find((p) => p.digit === active.v
                     @mouseenter="active = region.digit"
                     @mouseleave="active = null"
                 >
-                    <span
-                        class="mt-1.5 block h-1.5 w-1.5 shrink-0 rounded-full"
-                        :class="region.covered ? 'bg-navy-700' : 'bg-gray-300'"
-                        aria-hidden="true"
-                    />
-                    <span class="min-w-0 text-sm" :class="region.covered ? 'text-gray-800' : 'text-gray-400'">
+                    <span class="mt-1.5 block h-1.5 w-1.5 shrink-0 rounded-full bg-navy-700" aria-hidden="true" />
+                    <span class="min-w-0 text-sm text-gray-800">
                         <span class="font-mono tabular-nums">{{ region.digit }}</span> · {{ region.places }}
                     </span>
                 </li>
             </ul>
 
-            <p class="measure pt-6 text-sm leading-normal text-gray-600">
-                Die Karte zeigt, in welchen Postleitregionen derzeit freigegebene und verfügbare
-                Sachverständige vermittelt werden können. Sie entsteht aus den hinterlegten
-                Einsatzgebieten unserer Partner und wächst mit dem Netz.
-            </p>
+
         </div>
     </div>
 </template>

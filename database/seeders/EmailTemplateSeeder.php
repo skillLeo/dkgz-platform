@@ -141,6 +141,18 @@ class EmailTemplateSeeder extends Seeder
                 'body_html' => '<p>Guten Tag {{ sv_nachname }},</p><p>Ihr Zugang zum Partnerportal wurde gesperrt. Begründung: {{ grund }}</p><p>Sie erhalten vorerst keine weiteren Anfragen. Zur Klärung wenden Sie sich bitte an die Administration.</p>',
             ],
             [
+                // For people who already work with Carspector: they are not
+                // being asked to trust a stranger, so the message opens by
+                // saying who we are to them rather than introducing itself.
+                'key' => 'einladung-carspector',
+                'name_de' => 'Einladung für bestehende Carspector-Partner',
+                'subject_de' => 'Neu für Carspector-Partner: Aufträge über die DKGZ',
+                'preheader_de' => 'Ihr Zugang ist vorbereitet. Die Einladung ist {{ gueltigkeit_tage }} Tage gültig.',
+                'available_variables' => ['anrede', 'nachname', 'admin_nachricht', 'admin_name', 'admin_datum', 'provisionssatz', 'ablauf_datum', 'gueltigkeit_tage', 'cta_url'],
+                'body_html' => '<p>Guten Tag {{ anrede }} {{ nachname }},</p><p>Sie arbeiten bereits mit Carspector zusammen — vielen Dank dafür.</p><p>Mit der Deutschen KFZ-Gutachterzentrale (DKGZ) haben wir einen zweiten Geschäftsbereich aufgebaut: eine bundesweite Vermittlung von Gutachtenaufträgen direkt an Sachverständige. Anfragen von Privatkunden und Versicherungen werden nach Postleitzahl und Leistungsart an die passenden Partner verteilt, der erste verfügbare Partner übernimmt.</p><p>Für Sie ändert sich an der bestehenden Zusammenarbeit nichts. DKGZ kommt als zusätzliche Auftragsquelle hinzu — ohne Grundgebühr, ohne Mindestabnahme, mit {{ provisionssatz }} je vermitteltem Auftrag.</p><p>Ihr Zugang ist vorbereitet. Sie müssen nur noch Einsatzgebiet und Leistungen ergänzen.</p>',
+                'note_de' => 'Sie erhalten diese Einladung, weil Sie bereits Partner von Carspector sind.',
+            ],
+            [
                 'key' => 'einladung-partnerschaft',
                 'name_de' => 'Einladung zur Partnerschaft',
                 'subject_de' => 'Einladung in das DKGZ-Partnernetz',

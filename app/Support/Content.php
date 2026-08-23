@@ -60,7 +60,13 @@ class Content
                         $value = SafeStorage::url($value);
                     }
 
-                    $blocks[$block->section_key][$block->field_key] = $value;
+                    // An empty block is present and empty, never missing.
+                    // Clearing a field in the admin panel stores null, and a
+                    // null reaching the page is indistinguishable from a block
+                    // that does not exist — so the template fell back to its
+                    // built-in default and the text the operator just deleted
+                    // reappeared.
+                    $blocks[$block->section_key][$block->field_key] = $value ?? '';
                 });
 
                 return $blocks;

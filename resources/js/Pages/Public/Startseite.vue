@@ -5,6 +5,7 @@ import {
     ArrowRight, Camera, Car, Check, ChevronDown, ClipboardCheck, Euro, History, Phone, Shield, ShieldCheck, Wrench,
 } from 'lucide-vue-next'
 import PublicLayout from '../../Layouts/PublicLayout.vue'
+import SealMark from '../../Components/Layout/SealMark.vue'
 import BaseButton from '../../Components/Base/BaseButton.vue'
 import GermanyCoverageMap from '../../Components/Domain/GermanyCoverageMap.vue'
 import ImageSlot from '../../Components/Layout/ImageSlot.vue'
@@ -97,8 +98,8 @@ const telHref = computed(() => `tel:${String(page.props.app?.phone ?? '').replac
                             <ArrowRight :size="20" :stroke-width="1.75" aria-hidden="true" />
                         </BaseButton>
 
-                        <p v-if="t('hero', 'cta_hinweis', 'x')" class="pt-3 text-sm text-gray-600">
-                            {{ t('hero', 'cta_hinweis', 'Kostenlos und unverbindlich · Antwort in der Regel innerhalb von 24 Stunden') }}
+                        <p v-if="t('hero', 'cta_hinweis')" class="pt-3 text-sm text-gray-600">
+                            {{ t('hero', 'cta_hinweis') }}
                         </p>
 
                         <p v-if="page.props.app?.phone" class="pt-4 text-base text-gray-600">
@@ -124,7 +125,7 @@ const telHref = computed(() => `tel:${String(page.props.app?.phone ?? '').replac
                         cropped as the column widened, which is what made the
                         hero look wrong on a large screen.
                     -->
-                    <div class="aspect-4/5 max-h-160 overflow-hidden rounded-card border border-gray-200">
+                    <div class="mx-auto aspect-4/5 max-h-120 max-w-100 overflow-hidden rounded-card border border-gray-200">
                         <ImageSlot
                             :src="t('hero', 'bild')"
                             alt="Kfz-Sachverständiger dokumentiert einen Fahrzeugschaden"
@@ -132,11 +133,7 @@ const telHref = computed(() => `tel:${String(page.props.app?.phone ?? '').replac
                         />
                     </div>
                     <div class="absolute bottom-0 left-0 flex items-center gap-3.5 rounded-card border border-gray-200 bg-white px-5 py-4 shadow-(--shadow-1)">
-                        <span class="grid h-11 w-11 shrink-0 place-items-center rounded-full border border-navy-700" aria-hidden="true">
-                            <span class="grid h-(--spacing-seal-ring-lg) w-(--spacing-seal-ring-lg) place-items-center rounded-full border" style="border-color: var(--dkgz-accent)">
-                                <span class="text-seal-xs font-bold tracking-label text-navy-700">DKGZ</span>
-                            </span>
-                        </span>
+                        <SealMark :size="44" />
                         <span>
                             <span class="block text-base font-semibold leading-snug text-navy-700">{{ t('hero', 'siegel_titel') }}</span>
                             <span class="block text-sm leading-snug text-gray-600">{{ t('hero', 'siegel_text') }}</span>

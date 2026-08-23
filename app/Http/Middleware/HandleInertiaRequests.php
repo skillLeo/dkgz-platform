@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use App\Support\Branding;
+use App\Support\Content;
 use App\Support\Permissions;
 use App\Models\ServiceRequest;
 use App\Support\Settings;
@@ -77,6 +78,12 @@ class HandleInertiaRequests extends Middleware
                 : null,
 
             'app' => [
+                // The notice above the header is one line for the whole site.
+                // It used to be read from whichever page's content happened to
+                // be loaded, so every page but the homepage fell back to the
+                // built-in default and the bar said something different as you
+                // moved around.
+                'announcement' => Content::get('startseite.meldeband.text', 'Bundesweites Netz geprüfter Kfz-Sachverständiger'),
                 'analytics_configured' => filled(Settings::get('integrations.analytics_id')),
                 'poll_seconds' => max(15, Settings::int('business.notification_cadence_minutes', 45)),
                 'name' => Settings::get('branding.platform_name', config('app.name')),

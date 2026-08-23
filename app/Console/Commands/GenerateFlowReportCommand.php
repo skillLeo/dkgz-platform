@@ -48,6 +48,7 @@ class GenerateFlowReportCommand extends Command
         'registrierung-abgelehnt' => ['Partner', 'Administration hat abgelehnt'],
         'konto-gesperrt' => ['Partner', 'Administration hat gesperrt'],
         'einladung-partnerschaft' => ['Eingeladene Person', 'Administration versendet Einladung'],
+        'einladung-carspector' => ['Bestehender Carspector-Partner', 'Administration versendet Einladung mit gesetztem Haken'],
         'anfrage-angebot' => ['Externe Person ohne Zugang', 'Administration sendet eine Anfrage von Hand'],
         'email-bestaetigen' => ['Nutzer', 'Adresse muss bestätigt werden'],
         'passwort-zuruecksetzen' => ['Nutzer', 'Zurücksetzen angefordert'],

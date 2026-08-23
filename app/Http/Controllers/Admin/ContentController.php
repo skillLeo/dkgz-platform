@@ -7,6 +7,7 @@ use App\Models\ContentBlock;
 use App\Models\Faq;
 use App\Models\Page;
 use App\Support\Content;
+use App\Support\ImagePipeline;
 use App\Support\Formatter;
 use App\Support\SafeStorage;
 use Illuminate\Http\RedirectResponse;
@@ -14,6 +15,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Inertia\Response;
+use RuntimeException;
 
 class ContentController extends Controller
 {
@@ -87,14 +89,28 @@ class ContentController extends Controller
         abort_unless($contentBlock->type === 'image', 422);
 
         $request->validate(
-            ['image' => ['required', 'file', 'mimes:png,jpg,jpeg,webp', 'max:4096']],
+            ['image' => ['required', 'file', 'mimes:png,jpg,jpeg,webp', 'max:12288']],
             [],
             ['image' => 'das Bild']
         );
 
         $previous = $contentBlock->value;
 
-        $contentBlock->update(['value' => $request->file('image')->store('inhalte', 'public')]);
+        // Re-encoded rather than stored as uploaded: converts the colour
+        // profile to sRGB so the picture on the page looks like the picture the
+        // operator chose, applies the phone's rotation flag, bounds the size,
+        // and drops the EXIF block including its GPS coordinates.
+        try {
+            $binary = ImagePipeline::encode($request->file('image'));
+        } catch (RuntimeException $e) {
+            return back()->withErrors(['image' => $e->getMessage()]);
+        }
+
+        $path = 'inhalte/'.bin2hex(random_bytes(12)).'.webp';
+
+        Storage::disk('public')->put($path, $binary);
+
+        $contentBlock->update(['value' => $path]);
 
         // Replacing an image deletes the one it replaced. Without this every
         // correction leaves a file nobody can reach and nobody will ever clean.

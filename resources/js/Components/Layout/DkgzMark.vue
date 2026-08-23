@@ -3,6 +3,7 @@ import { computed } from 'vue'
 import { usePage } from '@inertiajs/vue3'
 import BrandLogo from './BrandLogo.vue'
 import BrandSeal from './BrandSeal.vue'
+import SealMark from './SealMark.vue'
 
 /**
  * The wordmark lockup: seal ring, "DKGZ", a 1px gold rule, then the two-line
@@ -35,19 +36,7 @@ const ringColour = computed(() => (props.inverted ? 'border-white/55' : 'border-
         <BrandLogo :inverted="inverted" height="h-9">
         <template #default>
             <BrandSeal :size="s.seal">
-                <span
-                    class="grid shrink-0 place-items-center rounded-full border"
-                    :class="ringColour"
-                    :style="{ width: `${s.seal}px`, height: `${s.seal}px` }"
-                    aria-hidden="true"
-                >
-                    <span
-                        class="grid place-items-center rounded-full border"
-                        :style="{ width: `${s.inner}px`, height: `${s.inner}px`, borderColor: 'var(--dkgz-accent)' }"
-                    >
-                        <span class="text-seal-2xs font-bold" :class="wordColour">DKGZ</span>
-                    </span>
-                </span>
+                <SealMark :size="s.seal" :inverted="inverted" />
             </BrandSeal>
             <span class="font-bold leading-none tracking-wordmark" :class="[s.word, wordColour]">
                 {{ branding.platform_name ?? 'DKGZ' }}

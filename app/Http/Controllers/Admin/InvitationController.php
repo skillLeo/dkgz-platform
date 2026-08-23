@@ -138,6 +138,7 @@ class InvitationController extends Controller
             'emails' => ['required', 'array', 'min:1', 'max:'.InvitationImport::MAX_ROWS],
             'emails.*' => ['required', 'email'],
             'message' => ['nullable', 'string', 'max:1000'],
+            'known_partner' => ['boolean'],
         ], [], [
             'emails' => 'die Adressen',
             'message' => 'die Nachricht',
@@ -166,6 +167,7 @@ class InvitationController extends Controller
             $invitation = Invitation::create([
                 'email' => $email,
                 'role' => 'assessor',
+                'known_partner' => $request->boolean('known_partner'),
                 'token' => Invitation::generateToken(),
                 'invited_by' => $request->user()->id,
                 'message' => $data['message'] ?? null,

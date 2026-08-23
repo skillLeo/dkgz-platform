@@ -13,7 +13,7 @@ class Invitation extends Model
     use HasFactory;
 
     protected $fillable = [
-        'email', 'role', 'token', 'invited_by', 'message', 'accepted_at', 'expires_at',
+        'email', 'role', 'known_partner', 'token', 'invited_by', 'message', 'accepted_at', 'expires_at',
     ];
 
     protected $hidden = ['token'];
@@ -21,6 +21,7 @@ class Invitation extends Model
     protected function casts(): array
     {
         return [
+            'known_partner' => 'boolean',
             'accepted_at' => 'datetime',
             'expires_at' => 'datetime',
         ];

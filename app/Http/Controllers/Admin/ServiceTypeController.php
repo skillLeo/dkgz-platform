@@ -52,7 +52,7 @@ class ServiceTypeController extends Controller
         $data = $this->validated($request);
 
         ServiceType::create($data + [
-            'slug' => Str::slug($data['name_de']),
+            'slug' => $this->uniqueSlug($data['name_de']),
             'sort_order' => (int) ServiceType::max('sort_order') + 1,
         ]);
 
@@ -63,8 +63,17 @@ class ServiceTypeController extends Controller
     {
         $this->authorize('update', $serviceType);
 
-        // Saving means a person has reviewed the seeded draft.
-        $serviceType->update([...$this->validated($request, $serviceType), 'content_is_placeholder' => false]);
+        $data = $this->validated($request, $serviceType);
+
+        // The public URL follows the name. Renaming a service and leaving it
+        // reachable at the old address means the address describes something
+        // that is no longer there.
+        $serviceType->update([
+            ...$data,
+            'slug' => $this->uniqueSlug($data['name_de'], $serviceType),
+            // Saving means a person has reviewed the seeded draft.
+            'content_is_placeholder' => false,
+        ]);
 
         return back()->with('success', 'Die Leistungsart wurde gespeichert.');
     }
@@ -95,6 +104,28 @@ class ServiceTypeController extends Controller
     }
 
     /** @return array<string, mixed> */
+    /**
+     * A URL-safe slug from the name, kept unique.
+     *
+     * Two services may legitimately be named similarly; the second gets a
+     * numeric suffix rather than silently taking over the first one's address.
+     */
+    private function uniqueSlug(string $name, ?ServiceType $existing = null): string
+    {
+        $base = Str::slug($name) ?: 'leistung';
+        $slug = $base;
+        $suffix = 2;
+
+        while (ServiceType::where('slug', $slug)
+            ->when($existing, fn ($q) => $q->whereKeyNot($existing->getKey()))
+            ->exists()
+        ) {
+            $slug = $base.'-'.$suffix++;
+        }
+
+        return $slug;
+    }
+
     private function validated(Request $request, ?ServiceType $existing = null): array
     {
         return $request->validate([

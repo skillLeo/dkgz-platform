@@ -5,6 +5,7 @@ import { Link, usePage } from '@inertiajs/vue3'
 import { Menu, X } from 'lucide-vue-next'
 import BrandLogo from '../Components/Layout/BrandLogo.vue'
 import BrandSeal from '../Components/Layout/BrandSeal.vue'
+import SealMark from '../Components/Layout/SealMark.vue'
 import FlagRule from '../Components/Layout/FlagRule.vue'
 import BaseButton from '../Components/Base/BaseButton.vue'
 import FlashMessage from '../Components/Feedback/FlashMessage.vue'
@@ -46,13 +47,19 @@ onUnmounted(() => window.removeEventListener('scroll', onScroll))
 
 <template>
     <div class="flex min-h-screen flex-col bg-white">
-        <!-- Meldeband, 28px -->
-        <div class="hidden h-7 items-center bg-navy-900 md:flex">
-            <div class="mx-auto flex w-full max-w-(--container-shell) items-center justify-between gap-6 px-6">
-                <span class="text-xs tracking-nav text-gray-300">
-                    {{ t('meldeband', 'text', 'Bundesweites Netz geprüfter Kfz-Sachverständiger') }}
+        <!--
+            Meldeband, 28px. The text comes from the shared props rather than
+            the page's own content, so it reads the same on every page, and it
+            sits in the middle column of a three-column grid so it is centred on
+            the page rather than merely left of the contact details.
+        -->
+        <div v-if="app.announcement" class="hidden h-7 items-center bg-navy-900 md:flex">
+            <div class="mx-auto grid w-full max-w-(--container-shell) grid-cols-[1fr_auto_1fr] items-center gap-6 px-6">
+                <span aria-hidden="true" />
+                <span class="text-center text-xs tracking-nav text-gray-300">
+                    {{ app.announcement }}
                 </span>
-                <div class="flex items-center gap-5">
+                <div class="flex items-center justify-end gap-5">
                     <a v-if="app.phone" :href="telHref(app.phone)" class="font-mono text-xs tabular-nums text-white">{{ app.phone }}</a>
                     <span class="h-3 w-px bg-white/22" aria-hidden="true" />
                     <span v-if="app.office_hours" class="text-xs text-gray-300">{{ app.office_hours }}</span>
@@ -66,15 +73,8 @@ onUnmounted(() => window.removeEventListener('scroll', onScroll))
             <div class="mx-auto flex h-18 w-full max-w-(--container-shell) items-center justify-between gap-8 px-4 md:px-6">
                 <Link href="/" class="flex items-center gap-3.5" aria-label="Zur Startseite">
                     <BrandLogo height="h-10">
-                    <BrandSeal :size="40">
-                        <span class="grid h-10 w-10 shrink-0 place-items-center rounded-full border border-navy-700" aria-hidden="true">
-                            <span
-                                class="grid h-(--spacing-seal-ring) w-(--spacing-seal-ring) place-items-center rounded-full border"
-                                style="border-color: var(--dkgz-accent)"
-                            >
-                                <span class="text-seal-3xs font-bold tracking-label text-navy-700">DKGZ</span>
-                            </span>
-                        </span>
+                    <BrandSeal :size="42">
+                        <SealMark :size="42" />
                     </BrandSeal>
                     <span class="text-mark font-bold leading-none tracking-wordmark text-navy-700">DKGZ</span>
                     <span class="h-(--spacing-mark-rule) w-px shrink-0" style="background: var(--dkgz-accent)" aria-hidden="true" />

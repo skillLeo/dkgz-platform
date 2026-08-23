@@ -27,9 +27,18 @@ class SendInvitationJob implements ShouldQueue
             return;
         }
 
-        Mailer::send($invitation->email, 'einladung-partnerschaft', [
+        // Somebody who already works with Carspector is not being asked to
+        // trust a stranger; they are being told the firm they know has opened a
+        // second line of business. Same invitation, different first sentence.
+        $template = $invitation->known_partner
+            ? 'einladung-carspector'
+            : 'einladung-partnerschaft';
+
+        Mailer::send($invitation->email, $template, [
             'eyebrow' => 'Einladung',
-            'headline' => 'Sie wurden in das DKGZ-Partnernetz eingeladen.',
+            'headline' => $invitation->known_partner
+                ? 'Ihr Zugang zur Deutschen KFZ-Gutachterzentrale.'
+                : 'Sie wurden in das DKGZ-Partnernetz eingeladen.',
             'salutation' => 'Guten Tag,',
             'admin_nachricht' => $invitation->message ?? '',
             'admin_name' => $invitation->invitedBy?->fullName() ?? 'DKGZ Administration',

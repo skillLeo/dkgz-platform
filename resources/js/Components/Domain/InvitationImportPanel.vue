@@ -1,8 +1,9 @@
 <script setup>
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useForm, usePage } from '@inertiajs/vue3'
 import { Upload } from 'lucide-vue-next'
 import BaseButton from '../Base/BaseButton.vue'
+import BaseCheckbox from '../Base/BaseCheckbox.vue'
 import BaseTextarea from '../Base/BaseTextarea.vue'
 import FieldError from '../Feedback/FieldError.vue'
 
@@ -26,7 +27,24 @@ const page = usePage()
 
 const fileInput = ref(null)
 const upload = useForm({ file: null })
-const send = useForm({ emails: [], message: DEFAULT_MESSAGE })
+// Existing Carspector partners get the same invitation with a different first
+// sentence: they are being told the firm they already work with has opened a
+// second line of business, not introduced to a stranger.
+const KNOWN_PARTNER_MESSAGE = `Sie arbeiten bereits mit Carspector zusammen — vielen Dank dafür.\n\n`
+    + `Mit der Deutschen KFZ-Gutachterzentrale (DKGZ) haben wir einen zweiten Geschäftsbereich `
+    + `aufgebaut: eine bundesweite Vermittlung von Gutachtenaufträgen direkt an Sachverständige. `
+    + `An der bestehenden Zusammenarbeit ändert sich dadurch nichts — DKGZ kommt als zusätzliche `
+    + `Auftragsquelle hinzu.\n\n`
+    + `Ihr Zugang ist bereits vorbereitet. Sie müssen nur noch Einsatzgebiet und Leistungen ergänzen.`
+
+const send = useForm({ emails: [], message: DEFAULT_MESSAGE, known_partner: false })
+
+// Switching the audience swaps the wording, unless it has been edited by hand.
+watch(() => send.known_partner, (isKnown, wasKnown) => {
+    const untouched = send.message === (wasKnown ? KNOWN_PARTNER_MESSAGE : DEFAULT_MESSAGE)
+
+    if (untouched) send.message = isKnown ? KNOWN_PARTNER_MESSAGE : DEFAULT_MESSAGE
+})
 
 const preview = computed(() => page.props.flash?.invitationPreview ?? null)
 
@@ -134,13 +152,24 @@ const dispatchAll = () => {
                 </table>
             </div>
 
+            <div class="rounded-sm border border-gray-200 bg-gray-50 p-4 mt-5">
+                <BaseCheckbox v-model="send.known_partner">
+                    Diese Liste enthält bestehende Carspector-Partner
+                </BaseCheckbox>
+                <p class="measure pl-7 pt-1.5 text-sm leading-normal text-gray-600">
+                    Dann wird die Einladung als Ankündigung eines zweiten Geschäftsbereichs
+                    formuliert statt als Vorstellung eines unbekannten Anbieters — und die
+                    Nachricht unten wird entsprechend vorbelegt.
+                </p>
+            </div>
+
             <BaseTextarea
                 v-model="send.message"
                 label="Nachricht an alle Eingeladenen"
                 hint="Erscheint in jeder Einladungs-E-Mail über dem Zugangslink."
                 :rows="8"
                 :error="send.errors.message"
-                class="pt-5"
+                class="pt-4"
             />
 
             <div class="flex flex-wrap items-center gap-3 pt-5">

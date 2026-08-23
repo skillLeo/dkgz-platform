@@ -4,6 +4,7 @@ import { useForm } from '@inertiajs/vue3'
 import { Check } from 'lucide-vue-next'
 import RequestFlowLayout from '../../Layouts/RequestFlowLayout.vue'
 import SectionLabel from '../../Components/Layout/SectionLabel.vue'
+import RequestProgress from '../../Components/Domain/RequestProgress.vue'
 import BaseInput from '../../Components/Base/BaseInput.vue'
 import BaseSelect from '../../Components/Base/BaseSelect.vue'
 import BaseTextarea from '../../Components/Base/BaseTextarea.vue'
@@ -49,6 +50,69 @@ const form = useForm({
 
 onMounted(() => { form.rendered_at = Date.now() })
 
+/**
+ * Three steps rather than one long form.
+ *
+ * The fields are unchanged and so is the submission: only the last step posts,
+ * so a half-filled request is never sent and the server-side validation stays
+ * the single source of truth. Moving forward checks the fields on the current
+ * step so somebody is told about a missing postal code there, rather than four
+ * screens later.
+ */
+const STEPS = [
+    { number: 1, label: 'Leistung und Standort', short: 'Leistung' },
+    { number: 2, label: 'Angaben zum Fahrzeug', short: 'Fahrzeug' },
+    { number: 3, label: 'Kontakt und Dringlichkeit', short: 'Kontakt' },
+]
+
+const REQUIRED_BY_STEP = {
+    1: ['service_type_id', 'postal_code', 'city'],
+    2: ['vehicle_make', 'vehicle_model'],
+    3: ['customer_name', 'customer_phone', 'customer_email', 'consent'],
+}
+
+const LABELS_BY_FIELD = {
+    service_type_id: 'Bitte wählen Sie die Art des Gutachtens.',
+    postal_code: 'Bitte geben Sie die Postleitzahl an.',
+    city: 'Bitte geben Sie den Standort des Fahrzeugs an.',
+    vehicle_make: 'Bitte geben Sie die Marke an.',
+    vehicle_model: 'Bitte geben Sie das Modell an.',
+    customer_name: 'Bitte geben Sie Ihren Namen an.',
+    customer_phone: 'Bitte geben Sie eine Telefonnummer an.',
+    customer_email: 'Bitte geben Sie eine E-Mail-Adresse an.',
+    consent: 'Bitte bestätigen Sie die Einwilligung.',
+}
+
+const step = ref(1)
+const furthest = ref(1)
+
+const goTo = (target) => {
+    step.value = target
+    furthest.value = Math.max(furthest.value, target)
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+}
+
+const next = () => {
+    const missing = REQUIRED_BY_STEP[step.value].filter((field) => {
+        const value = form[field]
+
+        return field === 'consent' ? value !== true : String(value ?? '').trim() === ''
+    })
+
+    if (missing.length) {
+        // Shown the same way the server shows its own, so the two never look
+        // like different kinds of problem.
+        form.setError(Object.fromEntries(missing.map((f) => [f, LABELS_BY_FIELD[f]])))
+
+        return
+    }
+
+    form.clearErrors()
+    goTo(step.value + 1)
+}
+
+const back = () => goTo(step.value - 1)
+
 const labels = {
     service_type_id: 'Art des Gutachtens',
     postal_code: 'Postleitzahl',
@@ -91,11 +155,15 @@ const submit = () => form.post('/anfrage', { forceFormData: true })
                             <input id="website" v-model="form.website" type="text" tabindex="-1" autocomplete="off">
                         </div>
 
-                        <div class="border-b border-gray-200 pb-5">
-                            <SectionLabel :text="t('formular', 'abschnitt_anliegen', 'Ihr Anliegen')" tone="muted" :with-rule="false" />
-                        </div>
+                        <RequestProgress
+                            :steps="STEPS"
+                            :current="step"
+                            :furthest="furthest"
+                            class="pb-7"
+                            @go="goTo"
+                        />
 
-                        <div class="flex flex-col gap-5 pt-6">
+                        <div v-show="step === 1" class="flex flex-col gap-5">
                             <BaseSelect
                                 id="service_type_id"
                                 v-model="form.service_type_id"
@@ -123,31 +191,17 @@ const submit = () => form.post('/anfrage', { forceFormData: true })
                                 />
                             </div>
 
+                        </div>
+
+                        <!-- Step 2 -->
+                        <div v-show="step === 2" class="flex flex-col gap-5">
                             <div class="grid grid-cols-2 gap-4 lg:grid-cols-4">
                                 <BaseInput id="vehicle_make" v-model="form.vehicle_make" label="Marke" placeholder="VW" :error="form.errors.vehicle_make" required />
                                 <BaseInput id="vehicle_model" v-model="form.vehicle_model" label="Modell" placeholder="Passat B8" :error="form.errors.vehicle_model" required />
                                 <BaseInput id="vehicle_year" v-model="form.vehicle_year" label="Baujahr" placeholder="2019" inputmode="numeric" maxlength="4" numeric :error="form.errors.vehicle_year" />
                                 <BaseInput id="vehicle_plate" v-model="form.vehicle_plate" label="Kennzeichen" placeholder="D-AB 1234" :error="form.errors.vehicle_plate" />
                             </div>
-                        </div>
 
-                        <div class="mt-8 border-b border-gray-200 pb-5">
-                            <SectionLabel :text="t('formular', 'abschnitt_kontakt', 'Ihre Kontaktdaten')" tone="muted" :with-rule="false" />
-                        </div>
-
-                        <div class="flex flex-col gap-5 pt-6">
-                            <BaseInput id="customer_name" v-model="form.customer_name" label="Vor- und Nachname" placeholder="Martina Reinhardt" autocomplete="name" :error="form.errors.customer_name" required />
-                            <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                                <BaseInput id="customer_phone" v-model="form.customer_phone" label="Telefon" placeholder="+49 179 0000000" autocomplete="tel" numeric :error="form.errors.customer_phone" required />
-                                <BaseInput id="customer_email" v-model="form.customer_email" label="E-Mail" type="email" placeholder="name@beispiel.de" autocomplete="email" :error="form.errors.customer_email" required />
-                            </div>
-                        </div>
-
-                        <div class="mt-8 border-b border-gray-200 pb-5">
-                            <SectionLabel :text="t('formular', 'abschnitt_optional', 'Optional')" tone="muted" :with-rule="false" />
-                        </div>
-
-                        <div class="flex flex-col gap-5 pt-6">
                             <BaseTextarea
                                 id="description"
                                 v-model="form.description"
@@ -168,6 +222,15 @@ const submit = () => form.post('/anfrage', { forceFormData: true })
                                 :max-size-mb="maxUploadMb"
                                 :error="form.errors.images"
                             />
+                        </div>
+
+                        <!-- Step 3 -->
+                        <div v-show="step === 3" class="flex flex-col gap-5">
+                            <BaseInput id="customer_name" v-model="form.customer_name" label="Vor- und Nachname" placeholder="Martina Reinhardt" autocomplete="name" :error="form.errors.customer_name" required />
+                            <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                                <BaseInput id="customer_phone" v-model="form.customer_phone" label="Telefon" placeholder="+49 179 0000000" autocomplete="tel" numeric :error="form.errors.customer_phone" required />
+                                <BaseInput id="customer_email" v-model="form.customer_email" label="E-Mail" type="email" placeholder="name@beispiel.de" autocomplete="email" :error="form.errors.customer_email" required />
+                            </div>
 
                             <BaseSelect
                                 id="urgency"
@@ -178,22 +241,53 @@ const submit = () => form.post('/anfrage', { forceFormData: true })
                                 optional
                                 class="max-w-80"
                             />
+
+                            <div class="pt-2">
+                                <BaseCheckbox id="consent" v-model="form.consent" :error="form.errors.consent">
+                                    Ich willige ein, dass DKGZ meine Angaben zur Vermittlung an geeignete Sachverständige
+                                    verarbeitet. Die
+                                    <a href="/datenschutz" class="border-b border-navy-700 pb-0.5 text-navy-700">Datenschutzerklärung</a>
+                                    habe ich gelesen.
+                                </BaseCheckbox>
+                            </div>
                         </div>
 
-                        <div class="pt-8">
-                            <BaseCheckbox id="consent" v-model="form.consent" :error="form.errors.consent">
-                                Ich willige ein, dass DKGZ meine Angaben zur Vermittlung an geeignete Sachverständige
-                                verarbeitet. Die
-                                <a href="/datenschutz" class="border-b border-navy-700 pb-0.5 text-navy-700">Datenschutzerklärung</a>
-                                habe ich gelesen.
-                            </BaseCheckbox>
+                        <!--
+                            Only the last step submits, so a half-filled request
+                            can never be sent and the server stays the single
+                            authority on what is valid.
+                        -->
+                        <div class="flex flex-col-reverse gap-3 pt-8 sm:flex-row sm:items-center">
+                            <BaseButton
+                                v-if="step > 1"
+                                type="button"
+                                variant="secondary"
+                                size="cta"
+                                class="w-full sm:w-auto"
+                                @click="back"
+                            >Zurück</BaseButton>
+
+                            <BaseButton
+                                v-if="step < STEPS.length"
+                                type="button"
+                                size="cta"
+                                class="w-full sm:ml-auto sm:w-auto"
+                                @click="next"
+                            >Weiter</BaseButton>
+
+                            <BaseButton
+                                v-else
+                                type="submit"
+                                size="cta"
+                                class="w-full sm:ml-auto sm:w-auto"
+                                :loading="form.processing"
+                                loading-label="Wird gesendet…"
+                            >{{ t('formular', 'cta', 'Anfrage absenden') }}</BaseButton>
                         </div>
 
-                        <BaseButton type="submit" size="cta" block class="mt-8" :loading="form.processing" loading-label="Wird gesendet…">
-                            {{ t('formular', 'cta', 'Anfrage absenden') }}
-                        </BaseButton>
-
-                        <p class="measure pt-3 text-sm leading-normal text-gray-600">{{ t('formular', 'datenschutzhinweis') }}</p>
+                        <p v-if="step === STEPS.length" class="measure pt-3 text-sm leading-normal text-gray-600">
+                            {{ t('formular', 'datenschutzhinweis') }}
+                        </p>
                     </form>
                 </div>
 

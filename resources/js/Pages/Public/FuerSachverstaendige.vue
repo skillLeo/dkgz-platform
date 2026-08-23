@@ -1,4 +1,5 @@
 <script setup>
+import { computed } from 'vue'
 import { Head, useForm } from '@inertiajs/vue3'
 import { Check } from 'lucide-vue-next'
 import PublicLayout from '../../Layouts/PublicLayout.vue'
@@ -14,6 +15,13 @@ const props = defineProps({
 
 const t = (section, field, fallback = '') => props.content?.[section]?.[field] ?? fallback
 
+
+const feeRows = computed(() => [1, 2, 3, 4]
+    .map((n) => ({
+        title: t('provision', `punkt_${n}_titel`),
+        text: t('provision', `punkt_${n}_text`),
+    }))
+    .filter((row) => row.title || row.text))
 
 const requirements = ['punkt_1', 'punkt_2', 'punkt_3', 'punkt_4', 'punkt_5', 'punkt_6']
 </script>
@@ -46,33 +54,19 @@ const requirements = ['punkt_1', 'punkt_2', 'punkt_3', 'punkt_4', 'punkt_5', 'pu
                 <h2 class="text-h2 font-semibold text-navy-700">{{ t('provision', 'ueberschrift') }}</h2>
                 <p class="measure pt-4 text-base leading-normal text-gray-600">{{ t('provision', 'text') }}</p>
 
+                <!--
+                    Four rows, all editable. They were fixed text in the
+                    template, which meant the one page that explains what DKGZ
+                    charges could not be corrected without a deployment.
+                -->
                 <dl class="border-t border-gray-200">
-                    <div class="grid gap-1 border-b border-gray-100 py-4 sm:grid-cols-[minmax(0,18rem)_minmax(0,1fr)] sm:gap-6">
-                        <dt class="text-sm font-medium text-gray-800">Feste Gebühr je Gutachtenart</dt>
-                        <dd class="measure text-sm leading-normal text-gray-600">
-                            DKGZ berechnet keinen Prozentsatz Ihres Honorars, sondern einen festen Betrag je
-                            vermitteltem Auftrag. Wie hoch er ist, hängt von der Art des Gutachtens ab.
-                        </dd>
-                    </div>
-                    <div class="grid gap-1 border-b border-gray-100 py-4 sm:grid-cols-[minmax(0,18rem)_minmax(0,1fr)] sm:gap-6">
-                        <dt class="text-sm font-medium text-gray-800">Vor Ihrer Entscheidung sichtbar</dt>
-                        <dd class="measure text-sm leading-normal text-gray-600">
-                            Der genaue Betrag steht bei jeder Anfrage, die Sie erreicht — bevor Sie annehmen.
-                            Nach der Annahme ändert er sich für diesen Auftrag nicht mehr.
-                        </dd>
-                    </div>
-                    <div class="grid gap-1 border-b border-gray-100 py-4 sm:grid-cols-[minmax(0,18rem)_minmax(0,1fr)] sm:gap-6">
-                        <dt class="text-sm font-medium text-gray-800">Nur bei Abschluss</dt>
-                        <dd class="measure text-sm leading-normal text-gray-600">
-                            Keine Grundgebühr, keine Kosten pro Anfrage und keine Berechnung für Anfragen, die
-                            Sie ablehnen. Eine Ablehnung wirkt sich nicht auf die weitere Verteilung aus.
-                        </dd>
-                    </div>
-                    <div class="grid gap-1 py-4 sm:grid-cols-[minmax(0,18rem)_minmax(0,1fr)] sm:gap-6">
-                        <dt class="text-sm font-medium text-gray-800">Abrechnung</dt>
-                        <dd class="measure text-sm leading-normal text-gray-600">
-                            Monatlich als Sammelrechnung über die im Berichtsmonat abgeschlossenen Aufträge.
-                        </dd>
+                    <div
+                        v-for="(row, index) in feeRows"
+                        :key="`gebuehr-${index}`"
+                        class="grid gap-1 border-b border-gray-100 py-4 last:border-b-0 sm:grid-cols-[minmax(0,18rem)_minmax(0,1fr)] sm:gap-6"
+                    >
+                        <dt class="text-sm font-medium text-gray-800">{{ row.title }}</dt>
+                        <dd class="measure text-sm leading-normal text-gray-600">{{ row.text }}</dd>
                     </div>
                 </dl>
 

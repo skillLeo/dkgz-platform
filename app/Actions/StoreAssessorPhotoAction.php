@@ -3,12 +3,9 @@
 namespace App\Actions;
 
 use App\Models\Assessor;
+use App\Support\ImagePipeline;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
-use Intervention\Image\Drivers\Gd\Driver as GdDriver;
-use Intervention\Image\Encoders\WebpEncoder;
-use Intervention\Image\ImageManager;
-use RuntimeException;
 
 /**
  * Stores an assessor's portrait.
@@ -25,29 +22,17 @@ class StoreAssessorPhotoAction
     /** Square, and large enough for a retina display at the size it is shown. */
     private const EDGE = 512;
 
-    private const ALLOWED = ['image/jpeg', 'image/png', 'image/webp'];
-
     public function execute(Assessor $assessor, UploadedFile $file): string
     {
-        if (! $file->isValid()) {
-            throw new RuntimeException('Die Datei konnte nicht gelesen werden.');
-        }
-
-        // Trust the content, never the extension.
-        if (! in_array($file->getMimeType(), self::ALLOWED, true)) {
-            throw new RuntimeException('Bitte laden Sie ein Bild im Format JPG, PNG oder WebP hoch.');
-        }
-
-        $image = ImageManager::usingDriver(new GdDriver)->decodePath($file->getRealPath());
-
         // Centre-cropped to a square: a portrait shown in a circle looks wrong
-        // at any other aspect ratio, and cropping here beats cropping in CSS
-        // on every surface that displays it.
-        $image->cover(self::EDGE, self::EDGE);
+        // at any other aspect ratio, and cropping here beats cropping in CSS on
+        // every surface that displays it. The pipeline handles the colour
+        // profile, the rotation flag and the EXIF block.
+        $binary = ImagePipeline::encode($file, square: self::EDGE);
 
         $path = 'sachverstaendige/'.$assessor->id.'/'.bin2hex(random_bytes(12)).'.webp';
 
-        Storage::disk('public')->put($path, (string) $image->encode(new WebpEncoder(quality: 85)));
+        Storage::disk('public')->put($path, $binary);
 
         $this->forget($assessor->photo_path);
 
