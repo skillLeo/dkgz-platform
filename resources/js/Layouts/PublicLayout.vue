@@ -95,16 +95,15 @@ onUnmounted(() => window.removeEventListener('scroll', onScroll))
 
                 <div class="flex items-center gap-3">
                     <!--
-                        Wrapped rather than hidden directly: BaseButton sets
-                        inline-flex on itself, which beat the `hidden` passed in
-                        from here, so the call to action appeared on a phone
-                        where there is no room for it and broke across two lines
-                        beside the wordmark. The span owns the visibility, the
-                        button owns its own layout, and neither fights.
+                        Always present, and never wrapped: on a narrow screen the
+                        label sheds its second word rather than the button
+                        disappearing, so the one thing a visitor came to do is
+                        reachable at every width. Hiding a word costs nothing;
+                        hiding the button costs the request.
                     -->
-                    <span class="hidden sm:block">
-                        <BaseButton href="/anfrage" size="compact" class="whitespace-nowrap">Anfrage starten</BaseButton>
-                    </span>
+                    <BaseButton href="/anfrage" size="compact" class="whitespace-nowrap">
+                        Anfrage<span class="hidden sm:inline">&nbsp;starten</span>
+                    </BaseButton>
                     <button
                         type="button"
                         class="grid h-11 w-11 place-items-center text-navy-700 lg:hidden"

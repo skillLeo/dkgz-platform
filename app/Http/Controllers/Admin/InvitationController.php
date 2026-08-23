@@ -54,6 +54,7 @@ class InvitationController extends Controller
             ],
             'role' => ['required', Rule::in(['assessor'])],
             'message' => ['nullable', 'string', 'max:1000'],
+            'known_partner' => ['boolean'],
         ], [
             'email.unique' => 'Für diese Adresse besteht bereits ein Zugang oder eine offene Einladung.',
         ], [
@@ -64,6 +65,7 @@ class InvitationController extends Controller
         $invitation = Invitation::create([
             'email' => $data['email'],
             'role' => $data['role'],
+            'known_partner' => $request->boolean('known_partner'),
             'token' => Invitation::generateToken(),
             'invited_by' => $request->user()->id,
             'message' => $data['message'] ?? null,

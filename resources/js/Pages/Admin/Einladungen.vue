@@ -9,6 +9,7 @@ import DataTable from '../../Components/Data/DataTable.vue'
 import StatusDot from '../../Components/Data/StatusDot.vue'
 import BaseButton from '../../Components/Base/BaseButton.vue'
 import BaseInput from '../../Components/Base/BaseInput.vue'
+import BaseCheckbox from '../../Components/Base/BaseCheckbox.vue'
 import BaseTextarea from '../../Components/Base/BaseTextarea.vue'
 import ErrorSummary from '../../Components/Feedback/ErrorSummary.vue'
 import { useGermanFormat } from '../../Composables/useGermanFormat.js'
@@ -24,7 +25,7 @@ const { date } = useGermanFormat()
 const { confirm } = useConfirm()
 
 const createOpen = ref(false)
-const form = useForm({ email: '', role: 'assessor', message: '' })
+const form = useForm({ email: '', role: 'assessor', message: '', known_partner: false })
 
 const columns = [
     { key: 'email', label: 'E-Mail', mono: true, cardRole: 'primary' },
@@ -69,6 +70,15 @@ const revoke = async (row) => {
             <div class="flex flex-col gap-5">
                 <BaseInput v-model="form.email" label="E-Mail-Adresse" type="email" :error="form.errors.email" required />
                 <BaseTextarea v-model="form.message" label="Persönliche Nachricht" hint="Erscheint als Zitat in der Einladungsmail." :error="form.errors.message" optional />
+
+                <!--
+                    Somebody who already works with Carspector is told that the
+                    firm they know has opened a second line of business, rather
+                    than being introduced to a stranger.
+                -->
+                <BaseCheckbox v-model="form.known_partner">
+                    Bestehender Carspector-Partner
+                </BaseCheckbox>
             </div>
             <div class="flex gap-3 pt-5">
                 <BaseButton type="submit" size="compact" :loading="form.processing">Einladung senden</BaseButton>

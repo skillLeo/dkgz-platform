@@ -5,9 +5,10 @@ import { Check } from 'lucide-vue-next'
  * Where the visitor is in the request, and how much is left.
  *
  * A single long form asks somebody to judge, before they start, whether it is
- * worth their time. Three named steps with "1 von 3" answer that question up
- * front, and the completed steps stay clickable so going back to correct
- * something never means starting again.
+ * worth their time. Three named steps answer that at a glance — the filled bars
+ * carry the count, so spelling it out in words as well only added noise — and
+ * completed steps stay clickable so going back to correct something never means
+ * starting again.
  */
 defineProps({
     steps: { type: Array, required: true },
@@ -20,14 +21,9 @@ const emit = defineEmits(['go'])
 
 <template>
     <div>
-        <div class="flex items-baseline justify-between gap-4 pb-3">
-            <p class="text-eyebrow font-semibold uppercase text-gray-600">
-                {{ steps[current - 1]?.label }}
-            </p>
-            <p class="font-mono text-sm tabular-nums text-gray-600">
-                Schritt {{ current }} von {{ steps.length }}
-            </p>
-        </div>
+        <p class="pb-3 text-eyebrow font-semibold uppercase text-gray-600">
+            {{ steps[current - 1]?.label }}
+        </p>
 
         <ol class="flex gap-2">
             <li v-for="step in steps" :key="step.number" class="min-w-0 flex-1">

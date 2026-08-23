@@ -12,6 +12,19 @@ use Inertia\Middleware;
 
 class HandleInertiaRequests extends Middleware
 {
+    /**
+     * Session keys handed to the page after a redirect.
+     *
+     * A controller that flashes anything not named here is flashing into the
+     * void: the value survives the redirect but never reaches Vue, and the
+     * feature quietly does nothing at all.
+     */
+    private const FLASH_KEYS = [
+        'success', 'error', 'warning', 'info',
+        'invitationPreview',
+        'reset_link_expired',
+    ];
+
     protected $rootView = 'app';
 
     public function version(Request $request): ?string
@@ -56,12 +69,13 @@ class HandleInertiaRequests extends Middleware
                 'roles' => $user?->getRoleNames()->all() ?? [],
             ],
 
-            'flash' => [
-                'success' => fn () => $request->session()->get('success'),
-                'error' => fn () => $request->session()->get('error'),
-                'warning' => fn () => $request->session()->get('warning'),
-                'info' => fn () => $request->session()->get('info'),
-            ],
+            // Every key a controller flashes has to be listed here or it never
+            // reaches the page. Two features were built against keys that were
+            // not — the CSV import preview simply never appeared — so this is
+            // one list rather than four hand-written closures.
+            'flash' => fn () => collect(self::FLASH_KEYS)
+                ->mapWithKeys(fn (string $key) => [$key => $request->session()->get($key)])
+                ->all(),
 
             // Branding is resolved lazily: it only costs a lookup on the first
             // request after a cache bust.

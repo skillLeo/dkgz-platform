@@ -146,11 +146,25 @@ const submit = () => form.post('/anfrage', { forceFormData: true })
         <div class="bg-gray-50">
             <div class="mx-auto grid w-full max-w-(--container-wide) grid-cols-1 gap-12 px-4 py-16 md:px-6 lg:grid-cols-[minmax(0,720px)_300px] lg:items-start">
                 <div class="min-w-0">
-                    <SectionLabel :text="t('kopf', 'eyebrow', 'Kostenlose Anfrage')" />
-                    <h1 class="pt-6 text-h1 font-bold text-navy-700">{{ t('kopf', 'ueberschrift', 'Gutachter anfragen') }}</h1>
-                    <p class="measure-lead pt-3 text-lead leading-relaxed text-gray-600">{{ t('kopf', 'text') }}</p>
+                    <!--
+                        Only on the first step. Repeating the page's title and
+                        its "here is what this is" paragraph above every step
+                        says nothing new after the visitor has begun, and pushes
+                        the fields they are actually working on down the screen.
+                        The step indicator above carries the context from there.
+                    -->
+                    <template v-if="step === 1">
+                        <SectionLabel :text="t('kopf', 'eyebrow', 'Kostenlose Anfrage')" />
+                        <h1 class="pt-6 text-h1 font-bold text-navy-700">{{ t('kopf', 'ueberschrift', 'Gutachter anfragen') }}</h1>
+                        <p class="measure-lead pt-3 text-lead leading-relaxed text-gray-600">{{ t('kopf', 'text') }}</p>
+                    </template>
 
-                    <form class="mt-8 rounded-card border border-gray-200 bg-white p-6 md:p-8" novalidate @submit.prevent="submit">
+                    <form
+                        class="rounded-card border border-gray-200 bg-white p-6 md:p-8"
+                        :class="step === 1 ? 'mt-8' : ''"
+                        novalidate
+                        @submit.prevent="submit"
+                    >
                         <ErrorSummary v-if="form.hasErrors" :errors="form.errors" :labels="labels" class="mb-6" />
 
                         <!-- Honeypot: visually and programmatically hidden -->
