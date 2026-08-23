@@ -201,12 +201,13 @@ const submitCompletion = () => complete.post(`/portal/auftraege/${props.assignme
                 senden Sie direkt an Ihren Kunden — hochladen müssen Sie sie hier nicht.
             </p>
 
-            <BaseButton
-                size="cta"
-                class="mt-4 hidden md:inline-flex"
-                :disabled="!assignment.can_complete"
-                @click="completeOpen = true"
-            >Gutachten fertiggestellt</BaseButton>
+            <span class="mt-4 hidden md:block">
+                <BaseButton
+                    size="cta"
+                    :disabled="!assignment.can_complete"
+                    @click="completeOpen = true"
+                >Gutachten fertiggestellt</BaseButton>
+            </span>
         </section>
 
         <!--

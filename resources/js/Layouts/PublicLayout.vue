@@ -49,17 +49,17 @@ onUnmounted(() => window.removeEventListener('scroll', onScroll))
     <div class="flex min-h-screen flex-col bg-white">
         <!--
             Meldeband, 28px. The text comes from the shared props rather than
-            the page's own content, so it reads the same on every page, and it
-            sits in the middle column of a three-column grid so it is centred on
-            the page rather than merely left of the contact details.
+            the page's own content: it used to be read from whichever page's
+            blocks happened to be loaded, so every page but the homepage fell
+            back to the built-in default and the bar said something different as
+            you moved around.
         -->
         <div v-if="app.announcement" class="hidden h-7 items-center bg-navy-900 md:flex">
-            <div class="mx-auto grid w-full max-w-(--container-shell) grid-cols-[1fr_auto_1fr] items-center gap-6 px-6">
-                <span aria-hidden="true" />
-                <span class="text-center text-xs tracking-nav text-gray-300">
+            <div class="mx-auto flex w-full max-w-(--container-shell) items-center justify-between gap-6 px-6">
+                <span class="text-xs tracking-nav text-gray-300">
                     {{ app.announcement }}
                 </span>
-                <div class="flex items-center justify-end gap-5">
+                <div class="flex items-center gap-5">
                     <a v-if="app.phone" :href="telHref(app.phone)" class="font-mono text-xs tabular-nums text-white">{{ app.phone }}</a>
                     <span class="h-3 w-px bg-white/22" aria-hidden="true" />
                     <span v-if="app.office_hours" class="text-xs text-gray-300">{{ app.office_hours }}</span>
@@ -94,7 +94,17 @@ onUnmounted(() => window.removeEventListener('scroll', onScroll))
                 </nav>
 
                 <div class="flex items-center gap-3">
-                    <BaseButton href="/anfrage" size="compact" class="hidden sm:inline-flex">Anfrage starten</BaseButton>
+                    <!--
+                        Wrapped rather than hidden directly: BaseButton sets
+                        inline-flex on itself, which beat the `hidden` passed in
+                        from here, so the call to action appeared on a phone
+                        where there is no room for it and broke across two lines
+                        beside the wordmark. The span owns the visibility, the
+                        button owns its own layout, and neither fights.
+                    -->
+                    <span class="hidden sm:block">
+                        <BaseButton href="/anfrage" size="compact" class="whitespace-nowrap">Anfrage starten</BaseButton>
+                    </span>
                     <button
                         type="button"
                         class="grid h-11 w-11 place-items-center text-navy-700 lg:hidden"

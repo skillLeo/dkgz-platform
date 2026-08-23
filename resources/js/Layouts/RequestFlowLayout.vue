@@ -92,6 +92,18 @@ onBeforeUnmount(() => window.removeEventListener('beforeunload', guard))
             </div>
         </header>
 
+        <!--
+            A band under the header for the step indicator. It belongs to the
+            shell rather than the form card: it describes where the visitor is
+            in the whole process, and reads as a property of the page rather
+            than of one box on it.
+        -->
+        <div v-if="$slots.progress" class="border-b border-gray-200 bg-white">
+            <div class="mx-auto w-full max-w-(--container-wide) px-4 py-4 md:px-6">
+                <slot name="progress" />
+            </div>
+        </div>
+
         <main class="flex-1">
             <FlashMessage class="mx-auto mt-6 w-full max-w-(--container-wide) px-4 md:px-6" />
             <slot />

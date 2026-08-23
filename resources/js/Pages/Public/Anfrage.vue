@@ -139,6 +139,10 @@ const submit = () => form.post('/anfrage', { forceFormData: true })
 <template>
 
     <RequestFlowLayout title="Anfrage" :dirty="form.isDirty">
+        <template #progress>
+            <RequestProgress :steps="STEPS" :current="step" :furthest="furthest" @go="goTo" />
+        </template>
+
         <div class="bg-gray-50">
             <div class="mx-auto grid w-full max-w-(--container-wide) grid-cols-1 gap-12 px-4 py-16 md:px-6 lg:grid-cols-[minmax(0,720px)_300px] lg:items-start">
                 <div class="min-w-0">
@@ -154,14 +158,6 @@ const submit = () => form.post('/anfrage', { forceFormData: true })
                             <label for="website">Website</label>
                             <input id="website" v-model="form.website" type="text" tabindex="-1" autocomplete="off">
                         </div>
-
-                        <RequestProgress
-                            :steps="STEPS"
-                            :current="step"
-                            :furthest="furthest"
-                            class="pb-7"
-                            @go="goTo"
-                        />
 
                         <div v-show="step === 1" class="flex flex-col gap-5">
                             <BaseSelect

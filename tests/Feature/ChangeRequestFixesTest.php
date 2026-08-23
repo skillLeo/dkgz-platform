@@ -254,3 +254,39 @@ describe('the homepage image survives a text save', function () {
             ->and($text->fresh()->value)->toBe('Neue Überschrift');
     });
 });
+
+describe('responsive visibility', function () {
+    // BaseButton sets inline-flex on itself, which beats a `hidden` passed in
+    // from the outside — the two classes have equal specificity and the winner
+    // is whichever Tailwind emits later. So a button meant for desktop only
+    // appeared on a phone and broke across two lines beside the wordmark.
+    it('never hides a BaseButton by putting hidden on the button itself', function () {
+        $offenders = [];
+
+        foreach (glob(resource_path('js/**/*.vue'), GLOB_BRACE) as $unused) {
+            // Filled below by the recursive search; glob alone misses nesting.
+        }
+
+        $files = new RecursiveIteratorIterator(
+            new RecursiveDirectoryIterator(resource_path('js'), FilesystemIterator::SKIP_DOTS)
+        );
+
+        foreach ($files as $file) {
+            if ($file->getExtension() !== 'vue') {
+                continue;
+            }
+
+            $source = file_get_contents($file->getPathname());
+
+            // <BaseButton ... class="… hidden …"> — the pattern that loses.
+            if (preg_match('/<BaseButton\b[^>]*\bclass="[^"]*\bhidden\b/s', $source)) {
+                $offenders[] = str_replace(resource_path('js').'/', '', $file->getPathname());
+            }
+        }
+
+        expect($offenders)->toBeEmpty(
+            'Diese Dateien verstecken einen BaseButton über die Schaltfläche selbst: '
+            .implode(', ', $offenders).'. Bitte in ein <span class="hidden …"> einpacken.'
+        );
+    });
+});
