@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { useForm } from '@inertiajs/vue3'
 import { Check } from 'lucide-vue-next'
 import RequestFlowLayout from '../../Layouts/RequestFlowLayout.vue'
@@ -65,6 +65,18 @@ const STEPS = [
     { number: 3, label: 'Kontakt und Dringlichkeit', short: 'Kontakt' },
 ]
 
+/**
+ * A heading for the steps that no longer carry the page title.
+ *
+ * Without it steps two and three open on a bare row of inputs with nothing
+ * saying what they are for. The wording comes from the content blocks so it can
+ * be changed with the rest of the page.
+ */
+const stepHeading = computed(() => ({
+    title: t('formular', `schritt_${step.value}_titel`, STEPS[step.value - 1]?.label ?? ''),
+    text: t('formular', `schritt_${step.value}_text`),
+}))
+
 const REQUIRED_BY_STEP = {
     1: ['service_type_id', 'postal_code', 'city'],
     2: ['vehicle_make', 'vehicle_model'],
@@ -89,6 +101,11 @@ const furthest = ref(1)
 const goTo = (target) => {
     step.value = target
     furthest.value = Math.max(furthest.value, target)
+
+    // Let go of the field that was focused: otherwise the on-screen keyboard
+    // stays up and covers the step that has just appeared.
+    document.activeElement?.blur?.()
+
     window.scrollTo({ top: 0, behavior: 'smooth' })
 }
 
@@ -158,6 +175,19 @@ const submit = () => form.post('/anfrage', { forceFormData: true })
                         <h1 class="pt-6 text-h1 font-bold text-navy-700">{{ t('kopf', 'ueberschrift', 'Gutachter anfragen') }}</h1>
                         <p class="measure-lead pt-3 text-lead leading-relaxed text-gray-600">{{ t('kopf', 'text') }}</p>
                     </template>
+
+                    <!--
+                        Steps two and three lost the page title with the rest of
+                        the introduction, which left them opening on a bare row
+                        of inputs. This says what the step is for without
+                        repeating the whole preamble.
+                    -->
+                    <div v-if="step > 1 && stepHeading.title" class="pb-5">
+                        <h2 class="text-h3 font-semibold text-navy-700">{{ stepHeading.title }}</h2>
+                        <p v-if="stepHeading.text" class="measure pt-1.5 text-base leading-normal text-gray-600">
+                            {{ stepHeading.text }}
+                        </p>
+                    </div>
 
                     <form
                         class="rounded-card border border-gray-200 bg-white p-6 md:p-8"

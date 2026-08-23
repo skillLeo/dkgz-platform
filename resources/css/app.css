@@ -187,6 +187,23 @@
     -webkit-text-size-adjust: 100%;
   }
 
+  /*
+   * Safari on iOS magnifies the page when a field whose text is smaller than
+   * 16px receives focus, and it never zooms back out — so somebody filling in
+   * the request is left magnified for every step that follows, with the form
+   * wider than the screen. The type scale sets 15px for body copy, which is a
+   * pixel under the threshold. Form controls alone are lifted to 16px where
+   * the pointer is a finger; the difference is invisible and the zoom stops
+   * happening at all, which is better than trying to undo it afterwards.
+   */
+  @media (pointer: coarse) {
+    input:not([type='checkbox']):not([type='radio']),
+    select,
+    textarea {
+      font-size: 16px;
+    }
+  }
+
   body {
     margin: 0;
     background: var(--color-white);

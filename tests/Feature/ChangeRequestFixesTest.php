@@ -290,3 +290,16 @@ describe('responsive visibility', function () {
         );
     });
 });
+
+describe('form fields on a phone', function () {
+    // Safari on iOS magnifies the page when a field whose text is under 16px
+    // takes focus, and never zooms back out — so somebody filling in the
+    // request is left magnified for every step that follows. The type scale
+    // sets 15px for body copy, one pixel under the threshold.
+    it('lifts form controls to 16px where the pointer is a finger', function () {
+        $css = file_get_contents(resource_path('css/app.css'));
+
+        expect($css)->toContain('pointer: coarse')
+            ->and($css)->toMatch('/@media \(pointer: coarse\).*?font-size:\s*16px/s');
+    });
+});

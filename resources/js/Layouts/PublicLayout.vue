@@ -77,7 +77,13 @@ onUnmounted(() => window.removeEventListener('scroll', onScroll))
                         <SealMark :size="42" />
                     </BrandSeal>
                     <span class="text-mark font-bold leading-none tracking-wordmark text-navy-700">DKGZ</span>
-                    <span class="h-(--spacing-mark-rule) w-px shrink-0" style="background: var(--dkgz-accent)" aria-hidden="true" />
+                    <!--
+                        The gold rule separates the wordmark from the subtitle,
+                        and the subtitle only appears from sm up — so on a phone
+                        it was a stray line dangling after "DKGZ", separating it
+                        from nothing.
+                    -->
+                    <span class="hidden h-(--spacing-mark-rule) w-px shrink-0 sm:block" style="background: var(--dkgz-accent)" aria-hidden="true" />
                     <span class="hidden text-seal font-semibold uppercase leading-[1.5] text-gray-600 sm:block">
                         Deutsche<br>KFZ-Gutachterzentrale
                     </span>
