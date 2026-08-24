@@ -23,7 +23,10 @@ createInertiaApp({
 
         // Nothing is requested from Google until the banner has been answered
         // with yes, here or on an earlier visit.
-        startAnalytics(props.initialPage.props.app?.analytics_id ?? null);
+        startAnalytics([
+            props.initialPage.props.app?.analytics_id,
+            props.initialPage.props.app?.google_ads_id,
+        ]);
     },
 
     progress: {

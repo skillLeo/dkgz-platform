@@ -26,15 +26,23 @@ function storedConsent () {
     }
 }
 
-/** Injects gtag.js and configures the property. Runs at most once. */
-function load (measurementId) {
-    if (loaded || ! measurementId) return
+/**
+ * Injects gtag.js once and configures every property given to it.
+ *
+ * Analytics and Ads are both gtag properties, so they share one script tag and
+ * one dataLayer — loading gtag.js twice would double every event. The script is
+ * requested with the first id; the rest are configured on top.
+ *
+ * @param {string[]} ids
+ */
+function load (ids) {
+    if (loaded || ids.length === 0) return
 
     loaded = true
 
     const script = document.createElement('script')
     script.async = true
-    script.src = `https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(measurementId)}`
+    script.src = `https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(ids[0])}`
     document.head.appendChild(script)
 
     window.dataLayer = window.dataLayer || []
@@ -42,21 +50,27 @@ function load (measurementId) {
     window.gtag = gtag
 
     gtag('js', new Date())
-    // IP anonymisation is the default in GA4 and cannot be turned off, but
-    // saying so explicitly documents the intent for anyone reading this later.
-    gtag('config', measurementId, { anonymize_ip: true })
+
+    for (const id of ids) {
+        // IP anonymisation is the default in GA4 and cannot be turned off, but
+        // saying so explicitly documents the intent for anyone reading later.
+        gtag('config', id, { anonymize_ip: true })
+    }
 }
 
 /**
- * @param {string|null} measurementId  The property to report to, or null when
- *   the operator has not configured one — in which case nothing ever loads and
- *   the banner never appears.
+ * @param {Array<string|null|undefined>} measurementIds  The properties to
+ *   report to. Empty when the operator has configured none, in which case
+ *   nothing ever loads and the banner never appears.
  */
-export function startAnalytics (measurementId) {
-    if (! measurementId) return
+export function startAnalytics (measurementIds) {
+    const ids = (Array.isArray(measurementIds) ? measurementIds : [measurementIds])
+        .filter(Boolean)
+
+    if (ids.length === 0) return
 
     if (storedConsent() === 'accepted') {
-        load(measurementId)
+        load(ids)
 
         return
     }
@@ -64,7 +78,7 @@ export function startAnalytics (measurementId) {
     // Otherwise wait for the banner. The event fires only on acceptance.
     window.addEventListener(
         'dkgz:analytics-consent',
-        () => load(measurementId),
+        () => load(ids),
         { once: true },
     )
 }

@@ -98,11 +98,16 @@ class HandleInertiaRequests extends Middleware
                 // built-in default and the bar said something different as you
                 // moved around.
                 'announcement' => Content::get('startseite.meldeband.text', 'Bundesweites Netz geprüfter Kfz-Sachverständiger'),
-                'analytics_configured' => filled(Settings::get('integrations.analytics_id')),
+                // The banner appears if either tag is configured: Ads sets
+                // cookies for advertising, which needs consent at least as
+                // clearly as measurement does.
+                'analytics_configured' => filled(Settings::get('integrations.analytics_id'))
+                    || filled(Settings::get('integrations.google_ads_id')),
                 // The property itself, so the tag can be loaded from the client
                 // once consent is given. It is a public identifier — it appears
                 // in the script URL of every site that uses it.
                 'analytics_id' => Settings::get('integrations.analytics_id') ?: null,
+                'google_ads_id' => Settings::get('integrations.google_ads_id') ?: null,
                 // The banner appears on every page and belongs to none, so its
                 // wording travels with the shared props rather than with
                 // whichever page happens to be loaded.

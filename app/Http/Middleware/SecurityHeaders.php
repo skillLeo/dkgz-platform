@@ -51,12 +51,23 @@ class SecurityHeaders
         // policy is otherwise "nothing but us": adding these hosts
         // unconditionally would leave the door open on an installation that
         // does no tracking at all.
-        $analytics = filled(Settings::get('integrations.analytics_id'))
-            ? ' https://www.googletagmanager.com'
+        $tracksAnything = filled(Settings::get('integrations.analytics_id'))
+            || filled(Settings::get('integrations.google_ads_id'));
+
+        $analytics = $tracksAnything ? ' https://www.googletagmanager.com' : '';
+
+        // The Ads tag pulls a second script from googleadservices once a
+        // conversion fires.
+        $adsScripts = filled(Settings::get('integrations.google_ads_id'))
+            ? ' https://www.googleadservices.com https://googleads.g.doubleclick.net'
             : '';
+        // Ads reports to googleadservices and google.com as well as the
+        // analytics endpoints, and draws its conversion pixel from both.
         $analyticsConnect = $analytics === ''
             ? ''
-            : ' https://www.googletagmanager.com https://www.google-analytics.com https://region1.google-analytics.com';
+            : ' https://www.googletagmanager.com https://www.google-analytics.com'
+                .' https://region1.google-analytics.com https://www.googleadservices.com'
+                .' https://googleads.g.doubleclick.net https://www.google.com';
 
         $directives = [
             "default-src 'self'",
@@ -64,7 +75,11 @@ class SecurityHeaders
             "form-action 'self'",
             $framedBySelf ? "frame-ancestors 'self'" : "frame-ancestors 'none'",
             "object-src 'none'",
-            "img-src 'self' data: blob:".($analytics === '' ? '' : ' https://www.google-analytics.com https://www.googletagmanager.com'),
+            "img-src 'self' data: blob:".($analytics === ''
+                ? ''
+                : ' https://www.google-analytics.com https://www.googletagmanager.com'
+                    .' https://www.googleadservices.com https://googleads.g.doubleclick.net'
+                    .' https://www.google.com https://www.google.de'),
             "font-src 'self'",
             "style-src 'self' 'unsafe-inline'",
             "connect-src 'self'".$analyticsConnect,
@@ -72,8 +87,8 @@ class SecurityHeaders
 
         // Vite's dev client needs eval and its own websocket; production does not.
         $directives[] = app()->environment('local')
-            ? "script-src 'self' 'unsafe-inline' 'unsafe-eval'".$analytics
-            : "script-src 'self'".$analytics;
+            ? "script-src 'self' 'unsafe-inline' 'unsafe-eval'".$analytics.$adsScripts
+            : "script-src 'self'".$analytics.$adsScripts;
 
         if (app()->environment('local')) {
             $directives[] = "connect-src 'self' ws: wss: http://localhost:* http://127.0.0.1:*";
