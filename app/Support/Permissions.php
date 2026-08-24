@@ -92,6 +92,7 @@ class Permissions
                     'branding.edit' => 'Erscheinungsbild bearbeiten',
                     'integrations.manage' => 'Integrationen verwalten',
                     'servicetypes.manage' => 'Leistungsarten verwalten',
+                    'cities.manage' => 'Städte und Regionalseiten verwalten',
                 ],
             ],
             'users' => [

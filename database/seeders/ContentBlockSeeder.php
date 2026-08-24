@@ -65,6 +65,7 @@ class ContentBlockSeeder extends Seeder
             $this->servicesPage(),
             $this->invoiceDocument(),
             $this->cookieBanner(),
+            $this->cityPages(),
             $this->aboutPage(),
             $this->contactPage(),
             $this->reviewPages(),
@@ -251,6 +252,33 @@ class ContentBlockSeeder extends Seeder
             ['page_key' => 'ablauf', 'section_key' => 'danach', 'field_key' => 'ueberschrift', 'value' => 'Was danach passiert', 'label_de' => 'Abschlussblock — Überschrift'],
             ['page_key' => 'ablauf', 'section_key' => 'danach', 'field_key' => 'text', 'type' => 'richtext', 'value' => 'Ab der Annahme läuft die Abstimmung unmittelbar zwischen Ihnen und dem Sachverständigen. Er nimmt den Schaden auf, erstellt das Gutachten und rechnet direkt mit Ihnen oder Ihrer Versicherung ab. DKGZ tritt dabei nicht mehr dazwischen.', 'label_de' => 'Abschlussblock — Fließtext'],
             ['page_key' => 'ablauf', 'section_key' => 'danach', 'field_key' => 'button', 'value' => 'Anfrage starten', 'label_de' => 'Abschlussblock — Schaltfläche'],
+        ];
+    }
+
+    /**
+     * Copy shared by every city page.
+     *
+     * The parts that do not change from city to city — the steps, the button,
+     * the wording on the overview. Anything specific to a place lives on the
+     * city itself.
+     *
+     * @return list<array<string, string>>
+     */
+    private function cityPages(): array
+    {
+        return [
+            ['page_key' => 'staedte', 'section_key' => 'uebersicht', 'field_key' => 'eyebrow', 'value' => 'Regionen', 'label_de' => 'Übersicht · Übertitel'],
+            ['page_key' => 'staedte', 'section_key' => 'uebersicht', 'field_key' => 'ueberschrift', 'value' => 'Kfz-Gutachter nach Stadt', 'label_de' => 'Übersicht · Überschrift'],
+            ['page_key' => 'staedte', 'section_key' => 'uebersicht', 'field_key' => 'text', 'type' => 'richtext', 'value' => 'Wählen Sie Ihre Stadt. Wir vermitteln in ganz Deutschland — auch dort, wo noch keine eigene Seite besteht.', 'label_de' => 'Übersicht · Text'],
+            ['page_key' => 'staedte', 'section_key' => 'uebersicht', 'field_key' => 'leer', 'type' => 'richtext', 'value' => 'Es sind noch keine Städte hinterlegt. Eine Anfrage können Sie trotzdem jederzeit stellen — wir vermitteln bundesweit.', 'label_de' => 'Übersicht · Text ohne Städte'],
+            ['page_key' => 'staedte', 'section_key' => 'stadt', 'field_key' => 'text', 'type' => 'richtext', 'value' => 'Wir vermitteln Ihnen einen geprüften Kfz-Sachverständigen aus Ihrer Region — kostenlos und unverbindlich.', 'label_de' => 'Stadtseite · Einleitung', 'help_de' => 'Gilt für Städte ohne eigenen Einleitungstext.'],
+            ['page_key' => 'staedte', 'section_key' => 'stadt', 'field_key' => 'leistungen_ueberschrift', 'value' => 'Gutachten in', 'label_de' => 'Stadtseite · Überschrift Leistungen', 'help_de' => 'Der Stadtname wird angehängt.'],
+            ['page_key' => 'staedte', 'section_key' => 'stadt', 'field_key' => 'cta', 'value' => 'Jetzt Gutachter anfragen', 'label_de' => 'Stadtseite · Schaltfläche'],
+            ['page_key' => 'staedte', 'section_key' => 'leistung', 'field_key' => 'cta', 'value' => 'Jetzt Gutachter anfragen', 'label_de' => 'Leistungsseite · Schaltfläche'],
+            ['page_key' => 'staedte', 'section_key' => 'leistung', 'field_key' => 'ablauf_ueberschrift', 'value' => 'So läuft die Vermittlung', 'label_de' => 'Leistungsseite · Überschrift Ablauf'],
+            ['page_key' => 'staedte', 'section_key' => 'leistung', 'field_key' => 'schritt_1', 'type' => 'richtext', 'value' => 'Sie stellen eine kostenlose Anfrage mit Standort, Fahrzeug und Art des Gutachtens.', 'label_de' => 'Leistungsseite · Schritt 1'],
+            ['page_key' => 'staedte', 'section_key' => 'leistung', 'field_key' => 'schritt_2', 'type' => 'richtext', 'value' => 'Wir leiten sie an geprüfte Sachverständige weiter, deren Einsatzgebiet Ihren Standort abdeckt.', 'label_de' => 'Leistungsseite · Schritt 2'],
+            ['page_key' => 'staedte', 'section_key' => 'leistung', 'field_key' => 'schritt_3', 'type' => 'richtext', 'value' => 'Der erste verfügbare Sachverständige übernimmt und meldet sich direkt bei Ihnen.', 'label_de' => 'Leistungsseite · Schritt 3'],
         ];
     }
 

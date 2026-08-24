@@ -3,7 +3,7 @@ import { computed, ref } from 'vue'
 import { usePage } from '@inertiajs/vue3'
 import {
     Bell, Building2, Euro, FileText, FileType, Home, Inbox, LayoutGrid, Mail, Settings,
-    Send, ShieldCheck, Sliders, User, UserPlus, Users, Wrench,
+    MapPin, Send, ShieldCheck, Sliders, User, UserPlus, Users, Wrench,
 } from 'lucide-vue-next'
 import Sidebar from '../Components/Layout/Sidebar.vue'
 import TopBar from '../Components/Layout/TopBar.vue'
@@ -58,6 +58,7 @@ const sections = computed(() => [
         label: 'Verwaltung',
         items: [
             can('servicetypes.manage') ? { href: '/admin/leistungsarten', label: 'Leistungsarten', icon: Wrench } : null,
+            can('cities.manage') ? { href: '/admin/staedte', label: 'Städte', icon: MapPin } : null,
             can('branding.edit') ? { href: '/admin/branding', label: 'Erscheinungsbild', icon: Sliders } : null,
             can('integrations.manage') ? { href: '/admin/integrationen', label: 'Integrationen', icon: Settings } : null,
             can('settings.view') ? { href: '/admin/einstellungen', label: 'Einstellungen', icon: Settings } : null,

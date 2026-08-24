@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CityController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\LegalPageController;
 use App\Http\Controllers\PublicController;
@@ -42,6 +43,18 @@ Route::middleware('maintenance')->group(function () {
     Route::get('/datenschutz', [LegalPageController::class, 'show'])->defaults('slug', 'datenschutz')->name('legal.privacy');
     Route::get('/agb', [LegalPageController::class, 'show'])->defaults('slug', 'agb')->name('legal.terms');
     Route::get('/widerruf', [LegalPageController::class, 'show'])->defaults('slug', 'widerruf')->name('legal.withdrawal');
+});
+
+/*
+ * City landing pages. Ordered city-then-service so a city has a page of its own
+ * that lists what can be arranged there, and each service below it. The routes
+ * sit under a fixed prefix so a new city can never collide with /anfrage or any
+ * other page on the site.
+ */
+Route::prefix('kfz-gutachter')->group(function () {
+    Route::get('/', [CityController::class, 'index'])->name('cities');
+    Route::get('/{city}', [CityController::class, 'show'])->name('cities.show');
+    Route::get('/{city}/{serviceType}', [CityController::class, 'service'])->name('cities.service');
 });
 
 Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');

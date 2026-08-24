@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\City;
 use App\Models\Page;
 use App\Models\ServiceType;
 use App\Support\Settings;
@@ -23,10 +24,28 @@ class SitemapController extends Controller
             ['loc' => route('about'), 'priority' => '0.6'],
             ['loc' => route('partner'), 'priority' => '0.7'],
             ['loc' => route('contact'), 'priority' => '0.6'],
+            ['loc' => route('cities'), 'priority' => '0.7'],
         ]);
 
         ServiceType::active()->ordered()->each(function (ServiceType $type) use ($urls) {
             $urls->push(['loc' => route('services.show', $type), 'priority' => '0.7']);
+        });
+
+        // City pages: the hub, then each service offered there. These exist to
+        // be found, so listing them is most of the point of having them.
+        City::active()->ordered()->with('publishedServiceTypes')->each(function (City $city) use ($urls) {
+            if ($city->publishedServiceTypes->isEmpty()) {
+                return;
+            }
+
+            $urls->push(['loc' => url("/kfz-gutachter/{$city->slug}"), 'priority' => '0.7']);
+
+            foreach ($city->publishedServiceTypes as $type) {
+                $urls->push([
+                    'loc' => url("/kfz-gutachter/{$city->slug}/{$type->slug}"),
+                    'priority' => '0.6',
+                ]);
+            }
         });
 
         Page::published()->each(function (Page $page) use ($urls) {

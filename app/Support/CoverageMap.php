@@ -71,6 +71,22 @@ class CoverageMap
      *
      * @return array<int, int>
      */
+    /**
+     * How many partners can actually be sent work in this postal code.
+     *
+     * Approved, active and available, with their area covering the code — the
+     * same test the matching engine applies, so a city page never promises a
+     * network that would not answer a request from it.
+     */
+    public static function partnersFor(string $postalCode): int
+    {
+        return Cache::remember(
+            'dkgz.partners.'.$postalCode,
+            now()->addMinutes(self::CACHE_MINUTES),
+            fn () => Assessor::matchable()->covering($postalCode)->count(),
+        );
+    }
+
     private static function coveredDigits(): array
     {
         $assessorIds = Assessor::matchable()->pluck('id');

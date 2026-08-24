@@ -125,6 +125,7 @@ class Content
             'fehler' => 'Fehlerseiten',
             'rechnung' => 'Rechnung (PDF)',
             'cookies' => 'Cookie-Hinweis',
+            'staedte' => 'Stadtseiten',
         ];
     }
 }

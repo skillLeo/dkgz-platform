@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\CityController;
 use App\Http\Controllers\Admin\AssessorController;
 use App\Http\Controllers\Admin\AssignmentController;
 use App\Http\Controllers\Admin\CommissionController;
@@ -115,6 +116,14 @@ Route::prefix('admin')
         // Service types
         Route::middleware('can:servicetypes.manage')->group(function () {
             Route::get('/leistungsarten', [ServiceTypeController::class, 'index'])->name('service-types');
+
+            // Städte und ihre Regionalseiten
+            Route::middleware('can:cities.manage')->group(function () {
+                Route::get('/staedte', [CityController::class, 'index'])->name('cities');
+                Route::post('/staedte', [CityController::class, 'store'])->name('cities.store');
+                Route::post('/staedte/{city}', [CityController::class, 'update'])->name('cities.update');
+                Route::delete('/staedte/{city}', [CityController::class, 'destroy'])->name('cities.destroy');
+            });
             Route::post('/leistungsarten', [ServiceTypeController::class, 'store'])->name('service-types.store');
             Route::post('/leistungsarten/reihenfolge', [ServiceTypeController::class, 'reorder'])->name('service-types.reorder');
             // Bound by id, not by the slug the model prefers: the public URL
