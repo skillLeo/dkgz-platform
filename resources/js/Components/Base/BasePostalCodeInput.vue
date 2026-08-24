@@ -76,12 +76,19 @@ const resolve = async (code) => {
 
 watch(() => props.city, (value) => { resolvedCity.value = value })
 
+/**
+ * Only speaks when it has something to say.
+ *
+ * The resting hint restated what the placeholder already shows — "Fünfstellig,
+ * z. B. 40589" under a field reading 40589 — so it was a line of text that
+ * carried nothing. What is left is the lookup: working, found, or not found.
+ */
 const hint = computed(() => {
     if (resolving.value) return 'Ort wird ermittelt…'
     if (notFound.value) return 'Ort konnte nicht automatisch ermittelt werden — bitte ergänzen.'
     if (resolvedCity.value) return `${props.modelValue} · ${resolvedCity.value}`
 
-    return 'Fünfstellig, z. B. 40589'
+    return ''
 })
 </script>
 

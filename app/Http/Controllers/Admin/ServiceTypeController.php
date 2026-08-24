@@ -7,7 +7,6 @@ use App\Models\ServiceType;
 use App\Support\Formatter;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -51,10 +50,9 @@ class ServiceTypeController extends Controller
 
         $data = $this->validated($request);
 
-        ServiceType::create($data + [
-            'slug' => $this->uniqueSlug($data['name_de']),
-            'sort_order' => (int) ServiceType::max('sort_order') + 1,
-        ]);
+        // The slug comes from the model, which keeps it matching the name
+        // however the record is changed.
+        ServiceType::create($data + ['sort_order' => (int) ServiceType::max('sort_order') + 1]);
 
         return back()->with('success', 'Die Leistungsart wurde angelegt.');
     }
@@ -68,12 +66,8 @@ class ServiceTypeController extends Controller
         // The public URL follows the name. Renaming a service and leaving it
         // reachable at the old address means the address describes something
         // that is no longer there.
-        $serviceType->update([
-            ...$data,
-            'slug' => $this->uniqueSlug($data['name_de'], $serviceType),
-            // Saving means a person has reviewed the seeded draft.
-            'content_is_placeholder' => false,
-        ]);
+        // Saving means a person has reviewed the seeded draft.
+        $serviceType->update([...$data, 'content_is_placeholder' => false]);
 
         return back()->with('success', 'Die Leistungsart wurde gespeichert.');
     }
@@ -104,28 +98,6 @@ class ServiceTypeController extends Controller
     }
 
     /** @return array<string, mixed> */
-    /**
-     * A URL-safe slug from the name, kept unique.
-     *
-     * Two services may legitimately be named similarly; the second gets a
-     * numeric suffix rather than silently taking over the first one's address.
-     */
-    private function uniqueSlug(string $name, ?ServiceType $existing = null): string
-    {
-        $base = Str::slug($name) ?: 'leistung';
-        $slug = $base;
-        $suffix = 2;
-
-        while (ServiceType::where('slug', $slug)
-            ->when($existing, fn ($q) => $q->whereKeyNot($existing->getKey()))
-            ->exists()
-        ) {
-            $slug = $base.'-'.$suffix++;
-        }
-
-        return $slug;
-    }
-
     private function validated(Request $request, ?ServiceType $existing = null): array
     {
         return $request->validate([

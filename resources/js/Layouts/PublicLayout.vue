@@ -108,7 +108,13 @@ onUnmounted(() => window.removeEventListener('scroll', onScroll))
                         hiding the button costs the request.
                     -->
                     <BaseButton href="/anfrage" size="compact" class="whitespace-nowrap">
-                        Anfrage<span class="hidden sm:inline">&nbsp;starten</span>
+                        <!--
+                            One flex child, not two: the button lays its slot out
+                            with a gap, so "Anfrage" and "starten" as separate
+                            nodes were pushed apart by it and the non-breaking
+                            space made a second gap on top.
+                        -->
+                        <span>Anfrage<span class="hidden sm:inline">&nbsp;starten</span></span>
                     </BaseButton>
                     <button
                         type="button"
