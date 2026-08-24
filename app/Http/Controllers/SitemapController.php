@@ -57,21 +57,53 @@ class SitemapController extends Controller
         return response($xml, 200, ['Content-Type' => 'application/xml']);
     }
 
+    /**
+     * robots.txt, generated rather than a static file.
+     *
+     * There was a static public/robots.txt as well, and the web server answered
+     * with that one — so this method's careful disallow list and its pointer to
+     * the sitemap never reached a single crawler. The file is gone; this is the
+     * only robots.txt now, which also means it names the right domain on the
+     * live site and the test site rather than advertising the other's sitemap.
+     */
     public function robots(): Response
     {
         $directive = Settings::get('seo.robots', 'index, follow');
-        $disallow = str_contains((string) $directive, 'noindex') ? '/' : '';
 
-        $lines = [
-            'User-agent: *',
-            $disallow === '/' ? 'Disallow: /' : 'Disallow: /portal/',
-            $disallow === '/' ? '' : 'Disallow: /admin/',
-            '',
-            'Sitemap: '.route('sitemap'),
-        ];
+        if (str_contains((string) $directive, 'noindex')) {
+            return $this->plain(['User-agent: *', 'Disallow: /']);
+        }
 
-        return response(implode("\n", array_filter($lines, fn ($l) => $l !== null))."\n", 200, [
-            'Content-Type' => 'text/plain',
+        $lines = ['User-agent: *'];
+
+        // Private, meant for one visitor, or simply of no use in a result list.
+        foreach ([
+            '/admin/',
+            '/portal/',
+            '/anmelden',
+            '/registrieren',
+            '/passwort',
+            '/bewertung/',
+            '/auftrag-angebot/',
+            '/einladung/',
+            '/anfrage/bestaetigung/',
+        ] as $path) {
+            $lines[] = "Disallow: {$path}";
+        }
+
+        if (Settings::bool('seo.sitemap_enabled', true)) {
+            $lines[] = '';
+            $lines[] = 'Sitemap: '.route('sitemap');
+        }
+
+        return $this->plain($lines);
+    }
+
+    /** @param  list<string>  $lines */
+    private function plain(array $lines): Response
+    {
+        return response(implode("\n", $lines)."\n", 200, [
+            'Content-Type' => 'text/plain; charset=UTF-8',
         ]);
     }
 }
