@@ -99,6 +99,10 @@ class HandleInertiaRequests extends Middleware
                 // moved around.
                 'announcement' => Content::get('startseite.meldeband.text', 'Bundesweites Netz geprüfter Kfz-Sachverständiger'),
                 'analytics_configured' => filled(Settings::get('integrations.analytics_id')),
+                // The property itself, so the tag can be loaded from the client
+                // once consent is given. It is a public identifier — it appears
+                // in the script URL of every site that uses it.
+                'analytics_id' => Settings::get('integrations.analytics_id') ?: null,
                 'poll_seconds' => max(15, Settings::int('business.notification_cadence_minutes', 45)),
                 'name' => Settings::get('branding.platform_name', config('app.name')),
                 'phone' => Settings::get('contact.phone'),

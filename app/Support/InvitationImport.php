@@ -22,6 +22,16 @@ class InvitationImport
     /** Guards against someone uploading an export of their whole CRM. */
     public const MAX_ROWS = 2000;
 
+    /**
+     * An address as it appears in a pasted list.
+     *
+     * Deliberately permissive about what surrounds it — angle brackets, quoted
+     * display names, stray semicolons — and strict only about the shape of the
+     * address itself. Anything it lets through is validated properly afterwards
+     * and shown in the preview before a single message is sent.
+     */
+    private const EMAIL_PATTERN = '/[A-Z0-9._%+\-]+@[A-Z0-9.\-]+\.[A-Z]{2,}/i';
+
     /** Column headings understood for the address, in either language. */
     private const EMAIL_KEYS = ['email', 'e-mail', 'mail', 'e_mail', 'emailadresse', 'e-mail-adresse'];
 
@@ -122,16 +132,12 @@ class InvitationImport
                 continue;
             }
 
-            $entry = self::extract($cells, $headings);
+            foreach (self::extract($cells, $headings, $line) as $entry) {
+                $rows->push([...$entry, 'line' => $index + 1]);
 
-            if ($entry === null) {
-                continue;
-            }
-
-            $rows->push([...$entry, 'line' => $index + 1]);
-
-            if ($rows->count() >= self::MAX_ROWS) {
-                break;
+                if ($rows->count() >= self::MAX_ROWS) {
+                    break 2;
+                }
             }
         }
 
@@ -151,16 +157,26 @@ class InvitationImport
     }
 
     /**
+     * Every address on one line, with a name where the file gives one.
+     *
+     * A row may be a record — `email;name` under headings — or it may simply be
+     * a run of addresses somebody pasted separated by semicolons. This used to
+     * take the first cell containing an "@" and drop the rest, so pasting fifty
+     * addresses on one line invited exactly one person and silently discarded
+     * forty-nine.
+     *
      * @param  array<int, string>  $cells
      * @param  array<int, string>|null  $headings
-     * @return array<string, string>|null
+     * @return list<array<string, string|null>>
      */
-    private static function extract(array $cells, ?array $headings): ?array
+    private static function extract(array $cells, ?array $headings, string $line): array
     {
-        $email = null;
-        $name = null;
-
+        // Headings name the address column, so the row is one record and the
+        // other cells belong to it.
         if ($headings !== null) {
+            $email = null;
+            $name = null;
+
             foreach ($headings as $position => $heading) {
                 $value = $cells[$position] ?? '';
 
@@ -172,28 +188,47 @@ class InvitationImport
                     $name = $value;
                 }
             }
-        }
 
-        // No usable headings, or the heading did not match: fall back to the
-        // first cell that looks like an address.
-        if (blank($email)) {
-            foreach ($cells as $cell) {
-                if (str_contains($cell, '@')) {
-                    $email = $cell;
-
-                    break;
-                }
+            if (filled($email)) {
+                return [[
+                    'email' => mb_strtolower(trim($email)),
+                    'name' => blank($name) ? null : trim($name),
+                ]];
             }
         }
 
-        if (blank($email)) {
-            return null;
+        // Otherwise read the addresses straight out of the line rather than
+        // trusting it to be well-formed CSV. People paste from Outlook, which
+        // writes `"Müller, Jan" <jan@x.de>; anna@y.de`, and from spreadsheets
+        // that mix commas and semicolons in the same row. Looking for the
+        // addresses themselves survives all of it; splitting on a separator
+        // chosen from the first line does not.
+        preg_match_all(self::EMAIL_PATTERN, $line, $matches);
+
+        $found = collect($matches[0])
+            ->map(fn (string $email) => ['email' => mb_strtolower(trim($email)), 'name' => null])
+            ->all();
+
+        // A token with an "@" that did not parse is a typo, not a blank line.
+        // It is kept so the preview can show it as unusable — an address that
+        // silently disappears is one the operator never learns to correct.
+        foreach (preg_split('/[;,\s]+/', $line) ?: [] as $token) {
+            $token = trim($token, " \t\"'<>");
+
+            if (! str_contains($token, '@')) {
+                continue;
+            }
+
+            foreach ($matches[0] as $valid) {
+                if (str_contains($token, $valid)) {
+                    continue 2;
+                }
+            }
+
+            $found[] = ['email' => mb_strtolower($token), 'name' => null];
         }
 
-        return [
-            'email' => mb_strtolower(trim($email)),
-            'name' => blank($name) ? null : trim($name),
-        ];
+        return $found;
     }
 
     private static function isValidEmail(string $email): bool
