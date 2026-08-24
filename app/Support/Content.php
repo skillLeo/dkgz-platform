@@ -124,6 +124,7 @@ class Content
             'bewertung' => 'Bewertung',
             'fehler' => 'Fehlerseiten',
             'rechnung' => 'Rechnung (PDF)',
+            'cookies' => 'Cookie-Hinweis',
         ];
     }
 }

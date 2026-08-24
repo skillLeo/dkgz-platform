@@ -103,6 +103,10 @@ class HandleInertiaRequests extends Middleware
                 // once consent is given. It is a public identifier — it appears
                 // in the script URL of every site that uses it.
                 'analytics_id' => Settings::get('integrations.analytics_id') ?: null,
+                // The banner appears on every page and belongs to none, so its
+                // wording travels with the shared props rather than with
+                // whichever page happens to be loaded.
+                'cookie_notice' => Content::page('cookies')['banner'] ?? [],
                 'poll_seconds' => max(15, Settings::int('business.notification_cadence_minutes', 45)),
                 'name' => Settings::get('branding.platform_name', config('app.name')),
                 'phone' => Settings::get('contact.phone'),

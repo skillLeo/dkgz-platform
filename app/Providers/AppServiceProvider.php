@@ -46,6 +46,10 @@ class AppServiceProvider extends ServiceProvider
             $view->with([
                 'faviconUrl' => SafeStorage::url(Settings::get('branding.favicon')),
                 'brandCss' => Branding::cssCustomProperties(),
+                // Search Console's ownership check. A static token: it sets no
+                // cookie and reports nothing, so it needs no consent and goes
+                // in the document rather than behind the banner.
+                'siteVerification' => Settings::get('integrations.google_site_verification'),
             ]);
         });
 

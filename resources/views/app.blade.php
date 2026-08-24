@@ -9,6 +9,10 @@
 
     <title inertia>{{ config('app.name', 'DKGZ Deutsche KFZ-Gutachterzentrale') }}</title>
 
+    @if (! empty($siteVerification))
+        <meta name="google-site-verification" content="{{ $siteVerification }}">
+    @endif
+
     <link rel="icon" href="{{ $faviconUrl ?? '/icons/icon-192.png' }}" sizes="any">
     <link rel="apple-touch-icon" href="/apple-touch-icon.png">
     <link rel="manifest" href="/site.webmanifest">

@@ -14,6 +14,7 @@ use Database\Seeders\SettingsSeeder;
 beforeEach(function () {
     $this->seed(RolePermissionSeeder::class);
     $this->seed(SettingsSeeder::class);
+    $this->seed(Database\Seeders\ContentBlockSeeder::class);
 });
 
 it('sends no Google tag in the document itself', function () {
@@ -73,4 +74,33 @@ it('loads nothing until consent, and remembers a refusal', function () {
     expect($source)->toContain("storedConsent() === 'accepted'")
         ->and($source)->toContain('dkgz:analytics-consent')
         ->and($source)->toContain('{ once: true }');
+});
+
+it('carries the banner wording from the admin panel', function () {
+    Settings::setMany(['integrations.analytics_id' => 'G-MQ2T5QTKWD']);
+
+    App\Models\ContentBlock::where('page_key', 'cookies')
+        ->where('field_key', 'titel')
+        ->update(['value' => 'Unsere Cookies']);
+
+    App\Support\Content::flush('cookies');
+
+    $this->get('/')
+        ->assertOk()
+        ->assertInertia(fn ($page) => $page->where('app.cookie_notice.titel', 'Unsere Cookies'));
+});
+
+it('puts the Search Console token in the document', function () {
+    Settings::setMany(['integrations.google_site_verification' => 'ABC123token']);
+
+    $this->get('/')
+        ->assertOk()
+        ->assertSee('name="google-site-verification"', false)
+        ->assertSee('ABC123token', false);
+});
+
+it('emits no verification tag when none is configured', function () {
+    Settings::setMany(['integrations.google_site_verification' => null]);
+
+    $this->get('/')->assertOk()->assertDontSee('google-site-verification', false);
 });

@@ -99,6 +99,7 @@ class SettingsSeeder extends Seeder
             ['group' => 'integrations', 'key' => 'integrations.smtp_password', 'type' => 'encrypted', 'is_encrypted' => true, 'label_de' => 'Passwort', 'help_de' => 'Verschlüsselt gespeichert und nie wieder angezeigt.'],
             ['group' => 'integrations', 'key' => 'integrations.map_api_key', 'type' => 'encrypted', 'is_encrypted' => true, 'label_de' => 'API-Schlüssel Kartendienst'],
             ['group' => 'integrations', 'key' => 'integrations.analytics_id', 'type' => 'string', 'label_de' => 'Analytics-Kennung'],
+            ['group' => 'integrations', 'key' => 'integrations.google_site_verification', 'type' => 'string', 'label_de' => 'Google Search Console — Bestätigungscode', 'help_de' => 'Nur der Wert aus dem content-Attribut, ohne den umgebenden Meta-Tag. Setzt kein Cookie und braucht keine Zustimmung.'],
 
             ['group' => 'business', 'key' => 'business.commission_rate', 'type' => 'decimal', 'value' => '15.00', 'label_de' => 'Vermittlungsprovision in Prozent', 'help_de' => 'Gilt für neue Abschlüsse. Bereits abgerechnete Provisionen bleiben unverändert.'],
             ['group' => 'business', 'key' => 'business.notification_cadence_minutes', 'type' => 'integer', 'value' => '45', 'label_de' => 'Abrufintervall für Benachrichtigungen in Sekunden'],

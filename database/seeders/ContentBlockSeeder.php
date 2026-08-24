@@ -64,6 +64,7 @@ class ContentBlockSeeder extends Seeder
             $this->processPage(),
             $this->servicesPage(),
             $this->invoiceDocument(),
+            $this->cookieBanner(),
             $this->aboutPage(),
             $this->contactPage(),
             $this->reviewPages(),
@@ -250,6 +251,27 @@ class ContentBlockSeeder extends Seeder
             ['page_key' => 'ablauf', 'section_key' => 'danach', 'field_key' => 'ueberschrift', 'value' => 'Was danach passiert', 'label_de' => 'Abschlussblock — Überschrift'],
             ['page_key' => 'ablauf', 'section_key' => 'danach', 'field_key' => 'text', 'type' => 'richtext', 'value' => 'Ab der Annahme läuft die Abstimmung unmittelbar zwischen Ihnen und dem Sachverständigen. Er nimmt den Schaden auf, erstellt das Gutachten und rechnet direkt mit Ihnen oder Ihrer Versicherung ab. DKGZ tritt dabei nicht mehr dazwischen.', 'label_de' => 'Abschlussblock — Fließtext'],
             ['page_key' => 'ablauf', 'section_key' => 'danach', 'field_key' => 'button', 'value' => 'Anfrage starten', 'label_de' => 'Abschlussblock — Schaltfläche'],
+        ];
+    }
+
+    /**
+     * The consent banner.
+     *
+     * It appears on every page and belongs to no page, so it has a section of
+     * its own rather than hiding under the homepage where nobody would look for
+     * it. Wording that asks for permission is exactly the wording an operator
+     * needs to be able to correct.
+     *
+     * @return list<array<string, string>>
+     */
+    private function cookieBanner(): array
+    {
+        return [
+            ['page_key' => 'cookies', 'section_key' => 'banner', 'field_key' => 'titel', 'value' => 'Statistik-Cookies', 'label_de' => 'Überschrift'],
+            ['page_key' => 'cookies', 'section_key' => 'banner', 'field_key' => 'text', 'type' => 'richtext', 'value' => 'Wir möchten anonym messen, wie diese Seite genutzt wird. Für den Betrieb notwendige Cookies setzen wir ohnehin — dafür ist keine Zustimmung nötig. Sie können jederzeit widersprechen.', 'label_de' => 'Text', 'help_de' => 'Der Link zur Datenschutzerklärung wird automatisch angehängt.'],
+            ['page_key' => 'cookies', 'section_key' => 'banner', 'field_key' => 'link', 'value' => 'Datenschutzerklärung', 'label_de' => 'Linktext zur Datenschutzerklärung'],
+            ['page_key' => 'cookies', 'section_key' => 'banner', 'field_key' => 'button_ablehnen', 'value' => 'Nur notwendige', 'label_de' => 'Schaltfläche — ablehnen'],
+            ['page_key' => 'cookies', 'section_key' => 'banner', 'field_key' => 'button_annehmen', 'value' => 'Einverstanden', 'label_de' => 'Schaltfläche — zustimmen'],
         ];
     }
 
