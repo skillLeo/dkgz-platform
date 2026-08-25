@@ -1,7 +1,7 @@
 <script setup>
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { Head, Link } from '@inertiajs/vue3'
-import { MapPin } from 'lucide-vue-next'
+import { Check, ChevronDown, MapPin } from 'lucide-vue-next'
 import PublicLayout from '../../Layouts/PublicLayout.vue'
 import SectionLabel from '../../Components/Layout/SectionLabel.vue'
 import { fill } from '../../Support/placeholders.js'
@@ -43,6 +43,17 @@ const title = computed(() => props.city.meta_title
 const description = computed(() => props.city.meta_description
     || t('leistung', 'meta_text', '{leistung} in {stadt} gesucht? DKGZ vermittelt Ihnen einen geprüften '
         + 'Kfz-Sachverständigen in {stadt} und Umgebung. Kostenlos, unverbindlich und ohne Registrierung.'))
+
+/** Questions belonging to this service, shown here as on its own page. */
+const openFaq = ref(null)
+
+const questions = computed(() => (props.serviceType.faqs ?? [])
+    .filter((entry) => entry?.frage && entry?.antwort))
+
+/** The reassurance points, skipping any the operator has emptied. */
+const points = computed(() => [1, 2, 3]
+    .map((n) => t('leistung', `punkt_${n}`))
+    .filter(Boolean))
 
 /** The steps, in order, skipping any the operator has emptied. */
 const steps = computed(() => [1, 2, 3]
@@ -96,7 +107,7 @@ const sections = computed(() => [
 
                 <div class="flex flex-wrap items-center gap-4 pt-8">
                     <BaseButton href="/anfrage" size="cta">
-                        {{ t('leistung', 'cta', 'Gutachter in {stadt} anfragen') }}
+                        {{ t('leistung', 'cta', 'Jetzt Gutachter anfragen') }}
                     </BaseButton>
 
                     <p v-if="city.partners" class="flex items-center gap-2 text-sm text-gray-600">
@@ -136,12 +147,63 @@ const sections = computed(() => [
                     </ol>
 
                     <BaseButton href="/anfrage" size="cta" class="mt-8">
-                        {{ t('leistung', 'cta', 'Gutachter in {stadt} anfragen') }}
+                        {{ t('leistung', 'cta', 'Jetzt Gutachter anfragen') }}
                     </BaseButton>
+                </section>
+
+                <section v-if="questions.length" class="border-t border-gray-200 pt-10 mt-10">
+                    <h2 class="text-h3 font-semibold text-navy-700">
+                        {{ t('leistung', 'faq_ueberschrift', 'Häufige Fragen zum {leistung}') }}
+                    </h2>
+
+                    <dl class="border-t border-gray-200 pt-2 mt-4">
+                        <div v-for="(entry, index) in questions" :key="index" class="border-b border-gray-200">
+                            <dt>
+                                <button
+                                    type="button"
+                                    class="flex w-full items-start justify-between gap-4 py-5 text-left"
+                                    :aria-expanded="openFaq === index"
+                                    @click="openFaq = openFaq === index ? null : index"
+                                >
+                                    <span class="text-base font-medium text-navy-700">{{ entry.frage }}</span>
+                                    <ChevronDown
+                                        :size="18"
+                                        :stroke-width="1.5"
+                                        class="mt-0.5 shrink-0 text-gray-600 transition-transform duration-(--duration-disclosure) ease-(--ease-dkgz)"
+                                        :class="openFaq === index ? 'rotate-180' : ''"
+                                        aria-hidden="true"
+                                    />
+                                </button>
+                            </dt>
+                            <dd v-if="openFaq === index" class="measure whitespace-pre-line pb-5 text-base leading-normal text-gray-600">
+                                {{ entry.antwort }}
+                            </dd>
+                        </div>
+                    </dl>
                 </section>
             </div>
 
             <aside class="flex flex-col gap-8">
+                <!--
+                    The same box the nationwide service page carries. It was the
+                    one thing the city version lacked, so the page that is meant
+                    to convert had less of a call to action than the general one.
+                -->
+                <div class="rounded-card border border-navy-700 p-6">
+                    <h2 class="text-h4 font-semibold text-navy-700">
+                        {{ t('leistung', 'seitenleiste_titel', '{leistung} in {stadt} anfragen') }}
+                    </h2>
+                    <ul v-if="points.length" class="flex flex-col gap-3 pt-4">
+                        <li v-for="point in points" :key="point" class="flex gap-2.5">
+                            <Check :size="18" :stroke-width="1.5" class="mt-0.5 shrink-0 text-navy-700" aria-hidden="true" />
+                            <span class="text-sm leading-normal text-gray-800">{{ point }}</span>
+                        </li>
+                    </ul>
+                    <BaseButton href="/anfrage" size="cta" block class="mt-5">
+                        {{ t('leistung', 'cta', 'Jetzt Gutachter anfragen') }}
+                    </BaseButton>
+                </div>
+
                 <div v-if="otherServices.length">
                     <p class="text-eyebrow font-semibold uppercase text-gray-600">
                         {{ t('leistung', 'weitere_leistungen', 'Weitere Gutachten in {stadt}') }}

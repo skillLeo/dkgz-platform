@@ -73,7 +73,7 @@ class CityController extends Controller
             'serviceType' => $serviceType->only([
                 'name_de', 'description_de', 'slug', 'icon', 'includes_de',
                 'target_audience_de', 'typical_situations_de',
-                'differences_de', 'additional_info_de',
+                'differences_de', 'additional_info_de', 'faqs',
             ]),
             // The other services here, so every page links onward rather than
             // being a dead end.

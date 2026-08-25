@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\City;
 use App\Models\Faq;
 use App\Models\PostalCode;
 use App\Models\ServiceType;
@@ -47,16 +46,6 @@ class PublicController extends Controller
                 'differences_de', 'additional_info_de', 'faqs',
             ]),
             'serviceTypes' => $this->activeServiceTypes(),
-            // Where this assessment can be arranged, so a nationwide page links
-            // down into the local ones rather than leaving them orphaned.
-            'cities' => City::active()->ordered()
-                ->whereHas('serviceTypes', fn ($q) => $q->whereKey($serviceType->getKey()))
-                ->limit(12)
-                ->get(['name', 'slug'])
-                ->map(fn (City $city) => [
-                    'name' => $city->name,
-                    'url' => "/kfz-gutachter/{$city->slug}/{$serviceType->slug}",
-                ]),
         ]);
     }
 

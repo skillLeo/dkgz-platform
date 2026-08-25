@@ -10,6 +10,22 @@ class Faq extends Model
 {
     use HasFactory;
 
+    /**
+     * The groups the public FAQ page sorts questions into.
+     *
+     * A fixed list rather than free text: the page renders one section per
+     * distinct value, so "Kosten" and "kosten" typed on different days would
+     * quietly become two headings saying the same thing.
+     */
+    public const CATEGORIES = [
+        'Allgemein',
+        'Ablauf',
+        'Kosten',
+        'Leistungen',
+        'Sachverständige',
+        'Datenschutz',
+    ];
+
     protected $fillable = [
         'question_de', 'answer_de', 'category', 'sort_order', 'is_published',
     ];

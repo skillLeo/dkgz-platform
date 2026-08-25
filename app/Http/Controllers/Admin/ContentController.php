@@ -13,6 +13,7 @@ use App\Support\SafeStorage;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 use Inertia\Response;
 use RuntimeException;
@@ -232,6 +233,7 @@ class ContentController extends Controller
         $this->authorize('viewAny', Faq::class);
 
         return Inertia::render('Admin/Faq', [
+            'categories' => Faq::CATEGORIES,
             'faqs' => Faq::ordered()->get()
                 ->map(fn (Faq $f) => [
                     'id' => $f->id,
@@ -295,7 +297,7 @@ class ContentController extends Controller
         return $request->validate([
             'question_de' => ['required', 'string', 'max:400'],
             'answer_de' => ['required', 'string', 'max:8000'],
-            'category' => ['nullable', 'string', 'max:80'],
+            'category' => ['nullable', Rule::in(Faq::CATEGORIES)],
             'is_published' => ['boolean'],
         ], [], [
             'question_de' => 'die Frage',

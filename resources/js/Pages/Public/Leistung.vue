@@ -1,7 +1,7 @@
 <script setup>
 import { computed, ref } from 'vue'
 import { Head, Link } from '@inertiajs/vue3'
-import { ChevronDown } from 'lucide-vue-next'
+import { Check, ChevronDown } from 'lucide-vue-next'
 import PublicLayout from '../../Layouts/PublicLayout.vue'
 import SectionLabel from '../../Components/Layout/SectionLabel.vue'
 import BaseButton from '../../Components/Base/BaseButton.vue'
@@ -22,7 +22,6 @@ const props = defineProps({
     serviceType: { type: Object, required: true },
     serviceTypes: { type: Array, default: () => [] },
     faqs: { type: Array, default: () => [] },
-    cities: { type: Array, default: () => [] },
 })
 
 const t = (section, field, fallback = '') => fill(
@@ -46,6 +45,11 @@ const sections = computed(() => [
     { title: t('detail', 'abschnitt_abgrenzung', 'Abgrenzung'), body: props.serviceType.differences_de },
     { title: t('detail', 'abschnitt_hinweise', 'Weitere Hinweise'), body: props.serviceType.additional_info_de },
 ].filter((section) => section.body))
+
+/** The reassurance points, skipping any the operator has emptied. */
+const points = computed(() => [1, 2, 3]
+    .map((n) => t('detail', `punkt_${n}`))
+    .filter(Boolean))
 
 const steps = computed(() => [1, 2, 3]
     .map((number) => ({ number, text: t('detail', `schritt_${number}`) }))
@@ -86,7 +90,7 @@ const others = computed(() => props.serviceTypes
                 </p>
 
                 <BaseButton href="/anfrage" size="cta" class="mt-8">
-                    {{ t('detail', 'cta', '{leistung} anfragen') }}
+                    {{ t('detail', 'cta', 'Jetzt Gutachter anfragen') }}
                 </BaseButton>
             </div>
         </section>
@@ -116,7 +120,7 @@ const others = computed(() => props.serviceTypes
                     </ol>
 
                     <BaseButton href="/anfrage" size="cta" class="mt-8">
-                        {{ t('detail', 'cta', '{leistung} anfragen') }}
+                        {{ t('detail', 'cta', 'Jetzt Gutachter anfragen') }}
                     </BaseButton>
                 </section>
 
@@ -164,13 +168,16 @@ const others = computed(() => props.serviceTypes
                     </h2>
                     <ul class="flex flex-col gap-3 pt-4">
                         <li
-                            v-for="n in [1, 2, 3]"
-                            :key="n"
-                            class="text-sm leading-normal text-gray-800"
-                        >{{ t('detail', `punkt_${n}`) }}</li>
+                            v-for="point in points"
+                            :key="point"
+                            class="flex gap-2.5"
+                        >
+                            <Check :size="18" :stroke-width="1.5" class="mt-0.5 shrink-0 text-navy-700" aria-hidden="true" />
+                            <span class="text-sm leading-normal text-gray-800">{{ point }}</span>
+                        </li>
                     </ul>
                     <BaseButton href="/anfrage" size="cta" block class="mt-5">
-                        {{ t('detail', 'cta', '{leistung} anfragen') }}
+                        {{ t('detail', 'cta', 'Jetzt Gutachter anfragen') }}
                     </BaseButton>
                 </div>
 
@@ -191,18 +198,6 @@ const others = computed(() => props.serviceTypes
                     </ul>
                 </div>
 
-                <div v-if="cities.length">
-                    <p class="text-eyebrow font-semibold uppercase text-gray-600">
-                        {{ t('detail', 'staedte', '{leistung} nach Stadt') }}
-                    </p>
-                    <ul class="flex flex-col gap-2 pt-3">
-                        <li v-for="city in cities" :key="city.url">
-                            <Link :href="city.url" class="text-sm text-navy-700 hover:text-navy-500">
-                                {{ city.name }}
-                            </Link>
-                        </li>
-                    </ul>
-                </div>
             </aside>
         </div>
     </PublicLayout>

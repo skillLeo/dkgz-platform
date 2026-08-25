@@ -37,7 +37,9 @@ const sizeClasses = {
 }
 
 const classes = computed(() => [
-    'inline-flex items-center justify-center gap-2.5 border rounded-sm font-medium',
+    // Never wraps: an operator editing a label has no way to see that their
+    // wording broke a button across two lines on somebody else's screen.
+    'inline-flex items-center justify-center gap-2.5 whitespace-nowrap border rounded-sm font-medium',
     'transition-colors duration-(--duration-hover) ease-(--ease-dkgz)',
     'focus-visible:outline-2 focus-visible:outline-navy-500 focus-visible:outline-offset-2',
     sizeClasses[props.size] ?? sizeClasses.default,

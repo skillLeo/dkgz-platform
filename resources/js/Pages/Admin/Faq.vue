@@ -1,17 +1,19 @@
 <script setup>
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { Head, useForm } from '@inertiajs/vue3'
 import { HelpCircle } from 'lucide-vue-next'
 import AdminLayout from '../../Layouts/AdminLayout.vue'
 import PageHeader from '../../Components/Layout/PageHeader.vue'
 import BaseInput from '../../Components/Base/BaseInput.vue'
+import BaseSelect from '../../Components/Base/BaseSelect.vue'
 import BaseTextarea from '../../Components/Base/BaseTextarea.vue'
 import BaseToggle from '../../Components/Base/BaseToggle.vue'
 import BaseButton from '../../Components/Base/BaseButton.vue'
 import EmptyState from '../../Components/Feedback/EmptyState.vue'
 import { useConfirm } from '../../Composables/useConfirm.js'
 
-const props = defineProps({ faqs: { type: Array, default: () => [] } })
+const props = defineProps({
+    categories: { type: Array, default: () => [] }, faqs: { type: Array, default: () => [] } })
 
 const { confirm } = useConfirm()
 const createOpen = ref(false)
@@ -20,6 +22,8 @@ const editing = ref(null)
 const create = useForm({ question_de: '', answer_de: '', category: '', is_published: true })
 const edit = useForm({ question_de: '', answer_de: '', category: '', is_published: true })
 const order = useForm({ order: [] })
+
+const categoryOptions = computed(() => props.categories.map((name) => ({ value: name, label: name })))
 
 const startEdit = (faq) => {
     editing.value = faq.id
@@ -66,7 +70,21 @@ const remove = async (faq) => {
             <div class="flex flex-col gap-5">
                 <BaseInput v-model="create.question_de" label="Frage" :error="create.errors.question_de" required />
                 <BaseTextarea v-model="create.answer_de" label="Antwort" :error="create.errors.answer_de" required />
-                <BaseInput v-model="create.category" label="Kategorie" optional />
+                <!--
+                    A fixed list rather than free text: the public page renders
+                    one section per distinct value, so "Kosten" and "kosten"
+                    typed on different days would become two headings saying the
+                    same thing.
+                -->
+                <BaseSelect
+                    v-model="create.category"
+                    label="Kategorie"
+                    :options="categoryOptions"
+                    placeholder="Allgemein"
+                    hint="Bestimmt, unter welcher Überschrift die Frage auf der FAQ-Seite erscheint."
+                    :error="create.errors.category"
+                    optional
+                />
             </div>
             <div class="flex gap-3 pt-5">
                 <BaseButton type="submit" size="compact" :loading="create.processing">Anlegen</BaseButton>
@@ -98,7 +116,14 @@ const remove = async (faq) => {
                     <div class="flex flex-col gap-5">
                         <BaseInput v-model="edit.question_de" label="Frage" :error="edit.errors.question_de" required />
                         <BaseTextarea v-model="edit.answer_de" label="Antwort" :error="edit.errors.answer_de" required />
-                        <BaseInput v-model="edit.category" label="Kategorie" optional />
+                        <BaseSelect
+                            v-model="edit.category"
+                            label="Kategorie"
+                            :options="categoryOptions"
+                            placeholder="Allgemein"
+                            :error="edit.errors.category"
+                            optional
+                        />
                         <BaseToggle v-model="edit.is_published" label="Veröffentlicht" on-label="Sichtbar" off-label="Verborgen" />
                     </div>
                     <div class="flex gap-3 pt-5">

@@ -63,7 +63,7 @@ const description = computed(() => props.city.meta_description
 
                 <div class="flex flex-wrap items-center gap-4 pt-8">
                     <BaseButton href="/anfrage" size="cta">
-                        {{ t('stadt', 'cta', 'Gutachter in {stadt} anfragen') }}
+                        {{ t('stadt', 'cta', 'Jetzt Gutachter anfragen') }}
                     </BaseButton>
 
                     <p v-if="city.partners" class="flex items-center gap-2 text-sm text-gray-600">

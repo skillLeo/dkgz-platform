@@ -48,16 +48,16 @@ describe('the service page', function () {
         $this->get("/leistungen/{$type->slug}")->assertOk();
     });
 
-    it('links down to the cities where it is offered', function () {
+    it('no longer lists cities on the nationwide page', function () {
+        // Those links belong on the city pages. Repeating them here made the
+        // sidebar a directory rather than a call to action.
         $type = ServiceType::factory()->create(['is_active' => true]);
         $city = App\Models\City::create(['name' => 'Köln', 'is_active' => true]);
         $city->serviceTypes()->sync([$type->id]);
 
         $this->get("/leistungen/{$type->slug}")
             ->assertOk()
-            ->assertInertia(fn ($page) => $page
-                ->has('cities', 1)
-                ->where('cities.0.url', "/kfz-gutachter/koeln/{$type->slug}"));
+            ->assertInertia(fn ($page) => $page->missing('cities'));
     });
 
     it('lets an operator save questions against a service', function () {
@@ -223,5 +223,87 @@ describe('the partner broadcast', function () {
         $outsider = User::factory()->create();
 
         $this->actingAs($outsider)->get('/admin/partnermail')->assertForbidden();
+    });
+});
+
+describe('the sidebar and questions', function () {
+    it('shows the service questions on the city page too', function () {
+        $type = ServiceType::factory()->create([
+            'name_de' => 'Unfallgutachten',
+            'is_active' => true,
+            'faqs' => [['frage' => 'Wie lange dauert es?', 'antwort' => 'Zwei Werktage.']],
+        ]);
+
+        $city = App\Models\City::create(['name' => 'Düsseldorf', 'is_active' => true]);
+        $city->serviceTypes()->sync([$type->id]);
+
+        $this->get("/kfz-gutachter/duesseldorf/{$type->slug}")
+            ->assertOk()
+            ->assertInertia(fn ($page) => $page
+                ->has('serviceType.faqs', 1)
+                ->where('serviceType.faqs.0.frage', 'Wie lange dauert es?'));
+    });
+
+    it('carries the reassurance points for both kinds of page', function () {
+        $this->get('/leistungen')->assertOk();
+
+        expect(App\Models\ContentBlock::where('page_key', 'leistungen')->where('field_key', 'punkt_1')->exists())->toBeTrue()
+            ->and(App\Models\ContentBlock::where('page_key', 'staedte')->where('field_key', 'punkt_1')->exists())->toBeTrue();
+    });
+
+    it('no longer offers city links on the nationwide service page', function () {
+        $source = file_get_contents(resource_path('js/Pages/Public/Leistung.vue'));
+
+        expect($source)->not->toContain('nach Stadt')
+            ->and($source)->not->toContain('cities');
+    });
+
+    it('uses one short call to action everywhere', function () {
+        $ctas = App\Models\ContentBlock::whereIn('page_key', ['leistungen', 'staedte'])
+            ->where('field_key', 'cta')
+            ->pluck('value')
+            ->unique();
+
+        expect($ctas)->toHaveCount(1)
+            ->and($ctas->first())->toBe('Jetzt Gutachter anfragen');
+    });
+
+    it('keeps a button on one line whatever is typed into it', function () {
+        // An operator editing a label cannot see that their wording broke a
+        // button in two on somebody else's screen.
+        $source = file_get_contents(resource_path('js/Components/Base/BaseButton.vue'));
+
+        expect($source)->toContain('whitespace-nowrap');
+    });
+});
+
+describe('FAQ categories', function () {
+    it('offers the fixed list when writing a question', function () {
+        $this->actingAs($this->admin)
+            ->get('/admin/faq')
+            ->assertOk()
+            ->assertInertia(fn ($page) => $page->has('categories'));
+    });
+
+    it('refuses a category that is not one of them', function () {
+        $this->actingAs($this->admin)
+            ->post('/admin/faq', [
+                'question_de' => 'Eine Frage?',
+                'answer_de' => 'Eine Antwort.',
+                'category' => 'Erfunden',
+            ])
+            ->assertSessionHasErrors('category');
+    });
+
+    it('accepts one that is', function () {
+        $this->actingAs($this->admin)
+            ->post('/admin/faq', [
+                'question_de' => 'Was kostet die Vermittlung?',
+                'answer_de' => 'Nichts.',
+                'category' => 'Kosten',
+            ])
+            ->assertSessionHasNoErrors();
+
+        expect(Faq::firstWhere('question_de', 'Was kostet die Vermittlung?')->category)->toBe('Kosten');
     });
 });
