@@ -141,10 +141,19 @@ class ServiceRequest extends Model
             && ! $this->matches()->where('outcome', RequestMatch::OUTCOME_PENDING)->exists();
     }
 
+    /**
+     * The vehicle, where anybody knows what it is.
+     *
+     * The public form stopped asking — the assessor telephones the customer and
+     * asks then — so this is empty on most requests now and has to say so. A
+     * bare "Fahrzeug:" followed by nothing reads like a bug in an e-mail.
+     */
     public function vehicleLabel(): string
     {
-        return trim("{$this->vehicle_make} {$this->vehicle_model}".
+        $label = trim("{$this->vehicle_make} {$this->vehicle_model}".
             ($this->vehicle_year ? " · {$this->vehicle_year}" : ''));
+
+        return $label !== '' ? $label : 'noch nicht angegeben';
     }
 
     /**

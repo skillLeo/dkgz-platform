@@ -71,7 +71,7 @@ describe('content blocks', function () {
     });
 
     it('resolves a dotted key', function () {
-        expect(Content::get('anfrage.formular.cta'))->toBe('Anfrage absenden');
+        expect(Content::get('anfrage.formular.cta'))->toBe('Kostenfrei anfragen');
     });
 
     it('returns the default for a key that does not exist', function () {

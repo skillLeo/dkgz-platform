@@ -2,8 +2,9 @@
 
 namespace App\Http\Requests;
 
+use App\Models\PostalCode;
+use App\Rules\ExistingPostalCode;
 use App\Rules\GermanLicencePlate;
-use App\Rules\GermanPostalCode;
 use App\Rules\VehicleIdentificationNumber;
 use App\Support\Settings;
 use Illuminate\Foundation\Http\FormRequest;
@@ -38,6 +39,28 @@ class StoreServiceRequestRequest extends FormRequest
         return $rules;
     }
 
+    /**
+     * The town comes from the postal code, not from the visitor.
+     *
+     * Asking for both invited them to disagree, and the pair only has one
+     * useful reading anyway: the code is what the matching runs on. The form no
+     * longer has the field, so it is filled in here — for the telephone path in
+     * the admin panel too, where an operator types a code and should not have
+     * to look the town up.
+     */
+    protected function prepareForValidation(): void
+    {
+        if ($this->filled('city')) {
+            return;
+        }
+
+        $city = PostalCode::cityFor(trim((string) $this->input('postal_code')));
+
+        if ($city !== null) {
+            $this->merge(['city' => $city]);
+        }
+    }
+
     public function rules(): array
     {
         $maxImages = Settings::int('business.max_images_per_request', 5);
@@ -45,20 +68,26 @@ class StoreServiceRequestRequest extends FormRequest
 
         return [
             'service_type_id' => ['required', 'integer', Rule::exists('service_types', 'id')->where('is_active', true)],
-            'postal_code' => ['required', new GermanPostalCode],
+            'postal_code' => ['required', new ExistingPostalCode],
             'city' => ['required', 'string', 'max:120'],
             'customer_name' => ['required', 'string', 'max:160'],
             'customer_phone' => ['required', 'string', 'max:40'],
             'customer_email' => ['required', 'string', 'email', 'max:255'],
-            'vehicle_make' => ['required', 'string', 'max:80'],
-            'vehicle_model' => ['required', 'string', 'max:80'],
+            // Optional since the form stopped asking: the assessor telephones
+            // the customer and asks then. The office still fills them in when a
+            // request is taken by telephone.
+            'vehicle_make' => ['nullable', 'string', 'max:80'],
+            'vehicle_model' => ['nullable', 'string', 'max:80'],
             'vehicle_year' => ['nullable', 'integer', 'min:1900', 'max:'.(now()->year + 1)],
             'vehicle_plate' => ['nullable', new GermanLicencePlate],
             'vehicle_vin' => ['nullable', new VehicleIdentificationNumber],
             'description' => ['nullable', 'string', 'max:2000'],
             'preferred_date' => ['nullable', 'date', 'after_or_equal:today'],
             'urgency' => ['nullable', Rule::in(['normal', 'soon', 'urgent'])],
-            'consent' => ['accepted'],
+            // No checkbox any more: the wording sits above the button, which
+            // is the ordinary German pattern for a request somebody has asked
+            // to be contacted about. consent_at is still recorded either way.
+            'consent' => ['sometimes', 'accepted'],
 
             'images' => ['nullable', 'array', "max:{$maxImages}"],
             'images.*' => ['file', 'mimes:jpg,jpeg,png,webp', "max:{$maxKb}"],

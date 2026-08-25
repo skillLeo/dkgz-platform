@@ -1,46 +1,49 @@
 <script setup>
 import { computed, onMounted, ref } from 'vue'
-import { router, useForm } from '@inertiajs/vue3'
+import { router, useForm, usePage } from '@inertiajs/vue3'
 import { Check } from 'lucide-vue-next'
 import RequestFlowLayout from '../../Layouts/RequestFlowLayout.vue'
 import SectionLabel from '../../Components/Layout/SectionLabel.vue'
 import RequestProgress from '../../Components/Domain/RequestProgress.vue'
+import RequestStarter from '../../Components/Domain/RequestStarter.vue'
+import TrustRow from '../../Components/Domain/TrustRow.vue'
 import BaseInput from '../../Components/Base/BaseInput.vue'
-import BaseSelect from '../../Components/Base/BaseSelect.vue'
-import BaseTextarea from '../../Components/Base/BaseTextarea.vue'
-import BasePostalCodeInput from '../../Components/Base/BasePostalCodeInput.vue'
-import BaseFileUpload from '../../Components/Base/BaseFileUpload.vue'
-import BaseCheckbox from '../../Components/Base/BaseCheckbox.vue'
 import BaseButton from '../../Components/Base/BaseButton.vue'
 import ErrorSummary from '../../Components/Feedback/ErrorSummary.vue'
-import { usePage } from '@inertiajs/vue3'
 
+/**
+ * Two steps: what and where, then who.
+ *
+ * It used to be three, and the middle one asked for the make, the model, the
+ * year, the plate, a description of what happened and photographs — a screen of
+ * work between somebody arriving from an advert and the point where DKGZ has
+ * their telephone number. The assessor telephones them and asks all of it
+ * anyway. Everything the matching actually runs on is the service and the
+ * postal code, and both are answered before the visitor is asked for anything
+ * about themselves.
+ *
+ * The first step is the same component as the homepage hero, so somebody who
+ * started at the top and somebody who clicked "Gutachter anfragen" from a
+ * service page meet the same two questions in the same order. Arriving with
+ * both already answered skips straight to the contact details.
+ */
 const props = defineProps({
     content: { type: Object, default: () => ({}) },
     serviceTypes: { type: Array, default: () => [] },
-    imageUploadsEnabled: { type: Boolean, default: true },
-    maxImages: { type: Number, default: 5 },
-    maxUploadMb: { type: Number, default: 10 },
+    /** Filled in when the visitor arrives having already chosen. */
+    selected: { type: Object, default: () => ({}) },
 })
 
 const page = usePage()
 const t = (section, field, fallback = '') => props.content?.[section]?.[field] ?? fallback
 
 const form = useForm({
-    service_type_id: '',
-    postal_code: new URLSearchParams(window.location.search).get('plz') ?? '',
-    city: '',
+    service_type_id: props.selected.service_type_id ?? '',
+    postal_code: props.selected.postal_code ?? '',
+    city: props.selected.city ?? '',
     customer_name: '',
     customer_phone: '',
     customer_email: '',
-    vehicle_make: '',
-    vehicle_model: '',
-    vehicle_year: '',
-    vehicle_plate: '',
-    description: '',
-    urgency: '',
-    images: null,
-    consent: false,
     // Honeypot plus the time the form was rendered — a submission inside three
     // seconds was not typed by a person. No third-party captcha: that would
     // send visitor data to someone else, which the GDPR brief rules out.
@@ -50,95 +53,49 @@ const form = useForm({
 
 onMounted(() => { form.rendered_at = Date.now() })
 
-/**
- * Three steps rather than one long form.
- *
- * The fields are unchanged and so is the submission: only the last step posts,
- * so a half-filled request is never sent and the server-side validation stays
- * the single source of truth. Moving forward checks the fields on the current
- * step so somebody is told about a missing postal code there, rather than four
- * screens later.
- */
 const STEPS = [
     { number: 1, label: 'Leistung und Standort', short: 'Leistung' },
-    { number: 2, label: 'Angaben zum Fahrzeug', short: 'Fahrzeug' },
-    { number: 3, label: 'Kontakt und Dringlichkeit', short: 'Kontakt' },
+    { number: 2, label: 'Ihre Kontaktdaten', short: 'Kontakt' },
 ]
 
-/**
- * A heading for the steps that no longer carry the page title.
- *
- * Without it steps two and three open on a bare row of inputs with nothing
- * saying what they are for. The wording comes from the content blocks so it can
- * be changed with the rest of the page.
- */
-const stepHeading = computed(() => ({
-    title: t('formular', `schritt_${step.value}_titel`, STEPS[step.value - 1]?.label ?? ''),
-    text: t('formular', `schritt_${step.value}_text`),
-}))
+// Both answers already in hand means the first step has nothing left to ask.
+const started = ref(Boolean(props.selected.service_type_id && props.selected.city))
+const step = computed(() => (started.value ? 2 : 1))
 
-const REQUIRED_BY_STEP = {
-    1: ['service_type_id', 'postal_code', 'city'],
-    2: ['vehicle_make', 'vehicle_model'],
-    3: ['customer_name', 'customer_phone', 'customer_email', 'consent'],
-}
+const service = computed(() => props.serviceTypes
+    .find((type) => String(type.id) === String(form.service_type_id)) ?? null)
 
-const LABELS_BY_FIELD = {
-    service_type_id: 'Bitte wählen Sie die Art des Gutachtens.',
-    postal_code: 'Bitte geben Sie die Postleitzahl an.',
-    city: 'Bitte geben Sie den Standort des Fahrzeugs an.',
-    vehicle_make: 'Bitte geben Sie die Marke an.',
-    vehicle_model: 'Bitte geben Sie das Modell an.',
-    customer_name: 'Bitte geben Sie Ihren Namen an.',
-    customer_phone: 'Bitte geben Sie eine Telefonnummer an.',
-    customer_email: 'Bitte geben Sie eine E-Mail-Adresse an.',
-    consent: 'Bitte bestätigen Sie die Einwilligung.',
-}
+/** Answering the first step here rather than arriving with it answered. */
+const onStart = ({ service_type_id, postal_code, city }) => {
+    form.service_type_id = service_type_id
+    form.postal_code = postal_code
+    form.city = city
+    started.value = true
 
-const step = ref(1)
-const furthest = ref(1)
+    // Counted once: going back and forward again is the same person on the
+    // same form, not a second one reaching the step.
+    router.post('/anfrage/schritt', { step: 'schritt_2' }, {
+        preserveState: true,
+        preserveScroll: true,
+        only: [],
+    })
 
-const goTo = (target) => {
-    // Counted once per visit: going back and forward again is the same person
-    // on the same form, not a second one reaching that step.
-    if (target > furthest.value && target > 1) {
-        router.post(`/anfrage/schritt`, { step: `schritt_${target}` }, {
-            preserveState: true,
-            preserveScroll: true,
-            only: [],
-        })
-    }
-
-    step.value = target
-    furthest.value = Math.max(furthest.value, target)
-
-    // Let go of the field that was focused: otherwise the on-screen keyboard
-    // stays up and covers the step that has just appeared.
     document.activeElement?.blur?.()
-
     window.scrollTo({ top: 0, behavior: 'smooth' })
 }
 
-const next = () => {
-    const missing = REQUIRED_BY_STEP[step.value].filter((field) => {
-        const value = form[field]
-
-        return field === 'consent' ? value !== true : String(value ?? '').trim() === ''
-    })
-
-    if (missing.length) {
-        // Shown the same way the server shows its own, so the two never look
-        // like different kinds of problem.
-        form.setError(Object.fromEntries(missing.map((f) => [f, LABELS_BY_FIELD[f]])))
-
-        return
-    }
-
+/** Back to the first step, with what was chosen still chosen. */
+const back = () => {
+    started.value = false
     form.clearErrors()
-    goTo(step.value + 1)
+    window.scrollTo({ top: 0, behavior: 'smooth' })
 }
 
-const back = () => goTo(step.value - 1)
+const REQUIRED = {
+    customer_name: 'Bitte geben Sie Ihren Namen an.',
+    customer_email: 'Bitte geben Sie eine E-Mail-Adresse an.',
+    customer_phone: 'Bitte geben Sie eine Telefonnummer an.',
+}
 
 const labels = {
     service_type_id: 'Art des Gutachtens',
@@ -147,64 +104,87 @@ const labels = {
     customer_name: 'Vor- und Nachname',
     customer_phone: 'Telefon',
     customer_email: 'E-Mail',
-    vehicle_make: 'Marke',
-    vehicle_model: 'Modell',
-    consent: 'Einwilligung',
 }
 
-const typeOptions = props.serviceTypes.map((t) => ({ value: t.id, label: t.name_de }))
+const submit = () => {
+    const missing = Object.keys(REQUIRED).filter((field) => String(form[field] ?? '').trim() === '')
 
-const urgencyOptions = [
-    { value: 'normal', label: 'Keine besondere Eile' },
-    { value: 'soon', label: 'Innerhalb von zwei Werktagen' },
-    { value: 'urgent', label: 'So schnell wie möglich' },
-]
+    if (missing.length) {
+        // Shown the same way the server shows its own, so the two never look
+        // like different kinds of problem.
+        form.setError(Object.fromEntries(missing.map((f) => [f, REQUIRED[f]])))
 
-const submit = () => form.post('/anfrage', { forceFormData: true })
+        return
+    }
+
+    form.clearErrors()
+    form.post('/anfrage')
+}
 </script>
 
 <template>
-
-    <RequestFlowLayout title="Anfrage" :dirty="form.isDirty">
-        <template #progress>
-            <RequestProgress :steps="STEPS" :current="step" :furthest="furthest" @go="goTo" />
+    <RequestFlowLayout
+        title="Anfrage"
+        :dirty="form.isDirty"
+        :can-go-back="started"
+        @back="back"
+    >
+        <template v-if="started" #progress>
+            <p class="pb-2 text-center text-sm text-gray-600">Schritt {{ step }} von {{ STEPS.length }}</p>
+            <RequestProgress :steps="STEPS" :current="step" :furthest="step" @go="(n) => n === 1 && back()" />
         </template>
 
         <div class="bg-gray-50">
-            <div class="mx-auto grid w-full max-w-(--container-wide) grid-cols-1 gap-12 px-4 py-16 md:px-6 lg:grid-cols-[minmax(0,720px)_300px] lg:items-start">
-                <div class="min-w-0">
-                    <!--
-                        Only on the first step. Repeating the page's title and
-                        its "here is what this is" paragraph above every step
-                        says nothing new after the visitor has begun, and pushes
-                        the fields they are actually working on down the screen.
-                        The step indicator above carries the context from there.
-                    -->
-                    <template v-if="step === 1">
-                        <SectionLabel :text="t('kopf', 'eyebrow', 'Kostenlose Anfrage')" />
-                        <h1 class="pt-6 text-h1 font-bold text-navy-700">{{ t('kopf', 'ueberschrift', 'Gutachter anfragen') }}</h1>
-                        <p class="measure-lead pt-3 text-lead leading-relaxed text-gray-600">{{ t('kopf', 'text') }}</p>
-                    </template>
+            <div class="mx-auto w-full max-w-(--container-prose) px-4 py-12 md:px-6 md:py-16">
+                <!-- ── Step one: what, and where ── -->
+                <template v-if="! started">
+                    <SectionLabel :text="t('kopf', 'eyebrow', 'Kostenlose Anfrage')" />
+                    <h1 class="pt-6 text-h2 font-bold text-navy-700 sm:text-h1">
+                        {{ t('kopf', 'ueberschrift', 'Gutachter anfragen') }}
+                    </h1>
+                    <p class="measure-lead pt-3 text-lead leading-relaxed text-gray-600">{{ t('kopf', 'text') }}</p>
+
+                    <RequestStarter
+                        class="mt-8"
+                        :service-types="serviceTypes"
+                        :initial-service="form.service_type_id"
+                        :initial-postal-code="form.postal_code"
+                        :action="null"
+                        :cta-label="t('formular', 'cta_schritt_1', 'Jetzt Gutachter anfragen')"
+                        @start="onStart"
+                    />
+
+                    <TrustRow class="pt-5" />
+                </template>
+
+                <!-- ── Step two: who to call ── -->
+                <template v-else>
+                    <h1 class="text-h2 font-bold text-navy-700">
+                        {{ t('formular', 'schritt_2_titel', 'Fast geschafft!') }}
+                    </h1>
+                    <p class="measure-lead pt-3 text-lead leading-relaxed text-gray-600">
+                        {{ t('formular', 'schritt_2_text', 'Bitte vervollständigen Sie Ihre Daten, damit wir einen passenden Gutachter für Sie vermitteln können.') }}
+                    </p>
 
                     <!--
-                        Steps two and three lost the page title with the rest of
-                        the introduction, which left them opening on a bare row
-                        of inputs. This says what the step is for without
-                        repeating the whole preamble.
+                        What they chose, in one quiet line. It is the only thing
+                        carried over from the step before, and without it the
+                        contact screen gives no sign that the first answer was
+                        kept.
                     -->
-                    <div v-if="step > 1 && stepHeading.title" class="pb-5">
-                        <h2 class="text-h3 font-semibold text-navy-700">{{ stepHeading.title }}</h2>
-                        <p v-if="stepHeading.text" class="measure pt-1.5 text-base leading-normal text-gray-600">
-                            {{ stepHeading.text }}
-                        </p>
-                    </div>
+                    <p v-if="service" class="flex flex-wrap items-center gap-x-2 gap-y-1 pt-4 text-sm text-gray-600">
+                        <Check :size="15" :stroke-width="2" class="shrink-0 text-success" aria-hidden="true" />
+                        <span class="font-medium text-navy-700">{{ service.name_de }}</span>
+                        <span aria-hidden="true">·</span>
+                        <span>{{ form.postal_code }} {{ form.city }}</span>
+                        <button
+                            type="button"
+                            class="border-b border-gray-300 text-gray-600 hover:border-navy-700 hover:text-navy-700"
+                            @click="back"
+                        >ändern</button>
+                    </p>
 
-                    <form
-                        class="rounded-card border border-gray-200 bg-white p-6 md:p-8"
-                        :class="step === 1 ? 'mt-8' : ''"
-                        novalidate
-                        @submit.prevent="submit"
-                    >
+                    <form class="mt-8 rounded-card border border-gray-200 bg-white p-5 sm:p-7" novalidate @submit.prevent="submit">
                         <ErrorSummary v-if="form.hasErrors" :errors="form.errors" :labels="labels" class="mb-6" />
 
                         <!-- Honeypot: visually and programmatically hidden -->
@@ -213,160 +193,74 @@ const submit = () => form.post('/anfrage', { forceFormData: true })
                             <input id="website" v-model="form.website" type="text" tabindex="-1" autocomplete="off">
                         </div>
 
-                        <div v-show="step === 1" class="flex flex-col gap-5">
-                            <BaseSelect
-                                id="service_type_id"
-                                v-model="form.service_type_id"
-                                label="Art des Gutachtens"
-                                :options="typeOptions"
-                                :error="form.errors.service_type_id"
+                        <div class="flex flex-col gap-5">
+                            <BaseInput
+                                id="customer_name"
+                                v-model="form.customer_name"
+                                label="Ihr Name"
+                                placeholder="Vor- und Nachname"
+                                autocomplete="name"
+                                :error="form.errors.customer_name"
                                 required
                             />
-
-                            <div class="grid grid-cols-1 gap-4 sm:grid-cols-[200px_minmax(0,1fr)]">
-                                <BasePostalCodeInput
-                                    id="postal_code"
-                                    v-model="form.postal_code"
-                                    v-model:city="form.city"
-                                    :error="form.errors.postal_code"
-                                    required
-                                />
-                                <BaseInput
-                                    id="city"
-                                    v-model="form.city"
-                                    label="Standort des Fahrzeugs"
-                                    placeholder="Ort, Straße oder Werkstatt"
-                                    :error="form.errors.city"
-                                    required
-                                />
-                            </div>
-
-                        </div>
-
-                        <!-- Step 2 -->
-                        <div v-show="step === 2" class="flex flex-col gap-5">
-                            <div class="grid grid-cols-2 gap-4 lg:grid-cols-4">
-                                <BaseInput id="vehicle_make" v-model="form.vehicle_make" label="Marke" placeholder="VW" :error="form.errors.vehicle_make" required />
-                                <BaseInput id="vehicle_model" v-model="form.vehicle_model" label="Modell" placeholder="Passat B8" :error="form.errors.vehicle_model" required />
-                                <BaseInput id="vehicle_year" v-model="form.vehicle_year" label="Baujahr" placeholder="2019" inputmode="numeric" maxlength="4" numeric :error="form.errors.vehicle_year" />
-                                <BaseInput id="vehicle_plate" v-model="form.vehicle_plate" label="Kennzeichen" placeholder="D-AB 1234" :error="form.errors.vehicle_plate" />
-                            </div>
-
-                            <BaseTextarea
-                                id="description"
-                                v-model="form.description"
-                                label="Kurze Beschreibung"
-                                placeholder="Was ist passiert? Zwei bis drei Sätze genügen."
-                                :error="form.errors.description"
-                                optional
+                            <BaseInput
+                                id="customer_email"
+                                v-model="form.customer_email"
+                                label="E-Mail-Adresse"
+                                type="email"
+                                placeholder="E-Mail eingeben"
+                                autocomplete="email"
+                                :error="form.errors.customer_email"
+                                required
                             />
-
-                            <BaseFileUpload
-                                v-if="imageUploadsEnabled"
-                                v-model="form.images"
-                                label="Fotos"
-                                accept=".jpg,.jpeg,.png,.webp"
-                                :accept-label="`JPG, PNG · max. ${maxImages} Dateien · je ${maxUploadMb} MB`"
-                                multiple
-                                :max-files="maxImages"
-                                :max-size-mb="maxUploadMb"
-                                :error="form.errors.images"
+                            <BaseInput
+                                id="customer_phone"
+                                v-model="form.customer_phone"
+                                label="Telefonnummer"
+                                placeholder="Telefonnummer eingeben"
+                                autocomplete="tel"
+                                hint="Für die direkte Kontaktaufnahme durch den Sachverständigen."
+                                numeric
+                                :error="form.errors.customer_phone"
+                                required
                             />
                         </div>
 
-                        <!-- Step 3 -->
-                        <div v-show="step === 3" class="flex flex-col gap-5">
-                            <BaseInput id="customer_name" v-model="form.customer_name" label="Vor- und Nachname" placeholder="Martina Reinhardt" autocomplete="name" :error="form.errors.customer_name" required />
-                            <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                                <BaseInput id="customer_phone" v-model="form.customer_phone" label="Telefon" placeholder="+49 179 0000000" autocomplete="tel" numeric :error="form.errors.customer_phone" required />
-                                <BaseInput id="customer_email" v-model="form.customer_email" label="E-Mail" type="email" placeholder="name@beispiel.de" autocomplete="email" :error="form.errors.customer_email" required />
-                            </div>
-
-                            <BaseSelect
-                                id="urgency"
-                                v-model="form.urgency"
-                                label="Dringlichkeit"
-                                :options="urgencyOptions"
-                                :error="form.errors.urgency"
-                                optional
-                                class="max-w-80"
-                            />
-
-                            <div class="pt-2">
-                                <BaseCheckbox id="consent" v-model="form.consent" :error="form.errors.consent">
-                                    Ich willige ein, dass DKGZ meine Angaben zur Vermittlung an geeignete Sachverständige
-                                    verarbeitet. Die
-                                    <a href="/datenschutz" class="border-b border-navy-700 pb-0.5 text-navy-700">Datenschutzerklärung</a>
-                                    habe ich gelesen.
-                                </BaseCheckbox>
-                            </div>
-                        </div>
+                        <BaseButton
+                            type="submit"
+                            size="cta"
+                            block
+                            class="mt-7"
+                            :loading="form.processing"
+                            loading-label="Wird gesendet…"
+                        >{{ t('formular', 'cta', 'Kostenfrei anfragen') }}</BaseButton>
 
                         <!--
-                            Only the last step submits, so a half-filled request
-                            can never be sent and the server stays the single
-                            authority on what is valid.
+                            The consent wording sits above the fold of the
+                            button rather than behind a tick box, which is the
+                            ordinary German pattern for a request somebody has
+                            asked to be contacted about. The moment it was given
+                            is still recorded against the request.
                         -->
-                        <div class="flex flex-col-reverse gap-3 pt-8 sm:flex-row sm:items-center">
-                            <BaseButton
-                                v-if="step > 1"
-                                type="button"
-                                variant="secondary"
-                                size="cta"
-                                class="w-full sm:w-auto"
-                                @click="back"
-                            >Zurück</BaseButton>
-
-                            <BaseButton
-                                v-if="step < STEPS.length"
-                                type="button"
-                                size="cta"
-                                class="w-full sm:ml-auto sm:w-auto"
-                                @click="next"
-                            >Weiter</BaseButton>
-
-                            <BaseButton
-                                v-else
-                                type="submit"
-                                size="cta"
-                                class="w-full sm:ml-auto sm:w-auto"
-                                :loading="form.processing"
-                                loading-label="Wird gesendet…"
-                            >{{ t('formular', 'cta', 'Anfrage absenden') }}</BaseButton>
-                        </div>
-
-                        <p v-if="step === STEPS.length" class="measure pt-3 text-sm leading-normal text-gray-600">
-                            {{ t('formular', 'datenschutzhinweis') }}
+                        <p class="measure pt-4 text-sm leading-normal text-gray-600">
+                            {{ t('formular', 'datenschutzhinweis', 'Mit dem Absenden willigen Sie ein, dass DKGZ Ihre Angaben zur Vermittlung an geeignete Sachverständige verarbeitet.') }}
+                            <a href="/datenschutz" class="border-b border-navy-700 pb-0.5 text-navy-700">Datenschutzerklärung</a>
                         </p>
-                        <p
-                            v-else
-                            class="flex items-center gap-2 pt-3 text-sm text-gray-600 lg:hidden"
-                        >
-                            <Check :size="15" :stroke-width="2" class="shrink-0 text-navy-700" aria-hidden="true" />
-                            {{ t('formular', 'kurzhinweis', 'Kostenlos und unverbindlich') }}
+
+                        <p class="flex items-start gap-2 pt-4 text-sm leading-normal text-gray-600">
+                            <Check :size="15" :stroke-width="2" class="mt-0.5 shrink-0 text-success" aria-hidden="true" />
+                            {{ t('formular', 'kurzhinweis', 'Ihre Anfrage ist kostenfrei und unverbindlich. Es entstehen für Sie keine Kosten.') }}
                         </p>
                     </form>
-                </div>
 
-                <!--
-                    Beside the form on a wide screen, gone on a phone: stacked
-                    below the fields it is a screenful of reassurance somebody
-                    has to scroll past after they have already started. The one
-                    line that still earns its place moves under the button.
-                -->
-                <aside class="hidden rounded-card border border-gray-200 bg-white p-6 lg:sticky lg:top-24 lg:block">
-                    <ul class="flex flex-col gap-4">
-                        <li v-for="key in ['punkt_1', 'punkt_2', 'punkt_3']" :key="key" class="flex gap-2.5">
-                            <Check :size="18" :stroke-width="1.5" class="mt-0.5 shrink-0 text-navy-700" aria-hidden="true" />
-                            <span class="text-sm leading-normal text-gray-800">{{ t('seitenleiste', key) }}</span>
-                        </li>
-                    </ul>
-                    <div v-if="page.props.app?.phone" class="mt-5 border-t border-gray-200 pt-4">
-                        <SectionLabel :text="t('seitenleiste', 'telefon_titel', 'Lieber telefonisch?')" tone="muted" :with-rule="false" />
-                        <a :href="`tel:${page.props.app.phone.replace(/\s/g, '')}`" class="block pt-2 font-mono text-base tabular-nums text-navy-700">{{ page.props.app.phone }}</a>
-                        <p class="text-sm text-gray-600">{{ page.props.app.office_hours }}</p>
-                    </div>
-                </aside>
+                    <p v-if="page.props.app?.phone" class="pt-6 text-center text-sm text-gray-600">
+                        {{ t('seitenleiste', 'telefon_titel', 'Lieber telefonisch?') }}
+                        <a
+                            :href="`tel:${page.props.app.phone.replace(/\s/g, '')}`"
+                            class="font-mono tabular-nums text-navy-700 underline underline-offset-2"
+                        >{{ page.props.app.phone }}</a>
+                    </p>
+                </template>
             </div>
         </div>
     </RequestFlowLayout>

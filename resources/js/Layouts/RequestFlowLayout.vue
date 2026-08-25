@@ -14,16 +14,21 @@ import { useConfirm } from '../Composables/useConfirm.js'
  * else. No navigation, no footer, no announcement bar — everything that would
  * invite the visitor to wander off mid-form is removed on purpose.
  *
- * The form is one page by design, so there is no stepper here; a numbered
- * progress indicator over a single step would be theatre. See DECISIONS.md D-17.
+ * The step indicator goes in the progress slot when there is more than one
+ * step to be in; a page that is the whole request does not get one, because a
+ * progress bar over a single step is theatre. See DECISIONS.md D-17.
  */
 const props = defineProps({
     title: { type: String, required: true },
     label: { type: String, default: 'Ihre Anfrage' },
     backHref: { type: String, default: null },
+    /** A back arrow that steps within the flow rather than navigating away. */
+    canGoBack: { type: Boolean, default: false },
     /** Warn before leaving when the visitor has typed something. */
     dirty: { type: Boolean, default: false },
 })
+
+const emit = defineEmits(['back'])
 
 const { confirm } = useConfirm()
 const leaving = ref(false)
@@ -75,15 +80,32 @@ onBeforeUnmount(() => window.removeEventListener('beforeunload', guard))
                     <ChevronLeft :size="20" :stroke-width="1.5" aria-hidden="true" />
                 </Link>
 
+                <!--
+                    The seal, not just the word. This header is the only thing
+                    on screen while somebody types their telephone number into a
+                    site they reached from an advert ten seconds ago, so it is
+                    where the mark has to be doing its work.
+                -->
                 <Link href="/" class="shrink-0" aria-label="Zur Startseite">
                     <DkgzMark size="sm" :with-subtitle="false" />
                 </Link>
 
-                <span class="ml-auto hidden text-sm text-gray-600 sm:block">{{ label }}</span>
+                <button
+                    v-if="canGoBack"
+                    type="button"
+                    class="ml-auto flex shrink-0 items-center gap-1.5 rounded-sm px-2 py-2 text-sm text-gray-600 hover:text-navy-700"
+                    @click="emit('back')"
+                >
+                    <ChevronLeft :size="17" :stroke-width="1.5" aria-hidden="true" />
+                    Zurück
+                </button>
+
+                <span v-else class="ml-auto hidden text-sm text-gray-600 sm:block">{{ label }}</span>
 
                 <button
                     type="button"
-                    class="-mr-2 ml-auto grid h-11 w-11 shrink-0 place-items-center rounded-sm text-gray-600 hover:text-navy-700 sm:ml-4"
+                    class="-mr-2 grid h-11 w-11 shrink-0 place-items-center rounded-sm text-gray-600 hover:text-navy-700 sm:ml-4"
+                    :class="canGoBack ? '' : 'ml-auto'"
                     aria-label="Anfrage abbrechen"
                     @click="exit"
                 >

@@ -1,12 +1,14 @@
 <script setup>
 import { computed, ref } from 'vue'
 import { Head, Link, usePage } from '@inertiajs/vue3'
-import { ArrowRight, Check, ChevronDown, Phone } from 'lucide-vue-next'
+import { Check, ChevronDown, Phone } from 'lucide-vue-next'
 import PublicLayout from '../../Layouts/PublicLayout.vue'
 import BrandSeal from '../../Components/Layout/BrandSeal.vue'
 import SealMark from '../../Components/Layout/SealMark.vue'
 import ServiceIcon from '../../Components/Domain/ServiceIcon.vue'
 import BaseButton from '../../Components/Base/BaseButton.vue'
+import RequestStarter from '../../Components/Domain/RequestStarter.vue'
+import TrustRow from '../../Components/Domain/TrustRow.vue'
 import GermanyCoverageMap from '../../Components/Domain/GermanyCoverageMap.vue'
 import ImageSlot from '../../Components/Layout/ImageSlot.vue'
 
@@ -80,19 +82,24 @@ const telHref = computed(() => `tel:${String(page.props.app?.phone ?? '').replac
                     <p class="measure-lead text-lead leading-relaxed text-gray-600">{{ t('hero', 'text') }}</p>
 
                     <!--
-                        A button, not a field. The postal code is asked for on
-                        the form itself; asking twice cost a step and gained
-                        nothing. The phone number sits beneath as the quieter
-                        alternative for anyone who would rather speak to someone.
+                        The first question, not a button to go and find it.
+                        Somebody arriving from an advert answers "which
+                        assessment" before they have decided anything else, and
+                        the postal code follows from it — so the hero asks
+                        rather than promising a form on the next page. The phone
+                        number sits beneath as the quieter alternative for
+                        anyone who would rather speak to someone.
                     -->
-                    <div class="mt-10">
-                        <BaseButton
-                            href="/anfrage"
-                            class="h-16 w-full px-10 text-lead sm:w-auto"
-                        >
-                            {{ t('hero', 'cta', 'Jetzt Gutachter anfragen') }}
-                            <ArrowRight :size="20" :stroke-width="1.75" aria-hidden="true" />
-                        </BaseButton>
+                    <div class="mt-10 max-w-lg">
+                        <RequestStarter
+                            :service-types="serviceTypes"
+                            :cta-label="t('hero', 'cta', 'Jetzt Gutachter anfragen')"
+                            :service-label="t('hero', 'frage_leistung', 'Welche Gutachtenart benötigen Sie?')"
+                            :postal-label="t('hero', 'frage_plz', 'Postleitzahl des Fahrzeugstandorts')"
+                            :service-hint="t('hero', 'frage_hinweis', 'Wählen Sie die passende Leistung aus, damit wir den richtigen Sachverständigen für Sie finden.')"
+                        />
+
+                        <TrustRow class="pt-5" />
 
                         <p v-if="t('hero', 'cta_hinweis')" class="pt-3 text-sm text-gray-600">
                             {{ t('hero', 'cta_hinweis') }}

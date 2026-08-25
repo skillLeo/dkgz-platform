@@ -5,10 +5,11 @@ namespace App\Http\Controllers;
 use App\Actions\CreateServiceRequestAction;
 use App\Http\Requests\StoreServiceRequestRequest;
 use App\Models\FunnelEvent;
+use App\Models\PostalCode;
 use App\Models\ServiceRequest;
 use App\Models\ServiceType;
 use App\Support\Content;
-use App\Support\Settings;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -16,17 +17,42 @@ use Inertia\Response;
 
 class RequestController extends Controller
 {
-    public function create(): Response
+    public function create(Request $request): Response
     {
         FunnelEvent::record('begonnen');
 
         return Inertia::render('Public/Anfrage', [
             'content' => Content::page('anfrage'),
             'serviceTypes' => ServiceType::active()->ordered()->get(['id', 'slug', 'name_de', 'description_de']),
-            'imageUploadsEnabled' => Settings::bool('features.image_uploads', true),
-            'maxImages' => Settings::int('business.max_images_per_request', 5),
-            'maxUploadMb' => Settings::int('business.max_upload_mb', 10),
+            'selected' => $this->selectionFrom($request),
         ]);
+    }
+
+    /**
+     * What the visitor has already answered before arriving here.
+     *
+     * The homepage hero asks which assessment and which postal code, so
+     * somebody who answered there must not be asked again — they come across
+     * with both in the address, and the contact step opens directly. Anything
+     * that does not resolve is simply left unanswered rather than guessed at,
+     * and the first step asks for it as usual.
+     *
+     * @return array<string, mixed>
+     */
+    private function selectionFrom(Request $request): array
+    {
+        $service = ServiceType::active()
+            ->where('slug', $request->string('leistung')->toString())
+            ->first(['id', 'slug']);
+
+        $code = preg_replace('/\D/', '', $request->string('plz')->toString());
+        $city = strlen((string) $code) === 5 ? PostalCode::cityFor($code) : null;
+
+        return array_filter([
+            'service_type_id' => $service?->id,
+            'postal_code' => $city === null ? null : $code,
+            'city' => $city,
+        ], fn ($value) => $value !== null);
     }
 
     public function store(StoreServiceRequestRequest $request, CreateServiceRequestAction $create): RedirectResponse
@@ -48,7 +74,7 @@ class RequestController extends Controller
      * Anonymous: nothing about who, only that it happened. Rate-limited at the
      * route so the counter cannot be inflated by anybody with a loop.
      */
-    public function trackStep(Request $request): \Illuminate\Http\JsonResponse
+    public function trackStep(Request $request): JsonResponse
     {
         $step = $request->string('step')->toString();
 
