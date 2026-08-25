@@ -1089,7 +1089,7 @@
     ]
   },
   "resources/js/Pages/Admin/Faq.vue": {
-    "file": "assets/Faq-CKrKFCHG.js",
+    "file": "assets/Faq-d-8IY6_Z.js",
     "name": "Faq",
     "src": "resources/js/Pages/Admin/Faq.vue",
     "isDynamicEntry": true,
@@ -1103,6 +1103,7 @@
       "_BaseSelect-Daeu6aL3.js",
       "_BaseTextarea-CtHXqbSO.js",
       "_EmptyState-BSSRRuLj.js",
+      "_BaseCheckbox-CxEGWjxp.js",
       "_BaseToggle-u3iKcHkh.js"
     ]
   },
@@ -1990,7 +1991,7 @@
     ]
   },
   "resources/js/app.js": {
-    "file": "assets/app-DDB8uOqQ.js",
+    "file": "assets/app-BTxfkXt4.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true,

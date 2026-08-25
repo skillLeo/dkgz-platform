@@ -7,8 +7,8 @@ use App\Models\ContentBlock;
 use App\Models\Faq;
 use App\Models\Page;
 use App\Support\Content;
-use App\Support\ImagePipeline;
 use App\Support\Formatter;
+use App\Support\ImagePipeline;
 use App\Support\SafeStorage;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -240,6 +240,7 @@ class ContentController extends Controller
                     'question_de' => $f->question_de,
                     'answer_de' => $f->answer_de,
                     'category' => $f->category,
+                    'show_on_homepage' => $f->show_on_homepage,
                     'sort_order' => $f->sort_order,
                     'is_published' => $f->is_published,
                 ]),
@@ -298,6 +299,7 @@ class ContentController extends Controller
             'question_de' => ['required', 'string', 'max:400'],
             'answer_de' => ['required', 'string', 'max:8000'],
             'category' => ['nullable', Rule::in(Faq::CATEGORIES)],
+            'show_on_homepage' => ['boolean'],
             'is_published' => ['boolean'],
         ], [], [
             'question_de' => 'die Frage',

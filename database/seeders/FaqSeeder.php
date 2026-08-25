@@ -13,10 +13,16 @@ class FaqSeeder extends Seeder
     public function run(): void
     {
         foreach ($this->entries() as $index => $entry) {
-            Faq::updateOrCreate(
-                ['question_de' => $entry['question_de']],
-                $entry + ['sort_order' => $index + 1, 'is_published' => true]
-            );
+            $faq = Faq::firstOrNew(['question_de' => $entry['question_de']]);
+
+            // These six are the questions the homepage copy was written around,
+            // so a fresh install starts with them there. An operator who unticks
+            // one has made a decision; reseeding must not put it back.
+            if (! $faq->exists) {
+                $faq->show_on_homepage = true;
+            }
+
+            $faq->fill($entry + ['sort_order' => $index + 1, 'is_published' => true])->save();
         }
     }
 

@@ -5,6 +5,7 @@ import { HelpCircle } from 'lucide-vue-next'
 import AdminLayout from '../../Layouts/AdminLayout.vue'
 import PageHeader from '../../Components/Layout/PageHeader.vue'
 import BaseInput from '../../Components/Base/BaseInput.vue'
+import BaseCheckbox from '../../Components/Base/BaseCheckbox.vue'
 import BaseSelect from '../../Components/Base/BaseSelect.vue'
 import BaseTextarea from '../../Components/Base/BaseTextarea.vue'
 import BaseToggle from '../../Components/Base/BaseToggle.vue'
@@ -19,8 +20,8 @@ const { confirm } = useConfirm()
 const createOpen = ref(false)
 const editing = ref(null)
 
-const create = useForm({ question_de: '', answer_de: '', category: '', is_published: true })
-const edit = useForm({ question_de: '', answer_de: '', category: '', is_published: true })
+const create = useForm({ question_de: '', answer_de: '', category: '', is_published: true, show_on_homepage: false })
+const edit = useForm({ question_de: '', answer_de: '', category: '', is_published: true, show_on_homepage: false })
 const order = useForm({ order: [] })
 
 const categoryOptions = computed(() => props.categories.map((name) => ({ value: name, label: name })))
@@ -30,6 +31,7 @@ const startEdit = (faq) => {
     edit.question_de = faq.question_de
     edit.answer_de = faq.answer_de
     edit.category = faq.category ?? ''
+    edit.show_on_homepage = Boolean(faq.show_on_homepage)
     edit.is_published = faq.is_published
 }
 
@@ -85,6 +87,15 @@ const remove = async (faq) => {
                     :error="create.errors.category"
                     optional
                 />
+                <!--
+                    The homepage used to show every published question, so
+                    growing the FAQ lengthened the front page rather than
+                    filling the FAQ page. What somebody needs before enquiring
+                    is not what they look up afterwards.
+                -->
+                <BaseCheckbox v-model="create.show_on_homepage">
+                    Auch auf der Startseite zeigen
+                </BaseCheckbox>
             </div>
             <div class="flex gap-3 pt-5">
                 <BaseButton type="submit" size="compact" :loading="create.processing">Anlegen</BaseButton>
@@ -101,7 +112,7 @@ const remove = async (faq) => {
                         <p class="text-base font-medium text-navy-700">{{ faq.question_de }}</p>
                         <p class="measure pt-1.5 text-sm leading-normal text-gray-600">{{ faq.answer_de }}</p>
                         <p class="pt-2 font-mono text-xs text-gray-400">
-                            {{ faq.category ?? 'ohne Kategorie' }}<template v-if="!faq.is_published"> · nicht veröffentlicht</template>
+                            {{ faq.category ?? 'ohne Kategorie' }}<template v-if="faq.show_on_homepage"> · Startseite</template><template v-if="!faq.is_published"> · nicht veröffentlicht</template>
                         </p>
                     </div>
                     <div class="flex shrink-0 items-center gap-2">
@@ -124,6 +135,15 @@ const remove = async (faq) => {
                             :error="edit.errors.category"
                             optional
                         />
+                        <!--
+                            The homepage used to show every published question, so
+                            growing the FAQ lengthened the front page rather than
+                            filling the FAQ page. What somebody needs before enquiring
+                            is not what they look up afterwards.
+                        -->
+                        <BaseCheckbox v-model="edit.show_on_homepage">
+                            Auch auf der Startseite zeigen
+                        </BaseCheckbox>
                         <BaseToggle v-model="edit.is_published" label="Veröffentlicht" on-label="Sichtbar" off-label="Verborgen" />
                     </div>
                     <div class="flex gap-3 pt-5">

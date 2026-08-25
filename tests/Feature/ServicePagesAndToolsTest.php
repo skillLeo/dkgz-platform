@@ -3,12 +3,15 @@
 use App\Jobs\NotifyOfficeOfRequestJob;
 use App\Jobs\SendPartnerBroadcastJob;
 use App\Models\Assessor;
+use App\Models\City;
+use App\Models\ContentBlock;
 use App\Models\Faq;
 use App\Models\FunnelEvent;
 use App\Models\ServiceType;
 use App\Models\User;
 use Database\Seeders\ContentBlockSeeder;
 use Database\Seeders\EmailTemplateSeeder;
+use Database\Seeders\FaqSeeder;
 use Database\Seeders\RolePermissionSeeder;
 use Database\Seeders\SettingsSeeder;
 use Illuminate\Support\Facades\Queue;
@@ -52,7 +55,7 @@ describe('the service page', function () {
         // Those links belong on the city pages. Repeating them here made the
         // sidebar a directory rather than a call to action.
         $type = ServiceType::factory()->create(['is_active' => true]);
-        $city = App\Models\City::create(['name' => 'Köln', 'is_active' => true]);
+        $city = City::create(['name' => 'Köln', 'is_active' => true]);
         $city->serviceTypes()->sync([$type->id]);
 
         $this->get("/leistungen/{$type->slug}")
@@ -234,7 +237,7 @@ describe('the sidebar and questions', function () {
             'faqs' => [['frage' => 'Wie lange dauert es?', 'antwort' => 'Zwei Werktage.']],
         ]);
 
-        $city = App\Models\City::create(['name' => 'Düsseldorf', 'is_active' => true]);
+        $city = City::create(['name' => 'Düsseldorf', 'is_active' => true]);
         $city->serviceTypes()->sync([$type->id]);
 
         $this->get("/kfz-gutachter/duesseldorf/{$type->slug}")
@@ -247,8 +250,8 @@ describe('the sidebar and questions', function () {
     it('carries the reassurance points for both kinds of page', function () {
         $this->get('/leistungen')->assertOk();
 
-        expect(App\Models\ContentBlock::where('page_key', 'leistungen')->where('field_key', 'punkt_1')->exists())->toBeTrue()
-            ->and(App\Models\ContentBlock::where('page_key', 'staedte')->where('field_key', 'punkt_1')->exists())->toBeTrue();
+        expect(ContentBlock::where('page_key', 'leistungen')->where('field_key', 'punkt_1')->exists())->toBeTrue()
+            ->and(ContentBlock::where('page_key', 'staedte')->where('field_key', 'punkt_1')->exists())->toBeTrue();
     });
 
     it('no longer offers city links on the nationwide service page', function () {
@@ -259,7 +262,7 @@ describe('the sidebar and questions', function () {
     });
 
     it('uses one short call to action everywhere', function () {
-        $ctas = App\Models\ContentBlock::whereIn('page_key', ['leistungen', 'staedte'])
+        $ctas = ContentBlock::whereIn('page_key', ['leistungen', 'staedte'])
             ->where('field_key', 'cta')
             ->pluck('value')
             ->unique();
@@ -305,5 +308,74 @@ describe('FAQ categories', function () {
             ->assertSessionHasNoErrors();
 
         expect(Faq::firstWhere('question_de', 'Was kostet die Vermittlung?')->category)->toBe('Kosten');
+    });
+});
+
+describe('which questions reach the homepage', function () {
+    it('shows only the ones picked out for it', function () {
+        // The homepage used to carry every published question, so growing the
+        // FAQ lengthened the front page instead of filling the FAQ page.
+        Faq::query()->delete();
+        Faq::factory()->onHomepage()->create(['question_de' => 'Ist die Anfrage kostenlos?']);
+        Faq::factory()->create(['question_de' => 'Wie lange werden Daten gespeichert?']);
+
+        $this->get('/')
+            ->assertOk()
+            ->assertInertia(fn ($page) => $page
+                ->where('faqs', fn ($faqs) => collect($faqs)->pluck('question_de')->all() === ['Ist die Anfrage kostenlos?'])
+            );
+    });
+
+    it('still answers all of them on the FAQ page', function () {
+        Faq::query()->delete();
+        Faq::factory()->onHomepage()->create(['question_de' => 'Ist die Anfrage kostenlos?']);
+        Faq::factory()->create(['question_de' => 'Wie lange werden Daten gespeichert?', 'category' => 'Datenschutz']);
+
+        $this->get('/faq')
+            ->assertOk()
+            ->assertInertia(fn ($page) => $page
+                ->where('groups', fn ($groups) => collect($groups)->flatten(1)->count() === 2)
+            );
+    });
+
+    it('leaves an unpublished question off the homepage even when it is ticked', function () {
+        Faq::query()->delete();
+        Faq::factory()->onHomepage()->create(['is_published' => false]);
+
+        $this->get('/')->assertInertia(fn ($page) => $page->where('faqs', []));
+    });
+
+    it('lets the admin tick and untick it', function () {
+        $this->actingAs($this->admin)
+            ->post('/admin/faq', [
+                'question_de' => 'Wer zahlt das Gutachten?',
+                'answer_de' => 'In der Regel die gegnerische Versicherung.',
+                'category' => 'Kosten',
+                'show_on_homepage' => true,
+            ])
+            ->assertSessionHasNoErrors();
+
+        $faq = Faq::firstWhere('question_de', 'Wer zahlt das Gutachten?');
+        expect($faq->show_on_homepage)->toBeTrue();
+
+        $this->actingAs($this->admin)
+            ->post("/admin/faq/{$faq->id}", [
+                'question_de' => $faq->question_de,
+                'answer_de' => $faq->answer_de,
+                'category' => 'Kosten',
+                'show_on_homepage' => false,
+                'is_published' => true,
+            ])
+            ->assertSessionHasNoErrors();
+
+        expect($faq->fresh()->show_on_homepage)->toBeFalse();
+    });
+
+    it('keeps the questions that were already on the front page there', function () {
+        // Nobody asked for the homepage to empty itself the day this shipped.
+        Faq::query()->delete();
+        $this->seed(FaqSeeder::class);
+
+        expect(Faq::onHomepage()->count())->toBe(6);
     });
 });

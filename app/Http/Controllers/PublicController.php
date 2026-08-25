@@ -22,7 +22,7 @@ class PublicController extends Controller
             'coverage' => CoverageMap::regions(),
             'content' => Content::page('startseite'),
             'serviceTypes' => $this->activeServiceTypes(),
-            'faqs' => Faq::published()->ordered()->get(['id', 'question_de', 'answer_de']),
+            'faqs' => Faq::published()->onHomepage()->ordered()->get(['id', 'question_de', 'answer_de']),
         ]);
     }
 

@@ -27,12 +27,13 @@ class Faq extends Model
     ];
 
     protected $fillable = [
-        'question_de', 'answer_de', 'category', 'sort_order', 'is_published',
+        'question_de', 'answer_de', 'category', 'sort_order', 'is_published', 'show_on_homepage',
     ];
 
     protected function casts(): array
     {
         return [
+            'show_on_homepage' => 'boolean',
             'is_published' => 'boolean',
             'sort_order' => 'integer',
         ];
@@ -41,6 +42,18 @@ class Faq extends Model
     public function scopePublished(Builder $query): Builder
     {
         return $query->where('is_published', true);
+    }
+
+    /**
+     * The handful chosen for the front page.
+     *
+     * The homepage used to show every published question, so growing the FAQ
+     * lengthened the front page rather than filling the FAQ page — and what
+     * somebody needs before enquiring is not what they look up afterwards.
+     */
+    public function scopeOnHomepage(Builder $query): Builder
+    {
+        return $query->where('show_on_homepage', true);
     }
 
     public function scopeOrdered(Builder $query): Builder

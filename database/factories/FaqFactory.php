@@ -18,6 +18,13 @@ class FaqFactory extends Factory
             'category' => 'Allgemein',
             'sort_order' => fake()->numberBetween(0, 20),
             'is_published' => true,
+            'show_on_homepage' => false,
         ];
+    }
+
+    /** One of the few questions picked out for the front page. */
+    public function onHomepage(): static
+    {
+        return $this->state(['show_on_homepage' => true]);
     }
 }
