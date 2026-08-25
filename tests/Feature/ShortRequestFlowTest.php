@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\ContentBlock;
 use App\Models\PostalCode;
 use App\Models\ServiceRequest;
 use App\Models\ServiceType;
@@ -182,5 +183,57 @@ describe('the pages that start it', function () {
         ] as $gone) {
             expect($source)->not->toContain($gone);
         }
+    });
+});
+
+describe('copy the operator had already rewritten', function () {
+    /** Runs one migration by hand against wording set up for it. */
+    function runRequestCopyMigration(): void
+    {
+        (require database_path('migrations/2026_08_26_093000_the_second_step_describes_itself.php'))->up();
+    }
+
+    function requestBlock(string $field): ?ContentBlock
+    {
+        return ContentBlock::where('page_key', 'anfrage')
+            ->where('section_key', 'formular')
+            ->where('field_key', $field)
+            ->first();
+    }
+
+    it('stops the second step describing the car', function () {
+        // Their wording, from the live site — kept by the migration that only
+        // rewrites untouched copy, and now above a name and a telephone number.
+        requestBlock('schritt_2_text')?->update([
+            'value' => 'Geben Sie die wichtigsten Fahrzeugdaten an. Fotos und eine kurze Beschreibung helfen bei der ersten Einschätzung.',
+        ]);
+
+        runRequestCopyMigration();
+
+        expect(requestBlock('schritt_2_text')->value)
+            ->not->toContain('Fahrzeugdaten')
+            ->toContain('vervollständigen');
+    });
+
+    it('puts the consent in front of their reassurance rather than over it', function () {
+        requestBlock('datenschutzhinweis')?->update([
+            'value' => 'Die Anfrage und Vermittlung sind für Sie kostenfrei und unverbindlich.',
+        ]);
+
+        runRequestCopyMigration();
+
+        expect(requestBlock('datenschutzhinweis')->value)
+            ->toStartWith('Mit dem Absenden willigen Sie ein')
+            ->toContain('kostenfrei und unverbindlich');
+    });
+
+    it('leaves a line alone that already says it', function () {
+        $already = 'Mit dem Absenden willigen Sie ein. Sonst nichts.';
+
+        requestBlock('datenschutzhinweis')?->update(['value' => $already]);
+
+        runRequestCopyMigration();
+
+        expect(requestBlock('datenschutzhinweis')->value)->toBe($already);
     });
 });
