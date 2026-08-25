@@ -6,6 +6,7 @@ import PublicLayout from '../../Layouts/PublicLayout.vue'
 import SectionLabel from '../../Components/Layout/SectionLabel.vue'
 import { fill } from '../../Support/placeholders.js'
 import BaseButton from '../../Components/Base/BaseButton.vue'
+import ServiceIcon from '../../Components/Domain/ServiceIcon.vue'
 
 /**
  * One service in one city — the page this whole structure exists for.
@@ -22,7 +23,6 @@ const props = defineProps({
     city: { type: Object, required: true },
     serviceType: { type: Object, required: true },
     otherServices: { type: Array, default: () => [] },
-    otherCities: { type: Array, default: () => [] },
 })
 
 /**
@@ -34,7 +34,12 @@ const props = defineProps({
  */
 const t = (section, field, fallback = '') => fill(
     props.content?.[section]?.[field] || fallback,
-    { stadt: props.city.name, leistung: props.serviceType.name_de, bundesland: props.city.state },
+    {
+        stadt: props.city.name,
+        leistung: props.serviceType.name_de,
+        leistung_genus: props.serviceType.genus,
+        bundesland: props.city.state,
+    },
 )
 
 const title = computed(() => props.city.meta_title
@@ -206,24 +211,15 @@ const sections = computed(() => [
 
                 <div v-if="otherServices.length">
                     <p class="text-eyebrow font-semibold uppercase text-gray-600">
-                        {{ t('leistung', 'weitere_leistungen', 'Weitere Gutachten in {stadt}') }}
+                        {{ t('leistung', 'weitere_leistungen', 'Weitere Leistungen in {stadt}') }}
                     </p>
-                    <ul class="flex flex-col gap-2 pt-3">
+                    <ul class="flex flex-col gap-2.5 pt-3">
                         <li v-for="entry in otherServices" :key="entry.url">
-                            <Link :href="entry.url" class="text-sm text-navy-700 hover:text-navy-500">
-                                {{ entry.name }}
-                            </Link>
-                        </li>
-                    </ul>
-                </div>
-
-                <div v-if="otherCities.length">
-                    <p class="text-eyebrow font-semibold uppercase text-gray-600">
-                        {{ t('leistung', 'weitere_staedte', '{leistung} in anderen Städten') }}
-                    </p>
-                    <ul class="flex flex-col gap-2 pt-3">
-                        <li v-for="entry in otherCities" :key="entry.url">
-                            <Link :href="entry.url" class="text-sm text-navy-700 hover:text-navy-500">
+                            <Link
+                                :href="entry.url"
+                                class="inline-flex items-center gap-2.5 text-sm text-navy-700 hover:text-navy-500"
+                            >
+                                <ServiceIcon :service="entry" :size="16" class="shrink-0 text-gray-400" />
                                 {{ entry.name }}
                             </Link>
                         </li>

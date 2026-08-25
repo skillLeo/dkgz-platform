@@ -1,8 +1,10 @@
 <?php
 
 use App\Models\City;
+use App\Models\ContentBlock;
 use App\Models\ServiceType;
 use App\Models\User;
+use App\Support\Content;
 use Database\Seeders\ContentBlockSeeder;
 use Database\Seeders\RolePermissionSeeder;
 use Database\Seeders\SettingsSeeder;
@@ -103,11 +105,19 @@ describe('the page itself', function () {
         $koeln = City::create(['name' => 'Köln', 'is_active' => true]);
         $koeln->serviceTypes()->sync([$this->service->id]);
 
+        // The other services in this city, each with its own mark. The same
+        // service elsewhere is no longer listed here — it is a column of city
+        // names that says nothing about the service, and every one of those
+        // pages is still reached from its own city page and from the index.
         $this->get('/kfz-gutachter/duesseldorf/unfallgutachten')
             ->assertOk()
             ->assertInertia(fn ($page) => $page
                 ->has('otherServices', 1)
-                ->has('otherCities', 1));
+                ->missing('otherCities'));
+
+        $this->get('/kfz-gutachter/koeln')
+            ->assertOk()
+            ->assertInertia(fn ($page) => $page->has('services', 1));
     });
 });
 
@@ -169,7 +179,9 @@ describe('the wording names the place', function () {
             ->assertOk()
             ->assertInertia(fn ($page) => $page
                 ->where('content.leistung.ueberschrift', '{leistung} in {stadt}')
-                ->where('content.leistung.ablauf_ueberschrift', 'So kommen Sie zum {leistung} in {stadt}'));
+                // The article rides inside the braces so it can be bent to the
+                // service's gender — "zum Unfallgutachten", "zur Beweissicherung".
+                ->where('content.leistung.ablauf_ueberschrift', 'So kommen Sie {zum leistung} in {stadt}'));
     });
 
     it('gives each page a title, description and canonical of its own', function () {
@@ -198,11 +210,11 @@ describe('the wording names the place', function () {
     });
 
     it('keeps the steps in order and drops any the operator empties', function () {
-        App\Models\ContentBlock::where('page_key', 'staedte')
+        ContentBlock::where('page_key', 'staedte')
             ->where('field_key', 'schritt_2')
             ->update(['value' => null]);
 
-        App\Support\Content::flush('staedte');
+        Content::flush('staedte');
 
         $this->get('/kfz-gutachter/duesseldorf/unfallgutachten')
             ->assertOk()

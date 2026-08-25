@@ -5,8 +5,10 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\ServiceType;
 use App\Support\Formatter;
+use App\Support\GermanNoun;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -22,6 +24,10 @@ class ServiceTypeController extends Controller
                     'id' => $t->id,
                     'slug' => $t->slug,
                     'name_de' => $t->name_de,
+                    // The stored override, then the article actually in use —
+                    // an operator has no way to check the guess otherwise.
+                    'gender' => $t->getRawOriginal('gender'),
+                    'artikel' => GermanNoun::LABELS[$t->genus()],
                     'description_de' => $t->description_de,
                     'faqs' => $t->faqs ?? [],
                     'icon' => $t->icon,
@@ -103,6 +109,8 @@ class ServiceTypeController extends Controller
     {
         return $request->validate([
             'name_de' => ['required', 'string', 'max:120'],
+            // Empty means the gender is guessed from the name.
+            'gender' => ['nullable', Rule::in(GermanNoun::GENDERS)],
             'description_de' => ['nullable', 'string', 'max:1000'],
             'icon' => ['nullable', 'string', 'max:60'],
             // Questions belonging to this assessment, shown on its own page.

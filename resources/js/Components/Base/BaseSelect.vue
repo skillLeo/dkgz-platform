@@ -13,6 +13,15 @@ const props = defineProps({
     error: { type: String, default: '' },
     required: { type: Boolean, default: false },
     optional: { type: Boolean, default: false },
+    /**
+     * Whether "nothing chosen" is itself a choice.
+     *
+     * Off by default, because for most fields the empty row is a prompt and
+     * picking it again would be picking nothing. Where the empty value means
+     * something — "work it out from the name" — the operator has to be able to
+     * come back to it after trying an answer.
+     */
+    emptyAllowed: { type: Boolean, default: false },
     disabled: { type: Boolean, default: false },
 })
 
@@ -59,7 +68,7 @@ const normalised = computed(() =>
                 @change="emit('update:modelValue', $event.target.value)"
                 @blur="emit('blur', $event)"
             >
-                <option value="" disabled>{{ placeholder }}</option>
+                <option value="" :disabled="! emptyAllowed">{{ placeholder }}</option>
                 <option v-for="option in normalised" :key="option.value" :value="option.value">{{ option.label }}</option>
             </select>
             <ChevronDown

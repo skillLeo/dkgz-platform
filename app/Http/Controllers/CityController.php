@@ -70,11 +70,13 @@ class CityController extends Controller
         return Inertia::render('Public/StadtLeistung', [
             'content' => Content::page('staedte'),
             'city' => $this->cityPayload($city),
+            // The gender travels with the name so the editable copy can bend
+            // its articles to it — "zum Unfallgutachten", "zur Beweissicherung".
             'serviceType' => $serviceType->only([
                 'name_de', 'description_de', 'slug', 'icon', 'includes_de',
                 'target_audience_de', 'typical_situations_de',
                 'differences_de', 'additional_info_de', 'faqs',
-            ]),
+            ]) + ['genus' => $serviceType->genus()],
             // The other services here, so every page links onward rather than
             // being a dead end.
             'otherServices' => $city->publishedServiceTypes()
@@ -83,17 +85,8 @@ class CityController extends Controller
                 ->get()
                 ->map(fn (ServiceType $type) => [
                     'name' => $type->name_de,
+                    'icon' => $type->icon,
                     'url' => "/kfz-gutachter/{$city->slug}/{$type->slug}",
-                ]),
-            // And the same service in other cities.
-            'otherCities' => City::active()->ordered()
-                ->whereKeyNot($city->getKey())
-                ->whereHas('serviceTypes', fn ($q) => $q->whereKey($serviceType->getKey()))
-                ->limit(8)
-                ->get(['name', 'slug'])
-                ->map(fn (City $other) => [
-                    'name' => $other->name,
-                    'url' => "/kfz-gutachter/{$other->slug}/{$serviceType->slug}",
                 ]),
         ]);
     }

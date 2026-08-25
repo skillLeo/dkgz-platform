@@ -31,11 +31,21 @@ const t = (section, field, fallback = '') => props.content?.[section]?.[field] ?
 
 
 
-const steps = computed(() => [1, 2, 3, 4].map((n) => ({
-    number: String(n).padStart(2, '0'),
-    title: t('ablauf', `schritt_${n}_titel`),
-    text: t('ablauf', `schritt_${n}_text`),
-})))
+/**
+ * Three, not four.
+ *
+ * The old fourth step said the assessor gets in touch, which is the same
+ * moment the third one already describes from the other side. An operator who
+ * empties a step drops it rather than leaving a numbered gap.
+ */
+const steps = computed(() => [1, 2, 3]
+    .map((n) => ({
+        number: t('ablauf', `schritt_${n}_titel`),
+        title: t('ablauf', `schritt_${n}_titel`),
+        text: t('ablauf', `schritt_${n}_text`),
+    }))
+    .filter((step) => step.title || step.text)
+    .map((step, index) => ({ ...step, number: String(index + 1).padStart(2, '0') })))
 
 const figures = computed(() => [1, 2, 3, 4].map((n) => ({
     value: t('kennzahlen', `wert_${n}`),
@@ -167,7 +177,7 @@ const telHref = computed(() => `tel:${String(page.props.app?.phone ?? '').replac
                     — which is what pushed the text out of alignment on narrow
                     screens.
                 -->
-                <ol class="grid grid-cols-1 gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-4">
+                <ol class="grid grid-cols-1 gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
                     <li
                         v-for="step in steps"
                         :key="step.number"

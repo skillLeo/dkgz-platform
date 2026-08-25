@@ -1,1 +1,0 @@
-function e(e,t={}){return e?String(e).replace(/\{([a-z_]+)\}/gi,(e,n)=>{let r=t[n.toLowerCase()];return r==null||r===``?e:String(r)}):``}export{e as t};

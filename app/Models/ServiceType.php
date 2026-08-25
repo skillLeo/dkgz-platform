@@ -3,12 +3,13 @@
 namespace App\Models;
 
 use App\Casts\MoneyCast;
+use App\Support\GermanNoun;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Str;
 use Spatie\Activitylog\Models\Concerns\LogsActivity;
 use Spatie\Activitylog\Support\LogOptions;
 
@@ -20,7 +21,7 @@ class ServiceType extends Model
         'dkgz_fee_cents',
         'includes_de', 'target_audience_de', 'typical_situations_de',
         'differences_de', 'additional_info_de', 'faqs', 'content_is_placeholder',
-        'slug', 'name_de', 'description_de', 'icon', 'sort_order', 'is_active',
+        'slug', 'name_de', 'gender', 'description_de', 'icon', 'sort_order', 'is_active',
     ];
 
     protected function casts(): array
@@ -33,6 +34,19 @@ class ServiceType extends Model
             'is_active' => 'boolean',
             'sort_order' => 'integer',
         ];
+    }
+
+    /**
+     * The gender the articles in front of this service's name are bent to.
+     *
+     * Stored only when the operator has overruled the guess, so renaming a
+     * service moves its gender with it unless somebody has said otherwise.
+     */
+    public function genus(): string
+    {
+        return in_array($this->gender, GermanNoun::GENDERS, true)
+            ? $this->gender
+            : GermanNoun::genderOf($this->name_de);
     }
 
     public function getActivitylogOptions(): LogOptions

@@ -40,11 +40,13 @@ class PublicController extends Controller
 
         return Inertia::render('Public/Leistung', [
             'content' => Content::page('leistungen'),
+            // The gender travels with the name so the editable copy can bend
+            // its articles to it — "zum Unfallgutachten", "zur Beweissicherung".
             'serviceType' => $serviceType->only([
                 'id', 'slug', 'name_de', 'description_de', 'icon',
                 'includes_de', 'target_audience_de', 'typical_situations_de',
                 'differences_de', 'additional_info_de', 'faqs',
-            ]),
+            ]) + ['genus' => $serviceType->genus()],
             'serviceTypes' => $this->activeServiceTypes(),
         ]);
     }

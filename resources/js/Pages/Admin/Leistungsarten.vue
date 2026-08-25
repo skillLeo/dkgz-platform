@@ -6,6 +6,7 @@ import AdminLayout from '../../Layouts/AdminLayout.vue'
 import PageHeader from '../../Components/Layout/PageHeader.vue'
 import BaseInput from '../../Components/Base/BaseInput.vue'
 import BaseCurrencyInput from '../../Components/Base/BaseCurrencyInput.vue'
+import BaseSelect from '../../Components/Base/BaseSelect.vue'
 import BaseTextarea from '../../Components/Base/BaseTextarea.vue'
 import ServiceIcon from '../../Components/Domain/ServiceIcon.vue'
 import { ICON_CHOICES } from '../../Support/serviceIcons.js'
@@ -18,16 +19,32 @@ import { useConfirm } from '../../Composables/useConfirm.js'
 
 const props = defineProps({ serviceTypes: { type: Array, default: () => [] } })
 
+/**
+ * The article that goes in front of this service's name.
+ *
+ * German picks the word before a noun by that noun's gender, so the same
+ * sentence gives "zum Unfallgutachten" and "zur Beweissicherung". The page copy
+ * is written once for every service, which is where that bites. It is guessed
+ * from the name — nearly everything here ends in "gutachten" — and this is only
+ * for saying otherwise.
+ */
+const GENDERS = [
+    { value: 'm', label: 'der (männlich)' },
+    { value: 'f', label: 'die (weiblich)' },
+    { value: 'n', label: 'das (sächlich)' },
+]
+
 const { confirm } = useConfirm()
 const createOpen = ref(false)
 const editing = ref(null)
 
-const create = useForm({ name_de: '', description_de: '', icon: '', faqs: [], is_active: true, dkgz_fee_cents: null })
-const edit = useForm({ name_de: '', description_de: '', icon: '', faqs: [], is_active: true, dkgz_fee_cents: null, includes_de: '', target_audience_de: '', typical_situations_de: '', differences_de: '', additional_info_de: '' })
+const create = useForm({ name_de: '', gender: '', description_de: '', icon: '', faqs: [], is_active: true, dkgz_fee_cents: null })
+const edit = useForm({ name_de: '', gender: '', description_de: '', icon: '', faqs: [], is_active: true, dkgz_fee_cents: null, includes_de: '', target_audience_de: '', typical_situations_de: '', differences_de: '', additional_info_de: '' })
 
 const startEdit = (type) => {
     editing.value = type.id
     edit.name_de = type.name_de
+    edit.gender = type.gender ?? ''
     edit.description_de = type.description_de ?? ''
     edit.icon = type.icon ?? ''
     edit.faqs = (type.faqs ?? []).map((entry) => ({ ...entry }))
@@ -66,6 +83,16 @@ const remove = async (type) => {
             <ErrorSummary v-if="create.hasErrors" :errors="create.errors" class="mb-5" />
             <div class="flex flex-col gap-5">
                 <BaseInput v-model="create.name_de" label="Name" :error="create.errors.name_de" required />
+                <BaseSelect
+                    v-model="create.gender"
+                    label="Artikel"
+                    placeholder="Automatisch aus dem Namen"
+                    empty-allowed
+                    :options="GENDERS"
+                    hint="Bestimmt, ob die Seitentexte „zum Unfallgutachten“ oder „zur Beweissicherung“ schreiben."
+                    :error="create.errors.gender"
+                    optional
+                />
                 <BaseTextarea v-model="create.description_de" label="Beschreibung" hint="Erscheint auf der öffentlichen Leistungsseite." :error="create.errors.description_de" optional />
                 <BaseInput v-model="create.icon" label="Symbol" hint="Name eines lucide-Symbols, z. B. file-text." optional />
                 <BaseCurrencyInput
@@ -94,7 +121,7 @@ const remove = async (type) => {
                         </div>
                         <p v-if="type.description_de" class="measure pt-1.5 text-sm leading-normal text-gray-600">{{ type.description_de }}</p>
                         <p class="pt-2 font-mono text-xs text-gray-400">
-                            {{ type.slug }} · {{ type.requests_count }} Anfragen · {{ type.assessors_count }} Partner
+                            {{ type.artikel }} {{ type.name_de }} · {{ type.slug }} · {{ type.requests_count }} Anfragen · {{ type.assessors_count }} Partner
                         </p>
                         <p class="pt-2 text-sm">
                             <span class="text-gray-600">DKGZ-Gebühr</span>
@@ -120,6 +147,16 @@ const remove = async (type) => {
                 <form v-if="editing === type.id" class="border-t border-gray-200 p-5" novalidate @submit.prevent="edit.post(`/admin/leistungsarten/${type.id}`, { preserveScroll: true, onSuccess: () => (editing = null) })">
                     <div class="flex flex-col gap-5">
                         <BaseInput v-model="edit.name_de" label="Name" :error="edit.errors.name_de" required />
+                        <BaseSelect
+                            v-model="edit.gender"
+                            label="Artikel"
+                            placeholder="Automatisch aus dem Namen"
+                            empty-allowed
+                            :options="GENDERS"
+                            :hint="`Zurzeit: „${type.artikel} ${type.name_de}“. Bestimmt, ob die Seitentexte „zum“ oder „zur“ schreiben.`"
+                            :error="edit.errors.gender"
+                            optional
+                        />
                         <BaseTextarea v-model="edit.description_de" label="Beschreibung" :error="edit.errors.description_de" optional />
                         <!--
                             A grid of the actual marks rather than a text field

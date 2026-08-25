@@ -26,7 +26,7 @@ const props = defineProps({
 
 const t = (section, field, fallback = '') => fill(
     props.content?.[section]?.[field] || fallback,
-    { leistung: props.serviceType.name_de },
+    { leistung: props.serviceType.name_de, leistung_genus: props.serviceType.genus },
 )
 
 const openFaq = ref(null)
