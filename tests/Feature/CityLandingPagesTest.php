@@ -158,3 +158,61 @@ describe('the admin screen', function () {
             ->assertSessionHasErrors('postal_code');
     });
 });
+
+describe('the wording names the place', function () {
+    // A page that says "Gutachter anfragen" could be about anywhere. Naming the
+    // city and the service is what makes it worth finding, and the placeholders
+    // keep that wording the operator's to change rather than freezing it in the
+    // template — which would guarantee the two versions drift apart.
+    it('fills the city and service into every editable string', function () {
+        $this->get('/kfz-gutachter/duesseldorf/unfallgutachten')
+            ->assertOk()
+            ->assertInertia(fn ($page) => $page
+                ->where('content.leistung.ueberschrift', '{leistung} in {stadt}')
+                ->where('content.leistung.ablauf_ueberschrift', 'So kommen Sie zum {leistung} in {stadt}'));
+    });
+
+    it('gives each page a title, description and canonical of its own', function () {
+        $html = $this->get('/kfz-gutachter/duesseldorf/unfallgutachten')->assertOk()->getContent();
+
+        // Rendered client-side, so the props carry what the page will show.
+        $this->get('/kfz-gutachter/duesseldorf/unfallgutachten')
+            ->assertInertia(fn ($page) => $page
+                ->where('city.slug', 'duesseldorf')
+                ->where('serviceType.slug', 'unfallgutachten')
+                ->has('content.leistung.meta_titel')
+                ->has('content.leistung.meta_text'));
+    });
+
+    it('lets an operator override the title and description per city', function () {
+        $this->city->update([
+            'meta_title' => 'Eigener Titel für Düsseldorf',
+            'meta_description' => 'Eigene Beschreibung.',
+        ]);
+
+        $this->get('/kfz-gutachter/duesseldorf/unfallgutachten')
+            ->assertOk()
+            ->assertInertia(fn ($page) => $page
+                ->where('city.meta_title', 'Eigener Titel für Düsseldorf')
+                ->where('city.meta_description', 'Eigene Beschreibung.'));
+    });
+
+    it('keeps the steps in order and drops any the operator empties', function () {
+        App\Models\ContentBlock::where('page_key', 'staedte')
+            ->where('field_key', 'schritt_2')
+            ->update(['value' => null]);
+
+        App\Support\Content::flush('staedte');
+
+        $this->get('/kfz-gutachter/duesseldorf/unfallgutachten')
+            ->assertOk()
+            ->assertInertia(fn ($page) => $page->where('content.leistung.schritt_2', ''));
+    });
+});
+
+it('links the locations page from the footer', function () {
+    $source = file_get_contents(resource_path('js/Layouts/PublicLayout.vue'));
+
+    expect($source)->toContain('/kfz-gutachter')
+        ->and($source)->toContain('Standorte');
+});

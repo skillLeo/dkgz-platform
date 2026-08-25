@@ -4,6 +4,7 @@ import { Head, Link } from '@inertiajs/vue3'
 import { FileText, MapPin } from 'lucide-vue-next'
 import PublicLayout from '../../Layouts/PublicLayout.vue'
 import SectionLabel from '../../Components/Layout/SectionLabel.vue'
+import { fill } from '../../Support/placeholders.js'
 import BaseButton from '../../Components/Base/BaseButton.vue'
 
 /**
@@ -19,14 +20,18 @@ const props = defineProps({
     services: { type: Array, default: () => [] },
 })
 
-const t = (section, field, fallback = '') => props.content?.[section]?.[field] ?? fallback
+/** Editable copy with the city filled in. */
+const t = (section, field, fallback = '') => fill(
+    props.content?.[section]?.[field] || fallback,
+    { stadt: props.city.name, bundesland: props.city.state },
+)
 
 const title = computed(() => props.city.meta_title
-    || `Kfz-Gutachter ${props.city.name} — Sachverständige finden`)
+    || t('stadt', 'meta_titel', 'Kfz-Gutachter {stadt} — Sachverständigen finden | DKGZ'))
 
 const description = computed(() => props.city.meta_description
-    || `Kfz-Sachverständige in ${props.city.name} finden: DKGZ vermittelt geprüfte Gutachter `
-        + 'für Unfall, Wert und Schaden. Kostenlos und unverbindlich.')
+    || t('stadt', 'meta_text', 'Kfz-Gutachter in {stadt} gesucht? DKGZ vermittelt Ihnen einen geprüften '
+        + 'Sachverständigen in {stadt} und Umgebung. Kostenlos und unverbindlich.'))
 </script>
 
 <template>
@@ -47,8 +52,8 @@ const description = computed(() => props.city.meta_description
 
                 <SectionLabel :text="city.label" />
 
-                <h1 class="pt-6 text-h1 font-bold text-navy-700">
-                    {{ city.headline || `Kfz-Gutachter in ${city.name}` }}
+                <h1 class="hyphens-auto break-words pt-6 text-h2 font-bold text-navy-700 sm:text-h1" lang="de">
+                    {{ city.headline || t('stadt', 'ueberschrift', 'Kfz-Gutachter in {stadt}') }}
                 </h1>
 
                 <p class="measure-lead pt-4 text-lead leading-relaxed text-gray-600">
@@ -57,12 +62,12 @@ const description = computed(() => props.city.meta_description
 
                 <div class="flex flex-wrap items-center gap-4 pt-8">
                     <BaseButton href="/anfrage" size="cta">
-                        {{ t('stadt', 'cta', 'Jetzt Gutachter anfragen') }}
+                        {{ t('stadt', 'cta', 'Gutachter in {stadt} anfragen') }}
                     </BaseButton>
 
                     <p v-if="city.partners" class="flex items-center gap-2 text-sm text-gray-600">
                         <MapPin :size="16" :stroke-width="1.5" class="shrink-0 text-navy-700" aria-hidden="true" />
-                        {{ city.partners }} verfügbare Sachverständige im Gebiet {{ city.postal_code }}
+                        {{ city.partners }} verfügbare Sachverständige rund um {{ city.name }}
                     </p>
                 </div>
             </div>
@@ -70,7 +75,7 @@ const description = computed(() => props.city.meta_description
 
         <div class="mx-auto w-full max-w-(--container-shell) px-4 py-16 md:px-6">
             <h2 class="text-h2 font-semibold text-navy-700">
-                {{ t('stadt', 'leistungen_ueberschrift', 'Gutachten in') }} {{ city.name }}
+                {{ t('stadt', 'leistungen_ueberschrift', 'Gutachten in {stadt}') }}
             </h2>
 
             <div class="grid grid-cols-1 gap-4 pt-8 sm:grid-cols-2 lg:grid-cols-3">

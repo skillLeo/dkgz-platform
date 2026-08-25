@@ -232,6 +232,7 @@ onUnmounted(() => window.removeEventListener('scroll', onScroll))
                             <li><Link href="/ablauf" class="text-sm text-white/72 hover:text-white">Ablauf</Link></li>
                             <li><Link href="/fuer-sachverstaendige" class="text-sm text-white/72 hover:text-white">Für Sachverständige</Link></li>
                             <li><Link :href="portalLink.href" class="text-sm text-white/72 hover:text-white">{{ portalLink.label }}</Link></li>
+                            <li><Link href="/kfz-gutachter" class="text-sm text-white/72 hover:text-white">Standorte</Link></li>
                             <li><Link href="/kontakt" class="text-sm text-white/72 hover:text-white">Kontakt</Link></li>
                         </ul>
                     </div>

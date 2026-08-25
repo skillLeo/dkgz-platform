@@ -1,9 +1,10 @@
 <script setup>
 import { computed } from 'vue'
 import { Head, Link } from '@inertiajs/vue3'
-import { Check, MapPin } from 'lucide-vue-next'
+import { MapPin } from 'lucide-vue-next'
 import PublicLayout from '../../Layouts/PublicLayout.vue'
 import SectionLabel from '../../Components/Layout/SectionLabel.vue'
+import { fill } from '../../Support/placeholders.js'
 import BaseButton from '../../Components/Base/BaseButton.vue'
 
 /**
@@ -24,14 +25,29 @@ const props = defineProps({
     otherCities: { type: Array, default: () => [] },
 })
 
-const t = (section, field, fallback = '') => props.content?.[section]?.[field] ?? fallback
+/**
+ * Editable copy with the city and service filled in.
+ *
+ * Every string on this page goes through here, so the wording stays the
+ * operator's to change while still naming the place and the service — which is
+ * what makes the page worth finding.
+ */
+const t = (section, field, fallback = '') => fill(
+    props.content?.[section]?.[field] || fallback,
+    { stadt: props.city.name, leistung: props.serviceType.name_de, bundesland: props.city.state },
+)
 
 const title = computed(() => props.city.meta_title
-    || `${props.serviceType.name_de} ${props.city.name} — Kfz-Sachverständige finden`)
+    || t('leistung', 'meta_titel', '{leistung} in {stadt} — Kfz-Sachverständigen finden | DKGZ'))
 
 const description = computed(() => props.city.meta_description
-    || `${props.serviceType.name_de} in ${props.city.name}: DKGZ vermittelt geprüfte Kfz-Sachverständige `
-        + 'in Ihrer Region. Kostenlos und unverbindlich anfragen.')
+    || t('leistung', 'meta_text', '{leistung} in {stadt} gesucht? DKGZ vermittelt Ihnen einen geprüften '
+        + 'Kfz-Sachverständigen in {stadt} und Umgebung. Kostenlos, unverbindlich und ohne Registrierung.'))
+
+/** The steps, in order, skipping any the operator has emptied. */
+const steps = computed(() => [1, 2, 3]
+    .map((number) => ({ number, text: t('leistung', `schritt_${number}`) }))
+    .filter((step) => step.text))
 
 /** Only the sections the service actually has copy for. */
 const sections = computed(() => [
@@ -64,22 +80,28 @@ const sections = computed(() => [
 
                 <SectionLabel :text="city.label" />
 
-                <h1 class="pt-6 text-h1 font-bold text-navy-700">
-                    {{ serviceType.name_de }} in {{ city.name }}
+                <!--
+                    A compound like "Fahrzeugschadengutachten in Düsseldorf" is
+                    longer than a phone is wide at 40px, so it stepped outside
+                    the screen. It steps down a size below sm and is allowed to
+                    hyphenate, which German needs more than most languages.
+                -->
+                <h1 class="hyphens-auto break-words pt-6 text-h2 font-bold text-navy-700 sm:text-h1" lang="de">
+                    {{ t('leistung', 'ueberschrift', '{leistung} in {stadt}') }}
                 </h1>
 
                 <p class="measure-lead pt-4 text-lead leading-relaxed text-gray-600">
-                    {{ city.intro || serviceType.description_de }}
+                    {{ city.intro || t('leistung', 'einleitung') || serviceType.description_de }}
                 </p>
 
                 <div class="flex flex-wrap items-center gap-4 pt-8">
                     <BaseButton href="/anfrage" size="cta">
-                        {{ t('leistung', 'cta', 'Jetzt Gutachter anfragen') }}
+                        {{ t('leistung', 'cta', 'Gutachter in {stadt} anfragen') }}
                     </BaseButton>
 
                     <p v-if="city.partners" class="flex items-center gap-2 text-sm text-gray-600">
                         <MapPin :size="16" :stroke-width="1.5" class="shrink-0 text-navy-700" aria-hidden="true" />
-                        {{ city.partners }} verfügbare Sachverständige im Gebiet {{ city.postal_code }}
+                        {{ city.partners }} verfügbare Sachverständige rund um {{ city.name }}
                     </p>
                 </div>
             </div>
@@ -96,23 +118,33 @@ const sections = computed(() => [
 
                 <section class="border-t border-gray-200 pt-10">
                     <h2 class="text-h3 font-semibold text-navy-700">
-                        {{ t('leistung', 'ablauf_ueberschrift', 'So läuft die Vermittlung') }}
+                        {{ t('leistung', 'ablauf_ueberschrift', 'So kommen Sie zum {leistung} in {stadt}') }}
                     </h2>
-                    <ol class="flex flex-col gap-3 pt-4">
-                        <li v-for="n in [1, 2, 3]" :key="n" class="flex gap-3">
-                            <Check :size="18" :stroke-width="1.5" class="mt-0.5 shrink-0 text-navy-700" aria-hidden="true" />
-                            <span class="measure text-base leading-normal text-gray-800">
-                                {{ t('leistung', `schritt_${n}`) }}
-                            </span>
+
+                    <!--
+                        Numbered, because they happen in an order. They were
+                        ticks, which reads as a list of things already done.
+                    -->
+                    <ol class="flex flex-col gap-5 pt-6">
+                        <li v-for="step in steps" :key="step.number" class="flex gap-4">
+                            <span
+                                class="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-navy-100 font-mono text-sm font-semibold text-navy-700"
+                                aria-hidden="true"
+                            >{{ step.number }}</span>
+                            <span class="measure pt-1 text-base leading-normal text-gray-800">{{ step.text }}</span>
                         </li>
                     </ol>
+
+                    <BaseButton href="/anfrage" size="cta" class="mt-8">
+                        {{ t('leistung', 'cta', 'Gutachter in {stadt} anfragen') }}
+                    </BaseButton>
                 </section>
             </div>
 
             <aside class="flex flex-col gap-8">
                 <div v-if="otherServices.length">
                     <p class="text-eyebrow font-semibold uppercase text-gray-600">
-                        Weitere Leistungen in {{ city.name }}
+                        {{ t('leistung', 'weitere_leistungen', 'Weitere Gutachten in {stadt}') }}
                     </p>
                     <ul class="flex flex-col gap-2 pt-3">
                         <li v-for="entry in otherServices" :key="entry.url">
@@ -125,7 +157,7 @@ const sections = computed(() => [
 
                 <div v-if="otherCities.length">
                     <p class="text-eyebrow font-semibold uppercase text-gray-600">
-                        {{ serviceType.name_de }} andernorts
+                        {{ t('leistung', 'weitere_staedte', '{leistung} in anderen Städten') }}
                     </p>
                     <ul class="flex flex-col gap-2 pt-3">
                         <li v-for="entry in otherCities" :key="entry.url">
