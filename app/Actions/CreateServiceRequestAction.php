@@ -2,6 +2,7 @@
 
 namespace App\Actions;
 
+use App\Jobs\NotifyOfficeOfRequestJob;
 use App\Jobs\NotifyRequestSubmittedJob;
 use App\Models\ServiceRequest;
 use App\Support\Settings;
@@ -59,6 +60,10 @@ class CreateServiceRequestAction
         }
 
         NotifyRequestSubmittedJob::dispatch($serviceRequest->id);
+
+        // And the office, so somebody knows a customer is waiting without
+        // having to open the admin panel to find out.
+        NotifyOfficeOfRequestJob::dispatch($serviceRequest->id);
 
         app(MatchRequestAction::class)->execute($serviceRequest);
 

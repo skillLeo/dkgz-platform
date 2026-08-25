@@ -51,6 +51,14 @@ Route::middleware('maintenance')->group(function () {
  * sit under a fixed prefix so a new city can never collide with /anfrage or any
  * other page on the site.
  */
+Route::get('/faq', [PublicController::class, 'faq'])->name('faq');
+
+// Anonymous funnel counter. Throttled so the tally cannot be inflated by
+// anybody with a loop and a spare afternoon.
+Route::post('/anfrage/schritt', [RequestController::class, 'trackStep'])
+    ->middleware('throttle:30,1')
+    ->name('request.track');
+
 Route::prefix('kfz-gutachter')->group(function () {
     Route::get('/', [CityController::class, 'index'])->name('cities');
     Route::get('/{city}', [CityController::class, 'show'])->name('cities.show');

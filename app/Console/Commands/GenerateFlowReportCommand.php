@@ -39,6 +39,8 @@ class GenerateFlowReportCommand extends Command
         'sachverstaendiger-steht-fest' => ['Kunde', 'Ein Partner hat die Anfrage angenommen'],
         'auftrag-vergeben' => ['Partner', 'Ein anderer Partner hat angenommen'],
         'auftrag-abgeschlossen' => ['Kunde', 'Auftrag abgeschlossen — mit Gutachten und Rechnung'],
+        'neue-anfrage-intern' => ['Büro', 'Jede eingegangene Anfrage'],
+        'partner-rundmail' => ['Alle Partner', 'Administration versendet eine Rundmail'],
         'keine-sachverstaendigen-gefunden' => ['Büro', 'Kein Partner im Gebiet'],
         'bewertungsanfrage' => ['Kunde', 'Nach der eingestellten Frist ab Abschluss'],
         'bewertung-erhalten' => ['Büro', 'Bewertung abgegeben'],

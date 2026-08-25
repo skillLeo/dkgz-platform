@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Assessor;
 use App\Models\Assignment;
 use App\Models\Commission;
+use App\Models\FunnelEvent;
 use App\Models\ServiceRequest;
 use App\Support\AttentionQueue;
 use Illuminate\Http\Request;
@@ -24,6 +25,10 @@ class DashboardController extends Controller
         $attention = AttentionQueue::items();
 
         return Inertia::render('Admin/Dashboard', [
+            // How far people get through the request form over the last thirty
+            // days. Anonymous counters, so this counts everybody rather than
+            // only visitors who accepted the cookie banner.
+            'funnel' => FunnelEvent::funnel(now()->subDays(29), now()),
             'stats' => [
                 'open_requests' => ServiceRequest::whereIn('status', [
                     ServiceRequest::STATUS_NEW, ServiceRequest::STATUS_MATCHED,

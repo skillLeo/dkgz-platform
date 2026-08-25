@@ -1,6 +1,6 @@
 <script setup>
 import { computed, onMounted, ref } from 'vue'
-import { useForm } from '@inertiajs/vue3'
+import { router, useForm } from '@inertiajs/vue3'
 import { Check } from 'lucide-vue-next'
 import RequestFlowLayout from '../../Layouts/RequestFlowLayout.vue'
 import SectionLabel from '../../Components/Layout/SectionLabel.vue'
@@ -99,6 +99,16 @@ const step = ref(1)
 const furthest = ref(1)
 
 const goTo = (target) => {
+    // Counted once per visit: going back and forward again is the same person
+    // on the same form, not a second one reaching that step.
+    if (target > furthest.value && target > 1) {
+        router.post(`/anfrage/schritt`, { step: `schritt_${target}` }, {
+            preserveState: true,
+            preserveScroll: true,
+            only: [],
+        })
+    }
+
     step.value = target
     furthest.value = Math.max(furthest.value, target)
 

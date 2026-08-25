@@ -1,12 +1,11 @@
 <script setup>
 import { computed, ref } from 'vue'
 import { Head, Link, usePage } from '@inertiajs/vue3'
-import {
-    ArrowRight, Camera, Car, Check, ChevronDown, ClipboardCheck, Euro, History, Phone, Shield, ShieldCheck, Wrench,
-} from 'lucide-vue-next'
+import { ArrowRight, Check, ChevronDown, Phone } from 'lucide-vue-next'
 import PublicLayout from '../../Layouts/PublicLayout.vue'
 import BrandSeal from '../../Components/Layout/BrandSeal.vue'
 import SealMark from '../../Components/Layout/SealMark.vue'
+import ServiceIcon from '../../Components/Domain/ServiceIcon.vue'
 import BaseButton from '../../Components/Base/BaseButton.vue'
 import GermanyCoverageMap from '../../Components/Domain/GermanyCoverageMap.vue'
 import ImageSlot from '../../Components/Layout/ImageSlot.vue'
@@ -30,21 +29,7 @@ const openFaq = ref(0)
 const t = (section, field, fallback = '') => props.content?.[section]?.[field] ?? fallback
 
 
-// The design assigns a specific icon per service; anything the admin adds later
-// falls back to the generic document mark.
-const icons = {
-    unfallgutachten: Car,
-    haftpflichtgutachten: ShieldCheck,
-    kaskogutachten: Shield,
-    'fahrzeugschadengutachten': Wrench,
-    reparaturbestaetigung: Wrench,
-    wertgutachten: Euro,
-    oldtimergutachten: History,
-    'gebrauchtwagen-check': ClipboardCheck,
-    beweissicherung: Camera,
-}
 
-const iconFor = (slug) => icons[slug] ?? ClipboardCheck
 
 const steps = computed(() => [1, 2, 3, 4].map((n) => ({
     number: String(n).padStart(2, '0'),
@@ -232,7 +217,7 @@ const telHref = computed(() => `tel:${String(page.props.app?.phone ?? '').replac
                         :href="`/leistungen/${type.slug}`"
                         class="flex gap-3.5 rounded-card border border-gray-200 p-4 transition-colors duration-(--duration-hover) ease-(--ease-dkgz) hover:border-navy-700"
                     >
-                        <component :is="iconFor(type.slug)" :size="20" :stroke-width="1.5" class="mt-0.5 shrink-0 text-navy-700" aria-hidden="true" />
+                        <ServiceIcon :service="type" class="mt-0.5 shrink-0 text-navy-700" />
                         <span class="min-w-0">
                             <span class="block text-lead font-semibold leading-snug text-navy-700">{{ type.name_de }}</span>
                             <span class="block pt-1 text-sm leading-normal text-gray-600">{{ type.description_de }}</span>

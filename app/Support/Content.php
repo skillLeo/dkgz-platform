@@ -126,6 +126,7 @@ class Content
             'rechnung' => 'Rechnung (PDF)',
             'cookies' => 'Cookie-Hinweis',
             'staedte' => 'Stadtseiten',
+            'faq' => 'FAQ-Seite',
         ];
     }
 }

@@ -9,6 +9,7 @@ const props = defineProps({
     attention: { type: Array, default: () => [] },
     attentionCount: { type: Number, default: 0 },
     weekly: { type: Array, default: () => [] },
+    funnel: { type: Array, default: () => [] },
 })
 
 /**
@@ -51,6 +52,37 @@ const cards = [
                     </span>
                 </div>
                 <WeeklyBars :weeks="weekly" />
+            </section>
+
+            <!--
+                How far people get through the request form. Anonymous counters,
+                so this is everybody rather than only the visitors who accepted
+                the cookie banner — which is the group most analytics can see.
+            -->
+            <section v-if="funnel.length" class="border border-gray-200 bg-white p-5">
+                <h2 class="text-eyebrow font-semibold uppercase text-gray-600">Anfrageformular · letzte 30 Tage</h2>
+
+                <ul class="flex flex-col gap-4 pt-5">
+                    <li v-for="row in funnel" :key="row.step">
+                        <div class="flex items-baseline justify-between gap-4 pb-1.5">
+                            <span class="text-sm text-gray-800">{{ row.label }}</span>
+                            <span class="shrink-0 font-mono text-sm tabular-nums text-navy-700">
+                                {{ row.count }}<span v-if="row.share !== null" class="pl-2 text-gray-500">{{ row.share }}%</span>
+                            </span>
+                        </div>
+                        <div class="h-2 w-full rounded-full bg-gray-100">
+                            <div
+                                class="h-2 rounded-full bg-navy-700 transition-[width] duration-(--duration-hover) ease-(--ease-dkgz)"
+                                :style="{ width: `${row.share ?? 0}%` }"
+                            />
+                        </div>
+                    </li>
+                </ul>
+
+                <p class="measure pt-4 text-sm leading-normal text-gray-600">
+                    Gezählt wird anonym: kein Name, keine Adresse, keine Zuordnung zu einer Person.
+                    Deshalb erscheinen hier alle Besucher, nicht nur die mit Cookie-Zustimmung.
+                </p>
             </section>
 
             <section class="rounded-card border border-gray-200 bg-white">

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\CityController;
+use App\Http\Controllers\Admin\PartnerMailController;
 use App\Http\Controllers\Admin\AssessorController;
 use App\Http\Controllers\Admin\AssignmentController;
 use App\Http\Controllers\Admin\CommissionController;
@@ -118,6 +119,12 @@ Route::prefix('admin')
             Route::get('/leistungsarten', [ServiceTypeController::class, 'index'])->name('service-types');
 
             // Städte und ihre Regionalseiten
+            // Rundmail an Partner
+            Route::middleware('can:assessors.view')->group(function () {
+                Route::get('/partnermail', [PartnerMailController::class, 'index'])->name('partner-mail');
+                Route::post('/partnermail', [PartnerMailController::class, 'send'])->name('partner-mail.send');
+            });
+
             Route::middleware('can:cities.manage')->group(function () {
                 Route::get('/staedte', [CityController::class, 'index'])->name('cities');
                 Route::post('/staedte', [CityController::class, 'store'])->name('cities.store');

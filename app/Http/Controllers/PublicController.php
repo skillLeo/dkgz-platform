@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\City;
 use App\Models\Faq;
 use App\Models\PostalCode;
 use App\Models\ServiceType;
@@ -43,10 +44,36 @@ class PublicController extends Controller
             'serviceType' => $serviceType->only([
                 'id', 'slug', 'name_de', 'description_de', 'icon',
                 'includes_de', 'target_audience_de', 'typical_situations_de',
-                'differences_de', 'additional_info_de',
+                'differences_de', 'additional_info_de', 'faqs',
             ]),
             'serviceTypes' => $this->activeServiceTypes(),
-            'faqs' => Faq::published()->ordered()->limit(4)->get(['id', 'question_de', 'answer_de']),
+            // Where this assessment can be arranged, so a nationwide page links
+            // down into the local ones rather than leaving them orphaned.
+            'cities' => City::active()->ordered()
+                ->whereHas('serviceTypes', fn ($q) => $q->whereKey($serviceType->getKey()))
+                ->limit(12)
+                ->get(['name', 'slug'])
+                ->map(fn (City $city) => [
+                    'name' => $city->name,
+                    'url' => "/kfz-gutachter/{$city->slug}/{$serviceType->slug}",
+                ]),
+        ]);
+    }
+
+    /**
+     * Every published question, grouped by the category it was filed under.
+     *
+     * The homepage shows a handful; this is the whole set, and it is what the
+     * header points at now that "Für Sachverständige" has moved to the footer
+     * — a visitor with a question is far commoner than one looking to join.
+     */
+    public function faq(): Response
+    {
+        return Inertia::render('Public/Faq', [
+            'content' => Content::page('faq'),
+            'groups' => Faq::published()->ordered()
+                ->get(['id', 'question_de', 'answer_de', 'category'])
+                ->groupBy(fn (Faq $faq) => $faq->category ?: 'Allgemein'),
         ]);
     }
 

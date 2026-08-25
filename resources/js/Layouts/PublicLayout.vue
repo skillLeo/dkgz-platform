@@ -49,10 +49,15 @@ const app = computed(() => page.props.app ?? {})
 const content = computed(() => page.props.content ?? {})
 const t = (section, field, fallback = '') => content.value?.[section]?.[field] ?? fallback
 
+/*
+ * "Für Sachverständige" has moved to the footer and the FAQ has taken its place:
+ * a visitor arriving with a question is far commoner than one arriving to join
+ * the network, and the header has room for whichever is commoner.
+ */
 const nav = [
     { href: '/leistungen', label: 'Leistungen' },
     { href: '/ablauf', label: 'Ablauf' },
-    { href: '/fuer-sachverstaendige', label: 'Für Sachverständige' },
+    { href: '/faq', label: 'FAQ' },
     { href: '/ueber-uns', label: 'Über DKGZ' },
     { href: '/kontakt', label: 'Kontakt' },
 ]

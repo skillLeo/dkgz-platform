@@ -7,6 +7,8 @@ import PageHeader from '../../Components/Layout/PageHeader.vue'
 import BaseInput from '../../Components/Base/BaseInput.vue'
 import BaseCurrencyInput from '../../Components/Base/BaseCurrencyInput.vue'
 import BaseTextarea from '../../Components/Base/BaseTextarea.vue'
+import ServiceIcon from '../../Components/Domain/ServiceIcon.vue'
+import { ICON_CHOICES } from '../../Support/serviceIcons.js'
 import BaseToggle from '../../Components/Base/BaseToggle.vue'
 import BaseButton from '../../Components/Base/BaseButton.vue'
 import StatusDot from '../../Components/Data/StatusDot.vue'
@@ -20,14 +22,15 @@ const { confirm } = useConfirm()
 const createOpen = ref(false)
 const editing = ref(null)
 
-const create = useForm({ name_de: '', description_de: '', icon: '', is_active: true, dkgz_fee_cents: null })
-const edit = useForm({ name_de: '', description_de: '', icon: '', is_active: true, dkgz_fee_cents: null, includes_de: '', target_audience_de: '', typical_situations_de: '', differences_de: '', additional_info_de: '' })
+const create = useForm({ name_de: '', description_de: '', icon: '', faqs: [], is_active: true, dkgz_fee_cents: null })
+const edit = useForm({ name_de: '', description_de: '', icon: '', faqs: [], is_active: true, dkgz_fee_cents: null, includes_de: '', target_audience_de: '', typical_situations_de: '', differences_de: '', additional_info_de: '' })
 
 const startEdit = (type) => {
     editing.value = type.id
     edit.name_de = type.name_de
     edit.description_de = type.description_de ?? ''
     edit.icon = type.icon ?? ''
+    edit.faqs = (type.faqs ?? []).map((entry) => ({ ...entry }))
     edit.is_active = type.is_active
     edit.dkgz_fee_cents = type.dkgz_fee_cents
     edit.includes_de = type.includes_de ?? ''
@@ -118,7 +121,63 @@ const remove = async (type) => {
                     <div class="flex flex-col gap-5">
                         <BaseInput v-model="edit.name_de" label="Name" :error="edit.errors.name_de" required />
                         <BaseTextarea v-model="edit.description_de" label="Beschreibung" :error="edit.errors.description_de" optional />
-                        <BaseInput v-model="edit.icon" label="Symbol" optional />
+                        <!--
+                            A grid of the actual marks rather than a text field
+                            expecting a name nobody can be expected to know. The
+                            icon is stored on the service, so it survives a
+                            rename — the old map was keyed by the address, which
+                            changes with the name.
+                        -->
+                        <div>
+                            <p class="pb-2 text-sm font-medium text-gray-800">Symbol</p>
+                            <div class="flex flex-wrap gap-2">
+                                <button
+                                    v-for="choice in ICON_CHOICES"
+                                    :key="choice.value"
+                                    type="button"
+                                    class="grid h-11 w-11 place-items-center rounded-sm border transition-colors duration-(--duration-hover) ease-(--ease-dkgz)"
+                                    :class="edit.icon === choice.value
+                                        ? 'border-navy-700 bg-navy-100 text-navy-700'
+                                        : 'border-gray-200 bg-white text-gray-600 hover:border-navy-500'"
+                                    :aria-pressed="edit.icon === choice.value"
+                                    :title="choice.label"
+                                    @click="edit.icon = edit.icon === choice.value ? '' : choice.value"
+                                >
+                                    <ServiceIcon :service="choice.value" :size="18" />
+                                    <span class="sr-only">{{ choice.label }}</span>
+                                </button>
+                            </div>
+                            <p class="pt-2 text-sm text-gray-600">
+                                Erscheint auf der Startseite, der Leistungsübersicht und den Stadtseiten.
+                                Ohne Auswahl wird ein Dokumentsymbol verwendet.
+                            </p>
+                        </div>
+
+                        <!--
+                            Questions about this assessment, shown on its own
+                            page under the steps. The general FAQ answers what
+                            DKGZ is; these answer what this report contains.
+                        -->
+                        <div>
+                            <p class="pb-2 text-sm font-medium text-gray-800">Häufige Fragen zu dieser Leistung</p>
+
+                            <div v-for="(entry, index) in edit.faqs" :key="index" class="flex flex-col gap-3 border-b border-gray-100 pb-4 pt-4 first:pt-0">
+                                <BaseInput v-model="entry.frage" label="Frage" :error="edit.errors[`faqs.${index}.frage`]" />
+                                <BaseTextarea v-model="entry.antwort" label="Antwort" :rows="3" :error="edit.errors[`faqs.${index}.antwort`]" />
+                                <button type="button" class="self-start text-sm text-gray-600 hover:text-danger" @click="edit.faqs.splice(index, 1)">
+                                    Frage entfernen
+                                </button>
+                            </div>
+
+                            <BaseButton
+                                v-if="edit.faqs.length < 12"
+                                type="button"
+                                variant="secondary"
+                                size="small"
+                                class="mt-4"
+                                @click="edit.faqs.push({ frage: '', antwort: '' })"
+                            >Frage hinzufügen</BaseButton>
+                        </div>
                         <BaseCurrencyInput
                             v-model="edit.dkgz_fee_cents"
                             label="DKGZ-Gebühr (netto)"

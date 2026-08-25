@@ -66,6 +66,7 @@ class ContentBlockSeeder extends Seeder
             $this->invoiceDocument(),
             $this->cookieBanner(),
             $this->cityPages(),
+            $this->faqPage(),
             $this->aboutPage(),
             $this->contactPage(),
             $this->reviewPages(),
@@ -256,6 +257,26 @@ class ContentBlockSeeder extends Seeder
     }
 
     /**
+     * The FAQ page, which the header now points at.
+     *
+     * @return list<array<string, string>>
+     */
+    private function faqPage(): array
+    {
+        return [
+            ['page_key' => 'faq', 'section_key' => 'kopf', 'field_key' => 'eyebrow', 'value' => 'Fragen und Antworten', 'label_de' => 'Übertitel'],
+            ['page_key' => 'faq', 'section_key' => 'kopf', 'field_key' => 'ueberschrift', 'value' => 'Häufige Fragen', 'label_de' => 'Überschrift'],
+            ['page_key' => 'faq', 'section_key' => 'kopf', 'field_key' => 'text', 'type' => 'richtext', 'value' => 'Wenn Ihre Frage hier nicht beantwortet wird, rufen Sie uns gern an — wir helfen Ihnen weiter.', 'label_de' => 'Einleitung'],
+            ['page_key' => 'faq', 'section_key' => 'kopf', 'field_key' => 'leer', 'value' => 'Es sind noch keine Fragen hinterlegt.', 'label_de' => 'Text ohne Fragen'],
+            ['page_key' => 'faq', 'section_key' => 'kopf', 'field_key' => 'meta_titel', 'value' => 'Häufige Fragen — DKGZ', 'label_de' => 'Seitentitel für Google'],
+            ['page_key' => 'faq', 'section_key' => 'kopf', 'field_key' => 'meta_text', 'type' => 'richtext', 'value' => 'Antworten auf die häufigsten Fragen zur Vermittlung von Kfz-Sachverständigen durch DKGZ.', 'label_de' => 'Beschreibung für Google'],
+            ['page_key' => 'faq', 'section_key' => 'abschluss', 'field_key' => 'ueberschrift', 'value' => 'Frage nicht dabei?', 'label_de' => 'Abschlussblock — Überschrift'],
+            ['page_key' => 'faq', 'section_key' => 'abschluss', 'field_key' => 'text', 'type' => 'richtext', 'value' => 'Stellen Sie einfach Ihre Anfrage — der vermittelte Sachverständige klärt alles Weitere direkt mit Ihnen.', 'label_de' => 'Abschlussblock — Text'],
+            ['page_key' => 'faq', 'section_key' => 'abschluss', 'field_key' => 'button', 'value' => 'Anfrage starten', 'label_de' => 'Abschlussblock — Schaltfläche'],
+        ];
+    }
+
+    /**
      * Copy shared by every city page.
      *
      * The parts that do not change from city to city — the steps, the button,
@@ -371,6 +392,17 @@ class ContentBlockSeeder extends Seeder
             ['page_key' => 'leistungen', 'section_key' => 'detail', 'field_key' => 'punkt_3', 'value' => 'Geprüfte Partner bundesweit', 'label_de' => 'Detailseite — Zusicherung 3'],
             ['page_key' => 'leistungen', 'section_key' => 'detail', 'field_key' => 'button_seite', 'value' => 'Anfrage starten', 'label_de' => 'Detailseite — Schaltfläche Seitenspalte'],
             ['page_key' => 'leistungen', 'section_key' => 'detail', 'field_key' => 'weitere', 'value' => 'Weitere Leistungen', 'label_de' => 'Detailseite — Überschrift weitere Leistungen'],
+            ['page_key' => 'leistungen', 'section_key' => 'detail', 'field_key' => 'eyebrow', 'value' => 'Leistung', 'label_de' => 'Detailseite — Übertitel'],
+            ['page_key' => 'leistungen', 'section_key' => 'detail', 'field_key' => 'ueberschrift', 'value' => '{leistung}', 'label_de' => 'Detailseite — Überschrift (H1)', 'help_de' => '{leistung} wird durch den Namen der Leistung ersetzt.'],
+            ['page_key' => 'leistungen', 'section_key' => 'detail', 'field_key' => 'cta', 'value' => '{leistung} anfragen', 'label_de' => 'Detailseite — Schaltfläche'],
+            ['page_key' => 'leistungen', 'section_key' => 'detail', 'field_key' => 'seitenleiste_titel', 'value' => '{leistung} anfragen', 'label_de' => 'Detailseite — Titel Seitenspalte'],
+            ['page_key' => 'leistungen', 'section_key' => 'detail', 'field_key' => 'schritt_1', 'type' => 'richtext', 'value' => 'Sie stellen eine kostenlose Anfrage mit Standort, Fahrzeug und Art des Gutachtens.', 'label_de' => 'Detailseite — Schritt 1'],
+            ['page_key' => 'leistungen', 'section_key' => 'detail', 'field_key' => 'schritt_2', 'type' => 'richtext', 'value' => 'Wir leiten sie an geprüfte Sachverständige weiter, deren Einsatzgebiet Ihren Standort abdeckt.', 'label_de' => 'Detailseite — Schritt 2'],
+            ['page_key' => 'leistungen', 'section_key' => 'detail', 'field_key' => 'schritt_3', 'type' => 'richtext', 'value' => 'Der erste verfügbare Sachverständige übernimmt und meldet sich direkt bei Ihnen.', 'label_de' => 'Detailseite — Schritt 3'],
+            ['page_key' => 'leistungen', 'section_key' => 'detail', 'field_key' => 'faq_ueberschrift', 'value' => 'Häufige Fragen zum {leistung}', 'label_de' => 'Detailseite — Überschrift Fragen'],
+            ['page_key' => 'leistungen', 'section_key' => 'detail', 'field_key' => 'staedte', 'value' => '{leistung} nach Stadt', 'label_de' => 'Detailseite — Überschrift Städte'],
+            ['page_key' => 'leistungen', 'section_key' => 'detail', 'field_key' => 'meta_titel', 'value' => '{leistung} — Kfz-Sachverständigen finden | DKGZ', 'label_de' => 'Detailseite — Seitentitel für Google'],
+            ['page_key' => 'leistungen', 'section_key' => 'detail', 'field_key' => 'meta_text', 'type' => 'richtext', 'value' => '{leistung} gesucht? DKGZ vermittelt Ihnen bundesweit einen geprüften Kfz-Sachverständigen. Kostenlos und unverbindlich.', 'label_de' => 'Detailseite — Beschreibung für Google'],
         ];
     }
 

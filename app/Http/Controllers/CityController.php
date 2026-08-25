@@ -55,6 +55,7 @@ class CityController extends Controller
             'services' => $services->map(fn (ServiceType $type) => [
                 'name' => $type->name_de,
                 'description' => $type->description_de,
+                'icon' => $type->icon,
                 'url' => "/kfz-gutachter/{$city->slug}/{$type->slug}",
             ]),
         ]);
@@ -70,7 +71,7 @@ class CityController extends Controller
             'content' => Content::page('staedte'),
             'city' => $this->cityPayload($city),
             'serviceType' => $serviceType->only([
-                'name_de', 'description_de', 'slug', 'includes_de',
+                'name_de', 'description_de', 'slug', 'icon', 'includes_de',
                 'target_audience_de', 'typical_situations_de',
                 'differences_de', 'additional_info_de',
             ]),

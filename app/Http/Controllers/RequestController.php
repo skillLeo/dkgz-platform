@@ -4,11 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Actions\CreateServiceRequestAction;
 use App\Http\Requests\StoreServiceRequestRequest;
+use App\Models\FunnelEvent;
 use App\Models\ServiceRequest;
 use App\Models\ServiceType;
 use App\Support\Content;
 use App\Support\Settings;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -16,6 +18,8 @@ class RequestController extends Controller
 {
     public function create(): Response
     {
+        FunnelEvent::record('begonnen');
+
         return Inertia::render('Public/Anfrage', [
             'content' => Content::page('anfrage'),
             'serviceTypes' => ServiceType::active()->ordered()->get(['id', 'slug', 'name_de', 'description_de']),
@@ -27,6 +31,8 @@ class RequestController extends Controller
 
     public function store(StoreServiceRequestRequest $request, CreateServiceRequestAction $create): RedirectResponse
     {
+        FunnelEvent::record('abgesendet');
+
         $serviceRequest = $create->execute(
             $request->validated(),
             $request->file('images'),
@@ -34,6 +40,23 @@ class RequestController extends Controller
         );
 
         return redirect()->route('request.confirmation', $serviceRequest->reference);
+    }
+
+    /**
+     * The browser reporting that somebody reached a later step.
+     *
+     * Anonymous: nothing about who, only that it happened. Rate-limited at the
+     * route so the counter cannot be inflated by anybody with a loop.
+     */
+    public function trackStep(Request $request): \Illuminate\Http\JsonResponse
+    {
+        $step = $request->string('step')->toString();
+
+        if (in_array($step, ['schritt_2', 'schritt_3'], true)) {
+            FunnelEvent::record($step);
+        }
+
+        return response()->json(['ok' => true]);
     }
 
     public function confirmation(string $reference): Response

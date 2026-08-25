@@ -23,6 +23,7 @@ class ServiceTypeController extends Controller
                     'slug' => $t->slug,
                     'name_de' => $t->name_de,
                     'description_de' => $t->description_de,
+                    'faqs' => $t->faqs ?? [],
                     'icon' => $t->icon,
                     'sort_order' => $t->sort_order,
                     'is_active' => $t->is_active,
@@ -104,6 +105,10 @@ class ServiceTypeController extends Controller
             'name_de' => ['required', 'string', 'max:120'],
             'description_de' => ['nullable', 'string', 'max:1000'],
             'icon' => ['nullable', 'string', 'max:60'],
+            // Questions belonging to this assessment, shown on its own page.
+            'faqs' => ['nullable', 'array', 'max:12'],
+            'faqs.*.frage' => ['required_with:faqs.*.antwort', 'nullable', 'string', 'max:200'],
+            'faqs.*.antwort' => ['required_with:faqs.*.frage', 'nullable', 'string', 'max:2000'],
             'is_active' => ['boolean'],
             // Required once the service is active, because an active service
             // without a fee books nothing when an assignment completes.
