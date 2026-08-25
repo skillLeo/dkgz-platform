@@ -55,6 +55,18 @@ describe('the gender of a service name', function () {
         }
     });
 
+    it('agrees with the first of two alternatives, not the last', function () {
+        // A slash means "or", so "ein Kurzgutachten / Bagatellschaden" agrees
+        // with the Kurzgutachten. Joining with "&" is the other way round: the
+        // name ends in the noun both halves share.
+        expect(GermanNoun::genderOf('Kurzgutachten / Bagatellschaden'))->toBe('n');
+        expect(GermanNoun::genderOf('Unfall- & Haftpflichtgutachten'))->toBe('n');
+        expect(GermanNoun::genderOf('Oldtimer- & Youngtimer-Gutachten'))->toBe('n');
+        expect(GermanNoun::genderOf('Technisches Gutachten'))->toBe('n');
+        expect(GermanNoun::genderOf('Leasing-Rückgabegutachten'))->toBe('n');
+        expect(GermanNoun::genderOf('Reparaturbestätigung'))->toBe('f');
+    });
+
     it('takes the gender of the last noun in a compound', function () {
         // "Gebrauchtwagen-Check" is masculine like "Check", not neuter like
         // the "Wagen" in the middle of it.
@@ -305,5 +317,82 @@ describe('saying the article in the admin panel', function () {
                 'dkgz_fee_cents' => 8500,
             ])
             ->assertSessionHasErrors('gender');
+    });
+});
+
+describe('copy the operator had already rewritten', function () {
+    it('moves a stranded article into the braces without touching the rest', function () {
+        // Wording the operator changed after it was seeded, so the migration
+        // that only rewrites untouched copy deliberately left it alone.
+        ContentBlock::query()
+            ->where('page_key', 'staedte')
+            ->where('field_key', 'einleitung')
+            ->update(['value' => 'Sie benötigen ein {leistung} in {stadt}? Wir vermitteln — kostenlos und unverbindlich.']);
+
+        ContentBlock::query()
+            ->where('page_key', 'staedte')
+            ->where('field_key', 'schritt_3')
+            ->update(['value' => 'Der Sachverständige übernimmt das {leistung} und meldet sich direkt bei Ihnen.']);
+
+        (require database_path('migrations/2026_08_25_160000_move_stranded_articles_into_the_braces.php'))->up();
+
+        expect(ContentBlock::where('page_key', 'staedte')->where('field_key', 'einleitung')->value('value'))
+            ->toBe('Sie benötigen {einen leistung} in {stadt}? Wir vermitteln — kostenlos und unverbindlich.');
+
+        expect(ContentBlock::where('page_key', 'staedte')->where('field_key', 'schritt_3')->value('value'))
+            ->toBe('Der Sachverständige übernimmt {den leistung} und meldet sich direkt bei Ihnen.');
+    });
+
+    it('reads a capitalised article as opening a sentence', function () {
+        ContentBlock::query()
+            ->where('page_key', 'staedte')
+            ->where('field_key', 'einleitung')
+            ->update(['value' => 'Das {leistung} ist in {stadt} schnell zu haben.']);
+
+        (require database_path('migrations/2026_08_25_160000_move_stranded_articles_into_the_braces.php'))->up();
+
+        expect(ContentBlock::where('page_key', 'staedte')->where('field_key', 'einleitung')->value('value'))
+            ->toBe('{Der leistung} ist in {stadt} schnell zu haben.');
+    });
+
+    it('counts three steps in a sentence the operator wrote', function () {
+        ContentBlock::query()
+            ->where('page_key', 'startseite')
+            ->where('section_key', 'ablauf')
+            ->where('field_key', 'text')
+            ->update(['value' => 'In 4 einfachen Schritten zum Gutachter']);
+
+        (require database_path('migrations/2026_08_25_160500_the_homepage_process_says_three.php'))->up();
+
+        expect(ContentBlock::where('page_key', 'startseite')->where('section_key', 'ablauf')->where('field_key', 'text')->value('value'))
+            ->toBe('In 3 einfachen Schritten zum Gutachter');
+    });
+
+    it('gives the last step back the ending the fourth one carried', function () {
+        ContentBlock::query()
+            ->where('page_key', 'startseite')
+            ->where('section_key', 'ablauf')
+            ->where('field_key', 'schritt_3_text')
+            ->update(['value' => 'Der erste verfügbare Sachverständige übernimmt Ihren Auftrag.']);
+
+        (require database_path('migrations/2026_08_25_160500_the_homepage_process_says_three.php'))->up();
+
+        expect(ContentBlock::where('page_key', 'startseite')->where('section_key', 'ablauf')->where('field_key', 'schritt_3_text')->value('value'))
+            ->toContain('meldet sich anschließend direkt bei Ihnen');
+    });
+
+    it('leaves a step alone that already says it', function () {
+        $already = 'Der erste Partner nimmt an und meldet sich direkt bei Ihnen.';
+
+        ContentBlock::query()
+            ->where('page_key', 'startseite')
+            ->where('section_key', 'ablauf')
+            ->where('field_key', 'schritt_3_text')
+            ->update(['value' => $already]);
+
+        (require database_path('migrations/2026_08_25_160500_the_homepage_process_says_three.php'))->up();
+
+        expect(ContentBlock::where('page_key', 'startseite')->where('section_key', 'ablauf')->where('field_key', 'schritt_3_text')->value('value'))
+            ->toBe($already);
     });
 });

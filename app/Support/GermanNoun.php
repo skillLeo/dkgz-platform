@@ -117,15 +117,26 @@ final class GermanNoun
      *
      * A German compound takes the gender of its last noun, so
      * "Gebrauchtwagen-Check" is masculine like "Check" and not like "Wagen".
-     * Umlauts are folded so the endings above can be written in plain ASCII.
+     *
+     * A slash is the exception, because it means "or" rather than joining a
+     * compound: in "Kurzgutachten / Bagatellschaden" the article agrees with
+     * the first of the two, so "ein Kurzgutachten / Bagatellschaden" and not
+     * "ein…schaden". Umlauts are folded so the endings above can be written in
+     * plain ASCII.
      */
     private static function headNoun(?string $name): string
     {
         $word = mb_strtolower(trim((string) $name));
         $word = strtr($word, ['ä' => 'ae', 'ö' => 'oe', 'ü' => 'ue', 'ß' => 'ss']);
 
-        // Take the last part of a hyphenated or spaced name.
-        $parts = preg_split('/[\s\-–—\/]+/u', $word, -1, PREG_SPLIT_NO_EMPTY) ?: [];
+        // Only the first of several alternatives.
+        $word = trim(explode('/', $word)[0]);
+
+        // Then the last part of what is left, which is the compound's head.
+        $parts = preg_split('/[\s\-–—]+/u', $word, -1, PREG_SPLIT_NO_EMPTY) ?: [];
+
+        // "&" joins two names rather than being one, so it is never the head.
+        $parts = array_values(array_filter($parts, fn (string $part) => $part !== '&' && $part !== 'und'));
 
         return (string) (end($parts) ?: '');
     }
