@@ -9,6 +9,7 @@ use App\Observers\CacheBustingObserver;
 use App\Support\Branding;
 use App\Support\SafeStorage;
 use App\Support\Settings;
+use Illuminate\Auth\Middleware\RedirectIfAuthenticated;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Mail\Events\MessageSent;
@@ -54,6 +55,30 @@ class AppServiceProvider extends ServiceProvider
         });
 
         $this->registerRateLimiters();
+
+        /*
+         * Where somebody who is already signed in goes if they ask for the
+         * login screen.
+         *
+         * Laravel's default is the site root, and the public homepage says
+         * nothing about being signed in — so a partner whose session was still
+         * alive clicked "Partner-Portal", landed back on the homepage, and
+         * concluded that logging in was broken. Sending them to their own area
+         * both answers the request and makes the state visible.
+         */
+        RedirectIfAuthenticated::redirectUsing(function (Request $request) {
+            $user = $request->user();
+
+            if ($user === null) {
+                return '/';
+            }
+
+            if ($user->can('admin.access') || $user->hasAnyRole(['admin', 'super_admin'])) {
+                return route('admin.dashboard');
+            }
+
+            return $user->assessor !== null ? route('portal.dashboard') : '/';
+        });
     }
 
     /**

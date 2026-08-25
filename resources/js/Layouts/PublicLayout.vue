@@ -22,6 +22,26 @@ defineProps({
 })
 
 const page = usePage()
+
+/**
+ * Where the portal link should point for whoever is reading.
+ *
+ * A signed-in partner used to be offered "Partner-Portal" pointing at the login
+ * screen, which bounced them straight back here — so the site looked broken
+ * when in fact they had never been signed out. Now it takes them where they
+ * were going and says whose area it is.
+ */
+const portalLink = computed(() => {
+    const user = page.props.auth?.user
+
+    if (! user) return { href: '/anmelden', label: 'Partner-Portal' }
+
+    const isAdmin = (user.roles ?? []).some((role) => ['admin', 'super_admin'].includes(role))
+
+    return isAdmin
+        ? { href: '/admin', label: 'Administration' }
+        : { href: '/portal', label: 'Mein Portal' }
+})
 const menuOpen = ref(false)
 const scrolled = ref(false)
 
@@ -151,7 +171,7 @@ onUnmounted(() => window.removeEventListener('scroll', onScroll))
                         class="border-b border-white/10 py-4 text-h4 text-white"
                         @click="menuOpen = false"
                     >{{ item.label }}</Link>
-                    <Link href="/anmelden" class="border-b border-white/10 py-4 text-h4 text-white/72" @click="menuOpen = false">Partner-Portal</Link>
+                    <Link :href="portalLink.href" class="border-b border-white/10 py-4 text-h4 text-white/72" @click="menuOpen = false">{{ portalLink.label }}</Link>
                 </nav>
                 <div class="shrink-0 p-4 pb-[calc(1rem+env(safe-area-inset-bottom))]">
                     <BaseButton href="/anfrage" variant="inverted" size="cta" block @click="menuOpen = false">Anfrage starten</BaseButton>
@@ -211,7 +231,7 @@ onUnmounted(() => window.removeEventListener('scroll', onScroll))
                             <li><Link href="/ueber-uns" class="text-sm text-white/72 hover:text-white">Über DKGZ</Link></li>
                             <li><Link href="/ablauf" class="text-sm text-white/72 hover:text-white">Ablauf</Link></li>
                             <li><Link href="/fuer-sachverstaendige" class="text-sm text-white/72 hover:text-white">Für Sachverständige</Link></li>
-                            <li><Link href="/anmelden" class="text-sm text-white/72 hover:text-white">Partner-Portal</Link></li>
+                            <li><Link :href="portalLink.href" class="text-sm text-white/72 hover:text-white">{{ portalLink.label }}</Link></li>
                             <li><Link href="/kontakt" class="text-sm text-white/72 hover:text-white">Kontakt</Link></li>
                         </ul>
                     </div>
