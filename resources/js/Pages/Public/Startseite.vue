@@ -98,7 +98,7 @@ const telHref = computed(() => `tel:${String(page.props.app?.phone ?? '').replac
                     </p>
                     <div class="rule-accent mt-2.5" aria-hidden="true" />
 
-                    <h1 class="text-h1 font-bold text-navy-700 pt-8 pb-6 lg:text-display">
+                    <h1 class="text-h1 font-bold text-navy-700 pt-7 pb-4 lg:text-display">
                         {{ t('hero', 'zeile_1') }}<br>{{ t('hero', 'zeile_2') }}<br>{{ t('hero', 'zeile_3') }}
                     </h1>
 
@@ -113,7 +113,7 @@ const telHref = computed(() => `tel:${String(page.props.app?.phone ?? '').replac
                         number sits beneath as the quieter alternative for
                         anyone who would rather speak to someone.
                     -->
-                    <div class="mt-10 max-w-lg">
+                    <div class="mt-7 max-w-lg">
                         <RequestStarter
                             :service-types="serviceTypes"
                             :title="t('hero', 'cta', 'Jetzt Gutachter anfragen')"

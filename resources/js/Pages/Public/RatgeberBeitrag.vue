@@ -54,7 +54,13 @@ const schema = computed(() => JSON.stringify({
         <component :is="'script'" type="application/ld+json">{{ schema }}</component>
     </Head>
 
-    <PublicLayout>
+    <!--
+        No bar pinned to the bottom of the screen here. An article is read, and
+        a button hovering over the last two lines of every paragraph is in the
+        way of the one thing the page is for — the offer to arrange an assessor
+        already sits at the end of the piece, where somebody has finished.
+    -->
+    <PublicLayout :sticky-cta="false">
         <article>
             <header class="border-b border-gray-200 bg-gray-50">
                 <div class="mx-auto w-full max-w-(--container-prose) px-4 py-14 md:px-6 md:py-16">

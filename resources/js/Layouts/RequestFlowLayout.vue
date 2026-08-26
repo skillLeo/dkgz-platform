@@ -96,7 +96,7 @@ onBeforeUnmount(() => window.removeEventListener('beforeunload', guard))
                     somebody looks for it.
                 -->
                 <span class="ml-auto flex shrink-0 items-center gap-2 text-sm text-gray-600">
-                    <ShieldCheck :size="16" :stroke-width="1.5" class="shrink-0" style="color: var(--dkgz-accent)" aria-hidden="true" />
+                    <ShieldCheck :size="22" :stroke-width="1.75" class="shrink-0" style="color: var(--dkgz-accent)" aria-hidden="true" />
                     <span class="hidden sm:inline">{{ label }}</span>
                 </span>
 

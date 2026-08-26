@@ -1,6 +1,7 @@
 <script setup>
 import { computed, onMounted, ref, watch } from 'vue'
-import { router, useForm } from '@inertiajs/vue3'
+import { useForm } from '@inertiajs/vue3'
+import axios from 'axios'
 import { Check, Loader2 } from 'lucide-vue-next'
 import RequestFlowLayout from '../../Layouts/RequestFlowLayout.vue'
 import SectionLabel from '../../Components/Layout/SectionLabel.vue'
@@ -68,11 +69,14 @@ const onStart = ({ service_type_id }) => {
 
     // Counted once: going back and forward again is the same person on the
     // same form, not a second one reaching the step.
-    router.post('/anfrage/schritt', { step: 'schritt_2' }, {
-        preserveState: true,
-        preserveScroll: true,
-        only: [],
-    })
+    //
+    // Sent with axios rather than through Inertia's router. The endpoint
+    // answers with JSON, and Inertia treats any response that is not an Inertia
+    // response as a failure — it put an error dialog on screen at exactly the
+    // moment somebody moved to the second step. Nothing here needs the page to
+    // change, and a counter that cannot be recorded must never interrupt
+    // somebody filling the form in.
+    axios.post('/anfrage/schritt', { step: 'schritt_2' }).catch(() => {})
 
     document.activeElement?.blur?.()
     window.scrollTo({ top: 0, behavior: 'smooth' })
@@ -189,6 +193,9 @@ const submit = () => {
                         :action="null"
                         :title="t('formular', 'cta_schritt_1', 'Jetzt Gutachter anfragen')"
                         :cta-label="t('formular', 'weiter', 'Weiter')"
+                        :service-label="t('formular', 'frage_leistung', 'Welche Gutachtenart benötigen Sie?')"
+                        :service-hint="t('formular', 'frage_hinweis', 'Wählen Sie die passende Leistung aus, damit wir den richtigen Sachverständigen für Sie finden.')"
+                        :hint="t('formular', 'hinweis_schritt_1')"
                         @start="onStart"
                     />
                 </template>

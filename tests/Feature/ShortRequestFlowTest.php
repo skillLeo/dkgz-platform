@@ -332,3 +332,60 @@ describe('the size of the homepage picture', function () {
         expect($source)->toContain('Math.min(140, Math.max(60, typed))');
     });
 });
+
+describe('moving to the second step', function () {
+    it('counts the step without going through Inertia', function () {
+        // The endpoint answers with JSON, and Inertia treats anything that is
+        // not an Inertia response as a failure — routing this through its
+        // router put an error dialog on screen at the exact moment somebody
+        // moved to the second step.
+        $source = file_get_contents(resource_path('js/Pages/Public/Anfrage.vue'));
+
+        expect($source)->toContain("axios.post('/anfrage/schritt'")
+            ->and($source)->not->toContain("router.post('/anfrage/schritt'");
+    });
+
+    it('never lets a failed count interrupt the form', function () {
+        expect(file_get_contents(resource_path('js/Pages/Public/Anfrage.vue')))
+            ->toContain('.catch(() => {})');
+    });
+
+    it('still answers the counter with plain json', function () {
+        $this->postJson('/anfrage/schritt', ['step' => 'schritt_2'])
+            ->assertOk()
+            ->assertExactJson(['ok' => true]);
+    });
+});
+
+describe('what the operator can reword', function () {
+    it('offers every string on the first step', function () {
+        foreach (['cta_schritt_1', 'frage_leistung', 'frage_hinweis', 'weiter', 'hinweis_schritt_1'] as $field) {
+            expect(ContentBlock::where('page_key', 'anfrage')
+                ->where('section_key', 'formular')
+                ->where('field_key', $field)
+                ->exists())->toBeTrue("anfrage.formular.{$field} fehlt");
+        }
+    });
+
+    it('reaches the first step rather than sitting unused in the admin panel', function () {
+        $source = file_get_contents(resource_path('js/Pages/Public/Anfrage.vue'));
+
+        foreach (['frage_leistung', 'frage_hinweis', 'hinweis_schritt_1', 'frage_plz'] as $field) {
+            expect($source)->toContain("'{$field}'");
+        }
+    });
+});
+
+describe('the blog on a telephone', function () {
+    it('has no bar pinned over the article', function () {
+        foreach (['Ratgeber.vue', 'RatgeberBeitrag.vue'] as $page) {
+            expect(file_get_contents(resource_path("js/Pages/Public/{$page}")))
+                ->toContain(':sticky-cta="false"');
+        }
+    });
+
+    it('still offers the request at the end of the piece', function () {
+        expect(file_get_contents(resource_path('js/Pages/Public/RatgeberBeitrag.vue')))
+            ->toContain('href="/anfrage"');
+    });
+});
