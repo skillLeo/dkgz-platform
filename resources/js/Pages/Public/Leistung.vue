@@ -89,7 +89,7 @@ const others = computed(() => props.serviceTypes
                     {{ serviceType.description_de }}
                 </p>
 
-                <BaseButton href="/anfrage" size="cta" class="mt-8">
+                <BaseButton :href="`/anfrage?leistung=${serviceType.slug}`" size="cta" class="mt-8">
                     {{ t('detail', 'cta', 'Jetzt Gutachter anfragen') }}
                 </BaseButton>
             </div>
@@ -119,7 +119,7 @@ const others = computed(() => props.serviceTypes
                         </li>
                     </ol>
 
-                    <BaseButton href="/anfrage" size="cta" class="mt-8">
+                    <BaseButton :href="`/anfrage?leistung=${serviceType.slug}`" size="cta" class="mt-8">
                         {{ t('detail', 'cta', 'Jetzt Gutachter anfragen') }}
                     </BaseButton>
                 </section>
@@ -176,7 +176,7 @@ const others = computed(() => props.serviceTypes
                             <span class="text-sm leading-normal text-gray-800">{{ point }}</span>
                         </li>
                     </ul>
-                    <BaseButton href="/anfrage" size="cta" block class="mt-5">
+                    <BaseButton :href="`/anfrage?leistung=${serviceType.slug}`" size="cta" block class="mt-5">
                         {{ t('detail', 'cta', 'Jetzt Gutachter anfragen') }}
                     </BaseButton>
                 </div>

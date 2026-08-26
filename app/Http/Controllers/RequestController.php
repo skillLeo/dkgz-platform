@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Actions\CreateServiceRequestAction;
 use App\Http\Requests\StoreServiceRequestRequest;
 use App\Models\FunnelEvent;
-use App\Models\PostalCode;
 use App\Models\ServiceRequest;
 use App\Models\ServiceType;
 use App\Support\Content;
@@ -29,13 +28,13 @@ class RequestController extends Controller
     }
 
     /**
-     * What the visitor has already answered before arriving here.
+     * The service the visitor arrived having already chosen.
      *
-     * The homepage hero asks which assessment and which postal code, so
-     * somebody who answered there must not be asked again — they come across
-     * with both in the address, and the contact step opens directly. Anything
-     * that does not resolve is simply left unanswered rather than guessed at,
-     * and the first step asks for it as usual.
+     * Every "Gutachter anfragen" button on a service page names its own
+     * service, so somebody who came from the Wertgutachten page is not asked
+     * which assessment they want — they already said, by being there. A slug
+     * that resolves to nothing is left unanswered rather than guessed at, and
+     * the first step asks as usual.
      *
      * @return array<string, mixed>
      */
@@ -43,16 +42,9 @@ class RequestController extends Controller
     {
         $service = ServiceType::active()
             ->where('slug', $request->string('leistung')->toString())
-            ->first(['id', 'slug']);
+            ->first(['id']);
 
-        $code = preg_replace('/\D/', '', $request->string('plz')->toString());
-        $city = strlen((string) $code) === 5 ? PostalCode::cityFor($code) : null;
-
-        return array_filter([
-            'service_type_id' => $service?->id,
-            'postal_code' => $city === null ? null : $code,
-            'city' => $city,
-        ], fn ($value) => $value !== null);
+        return $service === null ? [] : ['service_type_id' => $service->id];
     }
 
     public function store(StoreServiceRequestRequest $request, CreateServiceRequestAction $create): RedirectResponse
@@ -78,7 +70,7 @@ class RequestController extends Controller
     {
         $step = $request->string('step')->toString();
 
-        if (in_array($step, ['schritt_2', 'schritt_3'], true)) {
+        if ($step === 'schritt_2') {
             FunnelEvent::record($step);
         }
 

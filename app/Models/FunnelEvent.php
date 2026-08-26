@@ -16,13 +16,23 @@ use Illuminate\Support\Facades\DB;
  */
 class FunnelEvent extends Model
 {
-    /** The steps of the request form, in order. */
+    /**
+     * The steps of the request form, in order.
+     *
+     * Named after what somebody has actually done rather than numbered, because
+     * the numbering has changed once already and a chart reading "Schritt 3"
+     * against a form with two steps tells nobody anything. The third step is
+     * gone with the vehicle questions; counts recorded against it while it
+     * existed stay in the table and simply stop being charted.
+     */
     public const STEPS = [
         'begonnen' => 'Formular geöffnet',
-        'schritt_2' => 'Schritt 2 erreicht',
-        'schritt_3' => 'Schritt 3 erreicht',
+        'schritt_2' => 'Kontaktdaten erreicht',
         'abgesendet' => 'Anfrage abgesendet',
     ];
+
+    /** Steps the form no longer has, kept so old rows are still recognised. */
+    public const RETIRED_STEPS = ['schritt_3'];
 
     protected $fillable = ['step', 'day', 'count'];
 

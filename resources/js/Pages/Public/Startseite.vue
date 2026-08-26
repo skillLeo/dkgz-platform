@@ -8,7 +8,6 @@ import SealMark from '../../Components/Layout/SealMark.vue'
 import ServiceIcon from '../../Components/Domain/ServiceIcon.vue'
 import BaseButton from '../../Components/Base/BaseButton.vue'
 import RequestStarter from '../../Components/Domain/RequestStarter.vue'
-import TrustRow from '../../Components/Domain/TrustRow.vue'
 import GermanyCoverageMap from '../../Components/Domain/GermanyCoverageMap.vue'
 import ImageSlot from '../../Components/Layout/ImageSlot.vue'
 
@@ -59,6 +58,30 @@ const trustPoints = computed(() => [1, 2, 3].map((n) => ({
     text: t('ueber', `punkt_${n}_text`),
 })))
 
+/**
+ * How large the hero photograph is drawn, as a percentage.
+ *
+ * A picture that suits the page at one size looks wrong at another, and which
+ * is which depends on the photograph — so the operator sets it rather than
+ * asking for a rebuild. Clamped, because a hero at 300% would push everything
+ * beside it off the screen, and anything unreadable falls back to full size.
+ */
+const HERO_WIDTH = 400
+const HERO_HEIGHT = 480
+
+const heroScale = computed(() => {
+    const typed = Number.parseInt(t('hero', 'bild_groesse', ''), 10)
+
+    if (! Number.isFinite(typed)) return 1
+
+    return Math.min(140, Math.max(60, typed)) / 100
+})
+
+const heroSize = computed(() => ({
+    maxWidth: `${Math.round(HERO_WIDTH * heroScale.value)}px`,
+    maxHeight: `${Math.round(HERO_HEIGHT * heroScale.value)}px`,
+}))
+
 const telHref = computed(() => `tel:${String(page.props.app?.phone ?? '').replace(/\s/g, '')}`)
 </script>
 
@@ -97,25 +120,24 @@ const telHref = computed(() => `tel:${String(page.props.app?.phone ?? '').replac
                             :cta-label="t('hero', 'cta_button', 'Weiter')"
                             :hint="t('hero', 'cta_hinweis')"
                             :service-label="t('hero', 'frage_leistung', 'Welche Gutachtenart benötigen Sie?')"
-                            :postal-label="t('hero', 'frage_plz', 'Postleitzahl des Fahrzeugstandorts')"
                             :service-hint="t('hero', 'frage_hinweis', 'Wählen Sie die passende Leistung aus, damit wir den richtigen Sachverständigen für Sie finden.')"
                         />
 
-                        <p v-if="page.props.app?.phone" class="flex flex-wrap items-center gap-x-2 gap-y-1 pt-5 text-base text-gray-600">
-                            <span class="grid h-7 w-7 shrink-0 place-items-center rounded-full border" style="border-color: var(--dkgz-accent)" aria-hidden="true">
-                                <Phone :size="14" :stroke-width="1.75" style="color: var(--dkgz-accent)" />
-                            </span>
+                        <!--
+                            The quieter alternative for somebody who would
+                            rather speak to a person. Small on purpose: it is an
+                            option, not a second call to action competing with
+                            the box above it.
+                        -->
+                        <p v-if="page.props.app?.phone" class="flex flex-wrap items-center gap-x-1.5 gap-y-1 pt-4 text-sm text-gray-400">
+                            <Phone :size="13" :stroke-width="1.5" class="shrink-0" aria-hidden="true" />
                             <span>{{ t('hero', 'telefon_titel', 'Lieber telefonisch?') }}</span>
                             <a
                                 :href="`tel:${page.props.app.phone.replace(/\s/g, '')}`"
-                                class="font-mono font-medium tabular-nums text-navy-700 underline underline-offset-2"
+                                class="font-mono tabular-nums text-gray-600 underline underline-offset-2 hover:text-navy-700"
                             >{{ page.props.app.phone }}</a>
-                            <span v-if="page.props.app?.office_hours" class="text-gray-400">
-                                · {{ page.props.app.office_hours }}
-                            </span>
+                            <span v-if="page.props.app?.office_hours">· {{ page.props.app.office_hours }}</span>
                         </p>
-
-                        <TrustRow class="pt-5" />
                     </div>
 
                     <p class="pt-3 text-sm text-gray-400">{{ t('hero', 'hinweis') }}</p>
@@ -129,7 +151,7 @@ const telHref = computed(() => `tel:${String(page.props.app?.phone ?? '').replac
                         cropped as the column widened, which is what made the
                         hero look wrong on a large screen.
                     -->
-                    <div class="mx-auto aspect-4/5 max-h-120 max-w-100 overflow-hidden rounded-card border border-gray-200">
+                    <div class="mx-auto aspect-4/5 overflow-hidden rounded-card border border-gray-200" :style="heroSize">
                         <ImageSlot
                             :src="t('hero', 'bild')"
                             alt="Kfz-Sachverständiger dokumentiert einen Fahrzeugschaden"

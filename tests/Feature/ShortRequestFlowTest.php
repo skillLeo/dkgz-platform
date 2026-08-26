@@ -102,13 +102,14 @@ describe('what the form still asks for', function () {
 });
 
 describe('arriving with the first step already answered', function () {
-    it('carries the service and the town across from the homepage', function () {
-        $this->get("/anfrage?leistung={$this->service->slug}&plz=40210")
+    it('carries the chosen service across from a service page', function () {
+        // The postal code is asked on the second step now, beside the contact
+        // details, so it does not travel in the address any more.
+        $this->get("/anfrage?leistung={$this->service->slug}")
             ->assertOk()
             ->assertInertia(fn ($page) => $page
                 ->where('selected.service_type_id', $this->service->id)
-                ->where('selected.postal_code', '40210')
-                ->where('selected.city', 'Düsseldorf'));
+                ->missing('selected.postal_code'));
     });
 
     it('asks the first step when nothing was answered', function () {
@@ -117,12 +118,11 @@ describe('arriving with the first step already answered', function () {
             ->assertInertia(fn ($page) => $page->where('selected', []));
     });
 
-    it('ignores a postal code it cannot place rather than guessing', function () {
-        $this->get("/anfrage?leistung={$this->service->slug}&plz=00000")
+    it('still opens the contact step when an old link carries a postal code', function () {
+        // Links from before the postal code moved are still out there.
+        $this->get("/anfrage?leistung={$this->service->slug}&plz=40210")
             ->assertOk()
-            ->assertInertia(fn ($page) => $page
-                ->where('selected.service_type_id', $this->service->id)
-                ->missing('selected.city'));
+            ->assertInertia(fn ($page) => $page->where('selected.service_type_id', $this->service->id));
     });
 
     it('ignores a service that is not active', function () {
@@ -265,5 +265,70 @@ describe('the box in the hero', function () {
                 ->where('field_key', $field)
                 ->exists())->toBeTrue("startseite.hero.{$field} fehlt");
         }
+    });
+});
+
+describe('what the shortened flow shows and hides', function () {
+    it('asks for the postal code on the second step, not the first', function () {
+        $starter = file_get_contents(resource_path('js/Components/Domain/RequestStarter.vue'));
+        $form = file_get_contents(resource_path('js/Pages/Public/Anfrage.vue'));
+
+        expect($starter)->not->toContain('postal_code');
+        expect($form)->toContain('form.postal_code');
+    });
+
+    it('drops the three reassurances from under the homepage box', function () {
+        $home = file_get_contents(resource_path('js/Pages/Public/Startseite.vue'));
+        $form = file_get_contents(resource_path('js/Pages/Public/Anfrage.vue'));
+
+        expect($home)->not->toContain('TrustRow');
+        expect($form)->not->toContain('TrustRow');
+    });
+
+    it('keeps the telephone line on the homepage and drops it from the form', function () {
+        // An option worth offering where somebody is still deciding; noise on
+        // the screen where they are already typing their own number in.
+        expect(file_get_contents(resource_path('js/Pages/Public/Startseite.vue')))
+            ->toContain("t('hero', 'telefon_titel'");
+
+        expect(file_get_contents(resource_path('js/Pages/Public/Anfrage.vue')))
+            ->not->toContain('telefon_titel');
+    });
+
+    it('carries a mark in the request header rather than a way out', function () {
+        $layout = file_get_contents(resource_path('js/Layouts/RequestFlowLayout.vue'));
+
+        expect($layout)->toContain('ShieldCheck')
+            ->and($layout)->not->toContain('canGoBack');
+    });
+
+    it('shows the progress bar without spelling out the step number', function () {
+        expect(file_get_contents(resource_path('js/Pages/Public/Anfrage.vue')))
+            ->toContain('RequestProgress')
+            ->and(file_get_contents(resource_path('js/Pages/Public/Anfrage.vue')))
+            ->not->toContain('Schritt {{ step }}');
+    });
+
+    it('sends somebody straight to the contact step from a service page', function () {
+        foreach (['Leistung.vue', 'StadtLeistung.vue'] as $page) {
+            expect(file_get_contents(resource_path("js/Pages/Public/{$page}")))
+                ->toContain('/anfrage?leistung=${serviceType.slug}')
+                ->not->toContain('href="/anfrage"');
+        }
+    });
+});
+
+describe('the size of the homepage picture', function () {
+    it('is set from the admin panel', function () {
+        expect(ContentBlock::where('page_key', 'startseite')
+            ->where('section_key', 'hero')
+            ->where('field_key', 'bild_groesse')
+            ->exists())->toBeTrue();
+    });
+
+    it('is clamped, so nobody can push the rest of the hero off the screen', function () {
+        $source = file_get_contents(resource_path('js/Pages/Public/Startseite.vue'));
+
+        expect($source)->toContain('Math.min(140, Math.max(60, typed))');
     });
 });

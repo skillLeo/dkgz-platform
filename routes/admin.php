@@ -126,11 +126,16 @@ Route::prefix('admin')
                 Route::post('/partnermail', [PartnerMailController::class, 'send'])->name('partner-mail.send');
             });
 
+            // Bound by id, not by the slug the model prefers for public URLs.
+            // The admin panel holds the row's id and posts the id, so binding
+            // by slug meant every save and every delete came back 404 — and
+            // renaming a city changes its slug, so even matching them up would
+            // have broken on the one action most likely to be taken.
             Route::middleware('can:cities.manage')->group(function () {
                 Route::get('/staedte', [CityController::class, 'index'])->name('cities');
                 Route::post('/staedte', [CityController::class, 'store'])->name('cities.store');
-                Route::post('/staedte/{city}', [CityController::class, 'update'])->name('cities.update');
-                Route::delete('/staedte/{city}', [CityController::class, 'destroy'])->name('cities.destroy');
+                Route::post('/staedte/{city:id}', [CityController::class, 'update'])->name('cities.update');
+                Route::delete('/staedte/{city:id}', [CityController::class, 'destroy'])->name('cities.destroy');
             });
             Route::post('/leistungsarten', [ServiceTypeController::class, 'store'])->name('service-types.store');
             Route::post('/leistungsarten/reihenfolge', [ServiceTypeController::class, 'reorder'])->name('service-types.reorder');

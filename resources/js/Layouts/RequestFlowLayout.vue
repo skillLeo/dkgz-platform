@@ -1,7 +1,7 @@
 <script setup>
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import { Head, Link, router } from '@inertiajs/vue3'
-import { ChevronLeft, X } from 'lucide-vue-next'
+import { ChevronLeft, ShieldCheck, X } from 'lucide-vue-next'
 import DkgzMark from '../Components/Layout/DkgzMark.vue'
 import FlashMessage from '../Components/Feedback/FlashMessage.vue'
 import ConfirmDialog from '../Components/Feedback/ConfirmDialog.vue'
@@ -20,15 +20,12 @@ import { useConfirm } from '../Composables/useConfirm.js'
  */
 const props = defineProps({
     title: { type: String, required: true },
-    label: { type: String, default: 'Ihre Anfrage' },
+    /** The reassurance beside the mark in the header. */
+    label: { type: String, default: 'Kostenfrei & unverbindlich' },
     backHref: { type: String, default: null },
-    /** A back arrow that steps within the flow rather than navigating away. */
-    canGoBack: { type: Boolean, default: false },
     /** Warn before leaving when the visitor has typed something. */
     dirty: { type: Boolean, default: false },
 })
-
-const emit = defineEmits(['back'])
 
 const { confirm } = useConfirm()
 const leaving = ref(false)
@@ -90,22 +87,22 @@ onBeforeUnmount(() => window.removeEventListener('beforeunload', guard))
                     <DkgzMark size="sm" :with-subtitle="false" />
                 </Link>
 
-                <button
-                    v-if="canGoBack"
-                    type="button"
-                    class="ml-auto flex shrink-0 items-center gap-1.5 rounded-sm px-2 py-2 text-sm text-gray-600 hover:text-navy-700"
-                    @click="emit('back')"
-                >
-                    <ChevronLeft :size="17" :stroke-width="1.5" aria-hidden="true" />
-                    Zurück
-                </button>
+                <!--
+                    A reassurance rather than a way out. Somebody is about to
+                    type their telephone number into a site they met ten seconds
+                    ago; the useful thing to put in front of them is why that is
+                    safe, not an arrow inviting them to leave. Going back a step
+                    is offered beside the answer it would change, which is where
+                    somebody looks for it.
+                -->
+                <span class="ml-auto flex shrink-0 items-center gap-2 text-sm text-gray-600">
+                    <ShieldCheck :size="16" :stroke-width="1.5" class="shrink-0" style="color: var(--dkgz-accent)" aria-hidden="true" />
+                    <span class="hidden sm:inline">{{ label }}</span>
+                </span>
 
-                <span v-else class="ml-auto hidden text-sm text-gray-600 sm:block">{{ label }}</span>
-
                 <button
                     type="button"
-                    class="-mr-2 grid h-11 w-11 shrink-0 place-items-center rounded-sm text-gray-600 hover:text-navy-700 sm:ml-4"
-                    :class="canGoBack ? '' : 'ml-auto'"
+                    class="-mr-2 ml-3 grid h-11 w-11 shrink-0 place-items-center rounded-sm text-gray-600 hover:text-navy-700 sm:ml-4"
                     aria-label="Anfrage abbrechen"
                     @click="exit"
                 >

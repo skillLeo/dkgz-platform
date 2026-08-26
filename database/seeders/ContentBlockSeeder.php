@@ -100,6 +100,7 @@ class ContentBlockSeeder extends Seeder
             ['page_key' => 'startseite', 'section_key' => 'hero', 'field_key' => 'cta_hinweis', 'value' => 'Kostenlos und unverbindlich · Antwort in der Regel innerhalb von 24 Stunden', 'label_de' => 'Hero · Hinweis unter der Schaltfläche', 'help_de' => 'Leer lassen, um die Zeile wegzulassen.'],
             ['page_key' => 'startseite', 'section_key' => 'hero', 'field_key' => 'hinweis', 'value' => 'Kostenlos und unverbindlich · Keine Registrierung erforderlich', 'label_de' => 'Hero · Hinweis unter dem Feld'],
             ['page_key' => 'startseite', 'section_key' => 'hero', 'field_key' => 'bild', 'type' => 'image', 'value' => '/images/hero-institutionell.svg', 'label_de' => 'Hero · Bild', 'help_de' => 'Platzhaltergrafik im DKGZ-Stil. Ersetzen Sie sie durch ein echtes Foto im Hochformat 4:5.'],
+            ['page_key' => 'startseite', 'section_key' => 'hero', 'field_key' => 'bild_groesse', 'value' => '100', 'label_de' => 'Hero · Bildgröße in Prozent', 'help_de' => 'Zwischen 60 und 140. 100 ist die Standardgröße; 130 macht das Bild größer, 80 kleiner. Leer lassen für die Standardgröße.'],
             ['page_key' => 'startseite', 'section_key' => 'hero', 'field_key' => 'siegel_titel', 'value' => 'Geprüfte Partner', 'label_de' => 'Hero · Siegel, Überschrift'],
             ['page_key' => 'startseite', 'section_key' => 'hero', 'field_key' => 'siegel_text', 'value' => 'Nach bundesweit einheitlichem Standard', 'label_de' => 'Hero · Siegel, Zusatz'],
 

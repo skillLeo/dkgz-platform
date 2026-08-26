@@ -1,31 +1,28 @@
 <script setup>
-import { computed, onMounted, ref } from 'vue'
-import { router, useForm, usePage } from '@inertiajs/vue3'
-import { Check } from 'lucide-vue-next'
+import { computed, onMounted, ref, watch } from 'vue'
+import { router, useForm } from '@inertiajs/vue3'
+import { Check, Loader2 } from 'lucide-vue-next'
 import RequestFlowLayout from '../../Layouts/RequestFlowLayout.vue'
 import SectionLabel from '../../Components/Layout/SectionLabel.vue'
 import RequestProgress from '../../Components/Domain/RequestProgress.vue'
 import RequestStarter from '../../Components/Domain/RequestStarter.vue'
-import TrustRow from '../../Components/Domain/TrustRow.vue'
 import BaseInput from '../../Components/Base/BaseInput.vue'
 import BaseButton from '../../Components/Base/BaseButton.vue'
 import ErrorSummary from '../../Components/Feedback/ErrorSummary.vue'
 
 /**
- * Two steps: what and where, then who.
+ * Two steps: which assessment, then where and who.
  *
  * It used to be three, and the middle one asked for the make, the model, the
  * year, the plate, a description of what happened and photographs — a screen of
  * work between somebody arriving from an advert and the point where DKGZ has
  * their telephone number. The assessor telephones them and asks all of it
- * anyway. Everything the matching actually runs on is the service and the
- * postal code, and both are answered before the visitor is asked for anything
- * about themselves.
+ * anyway.
  *
  * The first step is the same component as the homepage hero, so somebody who
  * started at the top and somebody who clicked "Gutachter anfragen" from a
- * service page meet the same two questions in the same order. Arriving with
- * both already answered skips straight to the contact details.
+ * service page meet the same question. Arriving with the service already chosen
+ * — which is what every service page now does — skips it entirely.
  */
 const props = defineProps({
     content: { type: Object, default: () => ({}) },
@@ -34,13 +31,12 @@ const props = defineProps({
     selected: { type: Object, default: () => ({}) },
 })
 
-const page = usePage()
 const t = (section, field, fallback = '') => props.content?.[section]?.[field] ?? fallback
 
 const form = useForm({
     service_type_id: props.selected.service_type_id ?? '',
-    postal_code: props.selected.postal_code ?? '',
-    city: props.selected.city ?? '',
+    postal_code: '',
+    city: '',
     customer_name: '',
     customer_phone: '',
     customer_email: '',
@@ -54,22 +50,20 @@ const form = useForm({
 onMounted(() => { form.rendered_at = Date.now() })
 
 const STEPS = [
-    { number: 1, label: 'Leistung und Standort', short: 'Leistung' },
-    { number: 2, label: 'Ihre Kontaktdaten', short: 'Kontakt' },
+    { number: 1, label: 'Leistung', short: 'Leistung' },
+    { number: 2, label: 'Standort und Kontakt', short: 'Kontakt' },
 ]
 
-// Both answers already in hand means the first step has nothing left to ask.
-const started = ref(Boolean(props.selected.service_type_id && props.selected.city))
+// A service already chosen means the first step has nothing left to ask.
+const started = ref(Boolean(props.selected.service_type_id))
 const step = computed(() => (started.value ? 2 : 1))
 
 const service = computed(() => props.serviceTypes
     .find((type) => String(type.id) === String(form.service_type_id)) ?? null)
 
 /** Answering the first step here rather than arriving with it answered. */
-const onStart = ({ service_type_id, postal_code, city }) => {
+const onStart = ({ service_type_id }) => {
     form.service_type_id = service_type_id
-    form.postal_code = postal_code
-    form.city = city
     started.value = true
 
     // Counted once: going back and forward again is the same person on the
@@ -91,7 +85,57 @@ const back = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' })
 }
 
+/**
+ * The town, looked up rather than typed.
+ *
+ * Asking for a postal code and a town invited them to disagree, and the code is
+ * the one the matching runs on. Showing the town back is what makes the code
+ * feel checked rather than merely entered.
+ */
+const resolving = ref(false)
+const unknown = ref(false)
+
+let timer = null
+
+const lookUp = async (code) => {
+    resolving.value = true
+    unknown.value = false
+
+    try {
+        const response = await fetch(`/api/plz/${code}`, { headers: { Accept: 'application/json' } })
+        const data = response.ok ? await response.json() : null
+
+        if (data?.city) {
+            form.city = data.city
+        } else {
+            form.city = ''
+            unknown.value = true
+        }
+    } catch {
+        // A lookup that cannot reach the server must not trap anybody on this
+        // screen. The code goes through and the server checks it on submit.
+        form.city = ''
+        unknown.value = false
+    } finally {
+        resolving.value = false
+    }
+}
+
+const onPostalInput = (value) => {
+    form.postal_code = String(value).replace(/\D/g, '').slice(0, 5)
+    form.city = ''
+    unknown.value = false
+
+    if (timer) clearTimeout(timer)
+    if (form.postal_code.length !== 5) return
+
+    timer = setTimeout(() => lookUp(form.postal_code), 250)
+}
+
+watch(() => form.postal_code, (value) => { if (value === '') unknown.value = false })
+
 const REQUIRED = {
+    postal_code: 'Bitte geben Sie die Postleitzahl an.',
     customer_name: 'Bitte geben Sie Ihren Namen an.',
     customer_email: 'Bitte geben Sie eine E-Mail-Adresse an.',
     customer_phone: 'Bitte geben Sie eine Telefonnummer an.',
@@ -123,20 +167,14 @@ const submit = () => {
 </script>
 
 <template>
-    <RequestFlowLayout
-        title="Anfrage"
-        :dirty="form.isDirty"
-        :can-go-back="started"
-        @back="back"
-    >
+    <RequestFlowLayout title="Anfrage" :dirty="form.isDirty">
         <template v-if="started" #progress>
-            <p class="pb-2 text-center text-sm text-gray-600">Schritt {{ step }} von {{ STEPS.length }}</p>
             <RequestProgress :steps="STEPS" :current="step" :furthest="step" @go="(n) => n === 1 && back()" />
         </template>
 
         <div class="bg-gray-50">
             <div class="mx-auto w-full max-w-(--container-prose) px-4 py-12 md:px-6 md:py-16">
-                <!-- ── Step one: what, and where ── -->
+                <!-- ── Step one: which assessment ── -->
                 <template v-if="! started">
                     <SectionLabel :text="t('kopf', 'eyebrow', 'Kostenlose Anfrage')" />
                     <h1 class="pt-6 text-h2 font-bold text-navy-700 sm:text-h1">
@@ -148,17 +186,14 @@ const submit = () => {
                         class="mt-8"
                         :service-types="serviceTypes"
                         :initial-service="form.service_type_id"
-                        :initial-postal-code="form.postal_code"
                         :action="null"
                         :title="t('formular', 'cta_schritt_1', 'Jetzt Gutachter anfragen')"
                         :cta-label="t('formular', 'weiter', 'Weiter')"
                         @start="onStart"
                     />
-
-                    <TrustRow class="pt-5" />
                 </template>
 
-                <!-- ── Step two: who to call ── -->
+                <!-- ── Step two: where the car is, and who to call ── -->
                 <template v-else>
                     <h1 class="text-h2 font-bold text-navy-700">
                         {{ t('formular', 'schritt_2_titel', 'Fast geschafft!') }}
@@ -168,16 +203,15 @@ const submit = () => {
                     </p>
 
                     <!--
-                        What they chose, in one quiet line. It is the only thing
-                        carried over from the step before, and without it the
-                        contact screen gives no sign that the first answer was
-                        kept.
+                        What they chose, in one quiet line, with the way back to
+                        change it. This is the only route back now that the
+                        header carries a mark rather than an arrow — and it is
+                        the more discoverable of the two, because it sits beside
+                        the thing it would change.
                     -->
                     <p v-if="service" class="flex flex-wrap items-center gap-x-2 gap-y-1 pt-4 text-sm text-gray-600">
                         <Check :size="15" :stroke-width="2" class="shrink-0 text-success" aria-hidden="true" />
                         <span class="font-medium text-navy-700">{{ service.name_de }}</span>
-                        <span aria-hidden="true">·</span>
-                        <span>{{ form.postal_code }} {{ form.city }}</span>
                         <button
                             type="button"
                             class="border-b border-gray-300 text-gray-600 hover:border-navy-700 hover:text-navy-700"
@@ -195,6 +229,38 @@ const submit = () => {
                         </div>
 
                         <div class="flex flex-col gap-5">
+                            <div>
+                                <BaseInput
+                                    id="postal_code"
+                                    :model-value="form.postal_code"
+                                    :label="t('formular', 'frage_plz', 'Postleitzahl des Fahrzeugstandorts')"
+                                    placeholder="40210"
+                                    inputmode="numeric"
+                                    autocomplete="postal-code"
+                                    maxlength="5"
+                                    numeric
+                                    required
+                                    :error="form.errors.postal_code"
+                                    @update:model-value="onPostalInput"
+                                />
+
+                                <p v-if="resolving" class="flex items-center gap-2 pt-2.5 text-sm text-gray-600">
+                                    <Loader2 :size="15" :stroke-width="1.75" class="shrink-0 animate-spin" aria-hidden="true" />
+                                    Ort wird ermittelt…
+                                </p>
+                                <p
+                                    v-else-if="form.city"
+                                    class="flex items-center gap-2 pt-2.5 text-sm font-medium text-success"
+                                    style="animation: dkgz-enter 220ms cubic-bezier(0.4,0,0.2,1) both"
+                                >
+                                    <Check :size="16" :stroke-width="2" class="shrink-0" aria-hidden="true" />
+                                    {{ form.postal_code }} {{ form.city }}
+                                </p>
+                                <p v-else-if="unknown" class="pt-2.5 text-sm text-danger">
+                                    Diese Postleitzahl konnten wir nicht zuordnen. Bitte prüfen Sie Ihre Eingabe.
+                                </p>
+                            </div>
+
                             <BaseInput
                                 id="customer_name"
                                 v-model="form.customer_name"
@@ -253,14 +319,6 @@ const submit = () => {
                             {{ t('formular', 'kurzhinweis', 'Ihre Anfrage ist kostenfrei und unverbindlich. Es entstehen für Sie keine Kosten.') }}
                         </p>
                     </form>
-
-                    <p v-if="page.props.app?.phone" class="pt-6 text-center text-sm text-gray-600">
-                        {{ t('seitenleiste', 'telefon_titel', 'Lieber telefonisch?') }}
-                        <a
-                            :href="`tel:${page.props.app.phone.replace(/\s/g, '')}`"
-                            class="font-mono tabular-nums text-navy-700 underline underline-offset-2"
-                        >{{ page.props.app.phone }}</a>
-                    </p>
                 </template>
             </div>
         </div>

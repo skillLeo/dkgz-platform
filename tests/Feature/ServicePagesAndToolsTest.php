@@ -148,14 +148,22 @@ describe('the request funnel', function () {
             ->and($funnel['abgesendet']['count'])->toBe(1);
     });
 
-    it('counts the middle steps when the browser reports them', function () {
+    it('counts the contact step when the browser reports it', function () {
         $this->post('/anfrage/schritt', ['step' => 'schritt_2'])->assertOk();
-        $this->post('/anfrage/schritt', ['step' => 'schritt_3'])->assertOk();
 
         $funnel = collect(FunnelEvent::funnel(now()->subDay(), now()))->keyBy('step');
 
-        expect($funnel['schritt_2']['count'])->toBe(1)
-            ->and($funnel['schritt_3']['count'])->toBe(1);
+        expect($funnel['schritt_2']['count'])->toBe(1);
+    });
+
+    it('ignores the third step, which the form no longer has', function () {
+        // Counts recorded against it while it existed stay in the table; the
+        // form stops adding to them and the chart stops showing them.
+        $this->post('/anfrage/schritt', ['step' => 'schritt_3'])->assertOk();
+
+        expect(FunnelEvent::count())->toBe(0);
+        expect(collect(FunnelEvent::funnel(now()->subDay(), now()))->pluck('step')->all())
+            ->toBe(['begonnen', 'schritt_2', 'abgesendet']);
     });
 
     it('ignores a step it does not recognise', function () {
@@ -180,7 +188,7 @@ describe('the request funnel', function () {
         $this->actingAs($this->admin)
             ->get('/admin')
             ->assertOk()
-            ->assertInertia(fn ($page) => $page->has('funnel', 4));
+            ->assertInertia(fn ($page) => $page->has('funnel', 3));
     });
 });
 

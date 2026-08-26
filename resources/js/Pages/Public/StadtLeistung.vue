@@ -111,7 +111,7 @@ const sections = computed(() => [
                 </p>
 
                 <div class="flex flex-wrap items-center gap-4 pt-8">
-                    <BaseButton href="/anfrage" size="cta">
+                    <BaseButton :href="`/anfrage?leistung=${serviceType.slug}`" size="cta">
                         {{ t('leistung', 'cta', 'Jetzt Gutachter anfragen') }}
                     </BaseButton>
 
@@ -151,7 +151,7 @@ const sections = computed(() => [
                         </li>
                     </ol>
 
-                    <BaseButton href="/anfrage" size="cta" class="mt-8">
+                    <BaseButton :href="`/anfrage?leistung=${serviceType.slug}`" size="cta" class="mt-8">
                         {{ t('leistung', 'cta', 'Jetzt Gutachter anfragen') }}
                     </BaseButton>
                 </section>
@@ -204,7 +204,7 @@ const sections = computed(() => [
                             <span class="text-sm leading-normal text-gray-800">{{ point }}</span>
                         </li>
                     </ul>
-                    <BaseButton href="/anfrage" size="cta" block class="mt-5">
+                    <BaseButton :href="`/anfrage?leistung=${serviceType.slug}`" size="cta" block class="mt-5">
                         {{ t('leistung', 'cta', 'Jetzt Gutachter anfragen') }}
                     </BaseButton>
                 </div>
