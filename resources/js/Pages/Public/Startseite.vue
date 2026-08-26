@@ -93,28 +93,29 @@ const telHref = computed(() => `tel:${String(page.props.app?.phone ?? '').replac
                     <div class="mt-10 max-w-lg">
                         <RequestStarter
                             :service-types="serviceTypes"
-                            :cta-label="t('hero', 'cta', 'Jetzt Gutachter anfragen')"
+                            :title="t('hero', 'cta', 'Jetzt Gutachter anfragen')"
+                            :cta-label="t('hero', 'cta_button', 'Weiter')"
+                            :hint="t('hero', 'cta_hinweis')"
                             :service-label="t('hero', 'frage_leistung', 'Welche Gutachtenart benötigen Sie?')"
                             :postal-label="t('hero', 'frage_plz', 'Postleitzahl des Fahrzeugstandorts')"
                             :service-hint="t('hero', 'frage_hinweis', 'Wählen Sie die passende Leistung aus, damit wir den richtigen Sachverständigen für Sie finden.')"
                         />
 
-                        <TrustRow class="pt-5" />
-
-                        <p v-if="t('hero', 'cta_hinweis')" class="pt-3 text-sm text-gray-600">
-                            {{ t('hero', 'cta_hinweis') }}
-                        </p>
-
-                        <p v-if="page.props.app?.phone" class="pt-4 text-base text-gray-600">
-                            Oder rufen Sie an:
+                        <p v-if="page.props.app?.phone" class="flex flex-wrap items-center gap-x-2 gap-y-1 pt-5 text-base text-gray-600">
+                            <span class="grid h-7 w-7 shrink-0 place-items-center rounded-full border" style="border-color: var(--dkgz-accent)" aria-hidden="true">
+                                <Phone :size="14" :stroke-width="1.75" style="color: var(--dkgz-accent)" />
+                            </span>
+                            <span>{{ t('hero', 'telefon_titel', 'Lieber telefonisch?') }}</span>
                             <a
                                 :href="`tel:${page.props.app.phone.replace(/\s/g, '')}`"
-                                class="font-mono tabular-nums text-navy-700 underline underline-offset-2"
+                                class="font-mono font-medium tabular-nums text-navy-700 underline underline-offset-2"
                             >{{ page.props.app.phone }}</a>
                             <span v-if="page.props.app?.office_hours" class="text-gray-400">
                                 · {{ page.props.app.office_hours }}
                             </span>
                         </p>
+
+                        <TrustRow class="pt-5" />
                     </div>
 
                     <p class="pt-3 text-sm text-gray-400">{{ t('hero', 'hinweis') }}</p>

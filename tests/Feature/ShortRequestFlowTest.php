@@ -237,3 +237,33 @@ describe('copy the operator had already rewritten', function () {
         expect(requestBlock('datenschutzhinweis')->value)->toBe($already);
     });
 });
+
+describe('the box in the hero', function () {
+    it('shows its button from the start rather than growing one', function () {
+        // A box with no visible destination gives the eye nowhere to land while
+        // somebody is still deciding whether to bother.
+        $source = file_get_contents(resource_path('js/Components/Domain/RequestStarter.vue'));
+
+        expect($source)->toContain(':disabled="! ready"');
+
+        // No v-if on the button: it is inert, not absent.
+        expect($source)->not->toMatch('/<BaseButton\b[^>]*\sv-if=/s');
+    });
+
+    it('says what it is before it asks anything', function () {
+        $this->get('/')
+            ->assertOk()
+            ->assertInertia(fn ($page) => $page
+                ->where('content.hero.cta', 'Jetzt Gutachter anfragen')
+                ->where('content.hero.cta_button', 'Weiter'));
+    });
+
+    it('lets the operator rename the heading and the button separately', function () {
+        foreach (['cta', 'cta_button', 'cta_hinweis', 'telefon_titel'] as $field) {
+            expect(ContentBlock::where('page_key', 'startseite')
+                ->where('section_key', 'hero')
+                ->where('field_key', $field)
+                ->exists())->toBeTrue("startseite.hero.{$field} fehlt");
+        }
+    });
+});

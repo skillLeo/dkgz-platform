@@ -4,8 +4,13 @@ import { Link } from '@inertiajs/vue3'
 
 /**
  * Foundations §05. Height 46px (default) / 44px (cta) / 40px (compact),
- * radius 3px, 140ms hover. A button is never disabled by invalid input —
- * only by its loading state.
+ * radius 3px, 140ms hover.
+ *
+ * A button is never disabled by invalid input: somebody who has typed something
+ * wrong needs to be told what, and a dead button tells them nothing. It is
+ * disabled while it is working, and where a question above it has not been
+ * answered at all — there is nothing to say about an empty dropdown, and the
+ * button still has to be on screen so the eye knows where the page is going.
  */
 const props = defineProps({
     variant: { type: String, default: 'primary' },

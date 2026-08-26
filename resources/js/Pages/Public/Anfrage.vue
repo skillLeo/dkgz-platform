@@ -150,7 +150,8 @@ const submit = () => {
                         :initial-service="form.service_type_id"
                         :initial-postal-code="form.postal_code"
                         :action="null"
-                        :cta-label="t('formular', 'cta_schritt_1', 'Jetzt Gutachter anfragen')"
+                        :title="t('formular', 'cta_schritt_1', 'Jetzt Gutachter anfragen')"
+                        :cta-label="t('formular', 'weiter', 'Weiter')"
                         @start="onStart"
                     />
 

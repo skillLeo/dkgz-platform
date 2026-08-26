@@ -1,7 +1,7 @@
 <script setup>
 import { computed, ref, watch } from 'vue'
 import { router } from '@inertiajs/vue3'
-import { ArrowRight, Check, Loader2, ShieldCheck } from 'lucide-vue-next'
+import { ArrowRight, Check, FileText, Loader2, ShieldCheck } from 'lucide-vue-next'
 import BaseSelect from '../Base/BaseSelect.vue'
 import BaseInput from '../Base/BaseInput.vue'
 import BaseButton from '../Base/BaseButton.vue'
@@ -11,9 +11,14 @@ import BaseButton from '../Base/BaseButton.vue'
  *
  * One card, revealed a line at a time. Choosing a service explains what that
  * service is, which is where the postal code appears; a code that resolves to a
- * town shows the town back, which is where the button appears. Nothing is on
- * screen that the visitor has not yet earned the right to be asked, so the
- * opening ask is a single dropdown rather than a form.
+ * town shows the town back. Nothing is asked that the visitor has not yet
+ * earned the right to be asked, so the opening ask is a single dropdown rather
+ * than a form.
+ *
+ * The button is the exception: it is on screen from the start, inert until the
+ * questions above it are answered. Revealing it only once they were meant the
+ * box had no visible destination while somebody was deciding whether to bother
+ * — which is exactly the moment their eye needs somewhere to land.
  *
  * It sits in the homepage hero and again on /anfrage, from the same file,
  * because somebody arriving at the request page from an advert should meet the
@@ -24,7 +29,11 @@ const props = defineProps({
     /** Preselected when the visitor arrives with a service already in mind. */
     initialService: { type: [String, Number], default: '' },
     initialPostalCode: { type: String, default: '' },
-    ctaLabel: { type: String, default: 'Jetzt Gutachter anfragen' },
+    /** The card's own heading — what this box is for, before anything is asked. */
+    title: { type: String, default: 'Jetzt Gutachter anfragen' },
+    ctaLabel: { type: String, default: 'Weiter' },
+    /** The line under the button. */
+    hint: { type: String, default: '' },
     serviceLabel: { type: String, default: 'Welche Gutachtenart benötigen Sie?' },
     postalLabel: { type: String, default: 'Postleitzahl des Fahrzeugstandorts' },
     serviceHint: {
@@ -138,6 +147,18 @@ const start = () => {
 
 <template>
     <form class="rounded-card border border-gray-200 bg-white p-5 shadow-(--shadow-1) sm:p-6" novalidate @submit.prevent="start">
+        <!--
+            The box says what it is before it asks anything. Without a heading
+            it read as a stray dropdown in the middle of the page rather than
+            the thing the page is for.
+        -->
+        <div class="flex items-center gap-3 pb-5">
+            <span class="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-navy-700 text-white" aria-hidden="true">
+                <FileText :size="18" :stroke-width="1.75" />
+            </span>
+            <h2 class="text-h4 font-semibold leading-snug text-navy-700">{{ title }}</h2>
+        </div>
+
         <BaseSelect
             v-model="serviceId"
             :label="serviceLabel"
@@ -192,17 +213,24 @@ const start = () => {
             </p>
         </div>
 
+        <!--
+            Always on screen, and inert until the questions above it have been
+            answered. Appearing only once they were meant the box had no visible
+            destination while somebody was deciding — which is the moment their
+            eye needs somewhere to land.
+        -->
         <BaseButton
-            v-if="ready"
             type="submit"
             size="cta"
             block
             class="mt-6"
+            :disabled="! ready"
             :loading="starting"
-            style="animation: dkgz-enter 260ms cubic-bezier(0.4,0,0.2,1) both"
         >
             {{ ctaLabel }}
             <ArrowRight :size="18" :stroke-width="1.75" aria-hidden="true" />
         </BaseButton>
+
+        <p v-if="hint" class="pt-3 text-center text-sm text-gray-600">{{ hint }}</p>
     </form>
 </template>
