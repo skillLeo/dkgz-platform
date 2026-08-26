@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\City;
 use App\Models\Page;
+use App\Models\Post;
 use App\Models\ServiceType;
 use App\Support\Settings;
 use Illuminate\Http\Response;
@@ -25,7 +26,14 @@ class SitemapController extends Controller
             ['loc' => route('partner'), 'priority' => '0.7'],
             ['loc' => route('contact'), 'priority' => '0.6'],
             ['loc' => route('cities'), 'priority' => '0.7'],
+            ['loc' => route('guide'), 'priority' => '0.6'],
         ]);
+
+        // Articles. These exist to be found by somebody who has not yet decided
+        // they need an assessor, so listing them is most of the point.
+        Post::published()->ordered()->each(function (Post $post) use ($urls) {
+            $urls->push(['loc' => url("/ratgeber/{$post->slug}"), 'priority' => '0.5']);
+        });
 
         ServiceType::active()->ordered()->each(function (ServiceType $type) use ($urls) {
             $urls->push(['loc' => route('services.show', $type), 'priority' => '0.7']);

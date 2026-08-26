@@ -34,6 +34,13 @@ Route::middleware('maintenance')->group(function () {
     Route::get('/anfrage/bestaetigung/{reference}', [RequestController::class, 'confirmation'])
         ->name('request.confirmation');
 
+    /*
+     * The Ratgeber. Under a fixed prefix like the city pages, so an article
+     * titled "Kontakt" can never take the contact page's address.
+     */
+    Route::get('/ratgeber', [PublicController::class, 'guide'])->name('guide');
+    Route::get('/ratgeber/{post}', [PublicController::class, 'guidePost'])->name('guide.show');
+
     Route::get('/bewertung/{token}', [ReviewController::class, 'show'])->name('review.show');
     Route::post('/bewertung/{token}', [ReviewController::class, 'store'])->name('review.store');
     Route::post('/bewertung/{token}/feedback', [ReviewController::class, 'feedback'])->name('review.feedback');

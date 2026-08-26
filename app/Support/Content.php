@@ -127,6 +127,7 @@ class Content
             'cookies' => 'Cookie-Hinweis',
             'staedte' => 'Stadtseiten',
             'faq' => 'FAQ-Seite',
+            'ratgeber' => 'Ratgeber',
         ];
     }
 }

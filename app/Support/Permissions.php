@@ -74,6 +74,7 @@ class Permissions
                     'content.edit' => 'Inhalte bearbeiten',
                     'pages.manage' => 'Seiten verwalten',
                     'faqs.manage' => 'FAQ verwalten',
+                    'posts.manage' => 'Ratgeber-Beiträge verwalten',
                 ],
             ],
             'emails' => [
@@ -182,7 +183,7 @@ class Permissions
                 'label' => 'Redaktion',
                 'permissions' => [
                     'content.view', 'content.edit', 'pages.manage', 'faqs.manage',
-                    'emails.view', 'emails.edit', 'branding.edit',
+                    'posts.manage', 'emails.view', 'emails.edit', 'branding.edit',
                 ],
             ],
             'assessor' => [

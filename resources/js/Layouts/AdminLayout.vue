@@ -1,10 +1,7 @@
 <script setup>
 import { computed, ref } from 'vue'
 import { usePage } from '@inertiajs/vue3'
-import {
-    Bell, Building2, Euro, FileText, FileType, Home, Inbox, LayoutGrid, Mail, Settings,
-    MapPin, Megaphone, Send, ShieldCheck, Sliders, User, UserPlus, Users, Wrench,
-} from 'lucide-vue-next'
+import { Bell, BookOpen, Building2, Euro, FileText, FileType, Home, Inbox, LayoutGrid, Mail, MapPin, Megaphone, Send, Settings, ShieldCheck, Sliders, User, UserPlus, Users, Wrench } from 'lucide-vue-next'
 import Sidebar from '../Components/Layout/Sidebar.vue'
 import TopBar from '../Components/Layout/TopBar.vue'
 import MobileTopBar from '../Components/Layout/MobileTopBar.vue'
@@ -51,6 +48,7 @@ const sections = computed(() => [
             can('content.view') ? { href: '/admin/inhalte', label: 'Seiteninhalte', icon: FileType } : null,
             can('pages.manage') ? { href: '/admin/seiten', label: 'Rechtliche Seiten', icon: FileText } : null,
             can('faqs.manage') ? { href: '/admin/faq', label: 'FAQ', icon: Bell } : null,
+            can('posts.manage') ? { href: '/admin/ratgeber', label: 'Ratgeber', icon: BookOpen } : null,
             can('emails.view') ? { href: '/admin/email-vorlagen', label: 'E-Mail-Vorlagen', icon: Mail } : null,
         ].filter(Boolean),
     },

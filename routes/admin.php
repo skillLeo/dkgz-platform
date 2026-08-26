@@ -1,14 +1,15 @@
 <?php
 
-use App\Http\Controllers\Admin\CityController;
-use App\Http\Controllers\Admin\PartnerMailController;
 use App\Http\Controllers\Admin\AssessorController;
 use App\Http\Controllers\Admin\AssignmentController;
+use App\Http\Controllers\Admin\CityController;
 use App\Http\Controllers\Admin\CommissionController;
 use App\Http\Controllers\Admin\ContentController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\EmailTemplateController;
 use App\Http\Controllers\Admin\InvitationController;
+use App\Http\Controllers\Admin\PartnerMailController;
+use App\Http\Controllers\Admin\PostController;
 use App\Http\Controllers\Admin\ProfileController as AdminProfileController;
 use App\Http\Controllers\Admin\RequestController;
 use App\Http\Controllers\Admin\ServiceTypeController;
@@ -157,6 +158,17 @@ Route::prefix('admin')
             Route::get('/seiten', [ContentController::class, 'pages'])->name('pages');
             Route::get('/seiten/{page}', [ContentController::class, 'editPage'])->name('pages.edit');
             Route::post('/seiten/{page}', [ContentController::class, 'updatePage'])->name('pages.update');
+        });
+
+        // Bound by id, not by the slug the model prefers: the public address
+        // follows the title, and renaming a draft must not take the form's own
+        // URL with it mid-edit.
+        Route::middleware('can:posts.manage')->group(function () {
+            Route::get('/ratgeber', [PostController::class, 'index'])->name('posts');
+            Route::post('/ratgeber', [PostController::class, 'store'])->name('posts.store');
+            Route::post('/ratgeber/{post:id}', [PostController::class, 'update'])->name('posts.update');
+            Route::delete('/ratgeber/{post:id}/bild', [PostController::class, 'destroyCover'])->name('posts.cover.destroy');
+            Route::delete('/ratgeber/{post:id}', [PostController::class, 'destroy'])->name('posts.destroy');
         });
 
         Route::middleware('can:faqs.manage')->group(function () {

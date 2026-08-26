@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Faq;
+use App\Models\Post;
 use App\Models\PostalCode;
 use App\Models\ServiceType;
 use App\Support\Content;
@@ -99,6 +100,67 @@ class PublicController extends Controller
      * 200 with a null city so the field simply does not auto-fill, rather than
      * a 404 the form might treat as a rejection.
      */
+    /**
+     * The Ratgeber index.
+     *
+     * Everything else on this site answers somebody who has already decided
+     * they need an assessor. These articles are for the person a week earlier,
+     * and the listing is arranged for skimming rather than reading — a title, a
+     * date, how long it takes and the first two lines.
+     */
+    public function guide(): Response
+    {
+        $posts = Post::published()->ordered()->get();
+
+        return Inertia::render('Public/Ratgeber', [
+            'content' => Content::page('ratgeber'),
+            'posts' => $posts->map(fn (Post $post) => $this->postCard($post))->values(),
+            // Only the ones something is actually filed under, so the filter
+            // never offers a heading that returns nothing.
+            'categories' => $posts->pluck('category')->filter()->unique()->sort()->values(),
+        ]);
+    }
+
+    /** One article. */
+    public function guidePost(Post $post): Response
+    {
+        abort_unless($post->is_published && ! $post->date()?->isFuture(), 404);
+
+        return Inertia::render('Public/RatgeberBeitrag', [
+            'content' => Content::page('ratgeber'),
+            'post' => $this->postCard($post) + [
+                'body' => $post->body,
+                'cover_alt' => $post->cover_alt,
+                'meta_title' => $post->meta_title,
+                'meta_description' => $post->meta_description,
+                'published_iso' => $post->date()?->toIso8601String(),
+            ],
+            // Something to read next, so an article is not a dead end.
+            'more' => Post::published()->ordered()
+                ->whereKeyNot($post->getKey())
+                ->limit(3)
+                ->get()
+                ->map(fn (Post $other) => $this->postCard($other))
+                ->values(),
+        ]);
+    }
+
+    /** @return array<string, mixed> */
+    private function postCard(Post $post): array
+    {
+        return [
+            'slug' => $post->slug,
+            'title' => $post->title,
+            'category' => $post->category,
+            'excerpt' => $post->summary(),
+            'author' => $post->author,
+            'cover_url' => $post->cover_path ? Storage::disk('public')->url($post->cover_path) : null,
+            'published_at' => $post->date()?->translatedFormat('j. F Y'),
+            'reading_minutes' => $post->readingMinutes(),
+            'url' => "/ratgeber/{$post->slug}",
+        ];
+    }
+
     public function resolvePostalCode(string $code): JsonResponse
     {
         return response()->json([
