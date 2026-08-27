@@ -208,6 +208,20 @@ const doUnsuspend = async () => {
                         <ul class="flex flex-wrap gap-2 pt-2">
                             <li v-for="type in assessor.service_types" :key="type" class="rounded-sm border border-gray-200 px-2.5 py-1 text-sm text-gray-800">{{ type }}</li>
                             <li v-if="!assessor.service_types.length" class="py-1 text-sm text-gray-400">Noch keine Leistung hinterlegt.</li>
+
+                            <!--
+                                Signed up for, but the platform no longer offers
+                                it. Shown apart rather than mixed in, so nobody
+                                reads a retired service as one this partner is
+                                being sent work for — and kept visible, because
+                                turning the service back on restores it.
+                            -->
+                            <li
+                                v-for="type in assessor.retired_service_types"
+                                :key="`retired-${type}`"
+                                class="rounded-sm border border-dashed border-gray-300 px-2.5 py-1 text-sm text-gray-400"
+                                title="Diese Leistung ist deaktiviert und wird nicht vermittelt."
+                            >{{ type }} · deaktiviert</li>
                         </ul>
                     </div>
                 </section>

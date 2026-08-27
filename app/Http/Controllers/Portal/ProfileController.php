@@ -14,8 +14,8 @@ use App\Rules\Iban;
 use App\Support\Settings;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -117,7 +117,10 @@ class ProfileController extends Controller
                     'description_de' => $type->description_de,
                     'demand' => (int) ($demand[$type->id] ?? 0),
                 ]),
-            'selected' => $assessor->serviceTypes()->pluck('service_types.id'),
+            // Only what the form can actually show. A retired service left in
+            // here is an id with no checkbox: the partner can neither see it
+            // nor untick it, and it rides along on every save.
+            'selected' => $assessor->activeServiceTypes()->pluck('service_types.id'),
             'demandWindowDays' => $windowDays,
         ]);
     }
@@ -126,13 +129,23 @@ class ProfileController extends Controller
     {
         $data = $request->validate([
             'service_type_ids' => ['required', 'array', 'min:1'],
-            'service_type_ids.*' => ['integer', Rule::exists('service_types', 'id')],
+            'service_type_ids.*' => ['integer', Rule::exists('service_types', 'id')->where('is_active', true)],
         ], [
             'service_type_ids.required' => 'Bitte wählen Sie mindestens eine Leistung aus.',
             'service_type_ids.min' => 'Bitte wählen Sie mindestens eine Leistung aus.',
         ], ['service_type_ids' => 'die Leistungen']);
 
-        $request->user()->assessor->serviceTypes()->sync($data['service_type_ids']);
+        $assessor = $request->user()->assessor;
+
+        // Saving from a form that cannot see the retired services must not be
+        // read as the partner giving them up, so they are carried through.
+        $retired = $assessor->serviceTypes()
+            ->where('service_types.is_active', false)
+            ->pluck('service_types.id');
+
+        $assessor->serviceTypes()->sync(
+            $retired->merge($data['service_type_ids'])->unique()->all()
+        );
 
         return back()->with('success', 'Ihre Leistungen wurden gespeichert.');
     }

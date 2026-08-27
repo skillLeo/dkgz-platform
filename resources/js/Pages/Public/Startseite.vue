@@ -66,6 +66,18 @@ const trustPoints = computed(() => [1, 2, 3].map((n) => ({
  * asking for a rebuild. Clamped, because a hero at 300% would push everything
  * beside it off the screen, and anything unreadable falls back to full size.
  */
+/**
+ * The headline, as however many lines the operator actually wrote.
+ *
+ * The three lines used to be joined with two fixed line breaks, so a headline
+ * of one line was followed by two empty ones — a block of white space under the
+ * heading that nobody could get rid of without emptying the field they wanted
+ * to keep.
+ */
+const headline = computed(() => [1, 2, 3]
+    .map((n) => t('hero', `zeile_${n}`))
+    .filter((line) => String(line).trim() !== ''))
+
 const HERO_WIDTH = 400
 const HERO_HEIGHT = 480
 
@@ -86,7 +98,7 @@ const telHref = computed(() => `tel:${String(page.props.app?.phone ?? '').replac
 </script>
 
 <template>
-    <Head :title="`${t('hero', 'zeile_1', 'Kfz-Gutachter finden.')} ${t('hero', 'zeile_2', '')}`.trim()" />
+    <Head :title="headline.join(' ') || 'Kfz-Gutachter finden'" />
 
     <PublicLayout>
         <!-- Hero. The one 420ms entrance in the product. -->
@@ -99,7 +111,7 @@ const telHref = computed(() => `tel:${String(page.props.app?.phone ?? '').replac
                     <div class="rule-accent mt-2.5" aria-hidden="true" />
 
                     <h1 class="text-h1 font-bold text-navy-700 pt-7 pb-4 lg:text-display">
-                        {{ t('hero', 'zeile_1') }}<br>{{ t('hero', 'zeile_2') }}<br>{{ t('hero', 'zeile_3') }}
+                        <template v-for="(line, index) in headline" :key="index"><br v-if="index">{{ line }}</template>
                     </h1>
 
                     <p class="measure-lead text-lead leading-relaxed text-gray-600">{{ t('hero', 'text') }}</p>

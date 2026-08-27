@@ -57,7 +57,7 @@ class RequestController extends Controller
                 (new ServiceRequestResource($match->serviceRequest))->toArray($request),
                 ['notified_at' => $match->notified_at, 'match_id' => $match->id],
             )),
-            'serviceTypes' => ServiceType::orderBy('sort_order')->get(['id', 'name_de']),
+            'serviceTypes' => ServiceType::active()->orderBy('sort_order')->get(['id', 'name_de']),
             'areaLabel' => $assessor->serviceAreaLabel(),
             'filters' => [
                 'suche' => $filters['suche'] ?? '',

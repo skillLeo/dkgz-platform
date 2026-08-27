@@ -122,7 +122,11 @@ class AssessorController extends Controller
                     'id' => $a->id,
                     'range' => $a->range(),
                 ]),
-                'service_types' => $assessor->serviceTypes->pluck('name_de'),
+                'service_types' => $assessor->serviceTypes->where('is_active', true)->pluck('name_de')->values(),
+                // Signed up for, but the platform no longer offers it. Shown
+                // apart rather than mixed in, so nobody reads a retired service
+                // as one this partner is being sent work for.
+                'retired_service_types' => $assessor->serviceTypes->where('is_active', false)->pluck('name_de')->values(),
             ],
             'can' => [
                 'approve' => $request->user()->can('approve', $assessor),

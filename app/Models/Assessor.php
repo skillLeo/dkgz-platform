@@ -142,9 +142,23 @@ class Assessor extends Model
         return $this->hasMany(AssessorServiceArea::class);
     }
 
+    /**
+     * Everything this assessor has ever signed up for, retired services and all.
+     *
+     * Switching a service off is not deleting it, so the rows stay: an operator
+     * who turns one back on should find their partners still signed up for it
+     * rather than having to ask 130 people to tick it again. Almost nothing
+     * should read this directly — see activeServiceTypes.
+     */
     public function serviceTypes(): BelongsToMany
     {
         return $this->belongsToMany(ServiceType::class);
+    }
+
+    /** The ones the platform still offers, which is what anybody should see. */
+    public function activeServiceTypes(): BelongsToMany
+    {
+        return $this->serviceTypes()->where('service_types.is_active', true);
     }
 
     public function requestMatches(): HasMany
@@ -316,11 +330,18 @@ class Assessor extends Model
         });
     }
 
+    /**
+     * Assessors who offer this service — and only while the platform does.
+     *
+     * A service switched off is retired, and matching a request to it would
+     * send partners work under a name the site no longer shows anywhere.
+     */
     public function scopeOffering(Builder $query, int $serviceTypeId): Builder
     {
         return $query->whereHas(
             'serviceTypes',
             fn (Builder $q) => $q->where('service_types.id', $serviceTypeId)
+                ->where('service_types.is_active', true)
         );
     }
 }

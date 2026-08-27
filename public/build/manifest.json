@@ -1328,7 +1328,7 @@
     ]
   },
   "resources/js/Pages/Admin/Sachverstaendiger.vue": {
-    "file": "assets/Sachverstaendiger-TXYCkenI.js",
+    "file": "assets/Sachverstaendiger-WtL697Pr.js",
     "name": "Sachverstaendiger",
     "src": "resources/js/Pages/Admin/Sachverstaendiger.vue",
     "isDynamicEntry": true,
@@ -2039,7 +2039,7 @@
     ]
   },
   "resources/js/Pages/Public/Startseite.vue": {
-    "file": "assets/Startseite-BGJuXWcN.js",
+    "file": "assets/Startseite-DJheZl3Z.js",
     "name": "Startseite",
     "src": "resources/js/Pages/Public/Startseite.vue",
     "isDynamicEntry": true,
@@ -2070,7 +2070,7 @@
     ]
   },
   "resources/js/app.js": {
-    "file": "assets/app-Bx9o1lrP.js",
+    "file": "assets/app-D9CeLsi2.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true,
