@@ -1,5 +1,5 @@
 <script setup>
-import { Head, Link } from '@inertiajs/vue3'
+import { Head, Link, router } from '@inertiajs/vue3'
 import AdminLayout from '../../Layouts/AdminLayout.vue'
 import StatCard from '../../Components/Data/StatCard.vue'
 import WeeklyBars from '../../Components/Data/WeeklyBars.vue'
@@ -10,12 +10,29 @@ const props = defineProps({
     attentionCount: { type: Number, default: 0 },
     weekly: { type: Array, default: () => [] },
     funnel: { type: Array, default: () => [] },
+    funnelPeriod: { type: String, default: '30tage' },
+    funnelPeriods: { type: Object, default: () => ({}) },
 })
 
 /**
  * Six figures at a higher density than the portal, per DKGZ Mobil: 2 x 3 on a
  * phone with hairline seams, spreading to six across on a wide screen.
  */
+/**
+ * Redraw the funnel over a different period.
+ *
+ * Only the funnel is fetched again: reloading the whole dashboard to change one
+ * chart would recount every open request, every assignment and every commission
+ * for nothing. The period is in the address, so a particular view can be shared
+ * or reloaded and comes back the same.
+ */
+const showPeriod = (key) => router.get('/admin', { zeitraum: key }, {
+    only: ['funnel', 'funnelPeriod'],
+    preserveState: true,
+    preserveScroll: true,
+    replace: true,
+})
+
 const cards = [
     { label: 'Offene Anfragen', value: () => props.stats.open_requests, href: '/admin/anfragen' },
     { label: 'Heute vermittelt', value: () => props.stats.matched_today, href: '/admin/anfragen' },
@@ -60,7 +77,28 @@ const cards = [
                 the cookie banner — which is the group most analytics can see.
             -->
             <section v-if="funnel.length" class="border border-gray-200 bg-white p-5">
-                <h2 class="text-eyebrow font-semibold uppercase text-gray-600">Anfrageformular · letzte 30 Tage</h2>
+                <div class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-3">
+                    <h2 class="text-eyebrow font-semibold uppercase text-gray-600">Anfrageformular</h2>
+
+                    <!--
+                        Only the funnel is fetched again. Reloading the whole
+                        dashboard to change one chart's period would recount
+                        every open request and every commission for nothing.
+                    -->
+                    <div class="flex flex-wrap gap-1">
+                        <button
+                            v-for="(label, key) in funnelPeriods"
+                            :key="key"
+                            type="button"
+                            class="rounded-sm px-2.5 py-1 text-xs transition-colors duration-(--duration-hover) ease-(--ease-dkgz)"
+                            :class="key === funnelPeriod
+                                ? 'bg-navy-700 text-white'
+                                : 'text-gray-600 hover:bg-gray-100'"
+                            :aria-pressed="key === funnelPeriod"
+                            @click="showPeriod(key)"
+                        >{{ label }}</button>
+                    </div>
+                </div>
 
                 <ul class="flex flex-col gap-4 pt-5">
                     <li v-for="row in funnel" :key="row.step">

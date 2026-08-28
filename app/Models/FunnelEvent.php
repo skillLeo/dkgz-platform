@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -34,11 +35,57 @@ class FunnelEvent extends Model
     /** Steps the form no longer has, kept so old rows are still recognised. */
     public const RETIRED_STEPS = ['schritt_3'];
 
+    /**
+     * The periods the dashboard offers, and how far back each one reaches.
+     *
+     * Yesterday is a closed day rather than "one day back": a funnel for a day
+     * still in progress and a funnel for a finished one answer different
+     * questions, and mixing them is how a quiet morning reads as a collapse.
+     */
+    public const PERIODS = [
+        'heute' => 'Heute',
+        'gestern' => 'Gestern',
+        '7tage' => 'Letzte 7 Tage',
+        '30tage' => 'Letzte 30 Tage',
+    ];
+
+    /**
+     * The first and last day of a named period.
+     *
+     * @return array{0: Carbon, 1: Carbon}
+     */
+    public static function period(string $key): array
+    {
+        return match ($key) {
+            'heute' => [today(), today()],
+            'gestern' => [today()->subDay(), today()->subDay()],
+            '7tage' => [today()->subDays(6), today()],
+            default => [today()->subDays(29), today()],
+        };
+    }
+
     protected $fillable = ['step', 'day', 'count'];
 
     protected function casts(): array
     {
         return ['day' => 'date', 'count' => 'integer'];
+    }
+
+    /**
+     * The day, written the way the column holds it.
+     *
+     * A plain date cast writes "2026-08-28 00:00:00" through the model while
+     * record() writes "2026-08-28" — two formats in one column. On SQLite the
+     * funnel compared strings, so a row with a time component sorted past the
+     * last day of any range that contained it and simply never appeared. The
+     * cast alone does not fix this: it governs how the value is read back and
+     * serialised, not how it is stored.
+     */
+    protected function day(): Attribute
+    {
+        return Attribute::make(
+            set: fn ($value) => $value === null ? null : Carbon::parse($value)->toDateString(),
+        );
     }
 
     /** Adds one to today's tally for this step. */
@@ -68,7 +115,11 @@ class FunnelEvent extends Model
      */
     public static function funnel(Carbon $from, Carbon $to): array
     {
-        $totals = static::whereBetween('day', [$from->toDateString(), $to->toDateString()])
+        // Compared as dates rather than as strings: a row holding a time
+        // component sorts after the last day of the range and vanishes from
+        // it, which is how a busy day could read as an empty one.
+        $totals = static::whereDate('day', '>=', $from->toDateString())
+            ->whereDate('day', '<=', $to->toDateString())
             ->groupBy('step')
             ->selectRaw('step, SUM(count) AS total')
             ->pluck('total', 'step');

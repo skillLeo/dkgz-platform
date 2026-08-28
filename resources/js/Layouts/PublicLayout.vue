@@ -46,6 +46,7 @@ const menuOpen = ref(false)
 const scrolled = ref(false)
 
 const app = computed(() => page.props.app ?? {})
+const footerServices = computed(() => page.props.footerServices ?? [])
 const content = computed(() => page.props.content ?? {})
 const t = (section, field, fallback = '') => content.value?.[section]?.[field] ?? fallback
 
@@ -223,9 +224,16 @@ onUnmounted(() => window.removeEventListener('scroll', onScroll))
 
                     <div>
                         <p class="pb-4 text-eyebrow font-semibold uppercase text-white/45">Leistungen</p>
+                        <!--
+                            The real services, each linking to its own page. The
+                            four names that used to sit here were typed into the
+                            template and all pointed at the index, so renaming a
+                            service left the footer advertising one that no
+                            longer existed.
+                        -->
                         <ul class="flex flex-col gap-2.5">
-                            <li v-for="item in ['Unfallgutachten', 'Haftpflichtgutachten', 'Wertgutachten', 'Oldtimergutachten']" :key="item">
-                                <Link href="/leistungen" class="text-sm text-white/72 transition-colors duration-(--duration-hover) ease-(--ease-dkgz) hover:text-white">{{ item }}</Link>
+                            <li v-for="service in footerServices" :key="service.url">
+                                <Link :href="service.url" class="text-sm text-white/72 transition-colors duration-(--duration-hover) ease-(--ease-dkgz) hover:text-white">{{ service.name }}</Link>
                             </li>
                             <li><Link href="/leistungen" class="text-sm text-white/72 hover:text-white">Alle Leistungen</Link></li>
                         </ul>

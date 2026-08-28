@@ -24,11 +24,18 @@ class DashboardController extends Controller
 
         $attention = AttentionQueue::items();
 
+        // Anything the dashboard does not know is the last thirty days, which
+        // is what it showed before there was a choice.
+        $period = $request->string('zeitraum')->toString();
+        $period = array_key_exists($period, FunnelEvent::PERIODS) ? $period : '30tage';
+
         return Inertia::render('Admin/Dashboard', [
-            // How far people get through the request form over the last thirty
-            // days. Anonymous counters, so this counts everybody rather than
-            // only visitors who accepted the cookie banner.
-            'funnel' => FunnelEvent::funnel(now()->subDays(29), now()),
+            // How far people get through the request form. Anonymous counters,
+            // so this counts everybody rather than only visitors who accepted
+            // the cookie banner.
+            'funnel' => FunnelEvent::funnel(...FunnelEvent::period($period)),
+            'funnelPeriod' => $period,
+            'funnelPeriods' => FunnelEvent::PERIODS,
             'stats' => [
                 'open_requests' => ServiceRequest::whereIn('status', [
                     ServiceRequest::STATUS_NEW, ServiceRequest::STATUS_MATCHED,

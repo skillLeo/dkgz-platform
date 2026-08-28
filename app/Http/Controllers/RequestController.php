@@ -20,10 +20,21 @@ class RequestController extends Controller
     {
         FunnelEvent::record('begonnen');
 
+        $selected = $this->selectionFrom($request);
+
+        // Somebody arriving from a service page has already answered the first
+        // question by being there — they open on the second step, so the
+        // browser never reports reaching it. Counted here instead, or the
+        // funnel shows every one of them dropping out at step one, which is
+        // most of the traffic now that every service page links this way.
+        if ($selected !== []) {
+            FunnelEvent::record('schritt_2');
+        }
+
         return Inertia::render('Public/Anfrage', [
             'content' => Content::page('anfrage'),
             'serviceTypes' => ServiceType::active()->ordered()->get(['id', 'slug', 'name_de', 'description_de']),
-            'selected' => $this->selectionFrom($request),
+            'selected' => $selected,
         ]);
     }
 

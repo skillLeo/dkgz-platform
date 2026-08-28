@@ -2,10 +2,11 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\ServiceRequest;
+use App\Models\ServiceType;
 use App\Support\Branding;
 use App\Support\Content;
 use App\Support\Permissions;
-use App\Models\ServiceRequest;
 use App\Support\Settings;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
@@ -118,6 +119,24 @@ class HandleInertiaRequests extends Middleware
                 'office_hours' => Settings::get('contact.office_hours'),
                 'support_email' => Settings::get('contact.support_email'),
             ],
+
+            /*
+             * The services, for the footer on every page.
+             *
+             * It used to hold four names typed into the template, each linking
+             * to the services index rather than to itself — so after the
+             * operator renamed things the footer advertised two services that
+             * no longer existed and none of the ones that did. Lazily
+             * evaluated, so a partial reload does not pay for a query nothing
+             * on the page is going to read.
+             */
+            'footerServices' => fn () => ServiceType::active()->ordered()
+                ->take(6)
+                ->get(['name_de', 'slug'])
+                ->map(fn (ServiceType $type) => [
+                    'name' => $type->name_de,
+                    'url' => "/leistungen/{$type->slug}",
+                ]),
 
             'ziggy' => fn () => [
                 'location' => $request->url(),
