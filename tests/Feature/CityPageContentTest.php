@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\City;
+use App\Models\ContentBlock;
 use App\Models\ServiceType;
 use App\Models\User;
 use Database\Seeders\ContentBlockSeeder;
@@ -27,15 +28,24 @@ beforeEach(function () {
 });
 
 describe('the shared sections', function () {
-    it('carries an introduction, steps, notes and questions for every city', function () {
+    it('carries the steps and the questions for every city', function () {
         $this->get('/kfz-gutachter/koeln')
             ->assertOk()
             ->assertInertia(fn ($page) => $page
-                ->has('content.stadt.einleitung_text')
                 ->has('content.stadt.schritt_1')
                 ->has('content.stadt.schritt_3')
-                ->has('content.stadt.hinweis_1_titel')
                 ->has('content.stadt.faq_1_frage'));
+    });
+
+    it('no longer offers wording for the introduction it dropped', function () {
+        // Left in the table it would sit in the admin panel offering fields
+        // that appear nowhere on the page.
+        $gone = ContentBlock::where('page_key', 'staedte')
+            ->where('section_key', 'stadt')
+            ->whereIn('field_key', ['einleitung_text', 'hinweis_1_titel', 'hinweise_ueberschrift'])
+            ->count();
+
+        expect($gone)->toBe(0);
     });
 
     it('hands the page both the placeholder and the name to fill it with', function () {
