@@ -102,6 +102,10 @@ class CityController extends Controller
             'postal_code' => $city->postal_code,
             'headline' => $city->headline,
             'intro' => $city->intro,
+            // The local passage and the local questions, where somebody has
+            // written them. The shared sections carry the page otherwise.
+            'body' => $city->body,
+            'faqs' => $city->faqs ?? [],
             'meta_title' => $city->meta_title,
             'meta_description' => $city->meta_description,
             'url' => "/kfz-gutachter/{$city->slug}",

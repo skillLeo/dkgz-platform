@@ -39,6 +39,8 @@ const blank = () => ({
     postal_code: '',
     headline: '',
     intro: '',
+    body: '',
+    faqs: [],
     meta_title: '',
     meta_description: '',
     is_active: false,
@@ -51,6 +53,7 @@ const labels = {
     name: 'Name',
     postal_code: 'Postleitzahl',
     meta_description: 'Meta-Beschreibung',
+    body: 'Ortstext',
 }
 
 const totalPages = computed(() => props.cities.reduce((sum, city) => sum + city.page_count, 0))
@@ -74,6 +77,8 @@ const startEdit = (city) => {
         postal_code: city.postal_code ?? '',
         headline: city.headline ?? '',
         intro: city.intro ?? '',
+        body: city.body ?? '',
+        faqs: (city.faqs ?? []).map((entry) => ({ ...entry })),
         meta_title: city.meta_title ?? '',
         meta_description: city.meta_description ?? '',
         is_active: city.is_active,
@@ -171,6 +176,39 @@ const remove = async (city) => {
                     :error="form.errors.intro"
                     optional
                 />
+
+                <!--
+                    The part that cannot be templated, which is the part that
+                    earns the ranking. Every city page carries the same three
+                    steps, notes and questions underneath; this is where
+                    something true about this particular place goes.
+                -->
+                <BaseTextarea
+                    v-model="form.body"
+                    label="Ortstext"
+                    :rows="10"
+                    hint="Der ausführliche Text zu dieser Stadt. HTML ist erlaubt: <p> für Absätze, <h3> für Zwischenüberschriften, <ul><li> für Listen. Leer lassen, um den allgemeinen Text zu verwenden."
+                    :error="form.errors.body"
+                    optional
+                />
+
+                <!--
+                    Questions about this city specifically. They are shown
+                    before the three every city page carries, not instead of
+                    them: a page with no answers ranks like a page with nothing.
+                -->
+                <div>
+                    <div class="flex items-baseline justify-between gap-4 pb-2">
+                        <p class="text-sm font-medium text-gray-800">Eigene Fragen <span class="font-normal text-gray-400">optional</span></p>
+                        <button type="button" class="text-sm text-navy-700 underline underline-offset-2" @click="form.faqs.push({ frage: '', antwort: '' })">Frage hinzufügen</button>
+                    </div>
+
+                    <div v-for="(entry, index) in form.faqs" :key="index" class="flex flex-col gap-2 border-t border-gray-200 py-3">
+                        <BaseInput v-model="entry.frage" label="Frage" :error="form.errors[`faqs.${index}.frage`]" />
+                        <BaseTextarea v-model="entry.antwort" label="Antwort" :rows="3" :error="form.errors[`faqs.${index}.antwort`]" />
+                        <button type="button" class="self-start text-sm text-gray-600 hover:text-danger" @click="form.faqs.splice(index, 1)">Entfernen</button>
+                    </div>
+                </div>
 
                 <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
                     <BaseInput v-model="form.meta_title" label="Meta-Titel" hint="Leer lassen für den automatischen Titel." :error="form.errors.meta_title" optional />

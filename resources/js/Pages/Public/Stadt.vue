@@ -1,7 +1,7 @@
 <script setup>
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { Head, Link } from '@inertiajs/vue3'
-import { MapPin } from 'lucide-vue-next'
+import { Check, ChevronDown, MapPin } from 'lucide-vue-next'
 import PublicLayout from '../../Layouts/PublicLayout.vue'
 import SectionLabel from '../../Components/Layout/SectionLabel.vue'
 import { fill } from '../../Support/placeholders.js'
@@ -29,6 +29,32 @@ const t = (section, field, fallback = '') => fill(
 
 const title = computed(() => props.city.meta_title
     || t('stadt', 'meta_titel', 'Kfz-Gutachter {stadt} — Sachverständigen finden | DKGZ'))
+
+/** The steps, in order, skipping any the operator has emptied. */
+const steps = computed(() => [1, 2, 3]
+    .map((number) => ({ number, text: t('stadt', `schritt_${number}`) }))
+    .filter((step) => step.text))
+
+/** Three things worth knowing before commissioning a report. */
+const notes = computed(() => [1, 2, 3]
+    .map((n) => ({ title: t('stadt', `hinweis_${n}_titel`), text: t('stadt', `hinweis_${n}_text`) }))
+    .filter((note) => note.title || note.text))
+
+/**
+ * The questions, city-specific ones first.
+ *
+ * A city with something of its own to answer says it before the three every
+ * city page carries — and the shared three are still worth having, because a
+ * page with no answers on it ranks like a page with nothing on it.
+ */
+const questions = computed(() => [
+    ...(props.city.faqs ?? []).filter((entry) => entry?.frage && entry?.antwort),
+    ...[1, 2, 3]
+        .map((n) => ({ frage: t('stadt', `faq_${n}_frage`), antwort: t('stadt', `faq_${n}_antwort`) }))
+        .filter((entry) => entry.frage && entry.antwort),
+])
+
+const openFaq = ref(null)
 
 const description = computed(() => props.city.meta_description
     || t('stadt', 'meta_text', 'Kfz-Gutachter in {stadt} gesucht? DKGZ vermittelt Ihnen einen geprüften '
@@ -74,6 +100,52 @@ const description = computed(() => props.city.meta_description
             </div>
         </section>
 
+        <!--
+            The part that earns the ranking. "Kfz-Gutachter Köln" is one of the
+            most valuable searches DKGZ can win, and the page answering it was a
+            heading and a list of services — thin enough that a search engine
+            has no reason to prefer it to anybody else's.
+        -->
+        <section class="mx-auto w-full max-w-(--container-shell) px-4 pt-16 md:px-6">
+            <div class="grid grid-cols-1 gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,340px)] lg:items-start">
+                <div class="min-w-0">
+                    <h2 class="text-h3 font-semibold text-navy-700">
+                        {{ t('stadt', 'einleitung_ueberschrift', 'Kfz-Gutachten in {stadt} — worauf es ankommt') }}
+                    </h2>
+
+                    <!--
+                        The city's own passage where somebody has written one,
+                        and the shared text where nobody has. Fifteen cities
+                        with nothing written are still better served by the
+                        shared copy than by an empty section.
+                    -->
+                    <div
+                        v-if="city.body"
+                        class="stadttext measure pt-4"
+                        v-html="city.body"
+                    />
+                    <p v-else class="measure whitespace-pre-line pt-4 text-base leading-relaxed text-gray-800">
+                        {{ t('stadt', 'einleitung_text') }}
+                    </p>
+                </div>
+
+                <div v-if="notes.length" class="rounded-card border border-gray-200 bg-white p-6">
+                    <h3 class="text-eyebrow font-semibold uppercase text-gray-600">
+                        {{ t('stadt', 'hinweise_ueberschrift', 'Gut zu wissen') }}
+                    </h3>
+                    <ul class="flex flex-col gap-5 pt-4">
+                        <li v-for="note in notes" :key="note.title" class="flex gap-2.5">
+                            <Check :size="16" :stroke-width="1.75" class="mt-0.5 shrink-0" style="color: var(--dkgz-accent)" aria-hidden="true" />
+                            <span class="min-w-0">
+                                <span class="block text-sm font-semibold text-navy-700">{{ note.title }}</span>
+                                <span class="block pt-1 text-sm leading-normal text-gray-600">{{ note.text }}</span>
+                            </span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
         <div class="mx-auto w-full max-w-(--container-shell) px-4 py-16 md:px-6">
             <h2 class="text-h2 font-semibold text-navy-700">
                 {{ t('stadt', 'leistungen_ueberschrift', 'Gutachten in {stadt}') }}
@@ -95,5 +167,79 @@ const description = computed(() => props.city.meta_description
                 </Link>
             </div>
         </div>
+
+        <section v-if="steps.length" class="border-t border-gray-200 bg-gray-50">
+            <div class="mx-auto w-full max-w-(--container-shell) px-4 py-16 md:px-6">
+                <h2 class="text-h2 font-semibold text-navy-700">
+                    {{ t('stadt', 'ablauf_ueberschrift', 'So kommen Sie in {stadt} zu Ihrem Gutachten') }}
+                </h2>
+
+                <!-- Numbered, because they happen in an order. -->
+                <ol class="grid grid-cols-1 gap-8 pt-10 md:grid-cols-3">
+                    <li v-for="step in steps" :key="step.number" class="border-t border-gray-200 pt-4">
+                        <span class="grid h-8 w-8 -translate-y-8 place-items-center rounded-full bg-navy-700 font-mono text-sm font-semibold text-white">
+                            {{ String(step.number).padStart(2, '0') }}
+                        </span>
+                        <p class="-mt-4 text-base leading-normal text-gray-800">{{ step.text }}</p>
+                    </li>
+                </ol>
+
+                <BaseButton href="/anfrage" size="cta" class="mt-10">
+                    {{ t('stadt', 'cta', 'Jetzt Gutachter anfragen') }}
+                </BaseButton>
+            </div>
+        </section>
+
+        <section v-if="questions.length" class="mx-auto w-full max-w-(--container-shell) px-4 py-16 md:px-6">
+            <h2 class="text-h2 font-semibold text-navy-700">
+                {{ t('stadt', 'faq_ueberschrift', 'Häufige Fragen zum Kfz-Gutachten in {stadt}') }}
+            </h2>
+
+            <dl class="measure border-t border-gray-200 pt-2 mt-6">
+                <div v-for="(entry, index) in questions" :key="index" class="border-b border-gray-200">
+                    <dt>
+                        <button
+                            type="button"
+                            class="flex w-full items-start justify-between gap-4 py-5 text-left"
+                            :aria-expanded="openFaq === index"
+                            @click="openFaq = openFaq === index ? null : index"
+                        >
+                            <span class="text-base font-medium text-navy-700">{{ entry.frage }}</span>
+                            <ChevronDown
+                                :size="18"
+                                :stroke-width="1.5"
+                                class="mt-0.5 shrink-0 text-gray-600 transition-transform duration-(--duration-disclosure) ease-(--ease-dkgz)"
+                                :class="openFaq === index ? 'rotate-180' : ''"
+                                aria-hidden="true"
+                            />
+                        </button>
+                    </dt>
+                    <dd v-if="openFaq === index" class="whitespace-pre-line pb-5 text-base leading-normal text-gray-600">
+                        {{ entry.antwort }}
+                    </dd>
+                </div>
+            </dl>
+        </section>
     </PublicLayout>
 </template>
+
+<style scoped>
+/* The operator's own passage about this city, set like the article body. */
+.stadttext :deep(p) {
+    font-size: var(--text-base);
+    line-height: 1.75;
+    color: var(--color-gray-800);
+    padding-bottom: 1rem;
+}
+
+.stadttext :deep(h3) {
+    font-size: var(--text-lead);
+    font-weight: 600;
+    color: var(--color-navy-700);
+    padding: 1rem 0 0.5rem;
+}
+
+.stadttext :deep(ul) { list-style: disc; padding: 0 0 1rem 1.5rem; }
+.stadttext :deep(li) { font-size: var(--text-base); line-height: 1.75; color: var(--color-gray-800); padding-bottom: 0.375rem; }
+.stadttext :deep(a) { color: var(--color-navy-700); border-bottom: 1px solid var(--color-gray-300); }
+</style>

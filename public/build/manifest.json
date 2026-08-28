@@ -831,7 +831,7 @@
     "src": "node_modules/@fontsource/ibm-plex-sans/files/ibm-plex-sans-vietnamese-700-normal.woff2"
   },
   "resources/css/app.css": {
-    "file": "assets/app-G1dXP99C.css",
+    "file": "assets/app-DfF9qy1C.css",
     "name": "app",
     "names": [
       "app.css"
@@ -1379,7 +1379,7 @@
     ]
   },
   "resources/js/Pages/Admin/Staedte.vue": {
-    "file": "assets/Staedte-CmXGuihe.js",
+    "file": "assets/Staedte-Duzvv7nz.js",
     "name": "Staedte",
     "src": "resources/js/Pages/Admin/Staedte.vue",
     "isDynamicEntry": true,
@@ -1996,7 +1996,7 @@
     ]
   },
   "resources/js/Pages/Public/Stadt.vue": {
-    "file": "assets/Stadt-DIG6gsZx.js",
+    "file": "assets/Stadt-Dfwfa8VG.js",
     "name": "Stadt",
     "src": "resources/js/Pages/Public/Stadt.vue",
     "isDynamicEntry": true,
@@ -2004,10 +2004,16 @@
       "_vendor-DSjCI_Yp.js",
       "_BaseButton-Ceh5KXPc.js",
       "_ServiceIcon-CPX5hiBr.js",
+      "_check-BfpNmDyM.js",
+      "_chevron-down-rvOCgDJv.js",
       "_map-pin-CxL7eIly.js",
       "_SectionLabel-6WVxdsdf.js",
       "_PublicLayout-DCaCXhwo.js",
-      "_placeholders-CqAQGc13.js"
+      "_placeholders-CqAQGc13.js",
+      "__plugin-vue_export-helper-BDNMzG2s.js"
+    ],
+    "css": [
+      "assets/Stadt-Cfa8JRbQ.css"
     ]
   },
   "resources/js/Pages/Public/StadtLeistung.vue": {
@@ -2070,7 +2076,7 @@
     ]
   },
   "resources/js/app.js": {
-    "file": "assets/app-8sPTX3CT.js",
+    "file": "assets/app-Ctpy9B8f.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true,

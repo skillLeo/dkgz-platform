@@ -23,13 +23,13 @@ class City extends Model
 
     protected $fillable = [
         'name', 'slug', 'state', 'postal_code',
-        'headline', 'intro', 'meta_title', 'meta_description',
+        'headline', 'intro', 'body', 'faqs', 'meta_title', 'meta_description',
         'is_active', 'sort_order',
     ];
 
     protected function casts(): array
     {
-        return ['is_active' => 'boolean'];
+        return ['is_active' => 'boolean', 'faqs' => 'array'];
     }
 
     public function getActivitylogOptions(): LogOptions

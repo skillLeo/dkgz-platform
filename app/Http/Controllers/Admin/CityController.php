@@ -36,6 +36,8 @@ class CityController extends Controller
                     'postal_code' => $city->postal_code,
                     'headline' => $city->headline,
                     'intro' => $city->intro,
+                    'body' => $city->body,
+                    'faqs' => $city->faqs ?? [],
                     'meta_title' => $city->meta_title,
                     'meta_description' => $city->meta_description,
                     'is_active' => $city->is_active,
@@ -93,6 +95,12 @@ class CityController extends Controller
             'postal_code' => ['nullable', 'digits:5'],
             'headline' => ['nullable', 'string', 'max:200'],
             'intro' => ['nullable', 'string', 'max:2000'],
+            // The part that cannot be templated, which is the part that earns
+            // the ranking. HTML, written by the office.
+            'body' => ['nullable', 'string', 'max:40000'],
+            'faqs' => ['nullable', 'array', 'max:8'],
+            'faqs.*.frage' => ['required_with:faqs.*.antwort', 'nullable', 'string', 'max:200'],
+            'faqs.*.antwort' => ['required_with:faqs.*.frage', 'nullable', 'string', 'max:2000'],
             'meta_title' => ['nullable', 'string', 'max:200'],
             'meta_description' => ['nullable', 'string', 'max:320'],
             'is_active' => ['boolean'],
