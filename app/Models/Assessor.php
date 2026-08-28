@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Str;
 use Spatie\Activitylog\Models\Concerns\LogsActivity;
 use Spatie\Activitylog\Support\LogOptions;
 
@@ -30,7 +31,7 @@ class Assessor extends Model
     protected $fillable = [
         'user_id', 'company_name', 'legal_form', 'street', 'house_number',
         'postal_code', 'city', 'country', 'vat_id', 'website',
-        'photo_path',
+        'photo_path', 'slug', 'public_profile', 'is_listed',
         'bank_account_holder', 'bank_iban', 'bank_bic',
         'notify_new_request', 'notify_commission_statement',
         'certification_body', 'certification_number', 'certification_valid_until',
@@ -42,6 +43,7 @@ class Assessor extends Model
     protected function casts(): array
     {
         return [
+            'is_listed' => 'boolean',
             'is_available' => 'boolean',
             'notify_new_request' => 'boolean',
             'notify_commission_statement' => 'boolean',
@@ -72,6 +74,71 @@ class Assessor extends Model
             ->take(2)
             ->map(fn (string $part) => mb_strtoupper(mb_substr($part, 0, 1)))
             ->implode('');
+    }
+
+    /**
+     * The address of the public profile, built from the trading name.
+     *
+     * It stops following the name once the partner has been approved, because
+     * by then the page can have been linked to and an address that has been
+     * shared is a promise. Umlauts are spelled out: "sachverstaendiger" is what
+     * people type and what a search engine expects.
+     */
+    protected static function booted(): void
+    {
+        static::saving(function (self $assessor) {
+            if (filled($assessor->slug) && $assessor->getOriginal('approval_status') === self::STATUS_APPROVED) {
+                return;
+            }
+
+            $base = Str::slug($assessor->company_name ?: 'sachverstaendiger', '-', 'de', [
+                'ä' => 'ae', 'ö' => 'oe', 'ü' => 'ue',
+                'Ä' => 'ae', 'Ö' => 'oe', 'Ü' => 'ue', 'ß' => 'ss',
+            ]) ?: 'sachverstaendiger';
+
+            $slug = $base;
+            $suffix = 2;
+
+            while (static::withTrashed()->where('slug', $slug)
+                ->when($assessor->exists, fn ($q) => $q->whereKeyNot($assessor->getKey()))
+                ->exists()
+            ) {
+                $slug = $base.'-'.$suffix++;
+            }
+
+            $assessor->slug = $slug;
+        });
+    }
+
+    public function getRouteKeyName(): string
+    {
+        return 'slug';
+    }
+
+    /**
+     * The partners with a page in the public directory.
+     *
+     * Approved and listed. Availability is deliberately not part of it: a
+     * partner who has switched themselves off for a fortnight still exists, and
+     * their page disappearing and reappearing would take its search ranking
+     * with it every time.
+     */
+    public function scopeListed(Builder $query): Builder
+    {
+        return $query->where('approval_status', self::STATUS_APPROVED)
+            ->where('is_listed', true)
+            ->whereHas('user', fn (Builder $q) => $q->where('is_active', true));
+    }
+
+    /**
+     * Where this partner works, in words rather than postal ranges.
+     *
+     * "40000–41999" is an answer to a question nobody asked; the towns those
+     * codes cover are what somebody is looking for.
+     */
+    public function regionLabel(): string
+    {
+        return collect([$this->postal_code, $this->city])->filter()->implode(' ');
     }
 
     public function partnerId(): string

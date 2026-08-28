@@ -128,6 +128,7 @@ class Content
             'staedte' => 'Stadtseiten',
             'faq' => 'FAQ-Seite',
             'ratgeber' => 'Ratgeber',
+            'verzeichnis' => 'Sachverständigen-Verzeichnis',
         ];
     }
 }

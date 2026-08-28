@@ -34,8 +34,9 @@ class CreateServiceRequestAction
         $serviceRequest = DB::transaction(fn () => ServiceRequest::create([
             'reference' => ServiceRequest::nextReference(),
             'service_type_id' => $data['service_type_id'],
-            'postal_code' => $data['postal_code'],
-            'city' => $data['city'] ?? PostalCode::cityFor($data['postal_code']) ?? '',
+            'requested_assessor_id' => $data['requested_assessor_id'] ?? null,
+            'postal_code' => $data['postal_code'] ?? null,
+            'city' => $data['city'] ?? (isset($data['postal_code']) ? PostalCode::cityFor($data['postal_code']) : null),
             'customer_name' => $data['customer_name'],
             'customer_phone' => $data['customer_phone'],
             'customer_email' => $data['customer_email'],

@@ -68,8 +68,23 @@ class StoreServiceRequestRequest extends FormRequest
 
         return [
             'service_type_id' => ['required', 'integer', Rule::exists('service_types', 'id')->where('is_active', true)],
-            'postal_code' => ['required', new ExistingPostalCode],
-            'city' => ['required', 'string', 'max:120'],
+            // Not asked for on a partner's own profile: there is nothing to
+            // match, because the assessor is already chosen and telephones to
+            // arrange everything else, as on every other route.
+            'postal_code' => [
+                Rule::requiredIf(fn () => ! $this->filled('requested_assessor_id')),
+                'nullable',
+                new ExistingPostalCode,
+            ],
+            'city' => ['nullable', 'string', 'max:120'],
+            // Only a partner who is publicly listed and offers this service can
+            // be named, so a hand-written id cannot route work to somebody who
+            // never agreed to appear.
+            'requested_assessor_id' => [
+                'nullable',
+                'integer',
+                Rule::exists('assessors', 'id')->where('approval_status', 'approved')->where('is_listed', true),
+            ],
             'customer_name' => ['required', 'string', 'max:160'],
             'customer_phone' => ['required', 'string', 'max:40'],
             'customer_email' => ['required', 'string', 'email', 'max:255'],

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CityController;
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\DirectoryController;
 use App\Http\Controllers\LegalPageController;
 use App\Http\Controllers\PublicController;
 use App\Http\Controllers\RequestController;
@@ -33,6 +34,13 @@ Route::middleware('maintenance')->group(function () {
         ->name('request.store');
     Route::get('/anfrage/bestaetigung/{reference}', [RequestController::class, 'confirmation'])
         ->name('request.confirmation');
+
+    /*
+     * The partner directory. Under a fixed prefix like the city pages, so a
+     * firm called "Kontakt" can never take the contact page's address.
+     */
+    Route::get('/sachverstaendige', [DirectoryController::class, 'index'])->name('directory');
+    Route::get('/sachverstaendige/{assessor}', [DirectoryController::class, 'show'])->name('directory.show');
 
     /*
      * The Ratgeber. Under a fixed prefix like the city pages, so an article

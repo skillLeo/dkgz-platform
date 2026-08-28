@@ -122,6 +122,9 @@ class AssessorController extends Controller
                     'id' => $a->id,
                     'range' => $a->range(),
                 ]),
+                'is_listed' => $assessor->is_listed,
+                'public_profile' => $assessor->public_profile,
+                'directory_url' => $assessor->slug ? "/sachverstaendige/{$assessor->slug}" : null,
                 'service_types' => $assessor->serviceTypes->where('is_active', true)->pluck('name_de')->values(),
                 // Signed up for, but the platform no longer offers it. Shown
                 // apart rather than mixed in, so nobody reads a retired service
@@ -219,15 +222,27 @@ class AssessorController extends Controller
     {
         $this->authorize('update', $assessor);
 
-        $data = $request->validate(
-            ['internal_notes' => ['nullable', 'string', 'max:4000']],
-            [],
-            ['internal_notes' => 'die interne Notiz']
-        );
+        $data = $request->validate([
+            'internal_notes' => ['nullable', 'string', 'max:4000'],
+            // Whether this partner has a page in the public directory, and what
+            // it says about them in their own words. The notes above are the
+            // office's and never appear anywhere public.
+            'is_listed' => ['boolean'],
+            'public_profile' => ['nullable', 'string', 'max:2000'],
+        ], [], [
+            'internal_notes' => 'die interne Notiz',
+            'public_profile' => 'das öffentliche Profil',
+        ]);
+
+        // Read explicitly rather than from the validated array: a toggle
+        // posting false arrives as an empty string, which the boolean rule
+        // passes over — so switching a partner out of the directory silently
+        // did nothing at all.
+        $data['is_listed'] = $request->boolean('is_listed');
 
         $assessor->update($data);
 
-        return back()->with('success', 'Die Notiz wurde gespeichert.');
+        return back()->with('success', 'Gespeichert.');
     }
 
     public function export(Request $request): StreamedResponse

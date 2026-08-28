@@ -36,7 +36,7 @@ class ServiceRequest extends Model
     public const STATUS_UNANSWERED = 'unanswered';
 
     protected $fillable = [
-        'reference', 'service_type_id', 'postal_code', 'city',
+        'reference', 'service_type_id', 'requested_assessor_id', 'postal_code', 'city',
         'customer_name', 'customer_phone', 'customer_email',
         'vehicle_make', 'vehicle_model', 'vehicle_year', 'vehicle_plate', 'vehicle_vin',
         'description', 'preferred_date', 'urgency', 'status', 'matched_count',
@@ -148,6 +148,12 @@ class ServiceRequest extends Model
      * asks then — so this is empty on most requests now and has to say so. A
      * bare "Fahrzeug:" followed by nothing reads like a bug in an e-mail.
      */
+    /** The one partner this was aimed at, where it was aimed at anybody. */
+    public function requestedAssessor(): BelongsTo
+    {
+        return $this->belongsTo(Assessor::class, 'requested_assessor_id');
+    }
+
     public function vehicleLabel(): string
     {
         $label = trim("{$this->vehicle_make} {$this->vehicle_model}".

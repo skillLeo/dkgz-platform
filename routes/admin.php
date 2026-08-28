@@ -42,7 +42,13 @@ Route::prefix('admin')
         Route::middleware('can:requests.view')->group(function () {
             Route::post('/anfragen/{serviceRequest}/externer-sachverstaendiger', [RequestController::class, 'offerExternally'])
                 ->name('requests.offer');
-            Route::post('/anfragen/{serviceRequest}/senden/{assessor}', [RequestController::class, 'notifyAssessor'])
+            // Two models in one address, and naming a key on the second makes
+            // Laravel look for it through the first. There is no such relation
+            // and no such intent: the assessor here is any assessor, addressed
+            // by id because the admin panel holds ids and the model itself
+            // prefers the slug its public profile is built from.
+            Route::post('/anfragen/{serviceRequest}/senden/{assessor:id}', [RequestController::class, 'notifyAssessor'])
+                ->withoutScopedBindings()
                 ->middleware('can:requests.reassign')->name('requests.notify-assessor');
             Route::post('/anfragen/{serviceRequest}/kunde-benachrichtigen', [RequestController::class, 'notifyCustomer'])
                 ->name('requests.notify-customer');
@@ -69,19 +75,23 @@ Route::prefix('admin')
         // Assessors
         Route::middleware('can:assessors.view')->group(function () {
             Route::get('/sachverstaendige', [AssessorController::class, 'index'])->name('assessors');
-            Route::get('/sachverstaendige/{assessor}/nachweise/{document}', [AssessorController::class, 'downloadDocument'])
+            Route::get('/sachverstaendige/{assessor:id}/nachweise/{document}', [AssessorController::class, 'downloadDocument'])
                 ->name('assessors.documents.download');
-            Route::get('/sachverstaendige/{assessor}', [AssessorController::class, 'show'])->name('assessors.show');
+            Route::get('/sachverstaendige/{assessor:id}', [AssessorController::class, 'show'])->name('assessors.show');
         });
-        Route::post('/sachverstaendige/{assessor}/freigeben', [AssessorController::class, 'approve'])
+        Route::post('/sachverstaendige/{assessor:id}/freigeben', [AssessorController::class, 'approve'])
             ->middleware('can:assessors.approve')->name('assessors.approve');
-        Route::post('/sachverstaendige/{assessor}/ablehnen', [AssessorController::class, 'reject'])
+        Route::post('/sachverstaendige/{assessor:id}/ablehnen', [AssessorController::class, 'reject'])
             ->middleware('can:assessors.reject')->name('assessors.reject');
-        Route::post('/sachverstaendige/{assessor}/sperren', [AssessorController::class, 'suspend'])
+        Route::post('/sachverstaendige/{assessor:id}/sperren', [AssessorController::class, 'suspend'])
             ->middleware('can:assessors.suspend')->name('assessors.suspend');
-        Route::post('/sachverstaendige/{assessor}/entsperren', [AssessorController::class, 'unsuspend'])
+        Route::post('/sachverstaendige/{assessor:id}/entsperren', [AssessorController::class, 'unsuspend'])
             ->middleware('can:assessors.suspend')->name('assessors.unsuspend');
-        Route::post('/sachverstaendige/{assessor}', [AssessorController::class, 'update'])
+        // Bound by id throughout, not by the slug the model prefers for its
+        // public profile. The admin panel holds the row's id and posts the id,
+        // and a partner renaming their firm must not take every admin action
+        // on them with it.
+        Route::post('/sachverstaendige/{assessor:id}', [AssessorController::class, 'update'])
             ->middleware('can:assessors.edit')->name('assessors.update');
         Route::get('/sachverstaendige-export', [AssessorController::class, 'export'])
             ->middleware('can:assessors.export')->name('assessors.export');

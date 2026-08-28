@@ -79,6 +79,18 @@ class MatchRequestAction
      */
     public function matchingAssessorIds(ServiceRequest $request)
     {
+        // Somebody who pressed the button on one partner's profile has chosen.
+        // Sending that to everybody covering the area answers a different
+        // question from the one they asked, and hands the work to whoever
+        // replies first — which is what they were trying not to do.
+        if ($request->requested_assessor_id !== null) {
+            return Assessor::query()
+                ->matchable()
+                ->whereKey($request->requested_assessor_id)
+                ->offering($request->service_type_id)
+                ->pluck('id');
+        }
+
         return Assessor::query()
             ->matchable()
             ->covering($request->postal_code)

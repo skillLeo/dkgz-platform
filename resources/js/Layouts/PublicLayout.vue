@@ -58,6 +58,7 @@ const t = (section, field, fallback = '') => content.value?.[section]?.[field] ?
 const nav = [
     { href: '/leistungen', label: 'Leistungen' },
     { href: '/ablauf', label: 'Ablauf' },
+    { href: '/sachverstaendige', label: 'Sachverständige' },
     { href: '/ratgeber', label: 'Ratgeber' },
     { href: '/faq', label: 'FAQ' },
     { href: '/ueber-uns', label: 'Über DKGZ' },

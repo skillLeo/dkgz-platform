@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Assessor;
 use App\Models\City;
 use App\Models\Page;
 use App\Models\Post;
@@ -27,7 +28,14 @@ class SitemapController extends Controller
             ['loc' => route('contact'), 'priority' => '0.6'],
             ['loc' => route('cities'), 'priority' => '0.7'],
             ['loc' => route('guide'), 'priority' => '0.6'],
+            ['loc' => route('directory'), 'priority' => '0.6'],
         ]);
+
+        // One page per listed partner: the only part of the site that names the
+        // firms themselves, and the reason the directory is worth having.
+        Assessor::listed()->orderBy('company_name')->each(function (Assessor $assessor) use ($urls) {
+            $urls->push(['loc' => url("/sachverstaendige/{$assessor->slug}"), 'priority' => '0.4']);
+        });
 
         // Articles. These exist to be found by somebody who has not yet decided
         // they need an assessor, so listing them is most of the point.

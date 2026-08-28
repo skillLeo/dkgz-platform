@@ -9,6 +9,7 @@ import StatusDot from '../../Components/Data/StatusDot.vue'
 import MoneyValue from '../../Components/Data/MoneyValue.vue'
 import BaseButton from '../../Components/Base/BaseButton.vue'
 import BaseTextarea from '../../Components/Base/BaseTextarea.vue'
+import BaseToggle from '../../Components/Base/BaseToggle.vue'
 import { useGermanFormat } from '../../Composables/useGermanFormat.js'
 import { useConfirm } from '../../Composables/useConfirm.js'
 
@@ -26,6 +27,17 @@ const reject = useForm({ reason: '' })
 const suspend = useForm({ reason: '' })
 const unsuspend = useForm({})
 const notes = useForm({ internal_notes: props.assessor.internal_notes ?? '' })
+
+/**
+ * What the public directory says about this partner, and whether it says
+ * anything at all. Kept apart from the internal notes above it, which are the
+ * office's and appear nowhere public.
+ */
+const listing = useForm({
+    is_listed: props.assessor.is_listed,
+    public_profile: props.assessor.public_profile ?? '',
+    internal_notes: props.assessor.internal_notes ?? '',
+})
 
 const rejectOpen = ref(false)
 const suspendOpen = ref(false)
@@ -231,6 +243,47 @@ const doUnsuspend = async () => {
                     <p class="pb-3 pt-2 text-sm text-gray-600">Nur intern sichtbar. Der Sachverständige sieht diese Notiz nie.</p>
                     <BaseTextarea v-model="notes.internal_notes" label="Notiz" :rows="4" optional :error="notes.errors.internal_notes" />
                     <BaseButton type="submit" size="compact" class="mt-4" :loading="notes.processing">Notiz speichern</BaseButton>
+                </form>
+
+                <!--
+                    The public page. A partner signed up before the directory
+                    existed, so this is the switch that says whether they appear
+                    in it — and the text below is theirs, not the notes above.
+                -->
+                <form class="border border-gray-200 bg-white p-5" @submit.prevent="listing.post(`/admin/sachverstaendige/${assessor.id}`, { preserveScroll: true })">
+                    <SectionLabel text="Öffentliches Profil" tone="muted" />
+                    <p class="pb-4 pt-2 text-sm text-gray-600">
+                        Erscheint im Verzeichnis unter dkgz.de/sachverstaendige. Kontaktdaten werden dort
+                        nie angezeigt — Anfragen laufen ausschließlich über DKGZ.
+                    </p>
+
+                    <BaseToggle
+                        v-model="listing.is_listed"
+                        label="Im Verzeichnis anzeigen"
+                        on-label="Sichtbar"
+                        off-label="Nicht gelistet"
+                    />
+
+                    <BaseTextarea
+                        v-model="listing.public_profile"
+                        label="Kurzprofil"
+                        :rows="4"
+                        class="mt-4"
+                        hint="Ein paar Sätze zur Vorstellung. Öffentlich sichtbar."
+                        :error="listing.errors.public_profile"
+                        optional
+                    />
+
+                    <div class="flex flex-wrap items-center gap-4 pt-4">
+                        <BaseButton type="submit" size="compact" :loading="listing.processing">Profil speichern</BaseButton>
+                        <a
+                            v-if="assessor.directory_url && assessor.is_listed"
+                            :href="assessor.directory_url"
+                            target="_blank"
+                            rel="noopener"
+                            class="text-sm text-gray-600 underline underline-offset-2 hover:text-navy-700"
+                        >Profil ansehen</a>
+                    </div>
                 </form>
             </div>
 
