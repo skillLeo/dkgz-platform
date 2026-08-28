@@ -1,127 +1,121 @@
 <script setup>
-import { computed, ref } from 'vue'
-import { BORDER_PATH, MAP, ZONE_POINTS, ZONES } from '../../Support/germany.js'
+import { computed } from 'vue'
+import { Check } from 'lucide-vue-next'
+import { BORDER_PATH, MAP } from '../../Support/germany.js'
 
 /**
- * Where DKGZ currently has partners, drawn on Germany.
+ * That DKGZ covers the whole country.
  *
- * The border is real: longitude and latitude projected through Web Mercator,
- * the same projection every map of Germany people have seen uses. The markers
- * sit at the true coordinates of the city each postal zone is named for, so the
- * outline and the points are drawn from one set of numbers and cannot drift
- * apart — which is what made the earlier hand-traced version look wrong.
+ * This used to draw Germany in grey with ten small markers on it, which reads
+ * as ten places rather than as one country — the opposite of the claim the
+ * section exists to make, and the reason it was worth redoing. The country is
+ * now filled solid, because the shape itself is the statement: a whole Germany
+ * in the brand's own navy says "bundesweit" before anybody reads a word.
  *
- * It is interactive rather than decorative: pointing at a region names it and
- * says whether we can place work there, which is the question the graphic
- * exists to answer.
+ * The border is real — longitude and latitude projected through Web Mercator,
+ * the same projection as every map of Germany anyone has seen.
+ *
+ * The regions stay, as a list beside the shape rather than as pins on it. They
+ * name the cities somebody is actually looking for, which is worth having on
+ * the page in words; they are simply not what the picture is about.
  */
 const props = defineProps({
     regions: { type: Array, default: () => [] },
 })
 
-const active = ref(null)
+const covered = computed(() => props.regions.filter((region) => region.covered))
 
-/**
- * Every postal region is drawn as served.
- *
- * DKGZ vermittelt bundesweit and places a request by hand where the network is
- * still thin, so a hollow circle over a region said "not us" about somewhere we
- * do in fact cover — the opposite of what the map is for.
- */
-const points = computed(() => props.regions
-    .filter((region) => ZONE_POINTS[region.digit])
-    .map((region) => ({
-        ...region,
-        ...ZONE_POINTS[region.digit],
-        covered: true,
-        label: ZONES[region.digit]?.label ?? '',
-    })))
+/** Whole-country coverage is a different claim from most-of-it. */
+const complete = computed(() => props.regions.length > 0 && covered.value.length === props.regions.length)
 
-const activePoint = computed(() => points.value.find((p) => p.digit === active.value) ?? null)
+const headline = computed(() => (complete.value
+    ? 'Bundesweit'
+    : `${covered.value.length} von ${props.regions.length} Regionen`))
 </script>
 
 <template>
-    <div class="flex flex-col gap-10 md:flex-row md:items-start md:gap-14">
-        <figure class="relative w-full max-w-88 shrink-0">
+    <div class="grid grid-cols-1 items-center gap-10 md:grid-cols-[minmax(0,260px)_minmax(0,1fr)] md:gap-14">
+        <figure class="relative mx-auto w-full max-w-64 md:mx-0">
             <svg
                 :viewBox="`0 0 ${MAP.width} ${MAP.height}`"
                 class="h-auto w-full"
                 role="img"
-                aria-label="Bundesweite Abdeckung: DKGZ vermittelt in allen Postleitregionen"
+                :aria-label="complete
+                    ? 'Deutschlandkarte: DKGZ vermittelt in allen Postleitregionen'
+                    : `Deutschlandkarte: DKGZ vermittelt in ${covered.length} von ${regions.length} Postleitregionen`"
             >
+                <defs>
+                    <linearGradient id="dkgz-coverage" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stop-color="var(--color-navy-500)" />
+                        <stop offset="100%" stop-color="var(--color-navy-700)" />
+                    </linearGradient>
+                </defs>
+
+                <!--
+                    One filled shape. Not a base layer with things drawn on top
+                    of it: the country is the whole of the message, and anything
+                    sitting over it invites the eye to read the marks instead of
+                    the outline.
+                -->
                 <path
                     :d="BORDER_PATH"
-                    class="fill-gray-100 stroke-gray-300"
+                    :fill="complete ? 'url(#dkgz-coverage)' : 'var(--color-navy-100)'"
+                    stroke="var(--color-navy-700)"
                     stroke-width="1.2"
                     stroke-linejoin="round"
                 />
-
-                <g
-                    v-for="point in points"
-                    :key="point.digit"
-                    class="cursor-pointer"
-                    tabindex="0"
-                    role="button"
-                    :aria-label="`Region ${point.digit}: ${point.places}`"
-                    @mouseenter="active = point.digit"
-                    @mouseleave="active = null"
-                    @focus="active = point.digit"
-                    @blur="active = null"
-                >
-                    <!-- A soft halo marks the live region without moving anything. -->
-                    <circle
-                        v-if="point.covered"
-                        :cx="point.x"
-                        :cy="point.y"
-                        :r="active === point.digit ? 15 : 11"
-                        class="fill-navy-700/12 transition-all duration-(--duration-hover) ease-(--ease-dkgz)"
-                    />
-                    <circle
-                        :cx="point.x"
-                        :cy="point.y"
-                        :r="active === point.digit ? 8 : 6.5"
-                        :class="point.covered
-                            ? 'fill-navy-700 stroke-white'
-                            : 'fill-white stroke-gray-400'"
-                        stroke-width="1.4"
-                        class="transition-all duration-(--duration-hover) ease-(--ease-dkgz)"
-                    />
-                    <text
-                        :x="point.x"
-                        :y="point.y + 2.4"
-                        text-anchor="middle"
-                        class="pointer-events-none font-mono font-semibold"
-                        style="font-size: 7px"
-                        :class="point.covered ? 'fill-white' : 'fill-gray-500'"
-                    >{{ point.digit }}</text>
-                </g>
             </svg>
 
-            <!-- Named on hover, so the map answers rather than decorates. -->
-            <figcaption class="min-h-8 pt-3 text-center" aria-live="polite">
-                <span v-if="activePoint" class="text-sm text-gray-800">
-                    <span class="font-mono">{{ activePoint.digit }}xxxx</span> · {{ activePoint.places }}
+            <!--
+                The claim, over the middle of the country. Small, because the
+                filled shape has already made it and repeating it loudly would
+                be the graphic arguing with itself.
+            -->
+            <figcaption
+                v-if="complete"
+                class="pointer-events-none absolute inset-0 grid place-items-center"
+            >
+                <span class="rounded-card bg-white/95 px-4 py-2 text-center shadow-(--shadow-1)">
+                    <span class="block text-h4 font-bold leading-none text-navy-700">{{ headline }}</span>
+                    <span class="block pt-1 text-xs text-gray-600">alle PLZ-Gebiete</span>
                 </span>
             </figcaption>
         </figure>
 
         <div class="min-w-0">
-            <ul class="grid gap-x-8 gap-y-2.5 sm:grid-cols-2">
+            <p class="text-h3 font-semibold text-navy-700">
+                {{ complete ? 'In jeder Postleitregion vertreten' : headline }}
+            </p>
+            <p class="measure pt-2 text-base leading-normal text-gray-600">
+                Geben Sie Ihre Postleitzahl an — wir finden einen Sachverständigen, dessen
+                Einsatzgebiet Ihren Standort abdeckt.
+            </p>
+
+            <!--
+                The regions in words. A search engine and a visitor both want to
+                see their own city named, and neither of them can read a pin.
+            -->
+            <ul class="grid grid-cols-1 gap-x-6 gap-y-2.5 pt-6 sm:grid-cols-2">
                 <li
-                    v-for="region in points"
-                    :key="`legende-${region.digit}`"
-                    class="flex items-baseline gap-2.5"
-                    @mouseenter="active = region.digit"
-                    @mouseleave="active = null"
+                    v-for="region in regions"
+                    :key="region.digit"
+                    class="flex items-start gap-2.5"
+                    :class="region.covered ? '' : 'opacity-45'"
                 >
-                    <span class="mt-1.5 block h-1.5 w-1.5 shrink-0 rounded-full bg-navy-700" aria-hidden="true" />
-                    <span class="min-w-0 text-sm text-gray-800">
-                        <span class="font-mono tabular-nums">{{ region.digit }}</span> · {{ region.places }}
+                    <Check
+                        v-if="region.covered"
+                        :size="15"
+                        :stroke-width="2"
+                        class="mt-1 shrink-0 text-success"
+                        aria-hidden="true"
+                    />
+                    <span v-else class="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-gray-400" aria-hidden="true" />
+                    <span class="min-w-0 text-sm leading-normal text-gray-800">
+                        <span class="font-mono text-xs text-gray-400">{{ region.digit }}</span>
+                        <span class="pl-1.5">{{ region.places }}</span>
                     </span>
                 </li>
             </ul>
-
-
         </div>
     </div>
 </template>
