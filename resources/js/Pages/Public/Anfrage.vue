@@ -187,7 +187,7 @@ const submit = () => {
 <template>
     <RequestFlowLayout title="Anfrage" :dirty="form.isDirty">
         <template v-if="started" #progress>
-            <RequestProgress :steps="STEPS" :current="step" :furthest="step" @go="(n) => n === 1 && back()" />
+            <RequestProgress :steps="STEPS" :current="step" />
         </template>
 
         <div class="bg-gray-50">

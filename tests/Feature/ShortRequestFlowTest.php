@@ -389,3 +389,21 @@ describe('the blog on a telephone', function () {
             ->toContain('href="/anfrage"');
     });
 });
+
+describe('the progress band', function () {
+    it('is a picture rather than navigation', function () {
+        // A completed step used to be a button back to itself, which made the
+        // band read as something to press. The way back is "ändern", beside the
+        // answer it would change.
+        $source = file_get_contents(resource_path('js/Components/Domain/RequestProgress.vue'));
+
+        expect($source)->not->toContain('<button')
+            ->and($source)->not->toContain('@click')
+            ->and($source)->not->toContain('defineEmits');
+    });
+
+    it('still leaves a way back to the first step', function () {
+        expect(file_get_contents(resource_path('js/Pages/Public/Anfrage.vue')))
+            ->toContain('>ändern</button>');
+    });
+});
