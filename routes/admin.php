@@ -12,6 +12,7 @@ use App\Http\Controllers\Admin\PartnerMailController;
 use App\Http\Controllers\Admin\PostController;
 use App\Http\Controllers\Admin\ProfileController as AdminProfileController;
 use App\Http\Controllers\Admin\RequestController;
+use App\Http\Controllers\Admin\SeoController;
 use App\Http\Controllers\Admin\ServiceTypeController;
 use App\Http\Controllers\Admin\SettingsController;
 use App\Http\Controllers\Admin\SystemController;
@@ -178,6 +179,14 @@ Route::prefix('admin')
         // Bound by id, not by the slug the model prefers: the public address
         // follows the title, and renaming a draft must not take the form's own
         // URL with it mid-edit.
+        // Reads and writes the wording where it already lives, so it needs
+        // only the ordinary content permissions.
+        Route::middleware('can:content.view')->group(function () {
+            Route::get('/seo', [SeoController::class, 'index'])->name('seo');
+        });
+        Route::post('/seo', [SeoController::class, 'update'])
+            ->middleware('can:content.edit')->name('seo.update');
+
         Route::middleware('can:posts.manage')->group(function () {
             Route::get('/ratgeber', [PostController::class, 'index'])->name('posts');
             Route::post('/ratgeber', [PostController::class, 'store'])->name('posts.store');

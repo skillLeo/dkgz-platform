@@ -4,6 +4,11 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <meta name="theme-color" content="#0A1628">
+    {{-- Emitted server-side rather than from the page component: a crawler that
+         does not run the JavaScript still has to be told. --}}
+    @unless ($isIndexed)
+        <meta name="robots" content="noindex, follow">
+    @endunless
 
     {{-- No preconnect to any font CDN: IBM Plex is bundled from @fontsource. --}}
 

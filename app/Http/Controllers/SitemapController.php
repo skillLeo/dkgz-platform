@@ -6,6 +6,7 @@ use App\Models\Assessor;
 use App\Models\City;
 use App\Models\Page;
 use App\Models\Post;
+use App\Models\SeoSetting;
 use App\Models\ServiceType;
 use App\Support\Settings;
 use Illuminate\Http\Response;
@@ -67,6 +68,17 @@ class SitemapController extends Controller
         Page::published()->each(function (Page $page) use ($urls) {
             $urls->push(['loc' => url("/{$page->slug}"), 'priority' => '0.3']);
         });
+
+        // A page switched to noindex has no business in the sitemap either:
+        // asking a crawler to fetch something and then telling it to forget
+        // what it found wastes the crawl budget the sitemap exists to direct.
+        $excluded = SeoSetting::excluded();
+
+        $urls = $urls->reject(fn (array $url) => in_array(
+            parse_url($url['loc'], PHP_URL_PATH) ?: '/',
+            $excluded,
+            true
+        ));
 
         $xml = view('sitemap', ['urls' => $urls])->render();
 

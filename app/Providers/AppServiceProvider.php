@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Listeners\RecordMailDelivery;
 use App\Models\ContentBlock;
+use App\Models\SeoSetting;
 use App\Models\Setting;
 use App\Observers\CacheBustingObserver;
 use App\Support\Branding;
@@ -44,6 +45,12 @@ class AppServiceProvider extends ServiceProvider
         // "Erscheinungsbild" were saved, shown back in the form, and had no
         // effect on the site whatsoever.
         View::composer('app', function ($view) {
+            // Whether this particular page may be indexed. Server-side, because
+            // a crawler that does not run the JavaScript still has to be told.
+            $view->with('isIndexed', SeoSetting::indexes(
+                '/'.ltrim(request()->path() === '/' ? '' : request()->path(), '/')
+            ));
+
             $view->with([
                 'faviconUrl' => SafeStorage::url(Settings::get('branding.favicon')),
                 'brandCss' => Branding::cssCustomProperties(),
