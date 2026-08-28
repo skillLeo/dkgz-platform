@@ -57,7 +57,13 @@ const apply = (changes) => router.get('/sachverstaendige', {
         <link rel="canonical" href="https://dkgz.de/sachverstaendige">
     </Head>
 
-    <PublicLayout>
+    <!--
+        No bar pinned to the bottom of the screen. The page already carries its
+        own call to action, aimed at this partner rather than at the general
+        queue, and a second one hovering over it would send somebody somewhere
+        they did not choose.
+    -->
+    <PublicLayout :sticky-cta="false">
         <section class="border-b border-gray-200 bg-gray-50">
             <div class="mx-auto w-full max-w-(--container-shell) px-4 py-16 md:px-6 md:py-20">
                 <SectionLabel :text="t('kopf', 'eyebrow', 'Partnernetz')" />

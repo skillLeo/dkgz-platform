@@ -1,7 +1,7 @@
 <script setup>
 import { computed, ref } from 'vue'
 import { Head, Link } from '@inertiajs/vue3'
-import { Check, ChevronDown, MapPin } from 'lucide-vue-next'
+import { ChevronDown, MapPin } from 'lucide-vue-next'
 import PublicLayout from '../../Layouts/PublicLayout.vue'
 import SectionLabel from '../../Components/Layout/SectionLabel.vue'
 import { fill } from '../../Support/placeholders.js'
@@ -34,11 +34,6 @@ const title = computed(() => props.city.meta_title
 const steps = computed(() => [1, 2, 3]
     .map((number) => ({ number, text: t('stadt', `schritt_${number}`) }))
     .filter((step) => step.text))
-
-/** Three things worth knowing before commissioning a report. */
-const notes = computed(() => [1, 2, 3]
-    .map((n) => ({ title: t('stadt', `hinweis_${n}_titel`), text: t('stadt', `hinweis_${n}_text`) }))
-    .filter((note) => note.title || note.text))
 
 /**
  * The questions, city-specific ones first.
@@ -101,49 +96,15 @@ const description = computed(() => props.city.meta_description
         </section>
 
         <!--
-            The part that earns the ranking. "Kfz-Gutachter Köln" is one of the
-            most valuable searches DKGZ can win, and the page answering it was a
-            heading and a list of services — thin enough that a search engine
-            has no reason to prefer it to anybody else's.
+            The city's own passage, where somebody has written one. The shared
+            introduction and the box of notes beside it went: on a page that
+            already carries the services, the steps and the questions they were
+            one section too many, and the shared wording said the same thing on
+            every city page anyway. What is left only appears when there is
+            something particular to say.
         -->
-        <section class="mx-auto w-full max-w-(--container-shell) px-4 pt-16 md:px-6">
-            <div class="grid grid-cols-1 gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,340px)] lg:items-start">
-                <div class="min-w-0">
-                    <h2 class="text-h3 font-semibold text-navy-700">
-                        {{ t('stadt', 'einleitung_ueberschrift', 'Kfz-Gutachten in {stadt} — worauf es ankommt') }}
-                    </h2>
-
-                    <!--
-                        The city's own passage where somebody has written one,
-                        and the shared text where nobody has. Fifteen cities
-                        with nothing written are still better served by the
-                        shared copy than by an empty section.
-                    -->
-                    <div
-                        v-if="city.body"
-                        class="stadttext measure pt-4"
-                        v-html="city.body"
-                    />
-                    <p v-else class="measure whitespace-pre-line pt-4 text-base leading-relaxed text-gray-800">
-                        {{ t('stadt', 'einleitung_text') }}
-                    </p>
-                </div>
-
-                <div v-if="notes.length" class="rounded-card border border-gray-200 bg-white p-6">
-                    <h3 class="text-eyebrow font-semibold uppercase text-gray-600">
-                        {{ t('stadt', 'hinweise_ueberschrift', 'Gut zu wissen') }}
-                    </h3>
-                    <ul class="flex flex-col gap-5 pt-4">
-                        <li v-for="note in notes" :key="note.title" class="flex gap-2.5">
-                            <Check :size="16" :stroke-width="1.75" class="mt-0.5 shrink-0" style="color: var(--dkgz-accent)" aria-hidden="true" />
-                            <span class="min-w-0">
-                                <span class="block text-sm font-semibold text-navy-700">{{ note.title }}</span>
-                                <span class="block pt-1 text-sm leading-normal text-gray-600">{{ note.text }}</span>
-                            </span>
-                        </li>
-                    </ul>
-                </div>
-            </div>
+        <section v-if="city.body" class="mx-auto w-full max-w-(--container-shell) px-4 pt-16 md:px-6">
+            <div class="stadttext measure" v-html="city.body" />
         </section>
 
         <div class="mx-auto w-full max-w-(--container-shell) px-4 py-16 md:px-6">

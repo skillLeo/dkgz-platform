@@ -58,7 +58,6 @@ const t = (section, field, fallback = '') => content.value?.[section]?.[field] ?
 const nav = [
     { href: '/leistungen', label: 'Leistungen' },
     { href: '/ablauf', label: 'Ablauf' },
-    { href: '/sachverstaendige', label: 'Sachverständige' },
     { href: '/ratgeber', label: 'Ratgeber' },
     { href: '/faq', label: 'FAQ' },
     { href: '/ueber-uns', label: 'Über DKGZ' },
@@ -244,6 +243,7 @@ onUnmounted(() => window.removeEventListener('scroll', onScroll))
                         <p class="pb-4 text-eyebrow font-semibold uppercase text-white/45">Unternehmen</p>
                         <ul class="flex flex-col gap-2.5">
                             <li><Link href="/ueber-uns" class="text-sm text-white/72 hover:text-white">Über DKGZ</Link></li>
+                            <li><Link href="/sachverstaendige" class="text-sm text-white/72 hover:text-white">Sachverständige</Link></li>
                             <li><Link href="/ablauf" class="text-sm text-white/72 hover:text-white">Ablauf</Link></li>
                             <li><Link href="/fuer-sachverstaendige" class="text-sm text-white/72 hover:text-white">Für Sachverständige</Link></li>
                             <li><Link :href="portalLink.href" class="text-sm text-white/72 hover:text-white">{{ portalLink.label }}</Link></li>

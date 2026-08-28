@@ -2,7 +2,7 @@
 import { computed, onMounted, ref, watch } from 'vue'
 import { useForm } from '@inertiajs/vue3'
 import axios from 'axios'
-import { Check, Loader2 } from 'lucide-vue-next'
+import { Check, Clock, Loader2 } from 'lucide-vue-next'
 import RequestFlowLayout from '../../Layouts/RequestFlowLayout.vue'
 import SectionLabel from '../../Components/Layout/SectionLabel.vue'
 import RequestProgress from '../../Components/Domain/RequestProgress.vue'
@@ -10,6 +10,7 @@ import RequestStarter from '../../Components/Domain/RequestStarter.vue'
 import BaseInput from '../../Components/Base/BaseInput.vue'
 import BaseButton from '../../Components/Base/BaseButton.vue'
 import ErrorSummary from '../../Components/Feedback/ErrorSummary.vue'
+import { fill } from '../../Support/placeholders.js'
 
 /**
  * Two steps: which assessment, then where and who.
@@ -137,6 +138,19 @@ const onPostalInput = (value) => {
 }
 
 watch(() => form.postal_code, (value) => { if (value === '') unknown.value = false })
+
+/**
+ * What happens next, said before they press the button rather than after.
+ *
+ * Somebody has just typed their telephone number into a site they met a minute
+ * ago and the next thing that happens is a stranger ringing it. Saying who will
+ * ring, from where and how soon is the difference between that being reassuring
+ * and being a surprise — and it is the last thing they read before deciding.
+ */
+const responseNote = computed(() => fill(
+    t('formular', 'rueckmeldung', 'Ein Sachverständiger aus {stadt} meldet sich in der Regel innerhalb weniger Minuten telefonisch bei Ihnen.'),
+    { stadt: form.city, plz: form.postal_code },
+))
 
 const REQUIRED = {
     postal_code: 'Bitte geben Sie die Postleitzahl an.',
@@ -300,11 +314,25 @@ const submit = () => {
                             />
                         </div>
 
+                        <!--
+                            Only once the town is known, because "ein
+                            Sachverständiger aus  meldet sich" is worse than
+                            saying nothing.
+                        -->
+                        <p
+                            v-if="form.city && responseNote"
+                            class="mt-7 flex items-start gap-2.5 rounded-card border border-gray-200 bg-gray-50 p-4 text-sm leading-normal text-gray-800"
+                            style="animation: dkgz-enter 260ms cubic-bezier(0.4,0,0.2,1) both"
+                        >
+                            <Clock :size="16" :stroke-width="1.75" class="mt-0.5 shrink-0" style="color: var(--dkgz-accent)" aria-hidden="true" />
+                            <span>{{ responseNote }}</span>
+                        </p>
+
                         <BaseButton
                             type="submit"
                             size="cta"
                             block
-                            class="mt-7"
+                            :class="form.city && responseNote ? 'mt-4' : 'mt-7'"
                             :loading="form.processing"
                             loading-label="Wird gesendet…"
                         >{{ t('formular', 'cta', 'Kostenfrei anfragen') }}</BaseButton>

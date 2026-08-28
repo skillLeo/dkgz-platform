@@ -296,6 +296,9 @@ class ProfileController extends Controller
                 'reference' => $commission->assignment?->serviceRequest?->reference,
                 'rate_percent' => (float) $commission->rate_percent,
                 'commission_cents' => $commission->commission_cents,
+                // The invoice total, so the partner is not left to add the tax
+                // themselves to find out what they are being asked to pay.
+                'gross_cents' => $commission->grossCents(),
                 'status' => $commission->status,
                 'status_label' => $commission->statusLabel(),
                 'invoice_number' => $commission->invoice_number,

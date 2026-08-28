@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Casts\MoneyCast;
+use App\Support\Settings;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -30,6 +31,7 @@ class Commission extends Model
     protected $fillable = [
         'assignment_id', 'assessor_id', 'fee_type', 'dkgz_fee_cents',
         'fee_cents', 'rate_percent', 'commission_cents',
+        'vat_percent', 'vat_cents', 'gross_cents',
         'status', 'invoice_number', 'invoice_path', 'invoiced_at',
         'settled_at', 'settled_by', 'notes',
     ];
@@ -42,16 +44,66 @@ class Commission extends Model
             'fee_cents' => MoneyCast::class,
             'dkgz_fee_cents' => MoneyCast::class,
             'commission_cents' => MoneyCast::class,
+            'vat_cents' => MoneyCast::class,
+            'gross_cents' => MoneyCast::class,
+            'vat_percent' => 'decimal:2',
             'rate_percent' => 'decimal:2',
             'invoiced_at' => 'datetime',
             'settled_at' => 'datetime',
         ];
     }
 
+    /**
+     * The rate to charge on a fee invoiced now.
+     *
+     * Only ever read when an invoice is being issued. Once it is, the rate that
+     * applied is written onto the row and read from there for ever after — a
+     * rate is a fact about a date, and recomputing it later would rewrite
+     * invoices both sides already have in their books.
+     */
+    public static function currentVatPercent(): float
+    {
+        return (float) Settings::get('business.vat_percent', 19);
+    }
+
+    /**
+     * Net, tax and gross for this commission.
+     *
+     * Falls back to the current rate for a commission not yet invoiced, so the
+     * portal can show a partner what an outstanding fee will come to before the
+     * invoice exists.
+     *
+     * @return array{net: int, percent: float, vat: int, gross: int}
+     */
+    public function amounts(): array
+    {
+        $net = (int) $this->commission_cents;
+        $percent = $this->vat_percent !== null
+            ? (float) $this->vat_percent
+            : self::currentVatPercent();
+
+        $vat = $this->vat_cents !== null
+            ? (int) $this->vat_cents
+            : (int) round($net * $percent / 100);
+
+        return [
+            'net' => $net,
+            'percent' => $percent,
+            'vat' => $vat,
+            'gross' => $this->gross_cents !== null ? (int) $this->gross_cents : $net + $vat,
+        ];
+    }
+
+    /** What the partner is actually asked to pay. */
+    public function grossCents(): int
+    {
+        return $this->amounts()['gross'];
+    }
+
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()
-            ->logOnly(['status', 'commission_cents', 'rate_percent', 'invoice_number', 'notes'])
+            ->logOnly(['status', 'commission_cents', 'rate_percent', 'vat_percent', 'gross_cents', 'invoice_number', 'notes'])
             ->logOnlyDirty()
             ->dontLogEmptyChanges()
             ->useLogName('provision');

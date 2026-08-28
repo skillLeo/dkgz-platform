@@ -32,6 +32,20 @@ class IssueCommissionInvoiceAction
         $number = Commission::nextInvoiceNumber();
         $path = null;
 
+        // Worked out once, here, and written onto the row. A rate is a fact
+        // about a date: if the German rate changes, every invoice already sent
+        // must go on saying what it said, because that is what the partner was
+        // billed and what both sides have in their books.
+        $net = (int) $commission->commission_cents;
+        $percent = Commission::currentVatPercent();
+        $vat = (int) round($net * $percent / 100);
+
+        $commission->forceFill([
+            'vat_percent' => $percent,
+            'vat_cents' => $vat,
+            'gross_cents' => $net + $vat,
+        ])->save();
+
         // Some operators invoice from their own accounting system; then the
         // platform still records the number and the status, but produces no PDF.
         if (Settings::bool('business.generate_commission_invoices', true)) {

@@ -22,6 +22,9 @@ const columns = [
     { key: 'status', label: 'Status', cardRole: 'status' },
     { key: 'fee_type', label: 'Modell', cardRole: 'meta' },
     { key: 'commission_cents', label: 'DKGZ-Gebühr', align: 'right', mono: true },
+    // What the invoice actually asks for. Showing the net alone left the
+    // partner to add the tax themselves to find out what they owe.
+    { key: 'gross_cents', label: 'Rechnungsbetrag', align: 'right', mono: true },
 ]
 </script>
 
@@ -55,6 +58,7 @@ const columns = [
                 </span>
             </template>
             <template #cell-commission_cents="{ row }"><MoneyValue :cents="row.commission_cents" /></template>
+            <template #cell-gross_cents="{ row }"><MoneyValue :cents="row.gross_cents" /></template>
         </DataTable>
     </PortalLayout>
 </template>

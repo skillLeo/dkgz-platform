@@ -91,7 +91,13 @@ const submit = () => {
         <link rel="canonical" :href="`https://dkgz.de${assessor.url}`">
     </Head>
 
-    <PublicLayout>
+    <!--
+        No bar pinned to the bottom of the screen. The page already carries its
+        own call to action, aimed at this partner rather than at the general
+        queue, and a second one hovering over it would send somebody somewhere
+        they did not choose.
+    -->
+    <PublicLayout :sticky-cta="false">
         <section class="border-b border-gray-200 bg-gray-50">
             <div class="mx-auto w-full max-w-(--container-shell) px-4 py-12 md:px-6 md:py-16">
                 <nav class="flex flex-wrap items-center gap-2 pb-8 text-sm text-gray-600" aria-label="Brotkrumen">
@@ -198,7 +204,7 @@ const submit = () => {
                     </BaseButton>
                     <p class="flex items-start gap-2 pt-4 text-sm leading-normal text-gray-600">
                         <Check :size="15" :stroke-width="2" class="mt-0.5 shrink-0 text-success" aria-hidden="true" />
-                        Kostenfrei und unverbindlich
+                        {{ t('profil', 'kurzhinweis', 'Kostenfrei und unverbindlich') }}
                     </p>
                 </template>
 
@@ -264,6 +270,16 @@ const submit = () => {
                     <p class="pt-4 text-sm leading-normal text-gray-600">
                         {{ t('profil', 'datenschutzhinweis', 'Mit dem Absenden willigen Sie ein, dass DKGZ Ihre Angaben an diesen Sachverständigen weitergibt.') }}
                         <a href="/datenschutz" class="border-b border-navy-700 pb-0.5 text-navy-700">Datenschutzerklärung</a>
+                    </p>
+
+                    <!--
+                        The same line the box carried before the form opened.
+                        It answered the question somebody was asking while they
+                        decided, and they are still asking it while they type.
+                    -->
+                    <p class="flex items-start gap-2 pt-4 text-sm leading-normal text-gray-600">
+                        <Check :size="15" :stroke-width="2" class="mt-0.5 shrink-0 text-success" aria-hidden="true" />
+                        {{ t('profil', 'kurzhinweis', 'Kostenfrei und unverbindlich') }}
                     </p>
                 </form>
             </aside>

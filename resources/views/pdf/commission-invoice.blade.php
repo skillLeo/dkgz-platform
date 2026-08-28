@@ -128,18 +128,29 @@
 
 <div style="height: 22pt;"></div>
 
+@php($amounts = $commission->amounts())
+
 <div class="eyebrow">{{ $t('posten', 'ueberschrift', 'Leistung') }}</div>
 <table class="data" style="margin-top: 8pt; border-top: 0.5pt solid {{ $gray200 }};">
     <tr>
         <td class="label">{{ $t('posten', 'bezeichnung', 'Vermittlungsgebühr') }}</td>
-        <td class="num">{{ Formatter::money($commission->commission_cents) }}</td>
+        <td class="num">{{ Formatter::money($amounts['net']) }}</td>
+    </tr>
+    {{-- The tax on its own line: an invoice showing only a total leaves the
+         partner to work it out themselves, and their bookkeeping needs the
+         split as much as ours does. --}}
+    <tr>
+        <td class="label">
+            {{ $t('posten', 'steuer', 'zzgl. Umsatzsteuer') }} {{ rtrim(rtrim(number_format($amounts['percent'], 2, ',', '.'), '0'), ',') }} %
+        </td>
+        <td class="num">{{ Formatter::money($amounts['vat']) }}</td>
     </tr>
 </table>
 
 <table class="total">
     <tr>
         <td>{{ $t('posten', 'summe', 'Rechnungsbetrag') }}</td>
-        <td class="num">{{ Formatter::money($commission->commission_cents) }}</td>
+        <td class="num">{{ Formatter::money($amounts['gross']) }}</td>
     </tr>
 </table>
 

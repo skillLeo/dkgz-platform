@@ -248,7 +248,11 @@ const telHref = computed(() => `tel:${String(page.props.app?.phone ?? '').replac
                     </p>
                 </div>
 
-                <GermanyCoverageMap :regions="coverage" />
+                <GermanyCoverageMap
+                    :regions="coverage"
+                    :heading="t('abdeckung', 'karte_ueberschrift', 'In jeder Postleitregion vertreten')"
+                    :text="t('abdeckung', 'karte_text', 'Geben Sie Ihre Postleitzahl an — wir finden einen Sachverständigen, dessen Einsatzgebiet Ihren Standort abdeckt.')"
+                />
             </div>
         </section>
 

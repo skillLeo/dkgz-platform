@@ -102,6 +102,7 @@ class SettingsSeeder extends Seeder
             ['group' => 'integrations', 'key' => 'integrations.google_ads_id', 'type' => 'string', 'label_de' => 'Google Ads — Conversion-Kennung', 'help_de' => 'Beginnt mit AW-. Wird wie die Analytics-Kennung erst nach Zustimmung geladen.'],
             ['group' => 'integrations', 'key' => 'integrations.google_site_verification', 'type' => 'string', 'label_de' => 'Google Search Console — Bestätigungscode', 'help_de' => 'Nur der Wert aus dem content-Attribut, ohne den umgebenden Meta-Tag. Setzt kein Cookie und braucht keine Zustimmung.'],
 
+            ['group' => 'business', 'key' => 'business.vat_percent', 'type' => 'integer', 'value' => '19', 'label_de' => 'Umsatzsteuer auf Provisionsrechnungen (%)', 'help_de' => 'Wird auf die Vermittlungsgebühr aufgeschlagen. Bereits ausgestellte Rechnungen behalten ihren Satz.'],
             ['group' => 'business', 'key' => 'business.commission_rate', 'type' => 'decimal', 'value' => '15.00', 'label_de' => 'Vermittlungsprovision in Prozent', 'help_de' => 'Gilt für neue Abschlüsse. Bereits abgerechnete Provisionen bleiben unverändert.'],
             ['group' => 'business', 'key' => 'business.notification_cadence_minutes', 'type' => 'integer', 'value' => '45', 'label_de' => 'Abrufintervall für Benachrichtigungen in Sekunden'],
             ['group' => 'business', 'key' => 'business.max_images_per_request', 'type' => 'integer', 'value' => '5', 'label_de' => 'Maximale Anzahl Fotos je Anfrage'],

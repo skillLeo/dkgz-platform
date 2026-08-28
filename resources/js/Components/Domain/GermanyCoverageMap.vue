@@ -21,6 +21,12 @@ import { BORDER_PATH, MAP } from '../../Support/germany.js'
  */
 const props = defineProps({
     regions: { type: Array, default: () => [] },
+    /** Both editable: they make the claim the section exists to make. */
+    heading: { type: String, default: 'In jeder Postleitregion vertreten' },
+    text: {
+        type: String,
+        default: 'Geben Sie Ihre Postleitzahl an — wir finden einen Sachverständigen, dessen Einsatzgebiet Ihren Standort abdeckt.',
+    },
 })
 
 const covered = computed(() => props.regions.filter((region) => region.covered))
@@ -84,12 +90,9 @@ const headline = computed(() => (complete.value
 
         <div class="min-w-0">
             <p class="text-h3 font-semibold text-navy-700">
-                {{ complete ? 'In jeder Postleitregion vertreten' : headline }}
+                {{ complete ? heading : headline }}
             </p>
-            <p class="measure pt-2 text-base leading-normal text-gray-600">
-                Geben Sie Ihre Postleitzahl an — wir finden einen Sachverständigen, dessen
-                Einsatzgebiet Ihren Standort abdeckt.
-            </p>
+            <p v-if="text" class="measure pt-2 text-base leading-normal text-gray-600">{{ text }}</p>
 
             <!--
                 The regions in words. A search engine and a visitor both want to

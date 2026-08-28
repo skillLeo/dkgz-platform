@@ -51,6 +51,7 @@ class CommissionController extends Controller
                 'fee_cents' => $c->fee_cents,
                 'rate_percent' => (float) $c->rate_percent,
                 'commission_cents' => $c->commission_cents,
+                'gross_cents' => $c->grossCents(),
                 'status' => $c->status,
                 'invoice_number' => $c->invoice_number,
                 'needs_review' => $c->needsReview(),
