@@ -8,6 +8,8 @@ use App\Models\Commission;
 use App\Models\RequestMatch;
 use App\Models\ServiceRequest;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
+use Throwable;
 
 /**
  * The admin dashboard's "Erfordert Aufmerksamkeit" list.
@@ -37,6 +39,7 @@ class AttentionQueue
             self::missingReports(),
             self::lapsingCover(),
             self::staleCommissions(),
+            self::undeliveredMail(),
         );
 
         // Oldest first: the longest-standing problem is the most overdue.
@@ -152,6 +155,44 @@ class AttentionQueue
     }
 
     /** @return array<int, array<string, mixed>> */
+    /**
+     * Mail that could not be sent.
+     *
+     * A changed mailbox password once stopped every e-mail for a day without
+     * anybody noticing: the application reported "gesendet", the jobs quietly
+     * moved to the failed table, and the first sign of trouble was a customer
+     * who never heard back. It belongs at the top of the same list as every
+     * other thing somebody has to act on.
+     */
+    private static function undeliveredMail(): array
+    {
+        try {
+            $failed = DB::table('failed_jobs')->count();
+
+            if ($failed === 0) {
+                return [];
+            }
+
+            $oldest = DB::table('failed_jobs')->orderBy('failed_at')->value('failed_at');
+            $since = $oldest ? Carbon::parse($oldest) : now();
+        } catch (Throwable) {
+            // The dashboard must not fall over because a diagnostic could not
+            // read a table.
+            return [];
+        }
+
+        $paused = QueueHealth::isPaused()
+            ? ' — die Warteschlange pausiert, bis die Ursache behoben ist'
+            : '';
+
+        return [self::row(
+            'E-Mail',
+            "{$failed} E-Mails konnten nicht versendet werden{$paused}",
+            $since,
+            route('admin.system'),
+        )];
+    }
+
     private static function staleCommissions(): array
     {
         return Commission::query()
