@@ -18,6 +18,20 @@ class ServiceRequest extends Model
 {
     use HasFactory, LogsActivity, SoftDeletes;
 
+    /**
+     * How far each reference advances past the last one.
+     *
+     * Five to twelve: enough that the gap between two references cannot be
+     * read as a count, small enough that four digits still hold a month's
+     * worth — a little over a thousand requests at this rate.
+     */
+    private const STEP_MIN = 5;
+
+    private const STEP_MAX = 12;
+
+    /** Retries when two requests land on the same number at once. */
+    private const REFERENCE_ATTEMPTS = 5;
+
     public const STATUS_NEW = 'new';
 
     public const STATUS_MATCHED = 'matched';
@@ -103,21 +117,71 @@ class ServiceRequest extends Model
      * exactly as they are — a reference a customer already holds must keep
      * matching the one in the system.
      */
+    /**
+     * The next reference, advanced by an unpredictable amount.
+     *
+     * It used to count up by one. Anybody holding two references — a customer
+     * and a partner comparing notes, or one person who enquired twice — could
+     * subtract them and read off exactly how much work DKGZ had taken in
+     * between, which is nobody's business but DKGZ's.
+     *
+     * A random step of five to twelve turns that arithmetic into a range: a gap
+     * of thirty-four means somewhere between three and seven requests, not
+     * thirty-four and not any exact number. It does not hide the order of two
+     * references, and it never can while they are readable and sequential at
+     * all — what it removes is the exact count, which is what was being leaked.
+     *
+     * The first reference of a month is offset too. Starting at 0001 announces
+     * both that it is the first and where the counting began, which hands an
+     * observer the fixed point the rest of the arithmetic needs.
+     *
+     * random_int rather than rand: this exists to stop somebody working the
+     * numbers out, so a predictable generator would defeat the whole point.
+     */
     public static function nextReference(?CarbonInterface $moment = null): string
     {
         $moment ??= now();
         $prefix = 'DKGZ'.$moment->format('ym');
 
+        // Two requests arriving together would otherwise read the same last
+        // reference and build the same next one. The column is unique, so the
+        // loser of that race raises rather than duplicating; trying again with
+        // a fresh read and a fresh step settles it.
+        foreach (range(1, self::REFERENCE_ATTEMPTS) as $ignored) {
+            $reference = $prefix.str_pad(
+                (string) (self::lastSequence($prefix) + random_int(self::STEP_MIN, self::STEP_MAX)),
+                4,
+                '0',
+                STR_PAD_LEFT
+            );
+
+            if (! static::withTrashed()->where('reference', $reference)->exists()) {
+                return $reference;
+            }
+        }
+
+        // Every attempt collided, which needs a great many simultaneous
+        // requests. Falling back to something certainly unique beats handing
+        // back a reference that is about to fail on insert.
+        return $prefix.str_pad((string) (self::lastSequence($prefix) + random_int(self::STEP_MIN, self::STEP_MAX) + random_int(100, 999)), 4, '0', STR_PAD_LEFT);
+    }
+
+    /**
+     * The highest sequence used this month, or zero.
+     *
+     * Ordered by length first: "DKGZ26080100" sorts below "DKGZ2608099" as
+     * text, so a month that runs past four digits would otherwise start
+     * counting again from the wrong place.
+     */
+    private static function lastSequence(string $prefix): int
+    {
         $last = static::withTrashed()
             ->where('reference', 'like', "{$prefix}%")
+            ->orderByRaw('LENGTH(reference) DESC')
             ->orderByDesc('reference')
             ->value('reference');
 
-        $sequence = $last === null ? 1 : ((int) substr($last, -4)) + 1;
-
-        // Four digits allow 9,999 requests in one month; beyond that the month
-        // rolls into five rather than silently colliding.
-        return $prefix.str_pad((string) $sequence, 4, '0', STR_PAD_LEFT);
+        return $last === null ? 0 : (int) substr($last, strlen($prefix));
     }
 
     public function isOpen(): bool

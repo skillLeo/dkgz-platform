@@ -6,7 +6,6 @@ use App\Models\AssignmentDocument;
 use App\Models\Commission;
 use App\Models\ServiceRequest;
 use App\Models\ServiceType;
-use App\Support\Money;
 use App\Support\Settings;
 use Database\Seeders\RolePermissionSeeder;
 use Database\Seeders\SettingsSeeder;
@@ -203,19 +202,23 @@ describe('invoice numbering', function () {
 });
 
 describe('reference numbering', function () {
-    it('runs sequentially within the month', function () {
-        expect(ServiceRequest::nextReference())->toBe('DKGZ'.now()->format('ym').'0001');
+    it('advances within the month, but not by one', function () {
+        // Counting up by one let anybody holding two references subtract them
+        // and read off exactly how much work came in between.
+        ServiceRequest::factory()->create(['reference' => 'DKGZ'.now()->format('ym').'0100']);
 
-        ServiceRequest::factory()->create(['reference' => 'DKGZ'.now()->format('ym').'0001']);
+        $next = (int) substr(ServiceRequest::nextReference(), 8);
 
-        expect(ServiceRequest::nextReference())->toBe('DKGZ'.now()->format('ym').'0002');
+        expect($next)->toBeGreaterThanOrEqual(105)->toBeLessThanOrEqual(112);
     });
 
     it('restarts the sequence in a new month', function () {
         ServiceRequest::factory()->create(['reference' => 'DKGZ'.now()->format('ym').'0042']);
 
-        expect(ServiceRequest::nextReference(now()->addMonthNoOverflow()))
-            ->toBe('DKGZ'.now()->addMonthNoOverflow()->format('ym').'0001');
+        $next = ServiceRequest::nextReference(now()->addMonthNoOverflow());
+
+        expect($next)->toStartWith('DKGZ'.now()->addMonthNoOverflow()->format('ym'))
+            ->and((int) substr($next, 8))->toBeLessThanOrEqual(12);
     });
 
     it('matches the format the client asked for', function () {
