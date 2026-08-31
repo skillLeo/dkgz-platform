@@ -1,7 +1,7 @@
 <script setup>
 import { computed, ref } from 'vue'
 import { Head, Link, usePage } from '@inertiajs/vue3'
-import { Check, ChevronDown, Phone } from 'lucide-vue-next'
+import { Check, ChevronDown, Phone, Star } from 'lucide-vue-next'
 import PublicLayout from '../../Layouts/PublicLayout.vue'
 import BrandSeal from '../../Components/Layout/BrandSeal.vue'
 import SealMark from '../../Components/Layout/SealMark.vue'
@@ -21,6 +21,7 @@ const props = defineProps({
     content: { type: Object, default: () => ({}) },
     serviceTypes: { type: Array, default: () => [] },
     faqs: { type: Array, default: () => [] },
+    testimonials: { type: Array, default: () => [] },
     coverage: { type: Array, default: () => [] },
 })
 
@@ -105,10 +106,18 @@ const telHref = computed(() => `tel:${String(page.props.app?.phone ?? '').replac
         <section style="animation: dkgz-enter 420ms cubic-bezier(0.4,0,0.2,1) both">
             <div class="mx-auto grid w-full max-w-(--container-shell) grid-cols-1 items-start gap-16 px-4 py-16 md:px-6 lg:grid-cols-[minmax(0,58fr)_minmax(0,42fr)] lg:py-24">
                 <div>
-                    <p class="text-eyebrow font-semibold uppercase" style="color: var(--dkgz-accent)">
-                        {{ t('hero', 'eyebrow') }}
-                    </p>
-                    <div class="rule-accent mt-2.5" aria-hidden="true" />
+                    <!--
+                        The line and its rule go together. Emptying the wording
+                        used to leave the gold rule floating above the headline
+                        with nothing to underline, so the only way to be rid of
+                        the pair was to edit the template.
+                    -->
+                    <template v-if="t('hero', 'eyebrow')">
+                        <p class="text-eyebrow font-semibold uppercase" style="color: var(--dkgz-accent)">
+                            {{ t('hero', 'eyebrow') }}
+                        </p>
+                        <div class="rule-accent mt-2.5" aria-hidden="true" />
+                    </template>
 
                     <h1 class="text-h1 font-bold text-navy-700 pt-7 pb-4 lg:text-display">
                         <template v-for="(line, index) in headline" :key="index"><br v-if="index">{{ line }}</template>
@@ -332,6 +341,69 @@ const telHref = computed(() => `tel:${String(page.props.app?.phone ?? '').replac
         </section>
 
         <!-- FAQ -->
+        <!--
+            The one place on this page where somebody other than DKGZ does the
+            talking. It appears only when there is something real to show: an
+            empty testimonial band is worse than none, because the space where
+            praise should be reads as the absence of any.
+        -->
+        <section v-if="testimonials.length" class="border-t border-gray-200 bg-gray-50">
+            <div class="mx-auto w-full max-w-(--container-shell) px-4 py-16 md:px-6 lg:py-20">
+                <div class="pb-12">
+                    <h2 class="text-h2 font-semibold text-navy-700">
+                        {{ t('stimmen', 'ueberschrift', 'Was unsere Kunden sagen') }}
+                    </h2>
+                    <p v-if="t('stimmen', 'text')" class="measure-lead pt-4 text-lead leading-relaxed text-gray-600">
+                        {{ t('stimmen', 'text') }}
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+                    <figure
+                        v-for="voice in testimonials"
+                        :key="voice.id"
+                        class="flex flex-col rounded-card border border-gray-200 bg-white p-6"
+                    >
+                        <div v-if="voice.rating" class="flex gap-0.5 pb-4" :aria-label="`${voice.rating} von 5 Sternen`">
+                            <Star
+                                v-for="n in voice.rating"
+                                :key="n"
+                                :size="16"
+                                :stroke-width="0"
+                                class="fill-current"
+                                style="color: var(--dkgz-accent)"
+                                aria-hidden="true"
+                            />
+                        </div>
+
+                        <blockquote class="flex-1 text-base leading-relaxed text-gray-800">
+                            „{{ voice.quote }}“
+                        </blockquote>
+
+                        <figcaption class="flex items-center gap-3.5 pt-6">
+                            <img
+                                v-if="voice.photo_url"
+                                :src="voice.photo_url"
+                                :alt="voice.name"
+                                class="h-11 w-11 shrink-0 rounded-full border border-gray-200 object-cover"
+                                loading="lazy"
+                            >
+                            <span
+                                v-else
+                                class="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-navy-100 text-sm font-semibold text-navy-700"
+                                aria-hidden="true"
+                            >{{ voice.initials }}</span>
+
+                            <span class="min-w-0">
+                                <span class="block truncate text-base font-medium text-navy-700">{{ voice.name }}</span>
+                                <span v-if="voice.location" class="block truncate text-sm text-gray-600">{{ voice.location }}</span>
+                            </span>
+                        </figcaption>
+                    </figure>
+                </div>
+            </div>
+        </section>
+
         <section v-if="faqs.length" class="bg-white">
             <div class="mx-auto grid w-full max-w-(--container-shell) grid-cols-1 items-start gap-16 px-4 py-16 md:px-6 lg:grid-cols-[380px_minmax(0,1fr)] lg:py-24">
                 <div>

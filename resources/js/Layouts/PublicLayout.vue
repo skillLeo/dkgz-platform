@@ -47,6 +47,20 @@ const scrolled = ref(false)
 
 const app = computed(() => page.props.app ?? {})
 const footerServices = computed(() => page.props.footerServices ?? [])
+
+/**
+ * The wording on the three buttons in the shell.
+ *
+ * Separate strings rather than one, because they sit in different amounts of
+ * room: the header on a phone has space for a word, the header on a desktop for
+ * a sentence, and the bar at the foot of the screen for whichever reads best
+ * when it is the only thing on screen.
+ */
+const cta = computed(() => ({
+    short: app.value.cta?.kurz || 'Anfrage',
+    long: app.value.cta?.lang || 'Anfrage starten',
+    sticky: app.value.cta?.sticky || 'Anfrage starten',
+}))
 const content = computed(() => page.props.content ?? {})
 const t = (section, field, fallback = '') => content.value?.[section]?.[field] ?? fallback
 
@@ -141,7 +155,8 @@ onUnmounted(() => window.removeEventListener('scroll', onScroll))
                             nodes were pushed apart by it and the non-breaking
                             space made a second gap on top.
                         -->
-                        <span>Anfrage<span class="hidden sm:inline">&nbsp;starten</span></span>
+                        <span class="sm:hidden">{{ cta.short }}</span>
+                        <span class="hidden sm:inline">{{ cta.long }}</span>
                     </BaseButton>
                     <button
                         type="button"
@@ -181,7 +196,7 @@ onUnmounted(() => window.removeEventListener('scroll', onScroll))
                     <Link :href="portalLink.href" class="border-b border-white/10 py-4 text-h4 text-white/72" @click="menuOpen = false">{{ portalLink.label }}</Link>
                 </nav>
                 <div class="shrink-0 p-4 pb-[calc(1rem+env(safe-area-inset-bottom))]">
-                    <BaseButton href="/anfrage" variant="inverted" size="cta" block @click="menuOpen = false">Anfrage starten</BaseButton>
+                    <BaseButton href="/anfrage" variant="inverted" size="cta" block @click="menuOpen = false">{{ cta.long }}</BaseButton>
                 </div>
             </div>
         </Teleport>
@@ -198,7 +213,7 @@ onUnmounted(() => window.removeEventListener('scroll', onScroll))
             v-if="stickyCta && scrolled"
             class="fixed inset-x-0 bottom-0 z-30 border-t border-gray-200 bg-white p-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))] sm:hidden"
         >
-            <BaseButton href="/anfrage" size="cta" block>Anfrage starten</BaseButton>
+            <BaseButton href="/anfrage" size="cta" block>{{ cta.sticky }}</BaseButton>
         </div>
 
         <footer class="bg-navy-900">

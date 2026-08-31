@@ -16,6 +16,7 @@ use App\Http\Controllers\Admin\SeoController;
 use App\Http\Controllers\Admin\ServiceTypeController;
 use App\Http\Controllers\Admin\SettingsController;
 use App\Http\Controllers\Admin\SystemController;
+use App\Http\Controllers\Admin\TestimonialController;
 use App\Http\Controllers\Admin\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -183,6 +184,12 @@ Route::prefix('admin')
         // only the ordinary content permissions.
         Route::middleware('can:content.view')->group(function () {
             Route::get('/seo', [SeoController::class, 'index'])->name('seo');
+            Route::get('/kundenstimmen', [TestimonialController::class, 'index'])->name('testimonials');
+        });
+        Route::middleware('can:content.edit')->group(function () {
+            Route::post('/kundenstimmen', [TestimonialController::class, 'store'])->name('testimonials.store');
+            Route::post('/kundenstimmen/{testimonial}', [TestimonialController::class, 'update'])->name('testimonials.update');
+            Route::delete('/kundenstimmen/{testimonial}', [TestimonialController::class, 'destroy'])->name('testimonials.destroy');
         });
         Route::post('/seo', [SeoController::class, 'update'])
             ->middleware('can:content.edit')->name('seo.update');

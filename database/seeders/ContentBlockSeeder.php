@@ -86,7 +86,7 @@ class ContentBlockSeeder extends Seeder
         return [
             ['page_key' => 'startseite', 'section_key' => 'meldeband', 'field_key' => 'text', 'value' => 'Bundesweites Netz geprüfter Kfz-Sachverständiger', 'label_de' => 'Meldeband über dem Kopfbereich'],
 
-            ['page_key' => 'startseite', 'section_key' => 'hero', 'field_key' => 'eyebrow', 'value' => 'Deutsche Kfz-Gutachterzentrale', 'label_de' => 'Hero · Übertitel'],
+            ['page_key' => 'startseite', 'section_key' => 'hero', 'field_key' => 'eyebrow', 'value' => 'Deutsche Kfz-Gutachterzentrale', 'label_de' => 'Hero · Übertitel', 'help_de' => 'Leer lassen, um die Zeile und den goldenen Strich darunter auszublenden.'],
             ['page_key' => 'startseite', 'section_key' => 'hero', 'field_key' => 'zeile_1', 'value' => 'Kfz-Gutachter finden.', 'label_de' => 'Hero · Überschrift, Zeile 1'],
             ['page_key' => 'startseite', 'section_key' => 'hero', 'field_key' => 'zeile_2', 'value' => 'Bundesweit koordiniert.', 'label_de' => 'Hero · Überschrift, Zeile 2'],
             ['page_key' => 'startseite', 'section_key' => 'hero', 'field_key' => 'zeile_3', 'value' => 'Ohne Umwege.', 'label_de' => 'Hero · Überschrift, Zeile 3'],
@@ -150,6 +150,9 @@ class ContentBlockSeeder extends Seeder
             ['page_key' => 'ueber-uns', 'section_key' => 'profil', 'field_key' => 'absatz_2', 'value' => 'Wir sind bewusst kein Vergleichsportal. Wer bei uns anfragt, erhält keine Liste von Angeboten und muss nicht auswählen. Der erste geeignete und verfügbare Partner übernimmt den Auftrag, und ab diesem Moment läuft die Abstimmung direkt zwischen Auftraggeber und Sachverständigem.', 'label_de' => 'Über uns · Absatz 2'],
             ['page_key' => 'ueber-uns', 'section_key' => 'profil', 'field_key' => 'absatz_3', 'value' => 'Jeder Partner in unserem Netz wird vor der Freigabe geprüft: Qualifikation, Berufshaftpflicht und Einsatzgebiet werden hinterlegt und regelmäßig überprüft. Läuft ein Nachweis aus, erhält der Partner keine neuen Anfragen mehr, bis er ihn erneuert hat.', 'label_de' => 'Über uns · Absatz 3'],
             ['page_key' => 'ueber-uns', 'section_key' => 'profil', 'field_key' => 'absatz_4', 'value' => 'Für Auftraggeber ist die Vermittlung kostenfrei und unverbindlich. Es entsteht kein Vertrag mit DKGZ, sondern ausschließlich mit dem Sachverständigen, der den Auftrag annimmt. Über die Plattform werden zu keinem Zeitpunkt Zahlungen abgewickelt.', 'label_de' => 'Über uns · Absatz 4'],
+            ['page_key' => 'startseite', 'section_key' => 'stimmen', 'field_key' => 'ueberschrift', 'value' => 'Was unsere Kunden sagen', 'label_de' => 'Kundenstimmen · Überschrift', 'help_de' => 'Die Stimmen selbst pflegen Sie unter Kundenstimmen. Ohne veröffentlichte Stimmen erscheint der Abschnitt nicht.'],
+            ['page_key' => 'startseite', 'section_key' => 'stimmen', 'field_key' => 'text', 'type' => 'richtext', 'value' => 'Rückmeldungen von Auftraggebern, die über DKGZ einen Sachverständigen gefunden haben.', 'label_de' => 'Kundenstimmen · Fließtext', 'help_de' => 'Leer lassen, um die Zeile wegzulassen.'],
+
             ['page_key' => 'startseite', 'section_key' => 'abdeckung', 'field_key' => 'karte_ueberschrift', 'value' => 'In jeder Postleitregion vertreten', 'label_de' => 'Karte · Überschrift neben der Karte'],
             ['page_key' => 'startseite', 'section_key' => 'abdeckung', 'field_key' => 'karte_text', 'type' => 'richtext', 'value' => 'Geben Sie Ihre Postleitzahl an — wir finden einen Sachverständigen, dessen Einsatzgebiet Ihren Standort abdeckt.', 'label_de' => 'Karte · Text neben der Karte', 'help_de' => 'Leer lassen, um die Zeile wegzulassen.'],
             ['page_key' => 'startseite', 'section_key' => 'abdeckung', 'field_key' => 'text', 'value' => 'Die Karte bildet ab, in welchen Postleitzahlregionen derzeit freigegebene Sachverständige zur Verfügung stehen. Sie entsteht aus den Einsatzgebieten unserer Partner und wächst mit dem Netz.', 'label_de' => 'Abdeckung · Text'],
@@ -184,6 +187,10 @@ class ContentBlockSeeder extends Seeder
     private function requestPage(): array
     {
         return [
+            ['page_key' => 'layout', 'section_key' => 'cta', 'field_key' => 'kurz', 'value' => 'Anfrage', 'label_de' => 'Kopfzeile · Schaltfläche auf dem Handy', 'help_de' => 'Kurz halten — auf schmalen Bildschirmen steht wenig Platz zur Verfügung.'],
+            ['page_key' => 'layout', 'section_key' => 'cta', 'field_key' => 'lang', 'value' => 'Anfrage starten', 'label_de' => 'Kopfzeile · Schaltfläche am Desktop', 'help_de' => 'Wird auch im aufgeklappten Menü auf dem Handy verwendet.'],
+            ['page_key' => 'layout', 'section_key' => 'cta', 'field_key' => 'sticky', 'value' => 'Anfrage starten', 'label_de' => 'Leiste am unteren Bildschirmrand (Handy)'],
+
             ['page_key' => 'anfrage', 'section_key' => 'kopf', 'field_key' => 'eyebrow', 'value' => 'Kostenlose Anfrage', 'label_de' => 'Übertitel'],
             ['page_key' => 'anfrage', 'section_key' => 'kopf', 'field_key' => 'ueberschrift', 'value' => 'Gutachter anfragen', 'label_de' => 'Überschrift'],
             ['page_key' => 'anfrage', 'section_key' => 'kopf', 'field_key' => 'text', 'value' => 'Zwei Schritte. Ihre Kontaktdaten sieht ausschließlich der Sachverständige, der den Auftrag annimmt.', 'label_de' => 'Fließtext'],

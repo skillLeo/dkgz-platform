@@ -6,6 +6,7 @@ use App\Models\Faq;
 use App\Models\Post;
 use App\Models\PostalCode;
 use App\Models\ServiceType;
+use App\Models\Testimonial;
 use App\Support\Content;
 use App\Support\CoverageMap;
 use App\Support\Settings;
@@ -24,6 +25,17 @@ class PublicController extends Controller
             'content' => Content::page('startseite'),
             'serviceTypes' => $this->activeServiceTypes(),
             'faqs' => Faq::published()->onHomepage()->ordered()->get(['id', 'question_de', 'answer_de']),
+            // The one place on the page where somebody other than DKGZ speaks.
+            'testimonials' => Testimonial::published()->ordered()->get()
+                ->map(fn (Testimonial $t) => [
+                    'id' => $t->id,
+                    'name' => $t->name,
+                    'location' => $t->location,
+                    'quote' => $t->quote,
+                    'rating' => $t->rating,
+                    'photo_url' => $t->photoUrl(),
+                    'initials' => $t->initials(),
+                ]),
         ]);
     }
 

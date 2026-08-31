@@ -113,6 +113,7 @@ class Content
     public static function pageKeys(): array
     {
         return [
+            'layout' => 'Kopf- und Fußzeile',
             'startseite' => 'Startseite',
             'anfrage' => 'Anfrageformular',
             'bestaetigung' => 'Bestätigungsseite',

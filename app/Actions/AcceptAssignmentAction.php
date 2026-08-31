@@ -4,11 +4,13 @@ namespace App\Actions;
 
 use App\Exceptions\RequestAlreadyAssignedException;
 use App\Jobs\NotifyAssignmentAcceptedJob;
+use App\Jobs\RequestGoogleReviewJob;
 use App\Models\Assessor;
 use App\Models\Assignment;
 use App\Models\RequestMatch;
 use App\Models\RequestOffer;
 use App\Models\ServiceRequest;
+use App\Support\Settings;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\DB;
 
@@ -113,6 +115,13 @@ class AcceptAssignmentAction
             // Dispatched outside the transaction so a queue write can never
             // roll the assignment back.
             NotifyAssignmentAcceptedJob::dispatch($assignment->id);
+
+            // And the review ask, a day later. Acceptance is when the customer
+            // feels best about it — the assessor has been in touch and their
+            // problem is being dealt with. By the time the report is written
+            // and paid for, that feeling has moved on.
+            RequestGoogleReviewJob::dispatch($assignment->id)
+                ->delay(now()->addDays(max(0, Settings::int('business.google_review_delay_days', 1))));
 
             return $assignment;
         } catch (QueryException $e) {

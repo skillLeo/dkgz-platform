@@ -73,7 +73,13 @@ class NotifyAssignmentCompletedJob implements ShouldQueue
             'bewertung_url' => $reviewUrl,
         ], related: $assignment);
 
-        if (Settings::bool('features.review_flow', true) && $assignment->review !== null) {
+        // Opt-in since the Google review ask took over at acceptance. Both
+        // would mean asking the same customer twice for the same thing a week
+        // apart, which is how a request for goodwill spends it instead.
+        if (Settings::bool('features.review_flow', true)
+            && Settings::bool('features.internal_review_request', false)
+            && $assignment->review !== null
+        ) {
             SendReviewRequestJob::dispatch($assignment->id)
                 ->delay(now()->addDays(Settings::int('business.review_delay_days', 3)));
         }

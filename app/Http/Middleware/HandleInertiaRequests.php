@@ -118,6 +118,10 @@ class HandleInertiaRequests extends Middleware
                 'phone' => Settings::get('contact.phone'),
                 'office_hours' => Settings::get('contact.office_hours'),
                 'support_email' => Settings::get('contact.support_email'),
+                // The buttons in the shell. They belong to no page, so like the
+                // announcement above them they travel with the shared props
+                // rather than with whichever page happens to be loaded.
+                'cta' => Content::page('layout')['cta'] ?? [],
             ],
 
             /*

@@ -85,6 +85,16 @@ class EmailTemplateSeeder extends Seeder
                 'note_de' => 'Die Rechnung stellt der Sachverständige. DKGZ ist nicht Vertragspartner der Begutachtung und stellt Ihnen keine Kosten in Rechnung.',
             ],
             [
+                'key' => 'google-bewertung',
+                'name_de' => 'Google-Bewertung erbitten',
+                'subject_de' => 'Vielen Dank für Ihr Vertrauen, {{ kunde }}',
+                'preheader_de' => 'Eine kurze Bewertung bei Google hilft anderen, den richtigen Sachverständigen zu finden.',
+                'available_variables' => ['kunde', 'nachname', 'referenz', 'gutachtenart', 'sv_firma', 'cta_url'],
+                'body_html' => '<p>Guten Tag {{ kunde }},</p>'
+                    .'<p>vielen Dank, dass Sie DKGZ mit Ihrer Anfrage betraut haben. Ihr Vorgang <strong>{{ referenz }}</strong> wurde an <strong>{{ sv_firma }}</strong> übergeben — der Sachverständige meldet sich direkt bei Ihnen und begleitet Sie von hier an.</p>'
+                    .'<p>Wenn die Vermittlung für Sie gut gelaufen ist, würden wir uns sehr über eine kurze Bewertung bei Google freuen. Zwei Sätze genügen, und sie helfen anderen dabei, im Schadenfall schnell den richtigen Sachverständigen zu finden.</p>',
+            ],
+            [
                 'key' => 'bewertungsanfrage',
                 'name_de' => 'Bewertungsanfrage',
                 'subject_de' => 'Wie zufrieden waren Sie? — {{ referenz }}',
