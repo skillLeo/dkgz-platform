@@ -26,7 +26,7 @@ const stateLabel = computed(() => (props.modelValue ? props.onLabel : props.offL
     <div class="flex items-start justify-between gap-4">
         <div v-if="label || description" class="min-w-0">
             <label :for="uid" class="block text-sm font-medium text-gray-800">{{ label }}</label>
-            <p v-if="description" class="pt-1 text-xs leading-normal text-gray-600">{{ description }}</p>
+            <p v-if="description" :id="`${uid}-hinweis`" class="pt-1 text-xs leading-normal text-gray-600">{{ description }}</p>
         </div>
 
         <div class="flex shrink-0 items-center gap-3">
@@ -39,6 +39,7 @@ const stateLabel = computed(() => (props.modelValue ? props.onLabel : props.offL
                 role="switch"
                 :aria-checked="modelValue"
                 :aria-label="label || stateLabel"
+                :aria-describedby="description ? `${uid}-hinweis` : undefined"
                 :disabled="disabled"
                 class="relative h-6 w-11 shrink-0 rounded-sm border transition-colors duration-(--duration-hover) ease-(--ease-dkgz) focus-visible:outline-2 focus-visible:outline-navy-500 focus-visible:outline-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                 :class="modelValue ? 'border-navy-700 bg-navy-700' : 'border-gray-300 bg-white'"

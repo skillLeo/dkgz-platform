@@ -13,7 +13,7 @@ return new class extends Migration
             $table->string('page_key', 60);
             $table->string('section_key', 60);
             $table->string('field_key', 60);
-            $table->enum('type', ['text', 'richtext', 'image', 'url'])->default('text');
+            $table->enum('type', ['text', 'richtext', 'image', 'url', 'boolean'])->default('text');
             $table->longText('value')->nullable();
             $table->string('label_de');
             $table->unsignedInteger('sort_order')->default(0);
