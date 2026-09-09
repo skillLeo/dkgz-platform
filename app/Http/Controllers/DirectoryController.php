@@ -84,8 +84,19 @@ class DirectoryController extends Controller
             ]),
             // Everything the shortened form on this page needs, and nothing
             // that would let it be pointed at somebody else.
-            'requestServiceTypes' => $assessor->activeServiceTypes
-                ->map(fn (ServiceType $t) => ['id' => $t->id, 'name_de' => $t->name_de]),
+            //
+            // A partner who has not filled in their services left this list
+            // empty, and an empty list is a dropdown with nothing in it: the
+            // visitor could not choose a service, so they could not send the
+            // form, so the page was a dead end. Falling back to the full list
+            // keeps the enquiry possible — DKGZ places it either way, and a
+            // partner with no services set is an unfinished profile rather than
+            // one that does nothing.
+            'requestServiceTypes' => ($assessor->activeServiceTypes->isNotEmpty()
+                ? $assessor->activeServiceTypes
+                : ServiceType::active()->ordered()->get(['id', 'name_de']))
+                ->map(fn (ServiceType $t) => ['id' => $t->id, 'name_de' => $t->name_de])
+                ->values(),
         ]);
     }
 

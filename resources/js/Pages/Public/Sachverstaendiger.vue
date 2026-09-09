@@ -1,6 +1,7 @@
 <script setup>
-import { computed, ref } from 'vue'
+import { computed, nextTick, ref } from 'vue'
 import { Head, Link, useForm } from '@inertiajs/vue3'
+import { fill } from '../../Support/placeholders.js'
 import { BadgeCheck, Check, MapPin } from 'lucide-vue-next'
 import PublicLayout from '../../Layouts/PublicLayout.vue'
 import BaseInput from '../../Components/Base/BaseInput.vue'
@@ -61,9 +62,75 @@ const REQUIRED = {
     customer_phone: 'Bitte geben Sie eine Telefonnummer an.',
 }
 
+/**
+ * The values the editable copy on this page is filled with.
+ *
+ * `leistungen` is never handed over empty. A placeholder with nothing behind it
+ * is left standing on purpose — an operator who types {ort} should see their
+ * mistake rather than a hole in the sentence — but a partner who has not filled
+ * in their services is not a typo, and their profile was showing the visitor a
+ * literal "{leistungen}".
+ */
+const values = computed(() => ({
+    name: props.assessor.name,
+    stadt: props.assessor.city || props.assessor.region || 'Ihrer Region',
+    leistungen: props.assessor.services.map((s) => s.name).join(', ') || 'Kfz-Gutachten',
+}))
+
+/**
+ * A sentence about this partner, assembled from what is known about them.
+ *
+ * Most profiles carry no text of their own — the office would have to write a
+ * hundred and seventy of them — and a page that names a firm and then says
+ * nothing about it gives a reader and a search engine equally little. The
+ * wording is editable; the names, the town and the services are filled in.
+ *
+ * Two versions, because the usual one names the services and a partner who has
+ * set none has nothing to name. Listing them is worth a sentence of its own
+ * rather than a clause that has to survive being empty.
+ */
+const summary = computed(() => (props.assessor.services.length
+    ? fill(t('profil', 'beschreibung',
+        '{name} ist als Kfz-Sachverständiger in {stadt} und Umgebung tätig und bietet '
+        + 'verschiedene Gutachterleistungen an. Dazu zählen unter anderem {leistungen}. '
+        + 'Über DKGZ können Sie direkt eine Anfrage für die passende Begutachtung an {name} '
+        + 'senden und die weiteren Schritte persönlich abstimmen.'), values.value)
+    : fill(t('profil', 'beschreibung_ohne_leistungen',
+        '{name} ist als Kfz-Sachverständiger in {stadt} und Umgebung tätig. '
+        + 'Über DKGZ können Sie direkt eine Anfrage für die passende Begutachtung an {name} '
+        + 'senden und die weiteren Schritte persönlich abstimmen.'), values.value)))
+
+/**
+ * What Google shows under the name.
+ *
+ * Editable, because a hundred and seventy pages sharing one sentence is exactly
+ * the kind of thing that needs changing once somebody sees how it reads in a
+ * result list — and it was previously written into the template.
+ */
+const metaDescription = computed(() => fill(
+    t('profil', 'meta_text',
+        '{name} — geprüfter Kfz-Sachverständiger in {stadt}. Gutachten nach Unfall, '
+        + 'Schaden oder für die Fahrzeugbewertung. Anfrage über DKGZ, kostenfrei und unverbindlich.'),
+    values.value,
+))
+
+const formRef = ref(null)
+
 const open = () => {
     asking.value = true
     form.rendered_at = Date.now()
+}
+
+/**
+ * Opens the form and brings it into view.
+ *
+ * On a phone the box is a screen and a half below this button, so opening it
+ * without scrolling would look like the button had done nothing at all.
+ */
+const scrollToForm = async () => {
+    open()
+    await nextTick()
+    formRef.value?.scrollIntoView({ behavior: 'smooth', block: 'start' })
 }
 
 const submit = () => {
@@ -84,10 +151,7 @@ const submit = () => {
 <template>
     <Head>
         <title>{{ `${assessor.name} — Kfz-Sachverständiger${assessor.city ? ` in ${assessor.city}` : ''} | DKGZ` }}</title>
-        <meta
-            name="description"
-            :content="`${assessor.name}, geprüfter Kfz-Sachverständiger im DKGZ-Netz${assessor.city ? ` in ${assessor.city}` : ''}. Anfrage kostenfrei und unverbindlich über DKGZ.`"
-        >
+        <meta name="description" :content="metaDescription">
         <link rel="canonical" :href="`https://dkgz.de${assessor.url}`">
     </Head>
 
@@ -135,6 +199,26 @@ const submit = () => {
                         </p>
                     </div>
                 </div>
+
+                <!--
+                    A sentence about this partner in particular, built from what
+                    is known about them. Most profiles have no text of their
+                    own, and a page that names a firm and then says nothing
+                    about it gives a search engine nothing to work with either.
+                -->
+                <p class="measure pt-8 text-base leading-relaxed text-gray-800">{{ summary }}</p>
+
+                <!--
+                    Mobile only. On a wide screen the request box sits beside
+                    this text and needs no signpost; on a phone it is a screen
+                    and a half further down, which is far enough that somebody
+                    reading this sentence has no idea it is there.
+                -->
+                <span class="mt-6 block lg:hidden">
+                    <BaseButton size="cta" block @click="scrollToForm">
+                        {{ t('profil', 'cta_mobil', 'Jetzt Gutachter kontaktieren') }}
+                    </BaseButton>
+                </span>
             </div>
         </section>
 
@@ -191,7 +275,7 @@ const submit = () => {
                 e-mail address anywhere on it: a listed partner is asked for
                 work through the platform and reached no other way.
             -->
-            <aside class="rounded-card border border-navy-700 p-6 lg:sticky lg:top-24">
+            <aside ref="formRef" class="scroll-mt-24 rounded-card border border-navy-700 p-6 lg:sticky lg:top-24">
                 <template v-if="! asking">
                     <h2 class="text-h4 font-semibold text-navy-700">
                         {{ t('profil', 'cta_titel', 'Diesen Sachverständigen anfragen') }}
