@@ -3,7 +3,6 @@
 namespace App\Support;
 
 use App\Models\AssessorDocument;
-use App\Models\Assignment;
 use App\Models\Commission;
 use App\Models\RequestMatch;
 use App\Models\ServiceRequest;
@@ -16,15 +15,16 @@ use Throwable;
  *
  * Everything here is a case the platform cannot resolve on its own and that
  * will quietly rot if nobody looks: a request no partner took, an area with no
- * cover at all, an order whose report never arrived, a partner whose liability
- * cover is about to lapse, a commission nobody has invoiced. Each row says what
- * happened and how long it has been true, because "how long" is what decides
- * which one to open first.
+ * cover at all, a partner whose liability cover is about to lapse, a commission
+ * nobody has invoiced. Each row says what happened and how long it has been
+ * true, because "how long" is what decides which one to open first.
+ *
+ * Nothing here may warn about something the platform no longer asks for. A row
+ * nobody can act on teaches the reader to skim the list, and a list that is
+ * skimmed is the same as no list.
  */
 class AttentionQueue
 {
-    public const LATE_REPORT_DAYS = 7;
-
     public const STALE_COMMISSION_DAYS = 30;
 
     public const COVER_EXPIRY_DAYS = 30;
@@ -36,7 +36,6 @@ class AttentionQueue
             self::customerUninformed(),
             self::declinedByEveryone(),
             self::withoutCover(),
-            self::missingReports(),
             self::lapsingCover(),
             self::staleCommissions(),
             self::undeliveredMail(),
@@ -63,6 +62,7 @@ class AttentionQueue
     private static function customerUninformed(): array
     {
         return ServiceRequest::query()
+            ->where('is_test', false)
             ->whereIn('status', [ServiceRequest::STATUS_UNANSWERED, ServiceRequest::STATUS_CANCELLED])
             ->whereNull('customer_notified_at')
             ->whereNotNull('customer_email')
@@ -80,6 +80,7 @@ class AttentionQueue
     private static function declinedByEveryone(): array
     {
         return ServiceRequest::query()
+            ->where('is_test', false)
             ->whereIn('status', [ServiceRequest::STATUS_MATCHED, ServiceRequest::STATUS_UNANSWERED])
             ->where('matched_count', '>', 0)
             ->whereDoesntHave('matches', fn ($query) => $query
@@ -97,7 +98,10 @@ class AttentionQueue
     /** @return array<int, array<string, mixed>> */
     private static function withoutCover(): array
     {
+        // A test is never matched on purpose, so it would otherwise raise this
+        // row the moment it was submitted and never stop.
         return ServiceRequest::query()
+            ->where('is_test', false)
             ->where('status', ServiceRequest::STATUS_NEW)
             ->where('matched_count', 0)
             ->get()
@@ -110,27 +114,17 @@ class AttentionQueue
             ->all();
     }
 
-    /** @return array<int, array<string, mixed>> */
-    private static function missingReports(): array
-    {
-        return Assignment::query()
-            ->open()
-            ->where('accepted_at', '<=', now()->subDays(self::LATE_REPORT_DAYS))
-            ->whereDoesntHave('documents', fn ($query) => $query->where('type', 'report'))
-            ->with('serviceRequest')
-            ->get()
-            ->map(function (Assignment $assignment) {
-                $days = (int) $assignment->accepted_at->diffInDays(now());
-
-                return self::row(
-                    $assignment->serviceRequest?->reference ?? "AUF-{$assignment->id}",
-                    "Gutachten seit {$days} Tagen nicht hochgeladen",
-                    $assignment->accepted_at,
-                    route('admin.assignments.show', $assignment),
-                );
-            })
-            ->all();
-    }
+    /*
+     * There was a "Gutachten seit N Tagen nicht hochgeladen" row here.
+     *
+     * Completion stopped requiring the report and the customer's invoice — see
+     * CompleteAssignmentAction — but this kept counting the days since a file
+     * nobody is asked for. Every accepted job therefore turned into a warning a
+     * week later, and the one list that is supposed to mean "somebody must act"
+     * filled up with rows nobody could act on. Uploading is still offered in the
+     * portal for partners who want to attach the report; it is simply not
+     * something to be chased.
+     */
 
     /** @return array<int, array<string, mixed>> */
     private static function lapsingCover(): array
