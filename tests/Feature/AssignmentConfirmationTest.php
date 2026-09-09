@@ -56,6 +56,40 @@ it('moves the job into progress, books the fee and issues the invoice', function
         ->and($commission->invoice_number)->not->toBeEmpty();
 });
 
+it('invoices when the partner marks the job as in progress', function () {
+    // Two buttons reach "In Bearbeitung". This one used to change a word on the
+    // screen and nothing else, so a partner who used it was working on a job
+    // DKGZ had never billed and nothing anywhere said so.
+    $assignment = acceptedAssignment(4_900);
+
+    $this->actingAs($assignment->assessor->user)
+        ->post("/portal/auftraege/{$assignment->id}/status", [
+            'status' => Assignment::STATUS_IN_PROGRESS,
+        ])
+        ->assertSessionHasNoErrors();
+
+    $commission = Commission::where('assignment_id', $assignment->id)->first();
+
+    expect($assignment->fresh()->status)->toBe(Assignment::STATUS_IN_PROGRESS)
+        ->and($commission)->not->toBeNull()
+        ->and($commission->commission_cents)->toBe(4_900)
+        ->and($commission->status)->toBe(Commission::STATUS_INVOICED)
+        ->and($commission->invoice_number)->not->toBeEmpty();
+});
+
+it('does not bill a second time when the status is set again', function () {
+    $assignment = acceptedAssignment(4_900);
+
+    foreach ([1, 2] as $ignored) {
+        $this->actingAs($assignment->assessor->user)
+            ->post("/portal/auftraege/{$assignment->id}/status", [
+                'status' => Assignment::STATUS_IN_PROGRESS,
+            ])->assertSessionHasNoErrors();
+    }
+
+    expect(Commission::where('assignment_id', $assignment->id)->count())->toBe(1);
+});
+
 it('bills the fee snapshotted at acceptance, not the current price list', function () {
     $assignment = acceptedAssignment(7_900);
 

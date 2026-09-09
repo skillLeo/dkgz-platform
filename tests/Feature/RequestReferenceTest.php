@@ -74,10 +74,17 @@ describe('what a reference still has to be', function () {
     it('carries on counting once a month passes four digits', function () {
         // "DKGZ26089999" sorts above "DKGZ260810005" as text, so reading the
         // last one by string order alone would start the month again.
+        //
+        // The month is named rather than taken from the clock: a sequence only
+        // ever continues within its own month, so once the calendar left August
+        // this read as a bug in the counting instead of a test still asking
+        // about August.
+        $august = now()->setDate(2026, 8, 15);
+
         ServiceRequest::factory()->create(['reference' => 'DKGZ26089995']);
         ServiceRequest::factory()->create(['reference' => 'DKGZ260810004']);
 
-        expect((int) substr(ServiceRequest::nextReference(), 8))->toBeGreaterThan(10004);
+        expect((int) substr(ServiceRequest::nextReference($august), 8))->toBeGreaterThan(10004);
     });
 
     it('never reuses one belonging to a deleted request', function () {
@@ -91,12 +98,14 @@ describe('what a reference still has to be', function () {
 
 describe('invoice numbers', function () {
     it('still run in an unbroken sequence', function () {
-        // Deliberately untouched. An invoice number has to be traceable for a
-        // tax audit, and a randomly jumping series invites the question of
-        // which invoices are missing.
+        // The request references jump by a random step on purpose, so four open
+        // requests do not read as "we have had four". An invoice number cannot
+        // do that: it has to be traceable for a tax audit, and a randomly
+        // jumping series invites the question of which invoices are missing.
+        // The same secrecy is bought by starting the run five digits in.
         $source = file_get_contents(app_path('Models/Commission.php'));
 
-        expect($source)->toContain('$sequence = $last ? ((int) substr($last, -4)) + 1 : 1;')
+        expect($source)->toContain('+ 1;')
             ->and($source)->not->toContain('random_int');
     });
 });

@@ -96,7 +96,9 @@ describe('completion', function () {
             ->and($commission->commission_cents)->toBe($assignment->fresh()->dkgz_fee_snapshot_cents ?? 0)
             ->and($commission->rate_percent)->toBeNull()
             ->and($commission->fee_cents)->toBeNull()
-            ->and($commission->status)->toBe(Commission::STATUS_OPEN);
+            // Billed on the way out now, not left waiting for somebody to press
+            // a button — a finished job with no invoice had nothing to download.
+            ->and($commission->status)->toBe(Commission::STATUS_INVOICED);
 
         $assignment->refresh();
 
@@ -186,18 +188,22 @@ describe('fixed-fee snapshotting', function () {
 });
 
 describe('invoice numbering', function () {
-    it('runs sequentially within a year', function () {
-        expect(Commission::nextInvoiceNumber(2026))->toBe('DKGZ-RE-2026-0001');
+    it('runs consecutively from a number that is not one', function () {
+        expect(Commission::nextInvoiceNumber())->toBe('DKGZRE-82191');
 
-        Commission::factory()->create(['invoice_number' => 'DKGZ-RE-2026-0001']);
+        Commission::factory()->create(['invoice_number' => 'DKGZRE-82191']);
 
-        expect(Commission::nextInvoiceNumber(2026))->toBe('DKGZ-RE-2026-0002');
+        expect(Commission::nextInvoiceNumber())->toBe('DKGZRE-82192');
     });
 
-    it('restarts each year', function () {
-        Commission::factory()->create(['invoice_number' => 'DKGZ-RE-2026-0042']);
+    it('does not restart each year', function () {
+        // Restarting each January makes the yearly volume readable, which is
+        // what the scheme exists to avoid.
+        Commission::factory()->create(['invoice_number' => 'DKGZRE-82233']);
 
-        expect(Commission::nextInvoiceNumber(2027))->toBe('DKGZ-RE-2027-0001');
+        $this->travelTo(now()->addYear());
+
+        expect(Commission::nextInvoiceNumber())->toBe('DKGZRE-82234');
     });
 });
 

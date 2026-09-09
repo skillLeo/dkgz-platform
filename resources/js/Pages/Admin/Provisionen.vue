@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from 'vue'
 import { Head } from '@inertiajs/vue3'
-import { Euro } from 'lucide-vue-next'
+import { Download, Euro } from 'lucide-vue-next'
 import AdminLayout from '../../Layouts/AdminLayout.vue'
 import PageHeader from '../../Components/Layout/PageHeader.vue'
 import DataTable from '../../Components/Data/DataTable.vue'
@@ -36,6 +36,9 @@ const columns = [
     { key: 'fee_cents', label: 'Honorar', align: 'right', mono: true, cardRole: 'meta' },
     { key: 'rate_percent', label: 'Satz', align: 'right', mono: true },
     { key: 'commission_cents', label: 'Provision', align: 'right', mono: true, cardRole: 'meta' },
+    // The PDF, from the list. It only ever hung off the detail page, so an
+    // office that wanted last month's invoices had to open every row.
+    { key: 'invoice', label: 'Rechnung', align: 'right' },
 ]
 
 const statusSelectOptions = Object.entries(props.statusOptions).map(([value, label]) => ({ value, label }))
@@ -83,6 +86,17 @@ const statusSelectOptions = Object.entries(props.statusOptions).map(([value, lab
             <template #cell-fee_cents="{ row }"><MoneyValue :cents="row.fee_cents" /></template>
             <template #cell-rate_percent="{ row }"><span class="font-mono text-sm tabular-nums text-gray-600">{{ percent(row.rate_percent) }}</span></template>
             <template #cell-commission_cents="{ row }"><MoneyValue :cents="row.commission_cents" emphasis /></template>
+            <template #cell-invoice="{ row }">
+                <a
+                    v-if="row.has_invoice"
+                    :href="`/admin/provisionen/${row.id}/rechnung`"
+                    class="inline-flex items-center gap-1.5 text-sm font-medium text-navy-700 hover:text-navy-500"
+                >
+                    <Download :size="15" :stroke-width="1.5" aria-hidden="true" />
+                    <span class="font-mono tabular-nums">{{ row.invoice_number }}</span>
+                </a>
+                <span v-else class="text-sm text-gray-400">—</span>
+            </template>
         </DataTable>
 
         <section

@@ -148,7 +148,17 @@ class AssignmentController extends Controller
         ]);
     }
 
-    public function updateStatus(Request $request, Assignment $assignment): RedirectResponse
+    /**
+     * Moving a job into "In Bearbeitung".
+     *
+     * There are two buttons that reach this status — "Zustande gekommen" and
+     * this one — and they used to mean different things: the first booked the
+     * fee and sent the invoice, this one only changed a word on the screen. A
+     * partner who used this one was working on a job DKGZ had never billed, and
+     * nothing anywhere said so. Starting the work is the moment the job is real,
+     * however the partner says it, so both buttons now do the same thing.
+     */
+    public function updateStatus(Request $request, Assignment $assignment, ConfirmAssignmentAction $confirm): RedirectResponse
     {
         $this->authorize('work', $assignment);
 
@@ -157,6 +167,14 @@ class AssignmentController extends Controller
             'note' => ['nullable', 'string', 'max:500'],
         ], [], ['status' => 'der Status']);
 
+        if ($assignment->status === Assignment::STATUS_ACCEPTED) {
+            $confirm->execute($assignment, $data['note'] ?? null);
+
+            return back()->with('success', 'Der Auftrag läuft. Die Abrechnung wurde erstellt und Ihnen zugeschickt.');
+        }
+
+        // Already past acceptance: the fee is booked and the invoice is out, so
+        // this is only a note against a status the job already has.
         $previous = $assignment->status;
 
         $assignment->update([

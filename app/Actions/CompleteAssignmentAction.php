@@ -84,6 +84,14 @@ class CompleteAssignmentAction
         // completion back.
         NotifyAssignmentCompletedJob::dispatch($assignment->id);
 
-        return $commission;
+        // Billed here too, not only at confirmation.
+        //
+        // A job that ran straight from accepted to finished — never passing
+        // through "In Bearbeitung" — booked the fee and then sat waiting for
+        // somebody to remember to press a button, so a finished job had no
+        // invoice to download and nothing said why. Issuing is refused for a
+        // commission that already carries a number, so a job that was confirmed
+        // on the way here is not billed a second time.
+        return app(IssueCommissionInvoiceAction::class)->execute($commission);
     }
 }

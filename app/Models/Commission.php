@@ -140,18 +140,39 @@ class Commission extends Model
         return (int) $this->fee_cents - (int) $this->commission_cents;
     }
 
-    /** DKGZ-RE-YYYY-NNNN, sequential within the year. */
-    public static function nextInvoiceNumber(?int $year = null): string
-    {
-        $year ??= (int) now()->format('Y');
+    /** The first number issued under the current scheme. */
+    public const INVOICE_START = 82191;
 
-        $last = static::where('invoice_number', 'like', "DKGZ-RE-{$year}-%")
+    public const INVOICE_PREFIX = 'DKGZRE-';
+
+    /**
+     * DKGZRE-82191, and one more for each after it.
+     *
+     * Consecutive, as an invoice number has to be, but it does not start at one.
+     * The old DKGZ-RE-2026-0001 announced to every partner exactly how many jobs
+     * DKGZ had ever placed, and the first partner to be sent number 0001 learns
+     * they are the first — which is not a thing a young platform wants to say.
+     * Beginning five digits in tells nobody anything and stays five digits for
+     * seventeen thousand invoices.
+     *
+     * Numbers already issued keep theirs. An invoice number is part of a
+     * document both sides have filed, and renumbering one afterwards is not a
+     * tidy-up, it is a different invoice.
+     */
+    public static function nextInvoiceNumber(): string
+    {
+        $last = static::where('invoice_number', 'like', self::INVOICE_PREFIX.'%')
+            // Longest first, so 100000 sorts above 99999 rather than below it —
+            // the same trap the request references fell into.
+            ->orderByRaw('LENGTH(invoice_number) DESC')
             ->orderByDesc('invoice_number')
             ->value('invoice_number');
 
-        $sequence = $last ? ((int) substr($last, -4)) + 1 : 1;
+        $sequence = $last === null
+            ? self::INVOICE_START
+            : ((int) substr($last, strlen(self::INVOICE_PREFIX))) + 1;
 
-        return sprintf('DKGZ-RE-%d-%04d', $year, $sequence);
+        return self::INVOICE_PREFIX.$sequence;
     }
 
     public function statusLabel(): string

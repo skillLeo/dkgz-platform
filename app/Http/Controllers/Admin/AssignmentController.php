@@ -126,6 +126,11 @@ class AssignmentController extends Controller
                 'rate_percent' => (float) $assignment->commission->rate_percent,
                 'status' => $assignment->commission->status,
                 'status_label' => $assignment->commission->statusLabel(),
+                'invoice_number' => $assignment->commission->invoice_number,
+                // So the PDF can be fetched from the order it belongs to. It
+                // only ever lived on the commission page, two clicks away, and
+                // an office looking at a finished job could not find it.
+                'has_invoice' => filled($assignment->commission->invoice_path),
             ],
             'review' => $assignment->review === null ? null : [
                 'rating' => $assignment->review->rating,

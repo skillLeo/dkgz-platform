@@ -54,6 +54,10 @@ class CommissionController extends Controller
                 'gross_cents' => $c->grossCents(),
                 'status' => $c->status,
                 'invoice_number' => $c->invoice_number,
+                // So the PDF can be fetched from the list. It only ever hung off
+                // the detail page, and an office that wanted last month's
+                // invoices had to open every row to get at them.
+                'has_invoice' => $c->invoice_path !== null,
                 'needs_review' => $c->needsReview(),
                 'created_at' => $c->created_at,
             ]),

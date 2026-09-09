@@ -57,6 +57,24 @@ const cancelOpen = ref(false)
 
         <div class="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_340px]">
             <div class="flex flex-col gap-6">
+                <!--
+                    Why it was handed back, at the top where the question is
+                    asked. The reason was recorded from the start and passed to
+                    this page from the start, and then never drawn — so the one
+                    thing somebody opens a cancelled order to find out was the
+                    one thing the page would not say.
+                -->
+                <section v-if="assignment.cancellation_reason" class="border border-danger bg-danger/4 p-5">
+                    <SectionLabel text="Storniert" tone="muted" />
+                    <p class="pt-3 text-base leading-normal text-gray-800">{{ assignment.cancellation_reason }}</p>
+                    <p v-if="assignment.assessor_notes" class="measure pt-2 text-sm leading-normal text-gray-600">
+                        {{ assignment.assessor_notes }}
+                    </p>
+                    <p v-if="assignment.cancelled_at" class="pt-2 font-mono text-xs tabular-nums text-gray-400">
+                        {{ dateTime(assignment.cancelled_at) }}
+                    </p>
+                </section>
+
                 <section class="border border-gray-200 bg-white p-5">
                     <SectionLabel text="Verlauf" tone="muted" />
                     <AssignmentTimeline :events="timeline" class="pt-4" />
@@ -128,8 +146,24 @@ const cancelOpen = ref(false)
                         <div class="flex items-baseline justify-between gap-4 py-2.5">
                             <dt class="text-sm text-gray-600">Provision</dt><dd><MoneyValue :cents="commission.commission_cents" emphasis /></dd>
                         </div>
+                        <div v-if="commission.invoice_number" class="flex items-baseline justify-between gap-4 border-t border-gray-100 py-2.5">
+                            <dt class="text-sm text-gray-600">Rechnung</dt>
+                            <dd class="font-mono text-sm tabular-nums text-gray-800">{{ commission.invoice_number }}</dd>
+                        </div>
                     </dl>
-                    <BaseButton variant="secondary" size="compact" class="mt-4" :href="`/admin/provisionen/${commission.id}`">Abrechnung öffnen</BaseButton>
+                    <!--
+                        The PDF, from the order it belongs to. It only ever lived
+                        on the commission page, and an office looking at a
+                        finished job had no way of knowing to go there.
+                    -->
+                    <div class="flex flex-wrap gap-2 pt-4">
+                        <BaseButton
+                            v-if="commission.has_invoice"
+                            size="compact"
+                            :href="`/admin/provisionen/${commission.id}/rechnung`"
+                        >Rechnung herunterladen</BaseButton>
+                        <BaseButton variant="secondary" size="compact" :href="`/admin/provisionen/${commission.id}`">Abrechnung öffnen</BaseButton>
+                    </div>
                 </section>
             </div>
         </div>

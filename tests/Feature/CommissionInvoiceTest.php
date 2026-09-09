@@ -33,20 +33,27 @@ beforeEach(function () {
     $this->admin->assignRole('admin');
 });
 
-it('numbers invoices sequentially within the year', function () {
-    expect(Commission::nextInvoiceNumber(2026))->toBe('DKGZ-RE-2026-0001');
+it('numbers invoices consecutively, starting well past one', function () {
+    // Consecutive, as an invoice number has to be, but it does not start at
+    // one: the old scheme announced to every partner exactly how many jobs DKGZ
+    // had ever placed.
+    expect(Commission::nextInvoiceNumber())->toBe('DKGZRE-82191');
 
-    billableCommission()->update(['invoice_number' => 'DKGZ-RE-2026-0001']);
-    expect(Commission::nextInvoiceNumber(2026))->toBe('DKGZ-RE-2026-0002');
+    billableCommission()->update(['invoice_number' => 'DKGZRE-82191']);
+    expect(Commission::nextInvoiceNumber())->toBe('DKGZRE-82192');
 
-    billableCommission()->update(['invoice_number' => 'DKGZ-RE-2026-0009']);
-    expect(Commission::nextInvoiceNumber(2026))->toBe('DKGZ-RE-2026-0010');
+    billableCommission()->update(['invoice_number' => 'DKGZRE-82199']);
+    expect(Commission::nextInvoiceNumber())->toBe('DKGZRE-82200');
 });
 
-it('restarts the sequence in a new year', function () {
-    billableCommission()->update(['invoice_number' => 'DKGZ-RE-2026-0042']);
+it('runs on across the year rather than restarting', function () {
+    // A restart each January makes the yearly volume readable again, which is
+    // the thing the new scheme exists to avoid.
+    billableCommission()->update(['invoice_number' => 'DKGZRE-82233']);
 
-    expect(Commission::nextInvoiceNumber(2027))->toBe('DKGZ-RE-2027-0001');
+    $this->travelTo(now()->addYear());
+
+    expect(Commission::nextInvoiceNumber())->toBe('DKGZRE-82234');
 });
 
 it('writes the PDF privately and marks the commission invoiced', function () {
@@ -59,7 +66,7 @@ it('writes the PDF privately and marks the commission invoiced', function () {
     $fresh = $commission->fresh();
 
     expect($fresh->status)->toBe(Commission::STATUS_INVOICED)
-        ->and($fresh->invoice_number)->toStartWith('DKGZ-RE-')
+        ->and($fresh->invoice_number)->toStartWith('DKGZRE-')
         ->and($fresh->invoice_path)->not->toBeNull();
 
     Storage::disk('private')->assertExists($fresh->invoice_path);
@@ -76,7 +83,7 @@ it('records the number but writes no PDF when generation is switched off', funct
     $fresh = $commission->fresh();
 
     expect($fresh->status)->toBe(Commission::STATUS_INVOICED)
-        ->and($fresh->invoice_number)->toStartWith('DKGZ-RE-')
+        ->and($fresh->invoice_number)->toStartWith('DKGZRE-')
         ->and($fresh->invoice_path)->toBeNull()
         ->and(Storage::disk('private')->files('provisionen'))->toBe([]);
 });

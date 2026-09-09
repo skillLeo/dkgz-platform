@@ -171,7 +171,9 @@ it('carries a request from the public form all the way to a settled review', fun
         ->and($commission->fee_cents)->toBeNull()
         ->and($commission->dkgz_fee_cents)->toBe($expectedFee)
         ->and($commission->commission_cents)->toBe($expectedFee)
-        ->and($commission->status)->toBe(Commission::STATUS_OPEN);
+        // Billed on the way out, so a finished job always has an invoice to
+        // download rather than waiting for somebody to press a button.
+        ->and($commission->status)->toBe(Commission::STATUS_INVOICED);
 
     expect(Formatter::money($commission->commission_cents))->toBe(Formatter::money($expectedFee));
 
