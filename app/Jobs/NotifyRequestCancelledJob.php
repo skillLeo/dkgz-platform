@@ -36,6 +36,11 @@ class NotifyRequestCancelledJob implements ShouldQueue
             return;
         }
 
+        // Never twice for the same request, however it got here.
+        if ($request->customer_notified_at !== null) {
+            return;
+        }
+
         Mailer::send($request->customer_email, 'anfrage-storniert', [
             'eyebrow' => 'Ihre Anfrage',
             'headline' => 'Ihre Begutachtung findet nicht statt.',
@@ -56,5 +61,11 @@ class NotifyRequestCancelledJob implements ShouldQueue
             'cta' => 'Neue Anfrage stellen',
             'cta_url' => route('request.create'),
         ], related: $request);
+
+        // Stamped, like every other message that closes a request off. Without
+        // it the customer was told and the dashboard went on saying they had
+        // not been — so every job a partner handed back left a warning nobody
+        // could clear, on the one list that is supposed to mean somebody must act.
+        $request->forceFill(['customer_notified_at' => now()])->save();
     }
 }
