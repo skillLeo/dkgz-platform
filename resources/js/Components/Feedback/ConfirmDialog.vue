@@ -69,7 +69,16 @@ const onKeydown = (event) => {
                         />
                         <div class="min-w-0">
                             <h2 id="bestaetigung-titel" class="text-h4 font-semibold text-navy-700">{{ state.title }}</h2>
-                            <p v-if="state.message" class="pt-2 text-base leading-normal text-gray-600">{{ state.message }}</p>
+                            <!--
+                                Line breaks the operator typed are kept. HTML
+                                collapses them, so an explanation written as two
+                                paragraphs in the admin panel arrived as one run
+                                of text and the example ran into the sentence
+                                before it. Still interpolated, never rendered as
+                                markup — a text field that quietly accepts tags
+                                is a text field somebody can put a script in.
+                            -->
+                            <p v-if="state.message" class="whitespace-pre-line pt-2 text-base leading-normal text-gray-600">{{ state.message }}</p>
                         </div>
                     </div>
 

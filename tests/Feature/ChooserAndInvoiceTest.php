@@ -226,6 +226,35 @@ describe('the first step of the request', function () {
         expect($type->fresh()->info_de)->toBe('Wann Sie das brauchen: nach einem Unfall.');
     });
 
+    it('keeps the line breaks the office typed into the info text', function () {
+        // An explanation written as two paragraphs arrived as one run of text,
+        // so the example ran into the sentence before it. Interpolated, never
+        // rendered as markup — a text field that quietly accepts tags is a text
+        // field somebody can put a script in.
+        $dialog = file_get_contents(resource_path('js/Components/Feedback/ConfirmDialog.vue'));
+
+        expect($dialog)->toContain('whitespace-pre-line pt-2 text-base')
+            ->and($dialog)->toContain('{{ state.message }}')
+            ->and($dialog)->not->toContain('v-html');
+    });
+
+    it('stores a line break rather than flattening it', function () {
+        $admin = User::factory()->create(['is_active' => true]);
+        $admin->assignRole('admin');
+        $type = ServiceType::factory()->create(['is_active' => true, 'dkgz_fee_cents' => 7900]);
+
+        $this->actingAs($admin)
+            ->post("/admin/leistungsarten/{$type->id}", [
+                'name_de' => $type->name_de,
+                'info_de' => "Nach einem Unfall.\n\nBeispiel: Auffahrunfall auf der Autobahn.",
+                'is_active' => true,
+                'dkgz_fee_cents' => 7900,
+            ])
+            ->assertSessionHasNoErrors();
+
+        expect($type->fresh()->info_de)->toContain("\n\nBeispiel:");
+    });
+
     it('opens each description in the dialog rather than inside its row', function () {
         $source = file_get_contents(resource_path('js/Components/Domain/ServiceChooser.vue'));
 

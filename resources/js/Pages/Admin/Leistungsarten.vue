@@ -169,8 +169,8 @@ const remove = async (type) => {
                         <BaseTextarea
                             v-model="edit.info_de"
                             label="Info-Text im Anfrageformular"
-                            :rows="4"
-                            hint="Erscheint hinter dem i in Schritt 1 der Anfrage. Beschreiben Sie, wann man diese Leistung braucht. Leer lassen, um die Beschreibung darüber zu verwenden."
+                            :rows="6"
+                            hint="Erscheint hinter dem i in Schritt 1 der Anfrage. Beschreiben Sie, wann man diese Leistung braucht. Zeilenumbrüche werden übernommen — für ein Beispiel in einer eigenen Zeile einfach Enter drücken. Leer lassen, um die Beschreibung darüber zu verwenden."
                             :error="edit.errors.info_de"
                             optional
                         />
