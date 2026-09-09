@@ -1,0 +1,1 @@
+function e(e,t,n,r=!0){let i=e?.[t]?.[n];return i==null||i===``?r:i!==!1&&i!==`0`}export{e as t};
