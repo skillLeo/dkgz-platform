@@ -64,6 +64,15 @@ const cta = computed(() => ({
 const content = computed(() => page.props.content ?? {})
 const t = (section, field, fallback = '') => content.value?.[section]?.[field] ?? fallback
 
+/**
+ * The footer's own wording.
+ *
+ * Read from the shared props rather than through t(), because t() reads the
+ * block set of whichever page is loaded and the footer stands on all of them.
+ * Stored under the homepage it changed there and nowhere else.
+ */
+const fuss = (field, fallback = '') => page.props.app?.fuss?.[field] || fallback
+
 /*
  * "Für Sachverständige" has moved to the footer and the FAQ has taken its place:
  * a visitor arriving with a question is far commoner than one arriving to join
@@ -228,7 +237,7 @@ onUnmounted(() => window.removeEventListener('scroll', onScroll))
                             </BrandLogo>
                         </div>
                         <p class="measure-brand pt-5 text-sm leading-relaxed text-white/60">
-                            {{ t('fuss', 'beschreibung', 'Bundesweite Vermittlung von Kfz-Sachverständigen. Eine Anfrage, ein Ansprechpartner, geprüfte Partner in allen PLZ-Gebieten.') }}
+                            {{ fuss('beschreibung', 'Bundesweite Vermittlung von Kfz-Sachverständigen. Eine Anfrage, ein Ansprechpartner, geprüfte Partner in allen PLZ-Gebieten.') }}
                         </p>
                         <div v-if="app.phone" class="flex items-center gap-5 pt-5">
                             <a :href="telHref(app.phone)" class="font-mono text-sm tabular-nums text-white">{{ app.phone }}</a>
@@ -281,7 +290,7 @@ onUnmounted(() => window.removeEventListener('scroll', onScroll))
                 <div class="mt-12 flex flex-wrap items-center justify-between gap-6 border-t border-white/12 pt-6">
                     <span class="text-sm text-white/45">© {{ new Date().getFullYear() }} DKGZ Deutsche KFZ-Gutachterzentrale</span>
                     <span class="measure-footer text-sm text-white/45">
-                        {{ t('fuss', 'rechtshinweis', 'DKGZ ist eine Vermittlungsstelle. Das Gutachten erstellt der vermittelte Sachverständige.') }}
+                        {{ fuss('rechtshinweis', 'DKGZ ist eine Vermittlungsstelle. Das Gutachten erstellt der vermittelte Sachverständige.') }}
                     </span>
                 </div>
             </div>

@@ -122,6 +122,10 @@ class HandleInertiaRequests extends Middleware
                 // announcement above them they travel with the shared props
                 // rather than with whichever page happens to be loaded.
                 'cta' => Content::page('layout')['cta'] ?? [],
+                // The footer, for the same reason as the buttons above it: it
+                // stands on every page, so reading it from whichever page
+                // happened to be loaded meant only the homepage ever had it.
+                'fuss' => Content::page('layout')['fuss'] ?? [],
             ],
 
             /*
