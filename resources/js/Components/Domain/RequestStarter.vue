@@ -1,132 +1,105 @@
 <script setup>
-import { computed, ref, watch } from 'vue'
+import { computed, ref } from 'vue'
 import { router } from '@inertiajs/vue3'
-import { ArrowRight, FileText, ShieldCheck } from 'lucide-vue-next'
-import BaseSelect from '../Base/BaseSelect.vue'
-import BaseButton from '../Base/BaseButton.vue'
+import { ChevronRight, FileText } from 'lucide-vue-next'
+import ServiceIcon from './ServiceIcon.vue'
 
 /**
- * The first and only thing anybody is asked before the form: which assessment.
+ * The homepage's opening question: which assessment.
  *
- * One dropdown. Choosing explains what that service is, and that is the whole
- * of it — the postal code moved to the second step to sit with the contact
- * details, so the opening ask is a single question with a single answer rather
- * than a form pretending to be one.
+ * Two choices and nothing else. Almost everybody arriving wants the assessment
+ * after a crash, so that one leads and goes straight to the contact step. The
+ * rest do not belong in a hero — seven assessments with descriptions is a page
+ * of reading beside a headline, a strapline and a row of faces — so the second
+ * choice hands over to the request page, which has room to list them all and
+ * explain each one.
  *
- * The button is on screen from the start, inert until the dropdown has an
- * answer. Revealing it only once it did meant the box had no visible
- * destination while somebody was deciding whether to bother, which is exactly
- * the moment their eye needs somewhere to land.
- *
- * It sits in the homepage hero and again on /anfrage, from the same file, so
- * somebody arriving at the request page from an advert meets the same question
- * as somebody who started at the top.
+ * Which assessment leads is not written here. It is whichever the operator has
+ * put first under Leistungsarten, so it follows the order they already control
+ * and survives a rename — the icon map was keyed by slug once and broke exactly
+ * that way.
  */
 const props = defineProps({
     serviceTypes: { type: Array, default: () => [] },
-    /** Preselected when the visitor arrives with a service already in mind. */
-    initialService: { type: [String, Number], default: '' },
-    /** The card's own heading — what this box is for, before anything is asked. */
+    /** The heading above the choices — what this is for, before anything is asked. */
     title: { type: String, default: 'Jetzt Gutachter anfragen' },
-    ctaLabel: { type: String, default: 'Weiter' },
-    /** The line under the button. */
+    /** The line under the choices. */
     hint: { type: String, default: '' },
-    serviceLabel: { type: String, default: 'Welche Gutachtenart benötigen Sie?' },
-    serviceHint: {
-        type: String,
-        default: 'Wählen Sie die passende Leistung aus, damit wir den richtigen Sachverständigen für Sie finden.',
-    },
-    /** Where the button goes once a service is chosen. */
+    otherLabel: { type: String, default: 'Weitere Gutachten' },
+    /** Where a choice goes once it is made. */
     action: { type: String, default: '/anfrage' },
 })
 
-const emit = defineEmits(['start'])
+/**
+ * One class list for both choices.
+ *
+ * Written once and bound twice rather than pasted twice: the two have to be
+ * indistinguishable, and two copies of a long class list drift apart the first
+ * time somebody edits one of them.
+ */
+const ROW = 'flex items-center gap-4 rounded-card border border-gray-300 bg-white p-4 text-left'
+    + ' transition-colors duration-(--duration-hover) ease-(--ease-dkgz)'
+    + ' hover:border-navy-700 hover:bg-navy-100/60'
+    + ' focus-visible:outline-2 focus-visible:outline-navy-500 focus-visible:outline-offset-2'
+    + ' disabled:opacity-60'
 
-const serviceId = ref(String(props.initialService ?? ''))
+const NAME = 'min-w-0 flex-1 hyphens-auto text-base font-semibold leading-snug text-navy-700'
+
+const leading = computed(() => props.serviceTypes[0] ?? null)
+const others = computed(() => props.serviceTypes.slice(1))
+
 const starting = ref(false)
 
-const options = computed(() => props.serviceTypes.map((type) => ({
-    value: String(type.id),
-    label: type.name_de,
-})))
-
-const service = computed(() => props.serviceTypes.find((type) => String(type.id) === serviceId.value) ?? null)
-
-const ready = computed(() => service.value !== null)
-
-watch(serviceId, () => { starting.value = false })
-
-const start = () => {
-    if (! ready.value) return
+/** Straight past the question, because pressing this answered it. */
+const startLeading = () => {
+    if (! leading.value || starting.value) return
 
     starting.value = true
 
-    emit('start', { service_type_id: serviceId.value })
+    router.get(props.action, { leistung: leading.value.slug }, { preserveScroll: false })
+}
 
-    if (! props.action) return
+/** To the request page with nothing chosen, where every assessment is listed. */
+const browseAll = () => {
+    if (starting.value) return
 
-    router.get(props.action, { leistung: service.value.slug }, { preserveScroll: false })
+    starting.value = true
+
+    router.get(props.action, {}, { preserveScroll: false })
 }
 </script>
 
 <template>
-    <form class="rounded-card border border-gray-200 bg-white p-5 shadow-(--shadow-1) sm:p-6" novalidate @submit.prevent="start">
-        <!--
-            The box says what it is before it asks anything. Without a heading
-            it read as a stray dropdown in the middle of the page rather than
-            the thing the page is for.
-        -->
-        <div class="flex items-center gap-3 pb-5">
-            <span class="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-navy-700 text-white" aria-hidden="true">
-                <FileText :size="18" :stroke-width="1.75" />
-            </span>
-            <h2 class="text-lead font-semibold leading-snug text-navy-700">{{ title }}</h2>
+    <div>
+        <h2 class="text-lead font-semibold leading-snug text-navy-700">{{ title }}</h2>
+
+        <!-- Side by side where there is room, stacked on a phone. -->
+        <div class="grid grid-cols-1 gap-3 pt-4 sm:grid-cols-2">
+            <button
+                v-if="leading"
+                type="button"
+                :class="ROW"
+                :disabled="starting"
+                @click="startLeading"
+            >
+                <ServiceIcon :service="leading" :size="28" :stroke-width="1.5" class="shrink-0 text-navy-700" />
+                <span :class="NAME">{{ leading.name_de }}</span>
+                <ChevronRight :size="20" :stroke-width="1.75" class="shrink-0 text-navy-700" aria-hidden="true" />
+            </button>
+
+            <button
+                v-if="others.length"
+                type="button"
+                :class="ROW"
+                :disabled="starting"
+                @click="browseAll"
+            >
+                <FileText :size="28" :stroke-width="1.5" class="shrink-0 text-navy-700" aria-hidden="true" />
+                <span :class="NAME">{{ otherLabel }}</span>
+                <ChevronRight :size="20" :stroke-width="1.75" class="shrink-0 text-navy-700" aria-hidden="true" />
+            </button>
         </div>
 
-        <BaseSelect
-            v-model="serviceId"
-            :label="serviceLabel"
-            :options="options"
-            placeholder="Bitte auswählen"
-        />
-
-        <!--
-            The service explains itself where it was chosen, so the next
-            question arrives with a reason attached rather than as one more
-            thing to fill in.
-        -->
-        <p v-if="! ready && serviceHint" class="flex gap-2 pt-2.5 text-sm leading-normal text-gray-600">
-            <ShieldCheck :size="15" :stroke-width="1.5" class="mt-0.5 shrink-0 text-gray-400" aria-hidden="true" />
-            <span>{{ serviceHint }}</span>
-        </p>
-
-        <p
-            v-else-if="service?.description_de"
-            class="flex gap-2 pt-3 text-sm leading-normal text-gray-600"
-            style="animation: dkgz-enter 260ms cubic-bezier(0.4,0,0.2,1) both"
-        >
-            <ShieldCheck :size="15" :stroke-width="1.5" class="mt-0.5 shrink-0" style="color: var(--dkgz-accent)" aria-hidden="true" />
-            <span>{{ service.description_de }}</span>
-        </p>
-
-        <!--
-            Always on screen, and inert until the questions above it have been
-            answered. Appearing only once they were meant the box had no visible
-            destination while somebody was deciding — which is the moment their
-            eye needs somewhere to land.
-        -->
-        <BaseButton
-            type="submit"
-            size="cta"
-            block
-            class="mt-6"
-            :disabled="! ready"
-            :loading="starting"
-        >
-            {{ ctaLabel }}
-            <ArrowRight :size="18" :stroke-width="1.75" aria-hidden="true" />
-        </BaseButton>
-
-        <p v-if="hint" class="pt-3 text-center text-sm text-gray-600">{{ hint }}</p>
-    </form>
+        <p v-if="hint" class="pt-4 text-sm text-gray-600">{{ hint }}</p>
+    </div>
 </template>

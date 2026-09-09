@@ -10,6 +10,7 @@ import BaseButton from '../../Components/Base/BaseButton.vue'
 import RequestStarter from '../../Components/Domain/RequestStarter.vue'
 import GermanyCoverageMap from '../../Components/Domain/GermanyCoverageMap.vue'
 import ImageSlot from '../../Components/Layout/ImageSlot.vue'
+import { isOn } from '../../Support/switches.js'
 
 /**
  * Built from "DKGZ Homepage.dc.html", section for section: hero on a 58/42
@@ -29,6 +30,8 @@ const page = usePage()
 const openFaq = ref(0)
 
 const t = (section, field, fallback = '') => props.content?.[section]?.[field] ?? fallback
+
+const flag = (section, field) => isOn(props.content, section, field)
 
 
 
@@ -75,6 +78,31 @@ const trustPoints = computed(() => [1, 2, 3].map((n) => ({
  * heading that nobody could get rid of without emptying the field they wanted
  * to keep.
  */
+/**
+ * The stars beside the faces in the hero.
+ *
+ * Averaged from the ratings the operator actually entered, rounded to the
+ * nearest whole star — never a figure typed into the template. A fabricated
+ * rating is illegal here under the UWG, and this one cannot drift from the
+ * reviews further down the page because it is computed from them.
+ */
+const heroRating = computed(() => {
+    const rated = props.testimonials.filter((voice) => voice.rating > 0)
+
+    if (! rated.length) return 5
+
+    return Math.round(rated.reduce((sum, voice) => sum + voice.rating, 0) / rated.length)
+})
+
+/**
+ * The gold line over the headline.
+ *
+ * Off by the switch, or empty of words — either way there is nothing to draw,
+ * and the rule underneath goes with it rather than floating above the heading
+ * underlining nothing.
+ */
+const showEyebrow = computed(() => flag('hero', 'eyebrow_anzeigen') && Boolean(t('hero', 'eyebrow')))
+
 const headline = computed(() => [1, 2, 3]
     .map((n) => t('hero', `zeile_${n}`))
     .filter((line) => String(line).trim() !== ''))
@@ -91,9 +119,19 @@ const heroScale = computed(() => {
 })
 
 const heroSize = computed(() => ({
-    maxWidth: `${Math.round(HERO_WIDTH * heroScale.value)}px`,
-    maxHeight: `${Math.round(HERO_HEIGHT * heroScale.value)}px`,
+    '--hero-w': `${Math.round(HERO_WIDTH * heroScale.value)}px`,
+    '--hero-h': `${Math.round(HERO_HEIGHT * heroScale.value)}px`,
 }))
+
+/**
+ * Whether the hero photograph is drawn on a phone at all.
+ *
+ * Off unless it is switched on: the picture has always been desktop-only here,
+ * and a switch that silently added it the moment this shipped would be a change
+ * nobody asked for. On a phone it is drawn small and below the request box, so
+ * it can never push the box off the first screen.
+ */
+const heroOnMobile = computed(() => isOn(props.content, 'hero', 'bild_mobil', false))
 
 const telHref = computed(() => `tel:${String(page.props.app?.phone ?? '').replace(/\s/g, '')}`)
 </script>
@@ -104,22 +142,34 @@ const telHref = computed(() => `tel:${String(page.props.app?.phone ?? '').replac
     <PublicLayout>
         <!-- Hero. The one 420ms entrance in the product. -->
         <section style="animation: dkgz-enter 420ms cubic-bezier(0.4,0,0.2,1) both">
-            <div class="mx-auto grid w-full max-w-(--container-shell) grid-cols-1 items-start gap-16 px-4 py-16 md:px-6 lg:grid-cols-[minmax(0,58fr)_minmax(0,42fr)] lg:py-24">
+            <!--
+                Less room under the hero than above it, so the band of four
+                figures sits closer to what it belongs to. The space above the
+                headline is left exactly as it was — it was tightened once and
+                read worse.
+            -->
+            <div class="mx-auto grid w-full max-w-(--container-shell) grid-cols-1 items-start gap-16 px-4 pb-12 pt-16 md:px-6 lg:grid-cols-[minmax(0,58fr)_minmax(0,42fr)] lg:pb-16 lg:pt-24">
                 <div>
                     <!--
-                        The line and its rule go together. Emptying the wording
-                        used to leave the gold rule floating above the headline
-                        with nothing to underline, so the only way to be rid of
-                        the pair was to edit the template.
+                        The line and its rule go together, and both answer to
+                        one switch in Seiteninhalte. Hiding the pair used to mean
+                        deleting the wording, so having it back meant typing it
+                        again from memory.
+
+                        The gap below the rule belongs to the rule, not to the
+                        headline. Parked on the h1 it stayed behind when the line
+                        was switched off — a band of white above the headline
+                        that also pushed it out of line with the photograph
+                        beside it.
                     -->
-                    <template v-if="t('hero', 'eyebrow')">
+                    <template v-if="showEyebrow">
                         <p class="text-eyebrow font-semibold uppercase" style="color: var(--dkgz-accent)">
                             {{ t('hero', 'eyebrow') }}
                         </p>
-                        <div class="rule-accent mt-2.5" aria-hidden="true" />
+                        <div class="rule-accent mt-2.5 mb-7" aria-hidden="true" />
                     </template>
 
-                    <h1 class="text-h1 font-bold text-navy-700 pt-7 pb-4 lg:text-display">
+                    <h1 class="text-h1 font-bold text-navy-700 pb-4 lg:text-display">
                         <template v-for="(line, index) in headline" :key="index"><br v-if="index">{{ line }}</template>
                     </h1>
 
@@ -134,15 +184,65 @@ const telHref = computed(() => `tel:${String(page.props.app?.phone ?? '').replac
                         number sits beneath as the quieter alternative for
                         anyone who would rather speak to someone.
                     -->
-                    <div class="mt-7 max-w-lg">
+                    <!--
+                        A little wider than it was. The white card around the
+                        choices went — a box inside a box inside the hero was
+                        three frames deep — and side by side the two names need
+                        the room the frame used to take.
+                    -->
+                    <div class="mt-7 max-w-xl">
                         <RequestStarter
                             :service-types="serviceTypes"
                             :title="t('hero', 'cta', 'Jetzt Gutachter anfragen')"
-                            :cta-label="t('hero', 'cta_button', 'Weiter')"
                             :hint="t('hero', 'cta_hinweis')"
-                            :service-label="t('hero', 'frage_leistung', 'Welche Gutachtenart benötigen Sie?')"
-                            :service-hint="t('hero', 'frage_hinweis', 'Wählen Sie die passende Leistung aus, damit wir den richtigen Sachverständigen für Sie finden.')"
+                            :other-label="t('hero', 'option_weitere', 'Weitere Gutachten')"
+                            :back-label="t('hero', 'zurueck', 'Zurück zur Auswahl')"
                         />
+
+                        <!--
+                            The proof, immediately under the box rather than
+                            eight screens below it. Somebody deciding whether to
+                            type anything into that dropdown is deciding now,
+                            and the reviews that would persuade them sit at the
+                            very bottom of the page where they will never see
+                            them. Real people only: these are the same published
+                            Kundenstimmen, so it cannot say anything the page
+                            does not already stand behind.
+                        -->
+                        <div v-if="testimonials.length" class="flex flex-wrap items-center gap-x-4 gap-y-2 pt-7">
+                            <div class="flex -space-x-2.5" aria-hidden="true">
+                                <template v-for="voice in testimonials.slice(0, 3)" :key="voice.id">
+                                    <img
+                                        v-if="voice.photo_url"
+                                        :src="voice.photo_url"
+                                        alt=""
+                                        class="h-9 w-9 rounded-full border-2 border-white object-cover"
+                                        loading="lazy"
+                                    >
+                                    <span
+                                        v-else
+                                        class="grid h-9 w-9 place-items-center rounded-full border-2 border-white bg-navy-100 text-xs font-semibold text-navy-700"
+                                    >{{ voice.initials }}</span>
+                                </template>
+                            </div>
+
+                            <div class="min-w-0">
+                                <div class="flex gap-0.5" :aria-label="`${heroRating} von 5 Sternen`">
+                                    <Star
+                                        v-for="n in 5"
+                                        :key="n"
+                                        :size="15"
+                                        :stroke-width="0"
+                                        class="fill-current"
+                                        :style="{ color: n <= heroRating ? 'var(--dkgz-accent)' : 'var(--color-gray-300)' }"
+                                        aria-hidden="true"
+                                    />
+                                </div>
+                                <p class="pt-1 text-sm text-gray-600">
+                                    {{ t('hero', 'bewertung_text', 'Von Kunden aus ganz Deutschland empfohlen') }}
+                                </p>
+                            </div>
+                        </div>
 
                         <!--
                             The quieter alternative for somebody who would
@@ -164,29 +264,67 @@ const telHref = computed(() => `tel:${String(page.props.app?.phone ?? '').replac
                     <p class="pt-3 text-sm text-gray-400">{{ t('hero', 'hinweis') }}</p>
                 </div>
 
-                <!-- Image column with the overlapping seal card -->
-                <div class="relative hidden pb-6 pl-6 lg:block">
+                <!--
+                    Image column with the overlapping seal card.
+
+                    Hidden on a phone unless the switch says otherwise, and then
+                    only small: at full width it pushed the request box off the
+                    first screen, which is the one thing the hero cannot afford.
+                -->
+                <div class="relative lg:pb-6 lg:pl-6" :class="heroOnMobile ? 'pt-10 lg:pt-0' : 'hidden lg:block'">
                     <!--
-                        The frame holds the briefed 4:5 ratio rather than a fixed
-                        560px height. Locked to a pixel height it stretched or
-                        cropped as the column widened, which is what made the
-                        hero look wrong on a large screen.
+                        Sized to the picture, and the seal hangs off this rather
+                        than off the column.
+
+                        Pinned to the column it was pinned to the column's
+                        bottom-left corner, and the picture is centred inside a
+                        column wider than it is — so the seal drifted out into
+                        the empty margin beside the photograph and read as a card
+                        that had come loose from it.
                     -->
-                    <div class="mx-auto aspect-4/5 overflow-hidden rounded-card border border-gray-200" :style="heroSize">
-                        <ImageSlot
-                            :src="t('hero', 'bild')"
-                            alt="Kfz-Sachverständiger dokumentiert einen Fahrzeugschaden"
-                            caption="Kfz-Sachverständiger dokumentiert einen Fahrzeugschaden — Klemmbrett oder Tablet, deutsche Werkstatt oder Außenaufnahme, kühl abgestimmt, unposiert. Hochformat 4:5."
-                        />
-                    </div>
-                    <div class="absolute bottom-0 left-0 flex items-center gap-3.5 rounded-card border border-gray-200 bg-white px-5 py-4 shadow-(--shadow-1)">
-                        <BrandSeal :size="44">
-                            <SealMark :size="44" />
-                        </BrandSeal>
-                        <span>
-                            <span class="block text-base font-semibold leading-snug text-navy-700">{{ t('hero', 'siegel_titel') }}</span>
-                            <span class="block text-sm leading-snug text-gray-600">{{ t('hero', 'siegel_text') }}</span>
-                        </span>
+                    <!--
+                        Left on a phone, centred from lg up.
+
+                        A small picture centred under a column of left-aligned
+                        text reads as something that fell there rather than as
+                        part of the page. On a wide screen it is centred in a
+                        column wider than itself, which is a different problem
+                        with a different answer.
+                    -->
+                    <div class="relative max-w-[220px] lg:mx-auto lg:max-w-(--hero-w)" :style="heroSize">
+                        <!--
+                            The frame holds the briefed 4:5 ratio rather than a
+                            fixed 560px height. Locked to a pixel height it
+                            stretched or cropped as the column widened, which is
+                            what made the hero look wrong on a large screen.
+
+                            The operator's size applies from lg up, as a pair of
+                            custom properties — an inline max-width would beat
+                            any class and there would be no way to hold it
+                            smaller on a phone.
+                        -->
+                        <div class="aspect-4/5 w-full overflow-hidden rounded-card border border-gray-200 lg:max-h-(--hero-h)">
+                            <ImageSlot
+                                :src="t('hero', 'bild')"
+                                alt="Kfz-Sachverständiger dokumentiert einen Fahrzeugschaden"
+                                caption="Kfz-Sachverständiger dokumentiert einen Fahrzeugschaden — Klemmbrett oder Tablet, deutsche Werkstatt oder Außenaufnahme, kühl abgestimmt, unposiert. Hochformat 4:5."
+                            />
+                        </div>
+                        <!--
+                            Overlapping the picture's own corner by a fixed
+                            amount, so it reads as sitting on the photograph
+                            however wide the column happens to be. Hidden on a
+                            phone, where a 220px picture has no corner to spare.
+                        -->
+                        <div class="absolute -bottom-6 -left-6 hidden items-center gap-3.5 rounded-card border border-gray-200 bg-white px-5 py-4 shadow-(--shadow-1) lg:flex">
+                            <BrandSeal :size="44">
+                                <SealMark :size="44" />
+                            </BrandSeal>
+                            <span>
+                                <span class="block text-base font-semibold leading-snug text-navy-700">{{ t('hero', 'siegel_titel') }}</span>
+                                <span class="block text-sm leading-snug text-gray-600">{{ t('hero', 'siegel_text') }}</span>
+                            </span>
+                        </div>
                     </div>
                 </div>
             </div>

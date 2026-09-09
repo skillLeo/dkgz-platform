@@ -3,6 +3,7 @@ import {
     Hammer, History, Landmark, Scale, Search, Shield, ShieldCheck, Sparkles,
     Truck, Wrench,
 } from 'lucide-vue-next'
+import CrashIcon from '../Components/Icons/CrashIcon.vue'
 
 /**
  * The icons a service may be given, by the name stored on it.
@@ -17,6 +18,15 @@ import {
  * The German labels are what the admin panel shows when picking one.
  */
 export const SERVICE_ICONS = {
+    // Drawn for this set rather than borrowed from it — nothing here said
+    // "after a crash" at a glance, which is what the commonest assessment needs.
+    //
+    // Drawn at the same size as the rest. It was given a quarter more for a
+    // while, on the theory that a thinner drawing needs the room to read the
+    // same — but a row of icons where one is visibly larger reads as a mistake
+    // long before it reads as balance. It fills its own grid now, which was the
+    // real fix.
+    'crash': { component: CrashIcon, label: 'Unfallschaden' },
     'file-text': { component: FileText, label: 'Dokument' },
     'car': { component: Car, label: 'Fahrzeug' },
     'shield-check': { component: ShieldCheck, label: 'Haftpflicht' },
