@@ -39,13 +39,14 @@ const createOpen = ref(false)
 const editing = ref(null)
 
 const create = useForm({ name_de: '', gender: '', description_de: '', icon: '', faqs: [], is_active: true, dkgz_fee_cents: null })
-const edit = useForm({ name_de: '', gender: '', description_de: '', icon: '', faqs: [], is_active: true, dkgz_fee_cents: null, includes_de: '', target_audience_de: '', typical_situations_de: '', differences_de: '', additional_info_de: '' })
+const edit = useForm({ name_de: '', gender: '', description_de: '', info_de: '', icon: '', faqs: [], is_active: true, dkgz_fee_cents: null, includes_de: '', target_audience_de: '', typical_situations_de: '', differences_de: '', additional_info_de: '' })
 
 const startEdit = (type) => {
     editing.value = type.id
     edit.name_de = type.name_de
     edit.gender = type.gender ?? ''
     edit.description_de = type.description_de ?? ''
+    edit.info_de = type.info_de ?? ''
     edit.icon = type.icon ?? ''
     edit.faqs = (type.faqs ?? []).map((entry) => ({ ...entry }))
     edit.is_active = type.is_active
@@ -157,7 +158,22 @@ const remove = async (type) => {
                             :error="edit.errors.gender"
                             optional
                         />
-                        <BaseTextarea v-model="edit.description_de" label="Beschreibung" :error="edit.errors.description_de" optional />
+                        <BaseTextarea v-model="edit.description_de" label="Beschreibung" hint="Erscheint auf der öffentlichen Leistungsseite und im Verzeichnis." :error="edit.errors.description_de" optional />
+                        <!--
+                            A different question, so a different field. The
+                            description says what the assessment covers; behind
+                            the "i" somebody is asking whether it is the one they
+                            need, and the answer to that is when you would want
+                            it.
+                        -->
+                        <BaseTextarea
+                            v-model="edit.info_de"
+                            label="Info-Text im Anfrageformular"
+                            :rows="4"
+                            hint="Erscheint hinter dem i in Schritt 1 der Anfrage. Beschreiben Sie, wann man diese Leistung braucht. Leer lassen, um die Beschreibung darüber zu verwenden."
+                            :error="edit.errors.info_de"
+                            optional
+                        />
                         <!--
                             A grid of the actual marks rather than a text field
                             expecting a name nobody can be expected to know. The

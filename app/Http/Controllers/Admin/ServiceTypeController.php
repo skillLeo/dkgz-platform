@@ -29,6 +29,7 @@ class ServiceTypeController extends Controller
                     'gender' => $t->getRawOriginal('gender'),
                     'artikel' => GermanNoun::LABELS[$t->genus()],
                     'description_de' => $t->description_de,
+                    'info_de' => $t->info_de,
                     'faqs' => $t->faqs ?? [],
                     'icon' => $t->icon,
                     'sort_order' => $t->sort_order,
@@ -112,6 +113,7 @@ class ServiceTypeController extends Controller
             // Empty means the gender is guessed from the name.
             'gender' => ['nullable', Rule::in(GermanNoun::GENDERS)],
             'description_de' => ['nullable', 'string', 'max:1000'],
+            'info_de' => ['nullable', 'string', 'max:1000'],
             'icon' => ['nullable', 'string', 'max:60'],
             // Questions belonging to this assessment, shown on its own page.
             'faqs' => ['nullable', 'array', 'max:12'],
@@ -131,6 +133,7 @@ class ServiceTypeController extends Controller
         ], [
             'name_de' => 'der Name',
             'description_de' => 'die Beschreibung',
+            'info_de' => 'der Info-Text',
             'dkgz_fee_cents' => 'die DKGZ-Gebühr',
         ]);
     }

@@ -21,8 +21,21 @@ class ServiceType extends Model
         'dkgz_fee_cents',
         'includes_de', 'target_audience_de', 'typical_situations_de',
         'differences_de', 'additional_info_de', 'faqs', 'content_is_placeholder',
-        'slug', 'name_de', 'gender', 'description_de', 'icon', 'sort_order', 'is_active',
+        'slug', 'name_de', 'gender', 'description_de', 'info_de', 'icon', 'sort_order', 'is_active',
     ];
+
+    /**
+     * What this assessment is for, behind the "i" on the request form.
+     *
+     * The description says what the assessment covers, which is the right answer
+     * on the services page and the wrong one to somebody deciding which of seven
+     * they need. Where nobody has written the longer answer yet, the description
+     * stands in rather than leaving the panel empty.
+     */
+    public function infoText(): ?string
+    {
+        return filled($this->info_de) ? $this->info_de : $this->description_de;
+    }
 
     protected function casts(): array
     {
