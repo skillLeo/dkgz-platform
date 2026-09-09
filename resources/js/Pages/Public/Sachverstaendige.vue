@@ -25,24 +25,29 @@ const props = defineProps({
 
 const t = (section, field, fallback = '') => props.content?.[section]?.[field] || fallback
 
-/**
- * The ten postal regions, which is the only geography somebody can pick from
- * without being shown a map.
- */
-const REGIONS = [
-    ['0', 'Dresden · Leipzig'],
-    ['1', 'Berlin · Potsdam'],
-    ['2', 'Hamburg · Bremen'],
-    ['3', 'Hannover · Kassel'],
-    ['4', 'Düsseldorf · Dortmund'],
-    ['5', 'Köln · Bonn'],
-    ['6', 'Frankfurt · Mannheim'],
-    ['7', 'Stuttgart · Karlsruhe'],
-    ['8', 'München · Augsburg'],
-    ['9', 'Nürnberg · Würzburg'],
-]
-
 const rows = computed(() => props.assessors.data ?? [])
+
+/**
+ * The paginator's links, made usable.
+ *
+ * Laravel hands over labels as raw HTML — "&laquo; Previous" — which is neither
+ * German nor something to inject into the page. Entries with no URL are the
+ * disabled ends and the "..." gap; neither is worth a dead button, so they go.
+ */
+const pages = computed(() => (props.assessors.links ?? [])
+    .filter((link) => link.url)
+    .map((link, index) => {
+        const raw = String(link.label).replace(/<[^>]*>/g, '').trim()
+        const isPrev = /pagination\.previous|previous|zurück|«/i.test(raw)
+        const isNext = /pagination\.next|next|weiter|»/i.test(raw)
+
+        return {
+            key: `${index}-${link.url}`,
+            url: link.url,
+            active: Boolean(link.active),
+            label: isPrev ? 'Zurück' : isNext ? 'Weiter' : raw,
+        }
+    }))
 
 const apply = (changes) => router.get('/sachverstaendige', {
     ...props.filters,
@@ -73,34 +78,16 @@ const apply = (changes) => router.get('/sachverstaendige', {
                 <p class="measure-lead pt-4 text-lead leading-relaxed text-gray-600">
                     {{ t('kopf', 'text', 'Jeder Partner in diesem Verzeichnis wurde vor der Freigabe geprüft. Die Anfrage läuft über DKGZ und ist für Sie kostenfrei.') }}
                 </p>
-                <p class="pt-4 text-sm text-gray-600">
-                    <span class="font-mono tabular-nums text-navy-700">{{ total }}</span> freigegebene Sachverständige
-                </p>
             </div>
         </section>
 
         <div class="mx-auto w-full max-w-(--container-shell) px-4 py-12 md:px-6">
-            <!-- Region and service, because those are the two things somebody knows. -->
+            <!--
+                Service only. The postal-region row asked somebody to know which
+                of ten numbered zones their town is in, which is a question
+                about the postal system rather than about finding an assessor.
+            -->
             <div class="flex flex-col gap-4 pb-10">
-                <div class="flex flex-wrap items-center gap-2">
-                    <span class="pr-1 text-eyebrow font-semibold uppercase text-gray-600">Region</span>
-                    <button
-                        type="button"
-                        class="rounded-sm border px-3 py-1.5 text-sm transition-colors duration-(--duration-hover) ease-(--ease-dkgz)"
-                        :class="! filters.region ? 'border-navy-700 bg-navy-700 text-white' : 'border-gray-200 bg-white text-gray-600 hover:border-gray-400'"
-                        @click="apply({ region: null })"
-                    >Alle</button>
-                    <button
-                        v-for="[digit, places] in REGIONS"
-                        :key="digit"
-                        type="button"
-                        class="rounded-sm border px-3 py-1.5 text-sm transition-colors duration-(--duration-hover) ease-(--ease-dkgz)"
-                        :class="filters.region === digit ? 'border-navy-700 bg-navy-700 text-white' : 'border-gray-200 bg-white text-gray-600 hover:border-gray-400'"
-                        :title="places"
-                        @click="apply({ region: digit })"
-                    >{{ digit }}</button>
-                </div>
-
                 <div v-if="serviceTypes.length" class="flex flex-wrap items-center gap-2">
                     <span class="pr-1 text-eyebrow font-semibold uppercase text-gray-600">Leistung</span>
                     <button
@@ -168,19 +155,28 @@ const apply = (changes) => router.get('/sachverstaendige', {
                 </Link>
             </div>
 
-            <!-- Pagination, so 130 partners are not one endless page. -->
-            <nav v-if="assessors.links?.length > 3" class="flex flex-wrap justify-center gap-1.5 pt-12" aria-label="Seiten">
-                <component
-                    :is="link.url ? 'a' : 'span'"
-                    v-for="link in assessors.links"
-                    :key="link.label"
-                    :href="link.url ?? undefined"
-                    class="rounded-sm border px-3 py-1.5 text-sm"
-                    :class="link.active
+            <!--
+                Pagination, so a hundred and seventy partners are not one
+                endless page.
+
+                Inertia links rather than plain anchors: an <a href> inside this
+                app throws away the whole page and rebuilds it, which on a slow
+                connection reads as the button having broken. The labels are
+                rebuilt too — the paginator hands over "&laquo; Previous" as raw
+                HTML, which is neither German nor safe to inject.
+            -->
+            <nav v-if="pages.length > 1" class="flex flex-wrap items-center justify-center gap-1.5 pt-12" aria-label="Seiten">
+                <Link
+                    v-for="entry in pages"
+                    :key="entry.key"
+                    :href="entry.url"
+                    preserve-scroll
+                    class="rounded-sm border px-3 py-1.5 text-sm transition-colors duration-(--duration-hover) ease-(--ease-dkgz)"
+                    :class="entry.active
                         ? 'border-navy-700 bg-navy-700 text-white'
-                        : (link.url ? 'border-gray-200 bg-white text-gray-600 hover:border-gray-400' : 'border-gray-100 text-gray-300')"
-                    v-html="link.label"
-                />
+                        : 'border-gray-200 bg-white text-gray-600 hover:border-gray-400'"
+                    :aria-current="entry.active ? 'page' : undefined"
+                >{{ entry.label }}</Link>
             </nav>
         </div>
     </PublicLayout>
