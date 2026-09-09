@@ -94,29 +94,45 @@ describe('the periods the dashboard offers', function () {
             ->firstWhere('step', 'begonnen')['count'])->toBe(158);
     });
 
-    it('offers all four on the dashboard, defaulting to thirty days', function () {
+    it('offers all four on the dashboard, defaulting to today', function () {
+        // The dashboard is opened in the morning to see how the day is going;
+        // thirty days is the question somebody asks deliberately.
         $this->actingAs($this->admin)
             ->get('/admin')
             ->assertOk()
             ->assertInertia(fn ($page) => $page
-                ->where('funnelPeriod', '30tage')
+                ->where('funnelPeriod', 'heute')
                 ->has('funnelPeriods', 4));
     });
 
     it('redraws for the period asked for', function () {
+        // Named rather than taken by position: the dashboard leads with the
+        // visitor count now, and a test that reads "the first row" says nothing
+        // about which step it just checked.
         $this->actingAs($this->admin)
             ->get('/admin?zeitraum=heute')
             ->assertOk()
             ->assertInertia(fn ($page) => $page
                 ->where('funnelPeriod', 'heute')
-                ->where('funnel.0.count', 40));
+                ->where('funnel', fn ($rows) => collect($rows)->firstWhere('step', 'begonnen')['count'] === 40));
+    });
+
+    it('charts the two steps of the request separately', function () {
+        $this->actingAs($this->admin)
+            ->get('/admin')
+            ->assertOk()
+            ->assertInertia(fn ($page) => $page->where(
+                'funnel',
+                fn ($rows) => collect($rows)->pluck('step')->all()
+                    === ['besucher', 'begonnen', 'schritt_2', 'abgesendet'],
+            ));
     });
 
     it('falls back rather than breaking on a period it does not know', function () {
         $this->actingAs($this->admin)
             ->get('/admin?zeitraum=erfunden')
             ->assertOk()
-            ->assertInertia(fn ($page) => $page->where('funnelPeriod', '30tage'));
+            ->assertInertia(fn ($page) => $page->where('funnelPeriod', 'heute'));
     });
 });
 

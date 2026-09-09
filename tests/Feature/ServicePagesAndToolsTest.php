@@ -163,7 +163,7 @@ describe('the request funnel', function () {
 
         expect(FunnelEvent::count())->toBe(0);
         expect(collect(FunnelEvent::funnel(now()->subDay(), now()))->pluck('step')->all())
-            ->toBe(['begonnen', 'schritt_2', 'abgesendet']);
+            ->toBe(['besucher', 'begonnen', 'schritt_2', 'abgesendet']);
     });
 
     it('ignores a step it does not recognise', function () {
@@ -188,7 +188,8 @@ describe('the request funnel', function () {
         $this->actingAs($this->admin)
             ->get('/admin')
             ->assertOk()
-            ->assertInertia(fn ($page) => $page->has('funnel', 3));
+            // Visitors, both steps of the request, and what was sent.
+            ->assertInertia(fn ($page) => $page->has('funnel', 4));
     });
 });
 

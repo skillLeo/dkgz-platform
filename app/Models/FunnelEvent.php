@@ -27,13 +27,24 @@ class FunnelEvent extends Model
      * existed stay in the table and simply stop being charted.
      */
     public const STEPS = [
-        'begonnen' => 'Formular geöffnet',
-        'schritt_2' => 'Kontaktdaten erreicht',
+        'besucher' => 'Besucher',
+        'begonnen' => 'Anfrage · Schritt 1',
+        'schritt_2' => 'Anfrage · Schritt 2',
         'abgesendet' => 'Anfrage abgesendet',
     ];
 
     /** Steps the form no longer has, kept so old rows are still recognised. */
     public const RETIRED_STEPS = ['schritt_3'];
+
+    /**
+     * What the dashboard charts: how many came, how many reached each step of
+     * the request, how many sent it.
+     *
+     * The two steps are named after the screens rather than after what happens
+     * on them, because that is how the office talks about them and because the
+     * screens have been renumbered once already.
+     */
+    public const HEADLINE_STEPS = ['besucher', 'begonnen', 'schritt_2', 'abgesendet'];
 
     /**
      * The periods the dashboard offers, and how far back each one reaches.
@@ -124,7 +135,10 @@ class FunnelEvent extends Model
             ->selectRaw('step, SUM(count) AS total')
             ->pluck('total', 'step');
 
-        $started = (int) ($totals['begonnen'] ?? 0);
+        // Against the top of the funnel, whatever the top currently is, rather
+        // than against a step named here — the first step has changed once and
+        // a percentage measured from the wrong one is worse than none.
+        $top = (int) ($totals[array_key_first(self::STEPS)] ?? 0);
         $rows = [];
 
         foreach (self::STEPS as $step => $label) {
@@ -134,9 +148,7 @@ class FunnelEvent extends Model
                 'step' => $step,
                 'label' => $label,
                 'count' => $count,
-                // Against the top of the funnel, which is the number that says
-                // whether the form is losing people.
-                'share' => $started > 0 ? round($count / $started * 100) : null,
+                'share' => $top > 0 ? round($count / $top * 100) : null,
             ];
         }
 

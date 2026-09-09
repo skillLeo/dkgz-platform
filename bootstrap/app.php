@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\CountVisitor;
 use App\Http\Middleware\DrainQueueAfterResponse;
 use App\Http\Middleware\EnsureAssessorIsApproved;
 use App\Http\Middleware\EnsureMaintenanceMode;
@@ -40,6 +41,7 @@ return Application::configure(basePath: dirname(__DIR__))
             SecurityHeaders::class,
             HandleInertiaRequests::class,
             RequirePasswordChange::class,
+            CountVisitor::class,
             AddLinkHeadersForPreloadedAssets::class,
             DrainQueueAfterResponse::class,
             RunDueMaintenance::class,

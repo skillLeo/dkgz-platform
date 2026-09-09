@@ -78,7 +78,7 @@ const cards = [
             -->
             <section v-if="funnel.length" class="border border-gray-200 bg-white p-5">
                 <div class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-3">
-                    <h2 class="text-eyebrow font-semibold uppercase text-gray-600">Anfrageformular</h2>
+                    <h2 class="text-eyebrow font-semibold uppercase text-gray-600">Besucher und Anfragen</h2>
 
                     <!--
                         Only the funnel is fetched again. Reloading the whole
@@ -117,10 +117,6 @@ const cards = [
                     </li>
                 </ul>
 
-                <p class="measure pt-4 text-sm leading-normal text-gray-600">
-                    Gezählt wird anonym: kein Name, keine Adresse, keine Zuordnung zu einer Person.
-                    Deshalb erscheinen hier alle Besucher, nicht nur die mit Cookie-Zustimmung.
-                </p>
             </section>
 
             <section class="rounded-card border border-gray-200 bg-white">
