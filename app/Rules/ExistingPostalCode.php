@@ -2,6 +2,7 @@
 
 namespace App\Rules;
 
+use App\Actions\CreateServiceRequestAction;
 use App\Models\PostalCode;
 use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
@@ -31,6 +32,13 @@ class ExistingPostalCode implements ValidationRule
         if (! preg_match('/^[0-9]{5}$/', $code)) {
             $fail('Bitte geben Sie eine fünfstellige Postleitzahl ein.');
 
+            return;
+        }
+
+        // The office's own code, which names no place on purpose. It has to pass
+        // here or a test request could never be submitted through the form the
+        // test exists to try.
+        if (CreateServiceRequestAction::isTest($code)) {
             return;
         }
 

@@ -74,7 +74,10 @@ class RequestController extends Controller
                 'matched_count' => $r->matched_count,
                 'created_at' => $r->created_at,
                 'created_at_label' => Formatter::dateTime($r->created_at),
-                'needs_attention' => $r->isUnmatched() || $r->isFullyDeclined(),
+                // A test is never matched on purpose, so it must not read as a
+                // request nobody covered.
+                'is_test' => $r->is_test,
+                'needs_attention' => ! $r->is_test && ($r->isUnmatched() || $r->isFullyDeclined()),
             ]),
             'filters' => $request->only(['suche', 'status', 'leistungsart', 'nicht_vermittelt', 'sort', 'direction']),
             'serviceTypes' => ServiceType::ordered()->get(['id', 'name_de']),

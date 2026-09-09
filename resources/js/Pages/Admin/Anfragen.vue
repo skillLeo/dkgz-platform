@@ -82,7 +82,18 @@ const statusSelectOptions = Object.entries(props.statusOptions).map(([value, lab
             </template>
 
             <template #cell-reference="{ row }">
-                <ReferenceNumber :value="row.reference" />
+                <span class="flex flex-wrap items-center gap-2">
+                    <ReferenceNumber :value="row.reference" />
+                    <!--
+                        Said plainly in the list. A test looks exactly like a
+                        real request otherwise, and the one thing it must never
+                        do is get worked.
+                    -->
+                    <span
+                        v-if="row.is_test"
+                        class="rounded-sm border border-warning bg-warning/10 px-1.5 py-0.5 text-xs font-medium text-gray-800"
+                    >Test</span>
+                </span>
             </template>
         </DataTable>
     </AdminLayout>

@@ -29,8 +29,24 @@ class CreateServiceRequestAction
      *                                              recording the office's own address as the customer's would be a lie in
      *                                              the one field that exists to answer "where did this come from".
      */
+    /**
+     * A request the office made to watch the flow work, rather than a customer.
+     *
+     * Recognised by the postal code alone, because that is the one field on the
+     * short form that can carry a signal nobody would type by accident. Empty
+     * setting means no such code exists and nothing is ever treated as a test.
+     */
+    public static function isTest(?string $postalCode): bool
+    {
+        $secret = trim(Settings::get('features.test_postal_code', ''));
+
+        return $secret !== '' && trim((string) $postalCode) === $secret;
+    }
+
     public function execute(array $data, ?array $images = null, array $origin = []): ServiceRequest
     {
+        $isTest = self::isTest($data['postal_code'] ?? null);
+
         $serviceRequest = DB::transaction(fn () => ServiceRequest::create([
             'reference' => ServiceRequest::nextReference(),
             'service_type_id' => $data['service_type_id'],
@@ -49,6 +65,7 @@ class CreateServiceRequestAction
             'preferred_date' => $data['preferred_date'] ?? null,
             'urgency' => $data['urgency'] ?? null,
             'status' => ServiceRequest::STATUS_NEW,
+            'is_test' => $isTest,
             'ip_address' => $origin['ip'] ?? null,
             'user_agent' => $origin['user_agent'] ?? null,
             // The GDPR record: when consent was given, not merely that it was.
@@ -67,7 +84,14 @@ class CreateServiceRequestAction
         // having to open the admin panel to find out.
         NotifyOfficeOfRequestJob::dispatch($serviceRequest->id);
 
-        app(MatchRequestAction::class)->execute($serviceRequest);
+        // Everything above happens for a test too — the confirmation to whoever
+        // submitted it, the note to the office — because that is the flow being
+        // tested. Matching is where it stops: this is the step that puts a job
+        // in front of real partners, and they must never be shown one that does
+        // not exist.
+        if (! $isTest) {
+            app(MatchRequestAction::class)->execute($serviceRequest);
+        }
 
         return $serviceRequest;
     }

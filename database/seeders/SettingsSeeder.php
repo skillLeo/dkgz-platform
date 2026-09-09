@@ -130,6 +130,7 @@ class SettingsSeeder extends Seeder
             ['group' => 'features', 'key' => 'features.image_uploads', 'type' => 'boolean', 'value' => '1', 'label_de' => 'Fotos in der Anfrage erlauben'],
             ['group' => 'features', 'key' => 'features.maintenance_mode', 'type' => 'boolean', 'value' => '0', 'label_de' => 'Wartungsmodus'],
             ['group' => 'features', 'key' => 'features.maintenance_message', 'type' => 'text', 'value' => 'Die Seite wird derzeit gewartet. Bitte versuchen Sie es in Kürze erneut.', 'label_de' => 'Text im Wartungsmodus'],
+            ['group' => 'features', 'key' => 'features.test_postal_code', 'type' => 'string', 'value' => '', 'label_de' => 'Postleitzahl für Testanfragen', 'help_de' => 'Eine fünfstellige Zahl, die es als Postleitzahl nicht gibt — zum Beispiel 00000. Eine Anfrage mit dieser Postleitzahl läuft ganz normal durch, wird aber an keinen Sachverständigen weitergeleitet und in der Anfrageliste als Testanfrage gekennzeichnet. Leer lassen, um Testanfragen abzuschalten.'],
         ]);
     }
 }

@@ -53,7 +53,7 @@ class ServiceRequest extends Model
         'reference', 'service_type_id', 'requested_assessor_id', 'postal_code', 'city',
         'customer_name', 'customer_phone', 'customer_email',
         'vehicle_make', 'vehicle_model', 'vehicle_year', 'vehicle_plate', 'vehicle_vin',
-        'description', 'preferred_date', 'urgency', 'status', 'matched_count',
+        'description', 'preferred_date', 'urgency', 'status', 'is_test', 'matched_count',
         'assigned_at', 'customer_notified_at', 'ip_address', 'user_agent', 'consent_at',
     ];
 
@@ -64,6 +64,7 @@ class ServiceRequest extends Model
             'assigned_at' => 'datetime',
             'customer_notified_at' => 'datetime',
             'consent_at' => 'datetime',
+            'is_test' => 'boolean',
             'matched_count' => 'integer',
             'vehicle_year' => 'integer',
         ];
