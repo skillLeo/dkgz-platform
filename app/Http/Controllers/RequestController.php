@@ -33,7 +33,22 @@ class RequestController extends Controller
 
         return Inertia::render('Public/Anfrage', [
             'content' => Content::page('anfrage'),
-            'serviceTypes' => ServiceType::active()->ordered()->get(['id', 'slug', 'name_de', 'description_de']),
+            // The icon travels too: the first step draws each assessment with
+            // its own mark, and without this column it fell back to the generic
+            // one here while the homepage showed the right one.
+            //
+            // So does the gender. The second step says "für Ihr
+            // Unfallgutachten" but "für Ihre Fahrzeugbewertung", and the only
+            // way to bend the article is to know which the noun is.
+            //
+            // And the longer explanation behind the "i", which is written for
+            // somebody deciding which of seven they need rather than for the
+            // services page. It falls back to the description while the office
+            // is still writing them.
+            'serviceTypes' => ServiceType::active()->ordered()
+                ->get(['id', 'slug', 'name_de', 'description_de', 'info_de', 'icon', 'gender'])
+                ->map(fn (ServiceType $type) => $type->only(['id', 'slug', 'name_de', 'description_de', 'icon'])
+                    + ['genus' => $type->genus(), 'info_de' => $type->infoText()]),
             'selected' => $selected,
         ]);
     }

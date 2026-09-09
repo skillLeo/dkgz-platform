@@ -65,19 +65,38 @@ describe('the buttons in the shell', function () {
 describe('the line above the headline', function () {
     it('takes its gold rule with it when emptied', function () {
         // Emptying the wording used to leave the rule floating above the
-        // headline with nothing to underline.
+        // headline with nothing to underline. The switch did not replace that
+        // guarantee — the second half of showEyebrow still carries it.
         $source = file_get_contents(resource_path('js/Pages/Public/Startseite.vue'));
 
-        expect($source)->toContain("<template v-if=\"t('hero', 'eyebrow')\">");
+        expect($source)->toContain('<template v-if="showEyebrow">')
+            ->and($source)->toContain("flag('hero', 'eyebrow_anzeigen') && Boolean(t('hero', 'eyebrow'))");
+    });
+
+    it('takes its spacing with it too', function () {
+        // The gap under the rule used to sit on the headline, so switching the
+        // line off left a band of white above it.
+        $source = file_get_contents(resource_path('js/Pages/Public/Startseite.vue'));
+
+        expect($source)->toContain('rule-accent mt-2.5 mb-7')
+            ->and($source)->not->toContain('text-h1 font-bold text-navy-700 pt-7');
     });
 
     it('says so in the admin panel', function () {
-        $help = ContentBlock::where('page_key', 'startseite')
+        $eyebrow = ContentBlock::where('page_key', 'startseite')
             ->where('section_key', 'hero')
             ->where('field_key', 'eyebrow')
             ->value('help_de');
 
-        expect($help)->toContain('Leer lassen');
+        $switch = ContentBlock::where('page_key', 'startseite')
+            ->where('section_key', 'hero')
+            ->where('field_key', 'eyebrow_anzeigen')
+            ->value('help_de');
+
+        // The operator is told how to hide the line, and told it where the
+        // switch that does it actually is.
+        expect($eyebrow)->toContain('Schalter')
+            ->and($switch)->toContain('Strich');
     });
 });
 

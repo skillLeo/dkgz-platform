@@ -12,6 +12,14 @@ const state = reactive({
     cancelLabel: 'Abbrechen',
     tone: 'default',
     requireTyped: null,
+    /**
+     * Nothing to decide — the panel is showing something, not asking.
+     *
+     * The dialog already handles the escape key, the focus, the backdrop and the
+     * sheet it becomes on a phone. An explanation needs all of that and none of
+     * the choice, so it borrows the panel and loses the second button.
+     */
+    dismissOnly: false,
     resolve: null,
 })
 
@@ -23,6 +31,7 @@ export function useConfirm() {
         state.cancelLabel = options.cancelLabel ?? 'Abbrechen'
         state.tone = options.tone ?? 'default'
         state.requireTyped = options.requireTyped ?? null
+        state.dismissOnly = options.dismissOnly ?? false
         state.open = true
 
         return new Promise((resolve) => {

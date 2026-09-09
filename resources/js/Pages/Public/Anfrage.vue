@@ -2,15 +2,16 @@
 import { computed, onMounted, ref, watch } from 'vue'
 import { useForm } from '@inertiajs/vue3'
 import axios from 'axios'
-import { Check, Clock, Loader2 } from 'lucide-vue-next'
+import { Check, Loader2 } from 'lucide-vue-next'
 import RequestFlowLayout from '../../Layouts/RequestFlowLayout.vue'
 import SectionLabel from '../../Components/Layout/SectionLabel.vue'
 import RequestProgress from '../../Components/Domain/RequestProgress.vue'
-import RequestStarter from '../../Components/Domain/RequestStarter.vue'
+import ServiceChooser from '../../Components/Domain/ServiceChooser.vue'
 import BaseInput from '../../Components/Base/BaseInput.vue'
 import BaseButton from '../../Components/Base/BaseButton.vue'
 import ErrorSummary from '../../Components/Feedback/ErrorSummary.vue'
 import { fill } from '../../Support/placeholders.js'
+import { isOn } from '../../Support/switches.js'
 
 /**
  * Two steps: which assessment, then where and who.
@@ -35,6 +36,19 @@ const props = defineProps({
 
 const t = (section, field, fallback = '') => props.content?.[section]?.[field] ?? fallback
 
+/**
+ * Which of the two contact fields is asked for first.
+ *
+ * Both are required either way — this only decides which one somebody reads
+ * first, and that is a judgement about the audience rather than about the form,
+ * so it belongs in Seiteninhalte and not in this file.
+ */
+const phoneFirst = computed(() => isOn(props.content, 'formular', 'telefon_zuerst'))
+
+/** The eyebrow and its gold rule over the first step, which can be switched off. */
+const showEyebrow = computed(() => isOn(props.content, 'kopf', 'eyebrow_anzeigen')
+    && Boolean(t('kopf', 'eyebrow')))
+
 const form = useForm({
     service_type_id: props.selected.service_type_id ?? '',
     postal_code: '',
@@ -52,7 +66,7 @@ const form = useForm({
 onMounted(() => { form.rendered_at = Date.now() })
 
 const STEPS = [
-    { number: 1, label: 'Leistung', short: 'Leistung' },
+    { number: 1, label: 'Gutachten', short: 'Gutachten' },
     { number: 2, label: 'Standort und Kontakt', short: 'Kontakt' },
 ]
 
@@ -62,6 +76,27 @@ const step = computed(() => (started.value ? 2 : 1))
 
 const service = computed(() => props.serviceTypes
     .find((type) => String(type.id) === String(form.service_type_id)) ?? null)
+
+/**
+ * The line that says somebody is out there, before any details are typed.
+ *
+ * Named after the assessment they chose, because "Gutachter sind verfügbar" says
+ * less than naming the thing they just asked for. Switchable, because it is a
+ * claim about availability made before the postal code is known.
+ */
+const availability = computed(() => fill(
+    t('formular', 'verfuegbarkeit', 'Passende Kfz-Gutachter für {Ihren leistung} sind deutschlandweit verfügbar.'),
+    {
+        leistung: service.value?.name_de ?? '',
+        // "für Ihr Unfallgutachten" but "für Ihre Fahrzeugbewertung". The
+        // article rides inside the braces and is bent to the noun after it.
+        leistung_genus: service.value?.genus,
+    },
+))
+
+const showAvailability = computed(() => isOn(props.content, 'formular', 'verfuegbarkeit_anzeigen')
+    && Boolean(service.value)
+    && Boolean(availability.value))
 
 /** Answering the first step here rather than arriving with it answered. */
 const onStart = ({ service_type_id }) => {
@@ -186,32 +221,55 @@ const submit = () => {
 
 <template>
     <RequestFlowLayout title="Anfrage" :dirty="form.isDirty">
-        <template v-if="started" #progress>
+        <!--
+            On both steps now. Somebody who lands on the first one has no idea
+            how much is being asked of them, and "1 von 2" is the answer — which
+            is exactly the moment it is worth having.
+        -->
+        <template #progress>
             <RequestProgress :steps="STEPS" :current="step" />
         </template>
 
         <div class="bg-gray-50">
-            <div class="mx-auto w-full max-w-(--container-prose) px-4 py-12 md:px-6 md:py-16">
+            <!--
+                Wider while the assessments are on screen. Two columns inside a
+                680px reading column left each name about 300px, which is not
+                enough for "Oldtimer- & Youngtimer-Gutachten" beside a mark and
+                an i. The second step goes back to the reading width, because it
+                is a form and a form wants a column.
+            -->
+            <div class="mx-auto w-full px-4 py-12 md:px-6 md:py-16" :class="started ? 'max-w-(--container-prose)' : 'max-w-4xl'">
                 <!-- ── Step one: which assessment ── -->
                 <template v-if="! started">
-                    <SectionLabel :text="t('kopf', 'eyebrow', 'Kostenlose Anfrage')" />
-                    <h1 class="pt-6 text-h2 font-bold text-navy-700 sm:text-h1">
-                        {{ t('kopf', 'ueberschrift', 'Gutachter anfragen') }}
-                    </h1>
-                    <p class="measure-lead pt-3 text-lead leading-relaxed text-gray-600">{{ t('kopf', 'text') }}</p>
+                    <!--
+                        The heading is the question the page asks. It used to
+                        repeat the homepage's own headline word for word, which
+                        told somebody who had just come from there nothing at
+                        all.
+                    -->
+                    <SectionLabel v-if="showEyebrow" :text="t('kopf', 'eyebrow', 'Kostenlose Anfrage')" />
 
-                    <RequestStarter
+                    <!-- The same size as the second step's, which it was not. -->
+                    <h1 class="text-h2 font-bold text-navy-700" :class="showEyebrow ? 'pt-6' : ''">
+                        {{ t('formular', 'frage_leistung', 'Welches Gutachten benötigen Sie?') }}
+                    </h1>
+                    <p class="measure-lead pt-3 text-lead leading-relaxed text-gray-600">
+                        {{ t('formular', 'frage_hinweis', 'Wählen Sie die passende Leistung aus. Über das i erfahren Sie, wofür ein Gutachten gedacht ist.') }}
+                    </p>
+
+                    <ServiceChooser
                         class="mt-8"
+                        v-model="form.service_type_id"
                         :service-types="serviceTypes"
-                        :initial-service="form.service_type_id"
-                        :action="null"
-                        :title="t('formular', 'cta_schritt_1', 'Jetzt Gutachter anfragen')"
+                        :label="t('formular', 'frage_leistung', 'Welches Gutachten benötigen Sie?')"
                         :cta-label="t('formular', 'weiter', 'Weiter')"
-                        :service-label="t('formular', 'frage_leistung', 'Welche Gutachtenart benötigen Sie?')"
-                        :service-hint="t('formular', 'frage_hinweis', 'Wählen Sie die passende Leistung aus, damit wir den richtigen Sachverständigen für Sie finden.')"
-                        :hint="t('formular', 'hinweis_schritt_1')"
-                        @start="onStart"
+                        :info-label="t('formular', 'info', 'Was ist das?')"
+                        @confirm="onStart({ service_type_id: form.service_type_id })"
                     />
+
+                    <p v-if="t('formular', 'hinweis_schritt_1')" class="pt-4 text-sm text-gray-600">
+                        {{ t('formular', 'hinweis_schritt_1') }}
+                    </p>
                 </template>
 
                 <!-- ── Step two: where the car is, and who to call ── -->
@@ -230,8 +288,20 @@ const submit = () => {
                         the more discoverable of the two, because it sits beside
                         the thing it would change.
                     -->
-                    <p v-if="service" class="flex flex-wrap items-center gap-x-2 gap-y-1 pt-4 text-sm text-gray-600">
-                        <Check :size="15" :stroke-width="2" class="shrink-0 text-success" aria-hidden="true" />
+                    <!--
+                        What they chose, on one line above the box.
+
+                        The word, the name, and the way back — nothing else. The
+                        description explained the assessment to somebody who had
+                        already chosen it, which is a paragraph answering a
+                        question nobody still has.
+
+                        "ändern" stays whatever else goes: the progress band
+                        above is deliberately not clickable, so this is the only
+                        way back to the first step.
+                    -->
+                    <p v-if="service" class="flex flex-wrap items-center gap-x-2 gap-y-1 pt-5 text-sm text-gray-600">
+                        <span>{{ t('formular', 'gewaehlte_leistung', 'Gutachten') }}:</span>
                         <span class="font-medium text-navy-700">{{ service.name_de }}</span>
                         <button
                             type="button"
@@ -240,7 +310,17 @@ const submit = () => {
                         >ändern</button>
                     </p>
 
-                    <form class="mt-8 rounded-card border border-gray-200 bg-white p-5 sm:p-7" novalidate @submit.prevent="submit">
+                    <!--
+                        Somebody is out there, said before any details are typed
+                        rather than after. The tick is the same one the form uses
+                        further down for things that are settled.
+                    -->
+                    <p v-if="showAvailability" class="flex items-start gap-2 pt-2 text-sm leading-normal text-gray-600">
+                        <Check :size="15" :stroke-width="2" class="mt-0.5 shrink-0 text-success" aria-hidden="true" />
+                        <span>{{ availability }}</span>
+                    </p>
+
+                    <form class="mt-6 rounded-card border border-gray-200 bg-white p-5 sm:p-7" novalidate @submit.prevent="submit">
                         <ErrorSummary v-if="form.hasErrors" :errors="form.errors" :labels="labels" class="mb-6" />
 
                         <!-- Honeypot: visually and programmatically hidden -->
@@ -255,7 +335,7 @@ const submit = () => {
                                     id="postal_code"
                                     :model-value="form.postal_code"
                                     :label="t('formular', 'frage_plz', 'Postleitzahl des Fahrzeugstandorts')"
-                                    placeholder="40210"
+                                    :placeholder="t('formular', 'platzhalter_plz', '40210')"
                                     inputmode="numeric"
                                     autocomplete="postal-code"
                                     maxlength="5"
@@ -286,30 +366,42 @@ const submit = () => {
                                 id="customer_name"
                                 v-model="form.customer_name"
                                 label="Ihr Name"
-                                placeholder="Vor- und Nachname"
+                                :placeholder="t('formular', 'platzhalter_name', 'Vor- und Nachname')"
                                 autocomplete="name"
                                 :error="form.errors.customer_name"
+                                required
+                            />
+                            <!--
+                                Telephone before e-mail by default: it is the
+                                one the assessor will actually use, and the line
+                                under it explains why it is being asked for —
+                                which reads better before the field somebody
+                                expects than after it. Which way round is a
+                                switch in Seiteninhalte, because which of the two
+                                a visitor is readier to give is a question about
+                                the audience rather than about the form.
+                            -->
+                            <BaseInput
+                                id="customer_phone"
+                                v-model="form.customer_phone"
+                                :class="phoneFirst ? 'order-1' : 'order-2'"
+                                label="Telefonnummer"
+                                :placeholder="t('formular', 'platzhalter_telefon', 'Telefonnummer eingeben')"
+                                autocomplete="tel"
+                                :hint="t('formular', 'hinweis_telefon', 'Für die direkte Kontaktaufnahme durch den Sachverständigen.')"
+                                numeric
+                                :error="form.errors.customer_phone"
                                 required
                             />
                             <BaseInput
                                 id="customer_email"
                                 v-model="form.customer_email"
+                                :class="phoneFirst ? 'order-2' : 'order-1'"
                                 label="E-Mail-Adresse"
                                 type="email"
-                                placeholder="E-Mail eingeben"
+                                :placeholder="t('formular', 'platzhalter_email', 'E-Mail eingeben')"
                                 autocomplete="email"
                                 :error="form.errors.customer_email"
-                                required
-                            />
-                            <BaseInput
-                                id="customer_phone"
-                                v-model="form.customer_phone"
-                                label="Telefonnummer"
-                                placeholder="Telefonnummer eingeben"
-                                autocomplete="tel"
-                                hint="Für die direkte Kontaktaufnahme durch den Sachverständigen."
-                                numeric
-                                :error="form.errors.customer_phone"
                                 required
                             />
                         </div>
@@ -318,13 +410,19 @@ const submit = () => {
                             Only once the town is known, because "ein
                             Sachverständiger aus  meldet sich" is worse than
                             saying nothing.
+
+                            Green, with a tick: this says somebody is there and
+                            will ring shortly. A clock face says waiting, which
+                            is the opposite of the reassurance intended.
                         -->
                         <p
                             v-if="form.city && responseNote"
-                            class="mt-7 flex items-start gap-2.5 rounded-card border border-gray-200 bg-gray-50 p-4 text-sm leading-normal text-gray-800"
+                            class="mt-7 flex items-start gap-2.5 rounded-card border border-success bg-success-50 p-4 text-sm leading-normal text-gray-800"
                             style="animation: dkgz-enter 260ms cubic-bezier(0.4,0,0.2,1) both"
                         >
-                            <Clock :size="16" :stroke-width="1.75" class="mt-0.5 shrink-0" style="color: var(--dkgz-accent)" aria-hidden="true" />
+                            <span class="mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-full bg-success text-white" aria-hidden="true">
+                                <Check :size="13" :stroke-width="3" />
+                            </span>
                             <span>{{ responseNote }}</span>
                         </p>
 
@@ -338,20 +436,19 @@ const submit = () => {
                         >{{ t('formular', 'cta', 'Kostenfrei anfragen') }}</BaseButton>
 
                         <!--
-                            The consent wording sits above the fold of the
-                            button rather than behind a tick box, which is the
-                            ordinary German pattern for a request somebody has
-                            asked to be contacted about. The moment it was given
-                            is still recorded against the request.
+                            The reassurance sits directly under the button, where
+                            somebody looks the moment before pressing it. The
+                            consent wording follows: it has to be there, but it
+                            is not what anybody is hesitating over.
                         -->
+                        <p v-if="t('formular', 'kurzhinweis')" class="flex items-start gap-2 pt-4 text-sm leading-normal text-gray-600">
+                            <Check :size="15" :stroke-width="2" class="mt-0.5 shrink-0 text-success" aria-hidden="true" />
+                            {{ t('formular', 'kurzhinweis') }}
+                        </p>
+
                         <p class="measure pt-4 text-sm leading-normal text-gray-600">
                             {{ t('formular', 'datenschutzhinweis', 'Mit dem Absenden willigen Sie ein, dass DKGZ Ihre Angaben zur Vermittlung an geeignete Sachverständige verarbeitet.') }}
                             <a href="/datenschutz" class="border-b border-navy-700 pb-0.5 text-navy-700">Datenschutzerklärung</a>
-                        </p>
-
-                        <p class="flex items-start gap-2 pt-4 text-sm leading-normal text-gray-600">
-                            <Check :size="15" :stroke-width="2" class="mt-0.5 shrink-0 text-success" aria-hidden="true" />
-                            {{ t('formular', 'kurzhinweis', 'Ihre Anfrage ist kostenfrei und unverbindlich. Es entstehen für Sie keine Kosten.') }}
                         </p>
                     </form>
                 </template>

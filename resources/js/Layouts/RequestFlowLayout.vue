@@ -95,14 +95,21 @@ onBeforeUnmount(() => window.removeEventListener('beforeunload', guard))
                     is offered beside the answer it would change, which is where
                     somebody looks for it.
                 -->
-                <span class="ml-auto flex shrink-0 items-center gap-2 text-sm text-gray-600">
+                <!--
+                    Shown on a phone too, wrapped rather than dropped. It was
+                    hidden below sm to keep the header on one line, which meant
+                    the one reassurance on screen disappeared exactly where the
+                    screen is smallest and the doubt is largest. Two short lines
+                    beside the mark take no more height than the mark itself.
+                -->
+                <span class="ml-auto flex shrink-0 items-center gap-1.5 text-sm text-gray-600 sm:gap-2">
                     <ShieldCheck :size="22" :stroke-width="1.75" class="shrink-0" style="color: var(--dkgz-accent)" aria-hidden="true" />
-                    <span class="hidden sm:inline">{{ label }}</span>
+                    <span class="max-w-24 text-xs leading-tight sm:max-w-none sm:text-sm">{{ label }}</span>
                 </span>
 
                 <button
                     type="button"
-                    class="-mr-2 ml-3 grid h-11 w-11 shrink-0 place-items-center rounded-sm text-gray-600 hover:text-navy-700 sm:ml-4"
+                    class="-mr-3 ml-0 grid h-11 w-11 shrink-0 place-items-center rounded-sm text-gray-600 hover:text-navy-700 sm:-mr-2 sm:ml-4"
                     aria-label="Anfrage abbrechen"
                     @click="exit"
                 >

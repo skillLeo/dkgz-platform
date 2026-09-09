@@ -89,7 +89,8 @@ const onKeydown = (event) => {
                 </div>
 
                 <div class="flex gap-3 border-t border-gray-200 p-4" :class="isMobile ? '' : 'justify-end'">
-                    <BaseButton variant="secondary" :block="isMobile" @click="cancel">{{ state.cancelLabel }}</BaseButton>
+                    <!-- Nothing to decline when the panel is only explaining. -->
+                    <BaseButton v-if="! state.dismissOnly" variant="secondary" :block="isMobile" @click="cancel">{{ state.cancelLabel }}</BaseButton>
                     <BaseButton
                         :variant="state.tone === 'danger' ? 'danger' : 'primary'"
                         :disabled="!canConfirm"

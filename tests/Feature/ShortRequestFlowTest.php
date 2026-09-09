@@ -163,13 +163,15 @@ describe('the pages that start it', function () {
                 ->has('serviceTypes.0.description_de'));
     });
 
-    it('asks the same two questions from one file on both pages', function () {
-        // Somebody who started at the top and somebody who clicked through from
-        // a service page have to meet the same thing.
-        foreach (['Pages/Public/Startseite.vue', 'Pages/Public/Anfrage.vue'] as $page) {
-            expect(file_get_contents(resource_path("js/{$page}")))
-                ->toContain('RequestStarter');
-        }
+    it('asks a two-way question in the hero and the full one on the request page', function () {
+        // They used to be the same component, and for a while the hero listed
+        // every assessment. Seven names with descriptions beside a headline, a
+        // strapline and a row of faces is a page of reading in a hero, so the
+        // hero asks the two-way question and hands the rest over.
+        expect(file_get_contents(resource_path('js/Pages/Public/Startseite.vue')))
+            ->toContain('RequestStarter')
+            ->and(file_get_contents(resource_path('js/Pages/Public/Anfrage.vue')))
+            ->toContain('ServiceChooser');
     });
 
     it('no longer offers the fields it stopped asking for', function () {
@@ -239,15 +241,18 @@ describe('copy the operator had already rewritten', function () {
 });
 
 describe('the box in the hero', function () {
-    it('shows its button from the start rather than growing one', function () {
-        // A box with no visible destination gives the eye nowhere to land while
-        // somebody is still deciding whether to bother.
+    it('is answered by pressing a choice, not by confirming one', function () {
+        // The commonest answer used to cost three actions: open a list, find the
+        // assessment after a crash, then press a button to confirm what had
+        // already been chosen. In the hero it is now one press either way — the
+        // leading assessment, or through to the page that lists them all.
         $source = file_get_contents(resource_path('js/Components/Domain/RequestStarter.vue'));
 
-        expect($source)->toContain(':disabled="! ready"');
-
-        // No v-if on the button: it is inert, not absent.
-        expect($source)->not->toMatch('/<BaseButton\b[^>]*\sv-if=/s');
+        expect($source)->toContain('@click="startLeading"')
+            ->and($source)->toContain('@click="browseAll"')
+            // Nothing is listed or confirmed in the hero.
+            ->and($source)->not->toContain('<BaseButton')
+            ->and($source)->not->toContain('<BaseSelect');
     });
 
     it('says what it is before it asks anything', function () {
@@ -255,11 +260,11 @@ describe('the box in the hero', function () {
             ->assertOk()
             ->assertInertia(fn ($page) => $page
                 ->where('content.hero.cta', 'Jetzt Gutachter anfragen')
-                ->where('content.hero.cta_button', 'Weiter'));
+                ->where('content.hero.option_weitere', 'Weitere Gutachten'));
     });
 
-    it('lets the operator rename the heading and the button separately', function () {
-        foreach (['cta', 'cta_button', 'cta_hinweis', 'telefon_titel'] as $field) {
+    it('lets the operator rename the heading and the choices separately', function () {
+        foreach (['cta', 'option_weitere', 'cta_hinweis', 'telefon_titel'] as $field) {
             expect(ContentBlock::where('page_key', 'startseite')
                 ->where('section_key', 'hero')
                 ->where('field_key', $field)
@@ -359,7 +364,7 @@ describe('moving to the second step', function () {
 
 describe('what the operator can reword', function () {
     it('offers every string on the first step', function () {
-        foreach (['cta_schritt_1', 'frage_leistung', 'frage_hinweis', 'weiter', 'hinweis_schritt_1'] as $field) {
+        foreach (['frage_leistung', 'frage_hinweis', 'weiter', 'info', 'hinweis_schritt_1'] as $field) {
             expect(ContentBlock::where('page_key', 'anfrage')
                 ->where('section_key', 'formular')
                 ->where('field_key', $field)
