@@ -95,18 +95,6 @@ const description = computed(() => props.city.meta_description
             </div>
         </section>
 
-        <!--
-            The city's own passage, where somebody has written one. The shared
-            introduction and the box of notes beside it went: on a page that
-            already carries the services, the steps and the questions they were
-            one section too many, and the shared wording said the same thing on
-            every city page anyway. What is left only appears when there is
-            something particular to say.
-        -->
-        <section v-if="city.body" class="mx-auto w-full max-w-(--container-shell) px-4 pt-16 md:px-6">
-            <div class="stadttext measure" v-html="city.body" />
-        </section>
-
         <div class="mx-auto w-full max-w-(--container-shell) px-4 py-16 md:px-6">
             <h2 class="text-h2 font-semibold text-navy-700">
                 {{ t('stadt', 'leistungen_ueberschrift', 'Gutachten in {stadt}') }}
@@ -180,6 +168,22 @@ const description = computed(() => props.city.meta_description
                     </dd>
                 </div>
             </dl>
+        </section>
+
+        <!--
+            The city's own passage, where somebody has written one, at the foot
+            of the page.
+
+            It sat above the services, where it pushed the three things a visitor
+            came for — what is offered, how it works, what it costs — below the
+            fold behind a paragraph they had not asked to read. Down here it is
+            what somebody still reading finds at the end, and it is where a
+            search engine expects the long-form text about a place to be.
+        -->
+        <section v-if="city.body" class="border-t border-gray-200 bg-gray-50">
+            <div class="mx-auto w-full max-w-(--container-shell) px-4 py-16 md:px-6">
+                <div class="stadttext measure" v-html="city.body" />
+            </div>
         </section>
     </PublicLayout>
 </template>
