@@ -1,122 +1,156 @@
 # DKGZ — Deutsche KFZ-Gutachterzentrale
 
-A nationwide German vehicle-assessor referral platform. A customer submits one
-short form with no account; the system matches the request to assessors whose
-service area covers that postal code and who are currently available; the first
-to accept takes the assignment and it closes for everyone else. Contact details
-stay hidden until acceptance. The assessor works the job outside the platform,
-uploads the report and the invoice they issued, marks it complete and enters the
-fee actually charged. DKGZ records a referral commission on that fee.
+A nationwide German platform that puts a car owner in touch with a qualified
+vehicle assessor. The customer answers two questions and leaves a telephone
+number; DKGZ finds a partner whose service area covers that postal code, and the
+first one to accept takes the job.
 
 **No money moves through this system.** There is no payment gateway, no wallet
-and no payout — the commission is a record, not a transaction.
+and no payout. The referral fee DKGZ charges its partners is recorded and
+invoiced as a PDF; settling it happens outside the platform.
 
-Laravel · Inertia 2 · Vue 3 · Tailwind 4 · MySQL, built for shared hosting.
+Laravel · Inertia 2 · Vue 3 · Tailwind 4 · MySQL — built to run on shared
+hosting with no Redis, no queue daemon and no websockets.
 
 ---
 
-## Local setup
+## How a request travels
 
-Requires PHP 8.3+, Composer and Node 20+.
+1. **The customer chooses an assessment.** The homepage offers the commonest one
+   directly; everything else opens the request page, which lists them all with an
+   explanation behind each. One more screen asks for postal code, name,
+   telephone and e-mail. Nothing else — the assessor telephones and asks the
+   rest.
+2. **DKGZ matches it.** Partners are selected by postal-code coverage, by the
+   services they offer and by whether they are currently available. Each is sent
+   the job without the customer's contact details.
+3. **A partner accepts.** The request closes for everyone else. Contact details
+   are released only to the partner who accepted.
+4. **The partner starts work.** Marking the job *In Bearbeitung* is the moment
+   DKGZ has earned its fee: the commission is booked and a numbered invoice PDF
+   is generated and e-mailed to the partner.
+5. **The job is completed** by the partner, and the customer is invited to leave
+   a review.
+
+The fee is a fixed amount per assessment type, **snapshotted onto the job when
+the partner accepts**. Changing the price list afterwards can never rewrite a
+job already running.
+
+If nobody accepts, or a partner hands the job back, the customer is told —
+silence after handing over a telephone number is the worst outcome available.
+
+---
+
+## Requirements
+
+| | |
+|---|---|
+| PHP | 8.3+ (8.4 in production) |
+| Node | 20+ |
+| Database | MySQL/MariaDB in production, SQLite in tests |
+| Extensions | `pdo_mysql`, `mbstring`, `gd`, `zip`, `intl`, `bcmath` |
+
+## Local setup
 
 ```bash
 composer install
 npm install
 cp .env.example .env
 php artisan key:generate
-php artisan migrate --seed        # production data + demo records
-npm run build                     # or: npm run dev
+php artisan migrate --seed
+npm run build            # or: npm run dev
 php artisan serve
 ```
 
-`migrate --seed` runs `ProductionSeeder` and then `DemoSeeder`. The demo seeder
-refuses to run when `APP_ENV=production`.
+`migrate --seed` runs `ProductionSeeder` (roles, permissions, settings, service
+types, the German postal-code table, mail templates, every editable string, legal
+pages) and then `DemoSeeder`, which refuses to run when `APP_ENV=production`.
 
-### Seeders
-
-| Seeder | What it writes |
-|---|---|
-| `ProductionSeeder` | roles, 44 permissions, all settings with German defaults, 8 service types, the German postal-code table, 19 mail templates, every content block with the copy from the design, 4 legal pages, 10 FAQs, one super-admin |
-| `DemoSeeder` | 25 assessors across real German cities, 60 requests in mixed states, 30 assignments, 20 commissions across all four statuses, reviews and invitations |
+For a live install, seed the production data only:
 
 ```bash
-php artisan db:seed --class=ProductionSeeder --force   # live installs
+php artisan db:seed --class=ProductionSeeder --force
 ```
-
-### Signing in locally
-
-After `migrate --seed` the console prints a generated super-admin password for
-`admin@dkgz.de`. Demo accounts all use `Gutachten2026!`:
-
-| Account | Role |
-|---|---|
-| `admin@dkgz.test` | admin |
-| `vermittlung@dkgz.test` | manager |
-| `support@dkgz.test` | support |
-| `redaktion@dkgz.test` | content_editor |
-| `sv1@dkgz.test` … `sv25@dkgz.test` | assessor |
-
-Staff sign in at `/admin/anmelden`, partners at `/anmelden`.
-
----
 
 ## Tests
 
 ```bash
-php artisan test          # or: ./vendor/bin/pest
-./vendor/bin/pint         # formatting
+php artisan test          # or: vendor/bin/pest --compact
 ```
 
-The suite covers, among other things:
+839 tests covering the request flow end to end, matching and availability,
+commission and VAT arithmetic, permissions and role boundaries, German grammar,
+and the public pages. The suite runs against SQLite in memory and touches no
+external service.
 
-- **first-accept-wins under concurrency** — two simultaneous accepts must
-  produce exactly one assignment, guarded by a pessimistic row lock and, behind
-  it, a unique index
-- the matching rule in isolation: approved **and** available **and** the user
-  active **and** in-area **and** offering that service, nothing else
-- customer contact data absent from the payload before acceptance and present
-  after, asserted against the raw response rather than only the props
-- documents unreachable without authorisation
-- commission arithmetic across a spread of fees, and rate snapshotting — editing
-  the rate must never rewrite a historical record
-- every admin route hit by every role, asserting 200 or 403
-- German money, date and phone formatting identical in PHP and JavaScript, by
-  running the Vue composable under Node against the same fixtures
+Several tests read Vue source files and assert on them. There is no JavaScript
+test runner in this project, and a source assertion is the only way to hold a
+front-end guarantee that has been broken before.
 
 ---
 
-## Layout
+## Operating it
 
-```
-app/
-├── Actions/          MatchRequestAction, AcceptAssignmentAction, CompleteAssignmentAction
-├── Support/          Settings, Content, Branding, Formatter, Mailer, SafeStorage, Permissions
-├── Policies/         one per model; routes are gated by permission, never by role
-resources/js/
-├── Layouts/          Public, Auth, Portal, Admin
-├── Pages/            Public/ Auth/ Portal/ Admin/
-├── Components/       Base/ Data/ Feedback/ Layout/ Domain/
-└── Composables/      useGermanFormat, usePermissions, usePolling, useConfirm, …
-design-src/           the imported design project, kept as the reference
-```
+Almost nothing user-facing is hard-coded. The admin panel owns the words.
 
-`DESIGN_TOKENS.md` holds every colour, size and duration, extracted from
-`design-src/DKGZ Design Foundations.dc.html`. No component uses an arbitrary
-value.
+- **Seiteninhalte** — every string on every public page, addressed as
+  `page.section.field`. A block can also be a **switch**, drawn as a toggle,
+  which turns a section on or off without deleting the wording that fills it.
+- **Leistungsarten** — the assessments, their order, their icons, their fee, and
+  the explanation shown behind the *i* on the request form. The first in the list
+  is the one the homepage leads with.
+- **Einstellungen** — branding colours, contact details, SMTP, feature switches.
+- **Test bookings** — set a five-digit code under *Funktionen →
+  Postleitzahl für Testanfragen*. A request submitted with that code runs the
+  whole flow and is marked as a test, but is never shown to a partner. Leave it
+  empty to switch the feature off.
+
+### German is a first-class concern
+
+The copy is written once and reused for every assessment, so the articles in
+front of a service name are bent to its gender: *zum Unfallgutachten* but *zur
+Beweissicherung*, *für Ihr Gutachten* but *für Ihre Fahrzeugbewertung*. The
+gender is stored per service and falls back to a suffix rule. An editable string
+carries the article inside the placeholder — `{Ihren leistung}` — so the operator
+writes it once in the masculine and every other form follows.
 
 ---
 
-## Notes that matter
+## Deployment
 
-- **Fonts are self-hosted.** German courts have held that pulling fonts from
-  Google's CDN unlawfully transmits visitor IP addresses, so IBM Plex ships from
-  `@fontsource` and the build contains zero requests to any Google domain.
-- **Money is integer cents everywhere**, cast through `MoneyCast`. Never a float.
-- **The commission rate is never hardcoded.** It is read from
-  `settings.business.commission_rate` and snapshotted onto each commission row.
-- **Almost everything is admin-editable** without a deploy: page copy, legal
-  pages, FAQs, logos, every colour token, SMTP credentials, all mail templates,
-  service types and the business rules.
+Full instructions live in [DEPLOYMENT.md](DEPLOYMENT.md). The shape of it:
 
-See `DEPLOYMENT.md` for the server, `HANDOVER.md` for the client-facing guide,
-`BUILD_SPEC.md` for the binding rules and `DECISIONS.md` for judgement calls.
+- **`public/build` is committed on purpose.** The host has no npm, so assets are
+  built locally and shipped.
+- **No queue daemon.** Mail is drained by middleware riding on ordinary traffic,
+  with a circuit breaker so a broken mail server cannot take the site down —
+  which it once did.
+- **Adding a content block needs the seeder.** `db:seed --class=ContentBlockSeeder
+  --force` is safe on every run: it writes a block's value only when the block
+  does not yet exist, so nothing an operator wrote is overwritten.
+
+---
+
+## Conventions
+
+- **Comments say why, not what.** Where the code looks odd, the comment explains
+  the failure that made it that way.
+- **No arbitrary design values.** `DESIGN_TOKENS.md` governs every colour,
+  radius, spacing step and duration.
+- **Money is integer cents**, cast at the model boundary. Rates are frozen onto
+  the row at the moment an invoice is issued, because a rate is a fact about a
+  date.
+- **Invoice numbers are consecutive and never reused**, and an issued number is
+  never rewritten.
+
+## Repository layout
+
+```
+app/            Actions, models, controllers, jobs, policies, support classes
+resources/js/   Inertia pages, layouts, base components, domain components
+resources/css/  The design tokens and the single stylesheet
+database/       Migrations, factories, seeders
+tests/Feature/  The suite
+design-src/     The original design documents the build was made from
+public/build/   Compiled assets, committed deliberately
+```

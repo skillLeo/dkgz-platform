@@ -177,6 +177,19 @@ php artisan migrate --force && php artisan config:cache && php artisan route:cac
 Always run `php artisan cache:clear` after a deploy: settings and page content
 are cached for an hour.
 
+A release that adds a new block under Seiteninhalte also needs the row itself,
+and only the seeder creates it. Without this the migration lands, the page still
+looks right, and the new field is simply absent from the admin panel:
+
+```bash
+php artisan db:seed --class=ContentBlockSeeder --force
+```
+
+That one class is safe to re-run: it writes a block's value only when the block
+does not yet exist, so nothing an operator typed is overwritten. Do not use
+`ProductionSeeder` for this — its other children do overwrite, including the
+legal pages and the e-mail templates.
+
 ---
 
 ## 7. Verifying the deploy
