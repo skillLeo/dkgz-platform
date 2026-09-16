@@ -81,6 +81,13 @@ class DirectoryController extends Controller
                     'description' => $t->description_de,
                     'url' => "/leistungen/{$t->slug}",
                 ])->values(),
+                // Whether a request aimed here could actually arrive. Listed and
+                // available are different things: the directory shows approved
+                // partners whether or not they are taking work today, and a
+                // partner who has paused was still being offered a form. What
+                // was sent through it matched nobody, so the customer handed
+                // over a telephone number and heard nothing.
+                'accepting' => $assessor->isMatchable(),
             ]),
             // Everything the shortened form on this page needs, and nothing
             // that would let it be pointed at somebody else.

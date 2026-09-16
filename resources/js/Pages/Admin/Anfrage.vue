@@ -185,6 +185,37 @@ const doRematch = async () => {
                     assessment type, and without this the office cannot tell the
                     two apart.
                 -->
+                <!--
+                    A request made from a partner's own profile went to that
+                    partner and nobody else, so there is no area to explain. What
+                    the office needs to know is whether the firm the customer
+                    chose could actually take it — and when it could not, why.
+                -->
+                <section v-if="matching && matching.requested" class="border border-gray-200 bg-white p-5">
+                    <SectionLabel text="Direkt angefragter Partner" tone="muted" />
+                    <p class="measure pt-2 text-sm text-gray-600">
+                        Diese Anfrage kam über das Profil eines Sachverständigen und ging ausschließlich an ihn.
+                    </p>
+                    <div class="flex flex-wrap items-center justify-between gap-x-5 gap-y-2 pt-4">
+                        <span class="min-w-0">
+                            <a :href="`/admin/sachverstaendige/${matching.requested.id}`" class="text-sm font-medium text-navy-700 hover:text-navy-500">
+                                {{ matching.requested.company_name }}
+                            </a>
+                            <span v-if="! matching.requested.reachable" class="block text-sm text-gray-600">
+                                {{ matching.requested.reasons.join(' · ') }}
+                            </span>
+                        </span>
+                        <StatusDot
+                            :status="matching.requested.reachable ? 'approved' : 'closed'"
+                            :label="matching.requested.reachable ? 'Angeschrieben' : 'Konnte nicht angeschrieben werden'"
+                        />
+                    </div>
+                    <p v-if="! matching.requested.reachable" class="measure pt-4 text-sm leading-normal text-gray-600">
+                        Die Anfrage liegt unvermittelt. Sie können sie unten von Hand an einen anderen
+                        Sachverständigen vergeben.
+                    </p>
+                </section>
+
                 <section v-if="matching && matching.excluded.length" class="border border-gray-200 bg-white p-5">
                     <SectionLabel text="Nicht angeschrieben" tone="muted" />
                     <p class="measure pt-2 text-sm text-gray-600">
@@ -423,7 +454,15 @@ const doRematch = async () => {
                         </div>
                         <div class="flex items-baseline justify-between gap-4 border-b border-gray-100 py-2.5">
                             <dt class="text-sm text-gray-600">Standort</dt>
-                            <dd class="text-sm text-gray-800">{{ request.city }} · {{ request.postal_code }}</dd>
+                            <!--
+                                A request made from a partner's profile has no
+                                postal code — it was never asked for, because the
+                                assessor was already chosen. This read as a bare
+                                "·" with nothing on either side of it.
+                            -->
+                            <dd class="text-sm text-gray-800">
+                                {{ [request.city, request.postal_code].filter(Boolean).join(' · ') || 'Direktanfrage, ohne Ortsangabe' }}
+                            </dd>
                         </div>
                         <div class="flex items-baseline justify-between gap-4 border-b border-gray-100 py-2.5">
                             <dt class="text-sm text-gray-600">Fahrzeug</dt>

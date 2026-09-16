@@ -368,14 +368,41 @@ class RequestController extends Controller
      */
     private function matchingDiagnosis(ServiceRequest $serviceRequest): array
     {
+        $eligible = app(MatchRequestAction::class)->matchingAssessorIds($serviceRequest);
+
+        // Somebody who pressed the button on one partner's profile chose that
+        // partner, so there is no area to search and nothing to explain about
+        // who else covers it. The only question worth answering is whether the
+        // one they chose could take it.
+        if ($serviceRequest->requested_assessor_id !== null) {
+            $wanted = Assessor::with(['user:id,is_active', 'serviceTypes:id'])
+                ->find($serviceRequest->requested_assessor_id);
+
+            return [
+                'postal_code' => null,
+                'requested' => $wanted === null ? null : [
+                    'id' => $wanted->id,
+                    'company_name' => $wanted->company_name,
+                    'reachable' => $eligible->contains($wanted->id),
+                    // Only asked when the answer is "it did not reach them".
+                    // whyNot() falls back to the liability cover once the four
+                    // visible criteria pass, which would read as a fault on a
+                    // partner who is perfectly fine.
+                    'reasons' => $eligible->contains($wanted->id) ? [] : self::whyNot($wanted, $serviceRequest),
+                ],
+                'covering_count' => 0,
+                'eligible_count' => $eligible->count(),
+                'excluded' => [],
+            ];
+        }
+
         $covering = Assessor::covering($serviceRequest->postal_code)
             ->with(['user:id,is_active', 'serviceTypes:id'])
             ->get();
 
-        $eligible = app(MatchRequestAction::class)->matchingAssessorIds($serviceRequest);
-
         return [
             'postal_code' => $serviceRequest->postal_code,
+            'requested' => null,
             'covering_count' => $covering->count(),
             'eligible_count' => $eligible->count(),
             'excluded' => $covering
@@ -385,17 +412,31 @@ class RequestController extends Controller
                     'company_name' => $a->company_name,
                     'already_notified' => $serviceRequest->matches
                         ->contains('assessor_id', $a->id),
-                    'reasons' => array_values(array_filter([
-                        $a->approval_status !== Assessor::STATUS_APPROVED ? 'Nicht freigegeben' : null,
-                        ! $a->is_available ? 'Als nicht verfügbar markiert' : null,
-                        ! ($a->user?->is_active) ? 'Zugang gesperrt' : null,
-                        ! $a->serviceTypes->contains('id', $serviceRequest->service_type_id)
-                            ? 'Bietet diese Leistungsart nicht an' : null,
-                    ])) ?: ['Nachweis der Haftpflicht fehlt oder ist abgelaufen'],
+                    'reasons' => self::whyNot($a, $serviceRequest),
                 ])
                 ->values()
                 ->all(),
         ];
+    }
+
+    /**
+     * Why this partner was not sent the request.
+     *
+     * The four criteria in order, and the liability cover as the answer left
+     * when none of them explains it — that check lives in the query rather than
+     * on the row, so it cannot be read off the model here.
+     *
+     * @return array<int, string>
+     */
+    private static function whyNot(Assessor $assessor, ServiceRequest $serviceRequest): array
+    {
+        return array_values(array_filter([
+            $assessor->approval_status !== Assessor::STATUS_APPROVED ? 'Nicht freigegeben' : null,
+            ! $assessor->is_available ? 'Als nicht verfügbar markiert' : null,
+            ! ($assessor->user?->is_active) ? 'Zugang gesperrt' : null,
+            ! $assessor->serviceTypes->contains('id', $serviceRequest->service_type_id)
+                ? 'Bietet diese Leistungsart nicht an' : null,
+        ])) ?: ['Nachweis der Haftpflicht fehlt oder ist abgelaufen'];
     }
 
     /** The form for a request taken over the telephone. */

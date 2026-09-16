@@ -919,7 +919,7 @@
     ]
   },
   "resources/js/Pages/Admin/Anfrage.vue": {
-    "file": "assets/Anfrage-Cb8BPSZD.js",
+    "file": "assets/Anfrage-CNohTL26.js",
     "name": "Anfrage",
     "src": "resources/js/Pages/Admin/Anfrage.vue",
     "isDynamicEntry": true,
@@ -2065,7 +2065,7 @@
     ]
   },
   "resources/js/Pages/Public/Sachverstaendiger.vue": {
-    "file": "assets/Sachverstaendiger-uGx6450c.js",
+    "file": "assets/Sachverstaendiger-Dmv5AVKa.js",
     "name": "Sachverstaendiger",
     "src": "resources/js/Pages/Public/Sachverstaendiger.vue",
     "isDynamicEntry": true,
@@ -2164,7 +2164,7 @@
     ]
   },
   "resources/js/app.js": {
-    "file": "assets/app-BMybd-cm.js",
+    "file": "assets/app-C3VfWXh7.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true,

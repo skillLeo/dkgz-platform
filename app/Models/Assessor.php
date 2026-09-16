@@ -251,6 +251,11 @@ class Assessor extends Model
     /**
      * The full eligibility gate used by the matching engine. Kept here so the
      * rule lives in exactly one place — see also scopeMatchable().
+     *
+     * The public profile asks this before offering its form. Being listed and
+     * being available are different things: the directory shows approved
+     * partners whether or not they are taking work today, and a form that can
+     * match nobody takes a customer's telephone number and does nothing with it.
      */
     public function isMatchable(): bool
     {
@@ -383,8 +388,21 @@ class Assessor extends Model
      * got in some other way should still cover the ground it names rather than
      * silently covering nothing.
      */
-    public function scopeCovering(Builder $query, string $postalCode): Builder
+    /**
+     * Partners whose service area contains this postal code.
+     *
+     * A request made from a partner's own profile carries no postal code — the
+     * form does not ask for one, because the assessor is already chosen. Passing
+     * that null in threw a TypeError and took the admin page for the request
+     * down with it, so "no postal code" answers "nobody covers it" rather than
+     * failing: there is no area to cover.
+     */
+    public function scopeCovering(Builder $query, ?string $postalCode): Builder
     {
+        if (blank($postalCode)) {
+            return $query->whereRaw('1 = 0');
+        }
+
         $numeric = (int) $postalCode;
 
         return $query->whereHas('serviceAreas', function (Builder $q) use ($numeric) {

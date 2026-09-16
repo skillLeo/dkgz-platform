@@ -104,14 +104,36 @@ class AttentionQueue
             ->where('is_test', false)
             ->where('status', ServiceRequest::STATUS_NEW)
             ->where('matched_count', 0)
+            ->with('requestedAssessor')
             ->get()
             ->map(fn (ServiceRequest $request) => self::row(
                 $request->reference,
-                "Kein Partner im PLZ-Gebiet {$request->postal_code}",
+                self::whyNobodyHasIt($request),
                 $request->created_at,
                 route('admin.requests.show', $request),
             ))
             ->all();
+    }
+
+    /**
+     * Why a request is sitting with nobody.
+     *
+     * A request made from a partner's own profile has no postal code, so the
+     * area wording read "Kein Partner im PLZ-Gebiet " with nothing after it —
+     * and it named the wrong problem anyway. The customer chose a firm; what
+     * the office needs to know is that the firm could not take it.
+     */
+    private static function whyNobodyHasIt(ServiceRequest $request): string
+    {
+        if ($request->requested_assessor_id === null) {
+            return "Kein Partner im PLZ-Gebiet {$request->postal_code}";
+        }
+
+        $name = $request->requestedAssessor?->company_name;
+
+        return $name === null
+            ? 'Der gewünschte Sachverständige konnte die Anfrage nicht erhalten'
+            : "Wunschpartner {$name} konnte die Anfrage nicht erhalten";
     }
 
     /*

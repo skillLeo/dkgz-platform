@@ -214,7 +214,7 @@ const submit = () => {
                     and a half further down, which is far enough that somebody
                     reading this sentence has no idea it is there.
                 -->
-                <span class="mt-6 block lg:hidden">
+                <span v-if="assessor.accepting" class="mt-6 block lg:hidden">
                     <BaseButton size="cta" block @click="scrollToForm">
                         {{ t('profil', 'cta_mobil', 'Jetzt Gutachter kontaktieren') }}
                     </BaseButton>
@@ -275,8 +275,28 @@ const submit = () => {
                 e-mail address anywhere on it: a listed partner is asked for
                 work through the platform and reached no other way.
             -->
-            <aside ref="formRef" class="scroll-mt-24 rounded-card border border-navy-700 p-6 lg:sticky lg:top-24">
-                <template v-if="! asking">
+            <aside ref="formRef" class="scroll-mt-24 rounded-card border p-6 lg:sticky lg:top-24" :class="assessor.accepting ? 'border-navy-700' : 'border-gray-300'">
+                <!--
+                    A partner who has paused is still listed — the directory shows
+                    approved partners whether or not they are taking work today.
+                    They were still being offered this form, and what went through
+                    it matched nobody: the customer handed over a telephone number
+                    and then heard nothing at all. Say so, and send them the way
+                    that does work.
+                -->
+                <template v-if="! assessor.accepting">
+                    <h2 class="text-h4 font-semibold text-navy-700">
+                        {{ t('profil', 'pausiert_titel', 'Nimmt derzeit keine Anfragen an') }}
+                    </h2>
+                    <p class="pt-2.5 text-sm leading-normal text-gray-600">
+                        {{ t('profil', 'pausiert_text', 'Dieser Sachverständige ist zurzeit nicht verfügbar. Stellen Sie Ihre Anfrage über DKGZ — wir vermitteln Sie an einen passenden Sachverständigen in Ihrer Region.') }}
+                    </p>
+                    <BaseButton href="/anfrage" size="cta" block class="mt-5">
+                        {{ t('profil', 'pausiert_cta', 'Anfrage über DKGZ stellen') }}
+                    </BaseButton>
+                </template>
+
+                <template v-else-if="! asking">
                     <h2 class="text-h4 font-semibold text-navy-700">
                         {{ t('profil', 'cta_titel', 'Diesen Sachverständigen anfragen') }}
                     </h2>
