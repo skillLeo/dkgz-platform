@@ -388,7 +388,7 @@ class RequestController extends Controller
                     // whyNot() falls back to the liability cover once the four
                     // visible criteria pass, which would read as a fault on a
                     // partner who is perfectly fine.
-                    'reasons' => $eligible->contains($wanted->id) ? [] : self::whyNot($wanted, $serviceRequest),
+                    'reasons' => $eligible->contains($wanted->id) ? [] : self::whyNot($wanted, $serviceRequest, direct: true),
                 ],
                 'covering_count' => 0,
                 'eligible_count' => $eligible->count(),
@@ -428,13 +428,20 @@ class RequestController extends Controller
      *
      * @return array<int, string>
      */
-    private static function whyNot(Assessor $assessor, ServiceRequest $serviceRequest): array
+    private static function whyNot(Assessor $assessor, ServiceRequest $serviceRequest, bool $direct = false): array
     {
         return array_values(array_filter([
             $assessor->approval_status !== Assessor::STATUS_APPROVED ? 'Nicht freigegeben' : null,
-            ! $assessor->is_available ? 'Als nicht verfügbar markiert' : null,
+            // A request made from the partner's own profile ignores the switch,
+            // so naming it as the reason would send the office after the wrong
+            // cause.
+            ! $direct && ! $assessor->is_available ? 'Als nicht verfügbar markiert' : null,
             ! ($assessor->user?->is_active) ? 'Zugang gesperrt' : null,
-            ! $assessor->serviceTypes->contains('id', $serviceRequest->service_type_id)
+            // Same for the service on a direct request: there it is only checked
+            // for a partner who has named any. Area matching checks it for
+            // everybody, so there an empty list is still the reason.
+            ($direct ? $assessor->serviceTypes->isNotEmpty() : true)
+                && ! $assessor->serviceTypes->contains('id', $serviceRequest->service_type_id)
                 ? 'Bietet diese Leistungsart nicht an' : null,
         ])) ?: ['Nachweis der Haftpflicht fehlt oder ist abgelaufen'];
     }

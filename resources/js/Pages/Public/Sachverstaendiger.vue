@@ -277,12 +277,14 @@ const submit = () => {
             -->
             <aside ref="formRef" class="scroll-mt-24 rounded-card border p-6 lg:sticky lg:top-24" :class="assessor.accepting ? 'border-navy-700' : 'border-gray-300'">
                 <!--
-                    A partner who has paused is still listed — the directory shows
-                    approved partners whether or not they are taking work today.
-                    They were still being offered this form, and what went through
-                    it matched nobody: the customer handed over a telephone number
-                    and then heard nothing at all. Say so, and send them the way
-                    that does work.
+                    Only where nothing sent through the form could arrive — a
+                    lapsed liability cover, a closed account. A partner who has
+                    merely switched themselves to unavailable still gets the form:
+                    that switch turns off the next job in their area, not the
+                    customer who went looking for this firm by name. Where it
+                    genuinely cannot reach them, say so and send the customer the
+                    way that does work, rather than taking a telephone number and
+                    doing nothing with it.
                 -->
                 <template v-if="! assessor.accepting">
                     <h2 class="text-h4 font-semibold text-navy-700">

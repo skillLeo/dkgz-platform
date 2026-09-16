@@ -83,11 +83,24 @@ class MatchRequestAction
         // Sending that to everybody covering the area answers a different
         // question from the one they asked, and hands the work to whoever
         // replies first — which is what they were trying not to do.
+        //
+        // Their availability switch is not consulted. It says "do not send me
+        // the next job in my area", and somebody who chose this firm by name is
+        // not that. A partner who has paused still gets the offer and can
+        // decline it like any other.
+        //
+        // The service is only checked where the partner has named any. The
+        // profile offers every assessment when a partner has set none, so a
+        // customer can pick one — and filtering on a list that is empty would
+        // silently drop the request they were invited to send.
         if ($request->requested_assessor_id !== null) {
             return Assessor::query()
-                ->matchable()
+                ->reachable()
                 ->whereKey($request->requested_assessor_id)
-                ->offering($request->service_type_id)
+                ->where(fn ($query) => $query
+                    ->whereDoesntHave('activeServiceTypes')
+                    ->orWhereHas('activeServiceTypes', fn ($service) => $service
+                        ->where('service_types.id', $request->service_type_id)))
                 ->pluck('id');
         }
 

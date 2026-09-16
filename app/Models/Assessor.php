@@ -259,8 +259,19 @@ class Assessor extends Model
      */
     public function isMatchable(): bool
     {
+        return $this->is_available && $this->acceptsDirectRequests();
+    }
+
+    /**
+     * Whether somebody who chose this partner by name can reach them.
+     *
+     * The same gate as matching, minus availability: a partner who has paused
+     * turned off the next job in their area, not the customer who went looking
+     * for them in particular. See scopeReachable().
+     */
+    public function acceptsDirectRequests(): bool
+    {
         return $this->isApproved()
-            && $this->is_available
             && (bool) $this->user?->is_active
             && (! Settings::bool('business.require_valid_liability_cover', true)
                 || ! $this->liabilityCoverHasLapsed());
@@ -359,8 +370,23 @@ class Assessor extends Model
      */
     public function scopeMatchable(Builder $query): Builder
     {
+        return $query->reachable()->where('is_available', true);
+    }
+
+    /**
+     * Everything that decides whether a partner may be sent work at all — but
+     * not whether they want any today.
+     *
+     * The two came apart for the request made from a partner's own profile. The
+     * availability switch says "do not send me the next job in my area", and a
+     * customer who went looking for this particular firm by name is not the next
+     * job in anybody's area. So a partner who has paused still hears from
+     * somebody who chose them, while approval, a working account and valid cover
+     * stay non-negotiable either way.
+     */
+    public function scopeReachable(Builder $query): Builder
+    {
         return $query->approved()
-            ->where('is_available', true)
             ->whereHas('user', fn (Builder $q) => $q->where('is_active', true))
             // Lapsed liability cover removes a partner from matching — but only
             // while the platform is configured to require it. This is a fifth
