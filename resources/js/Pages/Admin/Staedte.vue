@@ -12,6 +12,7 @@ import BaseToggle from '../../Components/Base/BaseToggle.vue'
 import BaseButton from '../../Components/Base/BaseButton.vue'
 import ErrorSummary from '../../Components/Feedback/ErrorSummary.vue'
 import ContentImageField from '../../Components/Domain/ContentImageField.vue'
+import PictureSizeField from '../../Components/Domain/PictureSizeField.vue'
 import { useConfirm } from '../../Composables/useConfirm.js'
 
 /**
@@ -27,6 +28,8 @@ const props = defineProps({
     cities: { type: Array, default: () => [] },
     serviceTypes: { type: Array, default: () => [] },
     canEdit: { type: Boolean, default: false },
+    /** The size a city picture gets while its own size is empty. */
+    defaultImageSize: { type: [String, Number], default: 100 },
 })
 
 const { confirm } = useConfirm()
@@ -46,6 +49,7 @@ const blank = () => ({
     meta_description: '',
     is_active: false,
     service_type_ids: [],
+    image_size: '',
 })
 
 const form = useForm(blank())
@@ -55,6 +59,7 @@ const labels = {
     postal_code: 'Postleitzahl',
     meta_description: 'Meta-Beschreibung',
     body: 'Ortstext',
+    image_size: 'Bildgröße',
 }
 
 /** The city open in the form, as the server last sent it — its picture included. */
@@ -87,6 +92,7 @@ const startEdit = (city) => {
         meta_description: city.meta_description ?? '',
         is_active: city.is_active,
         service_type_ids: [...city.service_type_ids],
+        image_size: city.image_size ?? '',
     })
 }
 
@@ -186,19 +192,31 @@ const remove = async (city) => {
                     whatever has been typed stays where it is. A city that does
                     not exist yet has nowhere to keep one.
                 -->
-                <ContentImageField
-                    v-if="editingCity"
-                    :block="{
-                        label: 'Bild neben der Überschrift',
-                        preview_url: editingCity.image_url,
-                        image: editingCity.image,
-                        help: 'Erscheint auf der Seite dieser Stadt und auf ihren Leistungsseiten, wenn die Leistung kein eigenes Bild hat. Ohne eigenes Bild zeigen die Seiten das Standardbild aus Seiteninhalte, sonst das Bild der Startseite. Am besten ein Hochformat (4:5).',
-                    }"
-                    :endpoint="`/admin/staedte/${editingCity.id}/bild`"
-                    :disabled="! canEdit"
-                    removed-note="Die Seiten zeigen wieder das Standardbild."
-                    preserve-state
-                />
+                <div v-if="editingCity">
+                    <ContentImageField
+                        :block="{
+                            label: 'Bild neben der Überschrift',
+                            preview_url: editingCity.image_url,
+                            image: editingCity.image,
+                            help: 'Erscheint auf der Seite dieser Stadt und auf ihren Leistungsseiten, wenn die Leistung kein eigenes Bild hat. Ohne eigenes Bild zeigen die Seiten das Standardbild aus Seiteninhalte, sonst das Bild der Startseite, jeweils in der dort eingestellten Größe. Am besten ein Hochformat (4:5).',
+                        }"
+                        :endpoint="`/admin/staedte/${editingCity.id}/bild`"
+                        :disabled="! canEdit"
+                        removed-note="Die Seiten zeigen wieder das Standardbild."
+                        preserve-state
+                    >
+                        <!-- Only for a picture of its own: the size belongs to the picture. -->
+                        <PictureSizeField
+                            v-if="editingCity.image_url"
+                            v-model="form.image_size"
+                            :inherited="defaultImageSize"
+                            inherited-label="Zurzeit die Standardgröße der Stadtseiten"
+                            hint="Wird mit »Speichern« übernommen."
+                            :disabled="! canEdit"
+                        />
+                    </ContentImageField>
+                    <p v-if="form.errors.image_size" class="pt-2 text-sm text-danger">{{ form.errors.image_size }}</p>
+                </div>
                 <p v-else class="text-sm text-gray-600">
                     Ein eigenes Bild für diese Stadt können Sie hinzufügen, sobald sie angelegt ist.
                 </p>

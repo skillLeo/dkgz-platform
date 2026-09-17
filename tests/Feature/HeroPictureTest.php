@@ -38,9 +38,14 @@ afterEach(fn () => SafeStorage::fakeSymlinkState(null));
 /** Sets a content block's picture as the upload endpoint would. */
 function setDefaultPicture(string $page, string $section, string $path): void
 {
-    ContentBlock::where(['page_key' => $page, 'section_key' => $section, 'field_key' => 'bild'])
+    setBlock($page, $section, 'bild', $path);
+}
+
+function setBlock(string $page, string $section, string $field, string $value): void
+{
+    ContentBlock::where(['page_key' => $page, 'section_key' => $section, 'field_key' => $field])
         ->firstOrFail()
-        ->update(['value' => $path]);
+        ->update(['value' => $value]);
 
     Content::flush();
 }
@@ -281,10 +286,137 @@ describe('uploading a picture for a city', function () {
     });
 });
 
-it('offers a default picture for each kind of page in Seiteninhalte', function () {
+it('offers a default picture and its size for each kind of page in Seiteninhalte', function () {
     foreach ([['leistungen', 'detail'], ['staedte', 'stadt'], ['staedte', 'leistung']] as [$page, $section]) {
         expect(ContentBlock::where([
             'page_key' => $page, 'section_key' => $section, 'field_key' => 'bild', 'type' => 'image',
-        ])->exists())->toBeTrue();
+        ])->exists())->toBeTrue()
+            ->and(ContentBlock::where([
+                'page_key' => $page, 'section_key' => $section, 'field_key' => 'bild_groesse',
+            ])->value('value'))->toBe('');
     }
+});
+
+describe('the size of a picture', function () {
+    it('follows the homepage while nothing else is set', function () {
+        setBlock('startseite', 'hero', 'bild_groesse', '93');
+
+        $this->get("/kfz-gutachter/{$this->city->slug}")
+            ->assertInertia(fn ($page) => $page->where('picture.size', '93'));
+    });
+
+    it('takes the size set for its kind of page', function () {
+        setBlock('staedte', 'stadt', 'bild_groesse', '80');
+
+        $this->get("/kfz-gutachter/{$this->city->slug}")
+            ->assertInertia(fn ($page) => $page->where('picture.size', '80'));
+
+        // Only that kind of page.
+        $this->get("/leistungen/{$this->service->slug}")
+            ->assertInertia(fn ($page) => $page->where('picture.size', Content::get('startseite.hero.bild_groesse')));
+    });
+
+    it('keeps the size set next to its own picture', function () {
+        setBlock('staedte', 'stadt', 'bild_groesse', '80');
+        $this->city->update(['image_path' => 'staedte/duesseldorf.webp', 'image_size' => 120]);
+
+        $this->get("/kfz-gutachter/{$this->city->slug}")
+            ->assertInertia(fn ($page) => $page->where('picture.size', '120'));
+    });
+
+    it('lets an own picture without a size take the size for its kind of page', function () {
+        setBlock('leistungen', 'detail', 'bild_groesse', '110');
+        $this->service->update(['image_path' => 'leistungen/eigenes.webp']);
+
+        $this->get("/leistungen/{$this->service->slug}")
+            ->assertInertia(fn ($page) => $page->where('picture.size', '110'));
+    });
+
+    it('goes with the city picture onto a service page in that city', function () {
+        setBlock('staedte', 'leistung', 'bild_groesse', '90');
+        $this->city->update(['image_path' => 'staedte/duesseldorf.webp', 'image_size' => 125]);
+
+        $this->get(cityServiceUrl())
+            ->assertInertia(fn ($page) => $page->where('picture.size', '125'));
+    });
+
+    it('never reaches a page that is not showing its picture', function () {
+        setBlock('staedte', 'leistung', 'bild_groesse', '90');
+        $this->city->update(['image_path' => 'staedte/duesseldorf.webp', 'image_size' => 125]);
+        $this->service->update(['image_path' => 'leistungen/eigenes.webp']);
+
+        // The service picture wins here, and it has no size of its own.
+        $this->get(cityServiceUrl())
+            ->assertInertia(fn ($page) => $page->where('picture.size', '90'));
+    });
+});
+
+describe('setting the size in the panel', function () {
+    it('saves it with a city that has a picture', function () {
+        $this->city->update(['image_path' => 'staedte/duesseldorf.webp']);
+
+        $this->actingAs($this->admin)
+            ->post("/admin/staedte/{$this->city->id}", ['name' => 'Düsseldorf', 'is_active' => true, 'image_size' => '115'])
+            ->assertSessionHasNoErrors();
+
+        expect($this->city->fresh()->image_size)->toBe(115);
+
+        // Emptied again, it follows the page.
+        $this->actingAs($this->admin)
+            ->post("/admin/staedte/{$this->city->id}", ['name' => 'Düsseldorf', 'is_active' => true, 'image_size' => ''])
+            ->assertSessionHasNoErrors();
+
+        expect($this->city->fresh()->image_size)->toBeNull();
+    });
+
+    it('saves it with a service that has a picture', function () {
+        $this->service->update(['image_path' => 'leistungen/eigenes.webp']);
+
+        $this->actingAs($this->admin)
+            ->post("/admin/leistungsarten/{$this->service->id}", [
+                'name_de' => 'Unfallgutachten', 'is_active' => true, 'dkgz_fee_cents' => 7900, 'image_size' => '70',
+            ])
+            ->assertSessionHasNoErrors();
+
+        expect($this->service->fresh()->image_size)->toBe(70);
+    });
+
+    it('refuses a size outside the range', function () {
+        $this->city->update(['image_path' => 'staedte/duesseldorf.webp']);
+
+        $this->actingAs($this->admin)
+            ->post("/admin/staedte/{$this->city->id}", ['name' => 'Düsseldorf', 'is_active' => true, 'image_size' => '200'])
+            ->assertSessionHasErrors('image_size');
+
+        expect($this->city->fresh()->image_size)->toBeNull();
+    });
+
+    it('keeps no size for a city without a picture', function () {
+        $this->actingAs($this->admin)
+            ->post("/admin/staedte/{$this->city->id}", ['name' => 'Düsseldorf', 'is_active' => true, 'image_size' => '120'])
+            ->assertSessionHasNoErrors();
+
+        expect($this->city->fresh()->image_size)->toBeNull();
+    });
+
+    it('forgets the size along with the picture', function () {
+        $this->actingAs($this->admin)->post("/admin/leistungsarten/{$this->service->id}/bild", [
+            'image' => UploadedFile::fake()->image('unfall.jpg'),
+        ]);
+        $this->service->fresh()->update(['image_size' => 130]);
+
+        $this->actingAs($this->admin)->delete("/admin/leistungsarten/{$this->service->id}/bild");
+
+        expect($this->service->fresh()->image_size)->toBeNull();
+    });
+
+    it('sits inside the picture box on every screen that uploads one', function () {
+        foreach (['Admin/Inhalte', 'Admin/Leistungsarten', 'Admin/Staedte'] as $screen) {
+            expect(file_get_contents(resource_path("js/Pages/{$screen}.vue")))->toContain('<PictureSizeField');
+        }
+
+        $this->actingAs($this->admin)
+            ->get('/admin/staedte')
+            ->assertInertia(fn ($page) => $page->has('defaultImageSize')->has('cities.0.image_size'));
+    });
 });

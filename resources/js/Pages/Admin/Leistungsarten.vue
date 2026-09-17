@@ -10,6 +10,7 @@ import BaseSelect from '../../Components/Base/BaseSelect.vue'
 import BaseTextarea from '../../Components/Base/BaseTextarea.vue'
 import ServiceIcon from '../../Components/Domain/ServiceIcon.vue'
 import ContentImageField from '../../Components/Domain/ContentImageField.vue'
+import PictureSizeField from '../../Components/Domain/PictureSizeField.vue'
 import { ICON_CHOICES } from '../../Support/serviceIcons.js'
 import BaseToggle from '../../Components/Base/BaseToggle.vue'
 import BaseButton from '../../Components/Base/BaseButton.vue'
@@ -18,7 +19,11 @@ import EmptyState from '../../Components/Feedback/EmptyState.vue'
 import ErrorSummary from '../../Components/Feedback/ErrorSummary.vue'
 import { useConfirm } from '../../Composables/useConfirm.js'
 
-const props = defineProps({ serviceTypes: { type: Array, default: () => [] } })
+const props = defineProps({
+    serviceTypes: { type: Array, default: () => [] },
+    /** The size a service picture gets while its own size is empty. */
+    defaultImageSize: { type: [String, Number], default: 100 },
+})
 
 /**
  * The article that goes in front of this service's name.
@@ -40,7 +45,7 @@ const createOpen = ref(false)
 const editing = ref(null)
 
 const create = useForm({ name_de: '', gender: '', description_de: '', icon: '', faqs: [], is_active: true, dkgz_fee_cents: null })
-const edit = useForm({ name_de: '', gender: '', description_de: '', info_de: '', icon: '', faqs: [], is_active: true, dkgz_fee_cents: null, includes_de: '', target_audience_de: '', typical_situations_de: '', differences_de: '', additional_info_de: '' })
+const edit = useForm({ name_de: '', gender: '', description_de: '', info_de: '', icon: '', faqs: [], is_active: true, dkgz_fee_cents: null, includes_de: '', target_audience_de: '', typical_situations_de: '', differences_de: '', additional_info_de: '', image_size: '' })
 
 const startEdit = (type) => {
     editing.value = type.id
@@ -57,6 +62,7 @@ const startEdit = (type) => {
     edit.typical_situations_de = type.typical_situations_de ?? ''
     edit.differences_de = type.differences_de ?? ''
     edit.additional_info_de = type.additional_info_de ?? ''
+    edit.image_size = type.image_size ?? ''
 }
 
 const remove = async (type) => {
@@ -256,12 +262,22 @@ const remove = async (type) => {
                                 label: 'Bild neben der Überschrift',
                                 preview_url: type.image_url,
                                 image: type.image,
-                                help: 'Erscheint auf der Seite dieser Leistung und auf ihren Stadtseiten. Ohne eigenes Bild zeigen die Seiten das Standardbild aus Seiteninhalte, sonst das Bild der Startseite. Am besten ein Hochformat (4:5).',
+                                help: 'Erscheint auf der Seite dieser Leistung und auf ihren Stadtseiten. Ohne eigenes Bild zeigen die Seiten das Standardbild aus Seiteninhalte, sonst das Bild der Startseite, jeweils in der dort eingestellten Größe. Am besten ein Hochformat (4:5).',
                             }"
                             :endpoint="`/admin/leistungsarten/${type.id}/bild`"
                             removed-note="Die Seiten zeigen wieder das Standardbild."
                             preserve-state
-                        />
+                        >
+                            <!-- Only for a picture of its own: the size belongs to the picture. -->
+                            <PictureSizeField
+                                v-if="type.image_url"
+                                v-model="edit.image_size"
+                                :inherited="defaultImageSize"
+                                inherited-label="Zurzeit die Standardgröße der Leistungsseiten"
+                                hint="Wird mit »Speichern« übernommen."
+                            />
+                        </ContentImageField>
+                        <p v-if="edit.errors.image_size" class="text-sm text-danger">{{ edit.errors.image_size }}</p>
                         <BaseTextarea v-model="edit.includes_de" label="Was enthalten ist" :rows="3" :error="edit.errors.includes_de" optional />
                         <BaseTextarea v-model="edit.target_audience_de" label="Für wen geeignet" :rows="2" :error="edit.errors.target_audience_de" optional />
                         <BaseTextarea v-model="edit.typical_situations_de" label="Typische Situationen" :rows="3" :error="edit.errors.typical_situations_de" optional />

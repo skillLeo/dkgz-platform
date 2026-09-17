@@ -124,19 +124,6 @@
       "_vendor-fTUErMgi.js"
     ]
   },
-  "_ContentImageField-DK8i6rIu.js": {
-    "file": "assets/ContentImageField-DK8i6rIu.js",
-    "name": "ContentImageField",
-    "imports": [
-      "_vendor-fTUErMgi.js",
-      "_BaseButton-CDIiDGYd.js",
-      "_ToastStack-D9zDxYZw.js",
-      "_image-C49BBE0q.js",
-      "_trash-2-C6Rz0wYy.js",
-      "_upload-CEDFq-QT.js",
-      "_FieldError-Cb-5Jhn5.js"
-    ]
-  },
   "_CookieConsent-C68-_i8v.js": {
     "file": "assets/CookieConsent-C68-_i8v.js",
     "name": "CookieConsent",
@@ -251,6 +238,19 @@
     "name": "PageHeader",
     "imports": [
       "_vendor-fTUErMgi.js"
+    ]
+  },
+  "_PictureSizeField-D0ZaE07o.js": {
+    "file": "assets/PictureSizeField-D0ZaE07o.js",
+    "name": "PictureSizeField",
+    "imports": [
+      "_vendor-fTUErMgi.js",
+      "_BaseButton-CDIiDGYd.js",
+      "_ToastStack-D9zDxYZw.js",
+      "_image-C49BBE0q.js",
+      "_trash-2-C6Rz0wYy.js",
+      "_upload-CEDFq-QT.js",
+      "_FieldError-Cb-5Jhn5.js"
     ]
   },
   "_PortalLayout-C8UOOf42.js": {
@@ -870,7 +870,7 @@
     "src": "node_modules/@fontsource/ibm-plex-sans/files/ibm-plex-sans-vietnamese-700-normal.woff2"
   },
   "resources/css/app.css": {
-    "file": "assets/app-VS5HQrr4.css",
+    "file": "assets/app-D5jEXata.css",
     "name": "app",
     "names": [
       "app.css"
@@ -1184,7 +1184,7 @@
     ]
   },
   "resources/js/Pages/Admin/Inhalte.vue": {
-    "file": "assets/Inhalte-BrqIV2jt.js",
+    "file": "assets/Inhalte-Daiz6WvO.js",
     "name": "Inhalte",
     "src": "resources/js/Pages/Admin/Inhalte.vue",
     "isDynamicEntry": true,
@@ -1197,7 +1197,7 @@
       "_BaseInput-blSRguEo.js",
       "_BaseTextarea-Cg68_2Qg.js",
       "_BaseToggle-Do8jCGnb.js",
-      "_ContentImageField-DK8i6rIu.js"
+      "_PictureSizeField-D0ZaE07o.js"
     ]
   },
   "resources/js/Pages/Admin/Kundenstimmen.vue": {
@@ -1224,7 +1224,7 @@
     ]
   },
   "resources/js/Pages/Admin/Leistungsarten.vue": {
-    "file": "assets/Leistungsarten-BbGnmsuB.js",
+    "file": "assets/Leistungsarten-jfQDRHFz.js",
     "name": "Leistungsarten",
     "src": "resources/js/Pages/Admin/Leistungsarten.vue",
     "isDynamicEntry": true,
@@ -1245,7 +1245,7 @@
       "_ErrorSummary-CW-JP4Hv.js",
       "_EmptyState-C4pjiq6e.js",
       "_BaseToggle-Do8jCGnb.js",
-      "_ContentImageField-DK8i6rIu.js"
+      "_PictureSizeField-D0ZaE07o.js"
     ]
   },
   "resources/js/Pages/Admin/Partnermail.vue": {
@@ -1458,7 +1458,7 @@
     ]
   },
   "resources/js/Pages/Admin/Staedte.vue": {
-    "file": "assets/Staedte-BgGs_h3i.js",
+    "file": "assets/Staedte-CxBxSNKe.js",
     "name": "Staedte",
     "src": "resources/js/Pages/Admin/Staedte.vue",
     "isDynamicEntry": true,
@@ -1476,7 +1476,7 @@
       "_ErrorSummary-CW-JP4Hv.js",
       "_BaseCheckbox-Dexko9go.js",
       "_BaseToggle-Do8jCGnb.js",
-      "_ContentImageField-DK8i6rIu.js"
+      "_PictureSizeField-D0ZaE07o.js"
     ]
   },
   "resources/js/Pages/Admin/System.vue": {
@@ -2195,7 +2195,7 @@
     ]
   },
   "resources/js/app.js": {
-    "file": "assets/app-C1kWHdyh.js",
+    "file": "assets/app-CcbgBGau.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true,

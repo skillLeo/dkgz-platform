@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\ServiceType;
 use App\Support\Formatter;
 use App\Support\GermanNoun;
+use App\Support\HeroPicture;
 use App\Support\StoredImage;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -49,10 +50,13 @@ class ServiceTypeController extends Controller
                     'content_is_placeholder' => $t->content_is_placeholder,
                     'image_url' => $t->imageUrl(),
                     'image' => StoredImage::meta($t->image_path),
+                    'image_size' => $t->image_size,
                     'requests_count' => $t->service_requests_count,
                     'assessors_count' => $t->assessors_count,
                     'can_delete' => $request->user()->can('delete', $t),
                 ]),
+            // Where the size slider starts for a picture with no size of its own.
+            'defaultImageSize' => HeroPicture::defaultSize('leistungen.detail'),
         ]);
     }
 
@@ -64,7 +68,11 @@ class ServiceTypeController extends Controller
 
         // The slug comes from the model, which keeps it matching the name
         // however the record is changed.
-        ServiceType::create($data + ['sort_order' => (int) ServiceType::max('sort_order') + 1]);
+        // A new service has no picture yet, so nothing for a size to belong to.
+        ServiceType::create(array_merge($data, [
+            'sort_order' => (int) ServiceType::max('sort_order') + 1,
+            'image_size' => null,
+        ]));
 
         return back()->with('success', 'Die Leistungsart wurde angelegt.');
     }
@@ -74,6 +82,13 @@ class ServiceTypeController extends Controller
         $this->authorize('update', $serviceType);
 
         $data = $this->validated($request, $serviceType);
+
+        // A size belongs to a picture. A form opened before the picture was
+        // removed still carries the old size, and saving it would hand that
+        // size to whatever is uploaded next.
+        if ($serviceType->image_path === null) {
+            $data['image_size'] = null;
+        }
 
         // The public URL follows the name. Renaming a service and leaving it
         // reachable at the old address means the address describes something
@@ -126,8 +141,9 @@ class ServiceTypeController extends Controller
     {
         $this->authorize('update', $serviceType);
 
+        // The size went with the picture it was set for.
         StoredImage::forget($serviceType->image_path);
-        $serviceType->update(['image_path' => null]);
+        $serviceType->update(['image_path' => null, 'image_size' => null]);
 
         return back()->with('success', 'Das Bild wurde entfernt. Die Seiten zeigen wieder das Standardbild.');
     }
@@ -171,6 +187,8 @@ class ServiceTypeController extends Controller
             'typical_situations_de' => ['nullable', 'string', 'max:2000'],
             'differences_de' => ['nullable', 'string', 'max:2000'],
             'additional_info_de' => ['nullable', 'string', 'max:2000'],
+            // The size of this service's own picture. Empty follows the page.
+            'image_size' => ['nullable', 'integer', 'between:'.HeroPicture::MIN_SIZE.','.HeroPicture::MAX_SIZE],
         ], [
             'dkgz_fee_cents.required_if' => 'Eine aktive Leistung braucht eine festgelegte DKGZ-Gebühr.',
         ], [
@@ -178,6 +196,7 @@ class ServiceTypeController extends Controller
             'description_de' => 'die Beschreibung',
             'info_de' => 'der Info-Text',
             'dkgz_fee_cents' => 'die DKGZ-Gebühr',
+            'image_size' => 'die Bildgröße',
         ]);
     }
 }

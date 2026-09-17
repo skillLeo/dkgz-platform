@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\City;
 use App\Models\ServiceType;
+use App\Support\HeroPicture;
 use App\Support\StoredImage;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -45,6 +46,7 @@ class CityController extends Controller
                     'is_active' => $city->is_active,
                     'image_url' => $city->imageUrl(),
                     'image' => StoredImage::meta($city->image_path),
+                    'image_size' => $city->image_size,
                     'service_type_ids' => $city->serviceTypes->pluck('id')->all(),
                     'url' => "/kfz-gutachter/{$city->slug}",
                     // How many pages this city actually publishes: the hub plus
@@ -55,6 +57,8 @@ class CityController extends Controller
                 ]),
             'serviceTypes' => ServiceType::active()->ordered()->get(['id', 'name_de']),
             'canEdit' => $request->user()->can('cities.manage'),
+            // Where the size slider starts for a picture with no size of its own.
+            'defaultImageSize' => HeroPicture::defaultSize('staedte.stadt'),
         ]);
     }
 
@@ -62,7 +66,8 @@ class CityController extends Controller
     {
         $this->authorize('create', City::class);
 
-        $city = City::create($this->validated($request));
+        // A new city has no picture yet, so nothing for a size to belong to.
+        $city = City::create(array_merge($this->validated($request), ['image_size' => null]));
         $city->serviceTypes()->sync($request->input('service_type_ids', []));
 
         return back()->with('success', "{$city->name} wurde angelegt.");
@@ -72,7 +77,16 @@ class CityController extends Controller
     {
         $this->authorize('update', $city);
 
-        $city->update($this->validated($request, $city));
+        $data = $this->validated($request, $city);
+
+        // A size belongs to a picture. A form opened before the picture was
+        // removed still carries the old size, and saving it would hand that
+        // size to whatever is uploaded next.
+        if ($city->image_path === null) {
+            $data['image_size'] = null;
+        }
+
+        $city->update($data);
         $city->serviceTypes()->sync($request->input('service_type_ids', []));
 
         return back()->with('success', "{$city->name} wurde gespeichert.");
@@ -117,8 +131,9 @@ class CityController extends Controller
     {
         $this->authorize('update', $city);
 
+        // The size went with the picture it was set for.
         StoredImage::forget($city->image_path);
-        $city->update(['image_path' => null]);
+        $city->update(['image_path' => null, 'image_size' => null]);
 
         return back()->with('success', 'Das Bild wurde entfernt. Die Seiten zeigen wieder das Standardbild.');
     }
@@ -145,10 +160,13 @@ class CityController extends Controller
             'is_active' => ['boolean'],
             'service_type_ids' => ['array'],
             'service_type_ids.*' => ['integer', 'exists:service_types,id'],
+            // The size of this city's own picture. Empty follows the page.
+            'image_size' => ['nullable', 'integer', 'between:'.HeroPicture::MIN_SIZE.','.HeroPicture::MAX_SIZE],
         ], [], [
             'name' => 'der Name',
             'postal_code' => 'die Postleitzahl',
             'meta_description' => 'die Meta-Beschreibung',
+            'image_size' => 'die Bildgröße',
         ]);
     }
 }

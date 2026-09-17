@@ -128,6 +128,11 @@ const remove = async () => {
             <span class="font-mono text-eyebrow text-gray-400">JPG, PNG oder WebP · max. 4 MB</span>
         </button>
 
+        <!-- Whatever belongs to this picture, such as its size, inside its own box. -->
+        <div v-if="$slots.default" class="pt-3">
+            <slot />
+        </div>
+
         <p v-if="block.help" class="pt-2 text-xs leading-normal text-gray-600">{{ block.help }}</p>
 
         <p v-if="form.processing" class="flex items-center gap-2 pt-2 text-sm text-gray-600">

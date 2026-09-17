@@ -5,6 +5,7 @@ import AdminLayout from '../../Layouts/AdminLayout.vue'
 import PageHeader from '../../Components/Layout/PageHeader.vue'
 import SectionLabel from '../../Components/Layout/SectionLabel.vue'
 import ContentImageField from '../../Components/Domain/ContentImageField.vue'
+import PictureSizeField from '../../Components/Domain/PictureSizeField.vue'
 import BaseInput from '../../Components/Base/BaseInput.vue'
 import BaseTextarea from '../../Components/Base/BaseTextarea.vue'
 import BaseToggle from '../../Components/Base/BaseToggle.vue'
@@ -19,6 +20,8 @@ const props = defineProps({
     pages: { type: Object, default: () => ({}) },
     sections: { type: Object, default: () => ({}) },
     canEdit: { type: Boolean, default: false },
+    /** What an empty size on the other pages falls back to. */
+    homepagePictureSize: { type: [String, Number], default: 100 },
 })
 
 const rowsFrom = (sections) => {
@@ -48,6 +51,19 @@ watch(() => props.sections, (sections) => {
 })
 
 const valueFor = (id) => form.blocks.find((row) => row.id === id) ?? { value: '' }
+
+/**
+ * The size that belongs to a picture: "bild_groesse" beside "bild".
+ *
+ * Shown inside the picture's own box rather than as a text field further down
+ * the section, where nobody would connect a bare "93" with the photograph above.
+ */
+const sizeFor = (fields, picture) => fields.find((field) => field.field_key === `${picture.field_key}_groesse`) ?? null
+
+const isPictureSize = (fields, field) => fields
+    .some((other) => other.type === 'image' && `${other.field_key}_groesse` === field.field_key)
+
+const visible = (fields) => fields.filter((field) => ! isPictureSize(fields, field))
 </script>
 
 <template>
@@ -74,12 +90,27 @@ const valueFor = (id) => form.blocks.find((row) => row.id === id) ?? { value: ''
                     <section v-for="(fields, sectionKey) in sections" :key="sectionKey" class="border border-gray-200 bg-white p-6">
                         <SectionLabel :text="sectionKey" tone="muted" />
                         <div class="flex flex-col gap-5 pt-5">
-                            <template v-for="field in fields" :key="field.id">
+                            <template v-for="field in visible(fields)" :key="field.id">
+                                <!--
+                                    The picture keeps this page as it is when it
+                                    uploads, so a size moved on the slider and not
+                                    yet saved is still there afterwards.
+                                -->
                                 <ContentImageField
                                     v-if="field.type === 'image'"
                                     :block="field"
                                     :disabled="!canEdit"
-                                />
+                                    preserve-state
+                                >
+                                    <PictureSizeField
+                                        v-if="sizeFor(fields, field)"
+                                        v-model="valueFor(sizeFor(fields, field).id).value"
+                                        :inherited="pageKey === 'startseite' ? 100 : homepagePictureSize"
+                                        :inherited-label="pageKey === 'startseite' ? 'Zurzeit die Standardgröße' : 'Zurzeit wie auf der Startseite'"
+                                        hint="Wird mit »Inhalte speichern« übernommen."
+                                        :disabled="!canEdit"
+                                    />
+                                </ContentImageField>
 
                                 <!--
                                     A switch, stored as the text "1" or "0" like

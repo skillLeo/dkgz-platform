@@ -46,6 +46,9 @@ class ContentController extends Controller
             'pages' => $pages,
             'sections' => $blocks,
             'canEdit' => $request->user()->can('content.edit'),
+            // What an empty size beside a picture falls back to on the other
+            // pages, so its slider starts where the page actually is.
+            'homepagePictureSize' => Content::get('startseite.hero.bild_groesse', '100'),
         ]);
     }
 

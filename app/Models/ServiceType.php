@@ -24,7 +24,7 @@ class ServiceType extends Model
         'includes_de', 'target_audience_de', 'typical_situations_de',
         'differences_de', 'additional_info_de', 'faqs', 'content_is_placeholder',
         'slug', 'name_de', 'gender', 'description_de', 'info_de', 'icon', 'sort_order', 'is_active',
-        'image_path',
+        'image_path', 'image_size',
     ];
 
     /** The picture beside the headline on this service's pages, if it has its own. */
@@ -55,6 +55,7 @@ class ServiceType extends Model
             'dkgz_fee_cents' => MoneyCast::class,
             'is_active' => 'boolean',
             'sort_order' => 'integer',
+            'image_size' => 'integer',
         ];
     }
 

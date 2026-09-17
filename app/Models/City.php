@@ -26,7 +26,7 @@ class City extends Model
     protected $fillable = [
         'name', 'slug', 'state', 'postal_code',
         'headline', 'intro', 'body', 'faqs', 'meta_title', 'meta_description',
-        'is_active', 'sort_order', 'image_path',
+        'is_active', 'sort_order', 'image_path', 'image_size',
     ];
 
     /** The picture beside the headline on this city's pages, if it has its own. */
@@ -37,7 +37,7 @@ class City extends Model
 
     protected function casts(): array
     {
-        return ['is_active' => 'boolean', 'faqs' => 'array'];
+        return ['is_active' => 'boolean', 'faqs' => 'array', 'image_size' => 'integer'];
     }
 
     public function getActivitylogOptions(): LogOptions
