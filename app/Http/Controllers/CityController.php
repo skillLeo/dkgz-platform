@@ -6,6 +6,7 @@ use App\Models\City;
 use App\Models\ServiceType;
 use App\Support\Content;
 use App\Support\CoverageMap;
+use App\Support\HeroPicture;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -52,6 +53,7 @@ class CityController extends Controller
         return Inertia::render('Public/Stadt', [
             'content' => Content::page('staedte'),
             'city' => $this->cityPayload($city),
+            'picture' => HeroPicture::forCity($city),
             'services' => $services->map(fn (ServiceType $type) => [
                 'name' => $type->name_de,
                 'description' => $type->description_de,
@@ -77,6 +79,7 @@ class CityController extends Controller
                 'target_audience_de', 'typical_situations_de',
                 'differences_de', 'additional_info_de', 'faqs',
             ]) + ['genus' => $serviceType->genus()],
+            'picture' => HeroPicture::forCityService($city, $serviceType),
             // The other services here, so every page links onward rather than
             // being a dead end.
             'otherServices' => $city->publishedServiceTypes()

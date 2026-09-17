@@ -6,11 +6,13 @@ use App\Http\Controllers\Controller;
 use App\Models\ServiceType;
 use App\Support\Formatter;
 use App\Support\GermanNoun;
+use App\Support\StoredImage;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 use Inertia\Response;
+use RuntimeException;
 
 class ServiceTypeController extends Controller
 {
@@ -45,6 +47,8 @@ class ServiceTypeController extends Controller
                     'differences_de' => $t->differences_de,
                     'additional_info_de' => $t->additional_info_de,
                     'content_is_placeholder' => $t->content_is_placeholder,
+                    'image_url' => $t->imageUrl(),
+                    'image' => StoredImage::meta($t->image_path),
                     'requests_count' => $t->service_requests_count,
                     'assessors_count' => $t->assessors_count,
                     'can_delete' => $request->user()->can('delete', $t),
@@ -87,6 +91,45 @@ class ServiceTypeController extends Controller
         $serviceType->delete();
 
         return back()->with('success', 'Die Leistungsart wurde gelöscht.');
+    }
+
+    /**
+     * The picture beside the headline on this service's own page and on its
+     * page in every city.
+     *
+     * Stored straight away rather than with the rest of the form, like every
+     * other picture in the panel, so a half-edited form is never what decides
+     * whether an upload happened.
+     */
+    public function uploadImage(Request $request, ServiceType $serviceType): RedirectResponse
+    {
+        $this->authorize('update', $serviceType);
+
+        $request->validate(['image' => StoredImage::RULES], [], ['image' => 'das Bild']);
+
+        $previous = $serviceType->image_path;
+
+        try {
+            $path = StoredImage::store($request->file('image'), 'leistungen');
+        } catch (RuntimeException $e) {
+            return back()->withErrors(['image' => $e->getMessage()]);
+        }
+
+        $serviceType->update(['image_path' => $path]);
+
+        StoredImage::forget($previous);
+
+        return back()->with('success', 'Das Bild wurde gespeichert.');
+    }
+
+    public function destroyImage(Request $request, ServiceType $serviceType): RedirectResponse
+    {
+        $this->authorize('update', $serviceType);
+
+        StoredImage::forget($serviceType->image_path);
+        $serviceType->update(['image_path' => null]);
+
+        return back()->with('success', 'Das Bild wurde entfernt. Die Seiten zeigen wieder das Standardbild.');
     }
 
     public function reorder(Request $request): RedirectResponse

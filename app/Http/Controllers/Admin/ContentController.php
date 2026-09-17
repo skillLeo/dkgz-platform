@@ -7,12 +7,10 @@ use App\Models\ContentBlock;
 use App\Models\Faq;
 use App\Models\Page;
 use App\Support\Content;
-use App\Support\Formatter;
-use App\Support\ImagePipeline;
 use App\Support\SafeStorage;
+use App\Support\StoredImage;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -39,7 +37,7 @@ class ContentController extends Controller
                 'type' => $b->type,
                 'value' => $b->value,
                 'preview_url' => $b->type === 'image' ? SafeStorage::url($b->value) : null,
-                'image' => $b->type === 'image' ? $this->imageMeta($b) : null,
+                'image' => $b->type === 'image' ? StoredImage::meta($b->value) : null,
                 'help' => $b->help_de,
             ])->values());
 
@@ -89,33 +87,19 @@ class ContentController extends Controller
         $this->authorize('content.edit');
         abort_unless($contentBlock->type === 'image', 422);
 
-        $request->validate(
-            ['image' => ['required', 'file', 'mimes:png,jpg,jpeg,webp', 'max:12288']],
-            [],
-            ['image' => 'das Bild']
-        );
+        $request->validate(['image' => StoredImage::RULES], [], ['image' => 'das Bild']);
 
         $previous = $contentBlock->value;
 
-        // Re-encoded rather than stored as uploaded: converts the colour
-        // profile to sRGB so the picture on the page looks like the picture the
-        // operator chose, applies the phone's rotation flag, bounds the size,
-        // and drops the EXIF block including its GPS coordinates.
         try {
-            $binary = ImagePipeline::encode($request->file('image'));
+            $path = StoredImage::store($request->file('image'), 'inhalte');
         } catch (RuntimeException $e) {
             return back()->withErrors(['image' => $e->getMessage()]);
         }
 
-        $path = 'inhalte/'.bin2hex(random_bytes(12)).'.webp';
-
-        Storage::disk('public')->put($path, $binary);
-
         $contentBlock->update(['value' => $path]);
 
-        // Replacing an image deletes the one it replaced. Without this every
-        // correction leaves a file nobody can reach and nobody will ever clean.
-        $this->forgetFile($previous);
+        StoredImage::forget($previous);
 
         Content::flush($contentBlock->page_key);
 
@@ -127,47 +111,12 @@ class ContentController extends Controller
         $this->authorize('content.edit');
         abort_unless($contentBlock->type === 'image', 422);
 
-        $this->forgetFile($contentBlock->value);
+        StoredImage::forget($contentBlock->value);
         $contentBlock->update(['value' => '']);
 
         Content::flush($contentBlock->page_key);
 
         return back()->with('success', 'Das Bild wurde entfernt. Die Seite zeigt wieder den Platzhalter.');
-    }
-
-    /**
-     * Size and dimensions of the stored file, so the editor can see what is
-     * actually there rather than only that something is.
-     *
-     * @return array<string, mixed>|null
-     */
-    private function imageMeta(ContentBlock $block): ?array
-    {
-        if (blank($block->value) || ! Storage::disk('public')->exists($block->value)) {
-            return null;
-        }
-
-        $meta = [
-            'name' => basename($block->value),
-            'size_label' => Formatter::fileSize(Storage::disk('public')->size($block->value)),
-            'dimensions' => null,
-        ];
-
-        $dimensions = @getimagesize(Storage::disk('public')->path($block->value));
-
-        if ($dimensions !== false) {
-            $meta['dimensions'] = $dimensions[0].' × '.$dimensions[1].' px';
-        }
-
-        return $meta;
-    }
-
-    /** Removes a stored file, tolerating one that has already gone. */
-    private function forgetFile(?string $path): void
-    {
-        if (filled($path) && Storage::disk('public')->exists($path)) {
-            Storage::disk('public')->delete($path);
-        }
     }
 
     // ---- Legal and standalone pages -------------------------------------

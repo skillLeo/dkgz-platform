@@ -9,6 +9,7 @@ use App\Models\ServiceType;
 use App\Models\Testimonial;
 use App\Support\Content;
 use App\Support\CoverageMap;
+use App\Support\HeroPicture;
 use App\Support\Settings;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Storage;
@@ -61,6 +62,7 @@ class PublicController extends Controller
                 'differences_de', 'additional_info_de', 'faqs',
             ]) + ['genus' => $serviceType->genus()],
             'serviceTypes' => $this->activeServiceTypes(),
+            'picture' => HeroPicture::forService($serviceType),
         ]);
     }
 

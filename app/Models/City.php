@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Support\SafeStorage;
+use App\Support\StoredImage;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -24,8 +26,14 @@ class City extends Model
     protected $fillable = [
         'name', 'slug', 'state', 'postal_code',
         'headline', 'intro', 'body', 'faqs', 'meta_title', 'meta_description',
-        'is_active', 'sort_order',
+        'is_active', 'sort_order', 'image_path',
     ];
+
+    /** The picture beside the headline on this city's pages, if it has its own. */
+    public function imageUrl(): ?string
+    {
+        return SafeStorage::url($this->image_path);
+    }
 
     protected function casts(): array
     {
@@ -71,6 +79,9 @@ class City extends Model
 
             $city->slug = $slug;
         });
+
+        // A deleted city leaves no picture behind that nothing points at.
+        static::deleted(fn (self $city) => StoredImage::forget($city->image_path));
     }
 
     public function getRouteKeyName(): string

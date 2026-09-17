@@ -5,10 +5,12 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\City;
 use App\Models\ServiceType;
+use App\Support\StoredImage;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
+use RuntimeException;
 
 /**
  * The cities that have their own pages, and which services they show.
@@ -41,6 +43,8 @@ class CityController extends Controller
                     'meta_title' => $city->meta_title,
                     'meta_description' => $city->meta_description,
                     'is_active' => $city->is_active,
+                    'image_url' => $city->imageUrl(),
+                    'image' => StoredImage::meta($city->image_path),
                     'service_type_ids' => $city->serviceTypes->pluck('id')->all(),
                     'url' => "/kfz-gutachter/{$city->slug}",
                     // How many pages this city actually publishes: the hub plus
@@ -82,6 +86,41 @@ class CityController extends Controller
         $city->delete();
 
         return back()->with('success', "{$name} wurde entfernt. Die Seiten sind nicht mehr erreichbar.");
+    }
+
+    /**
+     * The picture beside the headline on this city's page, and on its service
+     * pages where the service has no picture of its own.
+     */
+    public function uploadImage(Request $request, City $city): RedirectResponse
+    {
+        $this->authorize('update', $city);
+
+        $request->validate(['image' => StoredImage::RULES], [], ['image' => 'das Bild']);
+
+        $previous = $city->image_path;
+
+        try {
+            $path = StoredImage::store($request->file('image'), 'staedte');
+        } catch (RuntimeException $e) {
+            return back()->withErrors(['image' => $e->getMessage()]);
+        }
+
+        $city->update(['image_path' => $path]);
+
+        StoredImage::forget($previous);
+
+        return back()->with('success', 'Das Bild wurde gespeichert.');
+    }
+
+    public function destroyImage(Request $request, City $city): RedirectResponse
+    {
+        $this->authorize('update', $city);
+
+        StoredImage::forget($city->image_path);
+        $city->update(['image_path' => null]);
+
+        return back()->with('success', 'Das Bild wurde entfernt. Die Seiten zeigen wieder das Standardbild.');
     }
 
     /** @return array<string, mixed> */

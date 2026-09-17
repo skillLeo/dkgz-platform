@@ -4,6 +4,7 @@ import { Head, Link } from '@inertiajs/vue3'
 import { Check, ChevronDown } from 'lucide-vue-next'
 import PublicLayout from '../../Layouts/PublicLayout.vue'
 import SectionLabel from '../../Components/Layout/SectionLabel.vue'
+import HeroPicture from '../../Components/Layout/HeroPicture.vue'
 import BaseButton from '../../Components/Base/BaseButton.vue'
 import ServiceIcon from '../../Components/Domain/ServiceIcon.vue'
 import { fill } from '../../Support/placeholders.js'
@@ -22,6 +23,8 @@ const props = defineProps({
     serviceType: { type: Object, required: true },
     serviceTypes: { type: Array, default: () => [] },
     faqs: { type: Array, default: () => [] },
+    /** The service's own picture, else the default for these pages, else the homepage's. */
+    picture: { type: Object, default: () => ({}) },
 })
 
 const t = (section, field, fallback = '') => fill(
@@ -72,26 +75,43 @@ const others = computed(() => props.serviceTypes
 
     <PublicLayout>
         <section class="border-b border-gray-200 bg-gray-50">
-            <div class="mx-auto w-full max-w-(--container-shell) px-4 py-16 md:px-6 md:py-20">
-                <nav class="flex flex-wrap items-center gap-2 pb-6 text-sm text-gray-600" aria-label="Brotkrumen">
-                    <Link href="/leistungen" class="hover:text-navy-700">Leistungen</Link>
-                    <span aria-hidden="true">·</span>
-                    <span class="text-gray-800">{{ serviceType.name_de }}</span>
-                </nav>
+            <!--
+                Two columns from lg up, the picture on the right as on the
+                homepage. The words sit level with the middle of the picture
+                rather than at its top: they are shorter than it here, and
+                hung from the top they left a gap under the button.
+            -->
+            <div class="mx-auto grid w-full max-w-(--container-shell) grid-cols-1 gap-16 px-4 py-16 md:px-6 md:py-20 lg:grid-cols-[minmax(0,58fr)_minmax(0,42fr)] lg:items-center">
+                <div class="min-w-0">
+                    <nav class="flex flex-wrap items-center gap-2 pb-6 text-sm text-gray-600" aria-label="Brotkrumen">
+                        <Link href="/leistungen" class="hover:text-navy-700">Leistungen</Link>
+                        <span aria-hidden="true">·</span>
+                        <span class="text-gray-800">{{ serviceType.name_de }}</span>
+                    </nav>
 
-                <SectionLabel :text="t('detail', 'eyebrow', 'Leistung')" />
+                    <SectionLabel :text="t('detail', 'eyebrow', 'Leistung')" />
 
-                <h1 class="hyphens-auto break-words pt-6 text-h2 font-bold text-navy-700 sm:text-h1" lang="de">
-                    {{ t('detail', 'ueberschrift', '{leistung}') }}
-                </h1>
+                    <h1 class="hyphens-auto break-words pt-6 text-h2 font-bold text-navy-700 sm:text-h1" lang="de">
+                        {{ t('detail', 'ueberschrift', '{leistung}') }}
+                    </h1>
 
-                <p class="measure-lead pt-4 text-lead leading-relaxed text-gray-600">
-                    {{ serviceType.description_de }}
-                </p>
+                    <p class="measure-lead pt-4 text-lead leading-relaxed text-gray-600">
+                        {{ serviceType.description_de }}
+                    </p>
 
-                <BaseButton :href="`/anfrage?leistung=${serviceType.slug}`" size="cta" class="mt-8">
-                    {{ t('detail', 'cta', 'Jetzt Gutachter anfragen') }}
-                </BaseButton>
+                    <BaseButton :href="`/anfrage?leistung=${serviceType.slug}`" size="cta" class="mt-8">
+                        {{ t('detail', 'cta', 'Jetzt Gutachter anfragen') }}
+                    </BaseButton>
+                </div>
+
+                <HeroPicture
+                    :src="picture.src"
+                    :alt="serviceType.name_de"
+                    :size="picture.size"
+                    :on-mobile="picture.on_mobile"
+                    :seal-title="picture.seal_title"
+                    :seal-text="picture.seal_text"
+                />
             </div>
         </section>
 

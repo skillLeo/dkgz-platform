@@ -9,6 +9,7 @@ import BaseCurrencyInput from '../../Components/Base/BaseCurrencyInput.vue'
 import BaseSelect from '../../Components/Base/BaseSelect.vue'
 import BaseTextarea from '../../Components/Base/BaseTextarea.vue'
 import ServiceIcon from '../../Components/Domain/ServiceIcon.vue'
+import ContentImageField from '../../Components/Domain/ContentImageField.vue'
 import { ICON_CHOICES } from '../../Support/serviceIcons.js'
 import BaseToggle from '../../Components/Base/BaseToggle.vue'
 import BaseButton from '../../Components/Base/BaseButton.vue'
@@ -245,6 +246,22 @@ const remove = async (type) => {
                                 sobald Sie gespeichert haben.
                             </p>
                         </div>
+                        <!--
+                            Saved the moment it is chosen, like every picture in
+                            the panel, and without closing this form: whatever
+                            has been typed above stays where it is.
+                        -->
+                        <ContentImageField
+                            :block="{
+                                label: 'Bild neben der Überschrift',
+                                preview_url: type.image_url,
+                                image: type.image,
+                                help: 'Erscheint auf der Seite dieser Leistung und auf ihren Stadtseiten. Ohne eigenes Bild zeigen die Seiten das Standardbild aus Seiteninhalte, sonst das Bild der Startseite. Am besten ein Hochformat (4:5).',
+                            }"
+                            :endpoint="`/admin/leistungsarten/${type.id}/bild`"
+                            removed-note="Die Seiten zeigen wieder das Standardbild."
+                            preserve-state
+                        />
                         <BaseTextarea v-model="edit.includes_de" label="Was enthalten ist" :rows="3" :error="edit.errors.includes_de" optional />
                         <BaseTextarea v-model="edit.target_audience_de" label="Für wen geeignet" :rows="2" :error="edit.errors.target_audience_de" optional />
                         <BaseTextarea v-model="edit.typical_situations_de" label="Typische Situationen" :rows="3" :error="edit.errors.typical_situations_de" optional />

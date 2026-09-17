@@ -4,6 +4,7 @@ import { Head, Link } from '@inertiajs/vue3'
 import { Check, ChevronDown, MapPin } from 'lucide-vue-next'
 import PublicLayout from '../../Layouts/PublicLayout.vue'
 import SectionLabel from '../../Components/Layout/SectionLabel.vue'
+import HeroPicture from '../../Components/Layout/HeroPicture.vue'
 import { fill } from '../../Support/placeholders.js'
 import BaseButton from '../../Components/Base/BaseButton.vue'
 import ServiceIcon from '../../Components/Domain/ServiceIcon.vue'
@@ -23,6 +24,8 @@ const props = defineProps({
     city: { type: Object, required: true },
     serviceType: { type: Object, required: true },
     otherServices: { type: Array, default: () => [] },
+    /** The service's picture, else the city's, else the default for these pages, else the homepage's. */
+    picture: { type: Object, default: () => ({}) },
 })
 
 /**
@@ -84,42 +87,54 @@ const sections = computed(() => [
 
     <PublicLayout>
         <section class="border-b border-gray-200 bg-gray-50">
-            <div class="mx-auto w-full max-w-(--container-shell) px-4 py-16 md:px-6 md:py-20">
-                <!-- Breadcrumb: the route in, and a way back up. -->
-                <nav class="flex flex-wrap items-center gap-2 pb-6 text-sm text-gray-600" aria-label="Brotkrumen">
-                    <Link href="/kfz-gutachter" class="hover:text-navy-700">Städte</Link>
-                    <span aria-hidden="true">·</span>
-                    <Link :href="city.url" class="hover:text-navy-700">{{ city.name }}</Link>
-                    <span aria-hidden="true">·</span>
-                    <span class="text-gray-800">{{ serviceType.name_de }}</span>
-                </nav>
+            <!-- Two columns from lg up, the picture on the right as on the homepage. -->
+            <div class="mx-auto grid w-full max-w-(--container-shell) grid-cols-1 gap-16 px-4 py-16 md:px-6 md:py-20 lg:grid-cols-[minmax(0,58fr)_minmax(0,42fr)] lg:items-center">
+                <div class="min-w-0">
+                    <!-- Breadcrumb: the route in, and a way back up. -->
+                    <nav class="flex flex-wrap items-center gap-2 pb-6 text-sm text-gray-600" aria-label="Brotkrumen">
+                        <Link href="/kfz-gutachter" class="hover:text-navy-700">Städte</Link>
+                        <span aria-hidden="true">·</span>
+                        <Link :href="city.url" class="hover:text-navy-700">{{ city.name }}</Link>
+                        <span aria-hidden="true">·</span>
+                        <span class="text-gray-800">{{ serviceType.name_de }}</span>
+                    </nav>
 
-                <SectionLabel :text="city.label" />
+                    <SectionLabel :text="city.label" />
 
-                <!--
-                    A compound like "Fahrzeugschadengutachten in Düsseldorf" is
-                    longer than a phone is wide at 40px, so it stepped outside
-                    the screen. It steps down a size below sm and is allowed to
-                    hyphenate, which German needs more than most languages.
-                -->
-                <h1 class="hyphens-auto break-words pt-6 text-h2 font-bold text-navy-700 sm:text-h1" lang="de">
-                    {{ t('leistung', 'ueberschrift', '{leistung} in {stadt}') }}
-                </h1>
+                    <!--
+                        A compound like "Fahrzeugschadengutachten in Düsseldorf" is
+                        longer than a phone is wide at 40px, so it stepped outside
+                        the screen. It steps down a size below sm and is allowed to
+                        hyphenate, which German needs more than most languages.
+                    -->
+                    <h1 class="hyphens-auto break-words pt-6 text-h2 font-bold text-navy-700 sm:text-h1" lang="de">
+                        {{ t('leistung', 'ueberschrift', '{leistung} in {stadt}') }}
+                    </h1>
 
-                <p class="measure-lead pt-4 text-lead leading-relaxed text-gray-600">
-                    {{ city.intro || t('leistung', 'einleitung') || serviceType.description_de }}
-                </p>
-
-                <div class="flex flex-wrap items-center gap-4 pt-8">
-                    <BaseButton :href="`/anfrage?leistung=${serviceType.slug}`" size="cta">
-                        {{ t('leistung', 'cta', 'Jetzt Gutachter anfragen') }}
-                    </BaseButton>
-
-                    <p v-if="city.partners" class="flex items-center gap-2 text-sm text-gray-600">
-                        <MapPin :size="16" :stroke-width="1.5" class="shrink-0 text-navy-700" aria-hidden="true" />
-                        {{ city.partners }} verfügbare Sachverständige rund um {{ city.name }}
+                    <p class="measure-lead pt-4 text-lead leading-relaxed text-gray-600">
+                        {{ city.intro || t('leistung', 'einleitung') || serviceType.description_de }}
                     </p>
+
+                    <div class="flex flex-wrap items-center gap-4 pt-8">
+                        <BaseButton :href="`/anfrage?leistung=${serviceType.slug}`" size="cta">
+                            {{ t('leistung', 'cta', 'Jetzt Gutachter anfragen') }}
+                        </BaseButton>
+
+                        <p v-if="city.partners" class="flex items-center gap-2 text-sm text-gray-600">
+                            <MapPin :size="16" :stroke-width="1.5" class="shrink-0 text-navy-700" aria-hidden="true" />
+                            {{ city.partners }} verfügbare Sachverständige rund um {{ city.name }}
+                        </p>
+                    </div>
                 </div>
+
+                <HeroPicture
+                    :src="picture.src"
+                    :alt="`${serviceType.name_de} in ${city.name}`"
+                    :size="picture.size"
+                    :on-mobile="picture.on_mobile"
+                    :seal-title="picture.seal_title"
+                    :seal-text="picture.seal_text"
+                />
             </div>
         </section>
 

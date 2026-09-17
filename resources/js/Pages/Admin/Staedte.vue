@@ -11,6 +11,7 @@ import BaseCheckbox from '../../Components/Base/BaseCheckbox.vue'
 import BaseToggle from '../../Components/Base/BaseToggle.vue'
 import BaseButton from '../../Components/Base/BaseButton.vue'
 import ErrorSummary from '../../Components/Feedback/ErrorSummary.vue'
+import ContentImageField from '../../Components/Domain/ContentImageField.vue'
 import { useConfirm } from '../../Composables/useConfirm.js'
 
 /**
@@ -55,6 +56,9 @@ const labels = {
     meta_description: 'Meta-Beschreibung',
     body: 'Ortstext',
 }
+
+/** The city open in the form, as the server last sent it — its picture included. */
+const editingCity = computed(() => props.cities.find((city) => city.id === editing.value) ?? null)
 
 const totalPages = computed(() => props.cities.reduce((sum, city) => sum + city.page_count, 0))
 
@@ -176,6 +180,28 @@ const remove = async (city) => {
                     :error="form.errors.intro"
                     optional
                 />
+
+                <!--
+                    Saved the moment it is chosen, and without closing this form:
+                    whatever has been typed stays where it is. A city that does
+                    not exist yet has nowhere to keep one.
+                -->
+                <ContentImageField
+                    v-if="editingCity"
+                    :block="{
+                        label: 'Bild neben der Überschrift',
+                        preview_url: editingCity.image_url,
+                        image: editingCity.image,
+                        help: 'Erscheint auf der Seite dieser Stadt und auf ihren Leistungsseiten, wenn die Leistung kein eigenes Bild hat. Ohne eigenes Bild zeigen die Seiten das Standardbild aus Seiteninhalte, sonst das Bild der Startseite. Am besten ein Hochformat (4:5).',
+                    }"
+                    :endpoint="`/admin/staedte/${editingCity.id}/bild`"
+                    :disabled="! canEdit"
+                    removed-note="Die Seiten zeigen wieder das Standardbild."
+                    preserve-state
+                />
+                <p v-else class="text-sm text-gray-600">
+                    Ein eigenes Bild für diese Stadt können Sie hinzufügen, sobald sie angelegt ist.
+                </p>
 
                 <!--
                     The part that cannot be templated, which is the part that

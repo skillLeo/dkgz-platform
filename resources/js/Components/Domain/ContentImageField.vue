@@ -18,9 +18,23 @@ import { useConfirm } from '../../Composables/useConfirm.js'
 const props = defineProps({
     block: { type: Object, required: true },
     disabled: { type: Boolean, default: false },
+    /**
+     * Where the picture is posted and deleted. A content block by default; the
+     * service types and cities keep their own pictures at their own addresses.
+     */
+    endpoint: { type: String, default: null },
+    /** What the page shows once the picture is gone. */
+    removedNote: { type: String, default: 'Die Seite zeigt an dieser Stelle wieder den Platzhalter, bis ein neues Bild hinterlegt wird.' },
+    /**
+     * Keeps the page around the field as it is. Inside a form somebody is still
+     * typing into, a fresh page would close that form and drop what was typed.
+     */
+    preserveState: { type: Boolean, default: false },
 })
 
 const { confirm } = useConfirm()
+
+const url = () => props.endpoint ?? `/admin/inhalte-bild/${props.block.id}`
 
 const input = ref(null)
 const dragging = ref(false)
@@ -30,9 +44,10 @@ const pick = (file) => {
     if (!file || props.disabled) return
 
     form.image = file
-    form.post(`/admin/inhalte-bild/${props.block.id}`, {
+    form.post(url(), {
         forceFormData: true,
         preserveScroll: true,
+        preserveState: props.preserveState,
         onSuccess: () => form.reset('image'),
     })
 }
@@ -45,13 +60,13 @@ const onDrop = (event) => {
 const remove = async () => {
     const ok = await confirm({
         title: 'Bild entfernen?',
-        message: `„${props.block.label}“ wird gelöscht. Die Seite zeigt an dieser Stelle wieder den Platzhalter, bis ein neues Bild hinterlegt wird.`,
+        message: `„${props.block.label}“ wird gelöscht. ${props.removedNote}`,
         confirmLabel: 'Entfernen',
         tone: 'danger',
     })
 
     if (ok) {
-        router.delete(`/admin/inhalte-bild/${props.block.id}`, { preserveScroll: true })
+        router.delete(url(), { preserveScroll: true, preserveState: props.preserveState })
     }
 }
 </script>

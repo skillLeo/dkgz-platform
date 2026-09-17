@@ -148,6 +148,8 @@ Route::prefix('admin')
                 Route::post('/staedte', [CityController::class, 'store'])->name('cities.store');
                 Route::post('/staedte/{city:id}', [CityController::class, 'update'])->name('cities.update');
                 Route::delete('/staedte/{city:id}', [CityController::class, 'destroy'])->name('cities.destroy');
+                Route::post('/staedte/{city:id}/bild', [CityController::class, 'uploadImage'])->name('cities.image');
+                Route::delete('/staedte/{city:id}/bild', [CityController::class, 'destroyImage'])->name('cities.image.destroy');
             });
             Route::post('/leistungsarten', [ServiceTypeController::class, 'store'])->name('service-types.store');
             Route::post('/leistungsarten/reihenfolge', [ServiceTypeController::class, 'reorder'])->name('service-types.reorder');
@@ -158,6 +160,8 @@ Route::prefix('admin')
             // id at a route expecting a slug is why saving returned 404.
             Route::post('/leistungsarten/{serviceType:id}', [ServiceTypeController::class, 'update'])->name('service-types.update');
             Route::delete('/leistungsarten/{serviceType:id}', [ServiceTypeController::class, 'destroy'])->name('service-types.destroy');
+            Route::post('/leistungsarten/{serviceType:id}/bild', [ServiceTypeController::class, 'uploadImage'])->name('service-types.image');
+            Route::delete('/leistungsarten/{serviceType:id}/bild', [ServiceTypeController::class, 'destroyImage'])->name('service-types.image.destroy');
         });
 
         // Content, pages, FAQ

@@ -4,6 +4,8 @@ namespace App\Models;
 
 use App\Casts\MoneyCast;
 use App\Support\GermanNoun;
+use App\Support\SafeStorage;
+use App\Support\StoredImage;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -22,7 +24,14 @@ class ServiceType extends Model
         'includes_de', 'target_audience_de', 'typical_situations_de',
         'differences_de', 'additional_info_de', 'faqs', 'content_is_placeholder',
         'slug', 'name_de', 'gender', 'description_de', 'info_de', 'icon', 'sort_order', 'is_active',
+        'image_path',
     ];
+
+    /** The picture beside the headline on this service's pages, if it has its own. */
+    public function imageUrl(): ?string
+    {
+        return SafeStorage::url($this->image_path);
+    }
 
     /**
      * What this assessment is for, behind the "i" on the request form.
@@ -129,6 +138,9 @@ class ServiceType extends Model
 
             $type->slug = $slug;
         });
+
+        // A deleted service leaves no picture behind that nothing points at.
+        static::deleted(fn (self $type) => StoredImage::forget($type->image_path));
     }
 
     public function getRouteKeyName(): string
