@@ -149,6 +149,18 @@ describe('a page for one service in one city', function () {
     });
 });
 
+it('describes the picture with the headline of the page it stands on', function () {
+    // What a search engine reads instead of the file name, and what somebody
+    // using a screen reader hears. Taken from the heading rather than typed
+    // again, so the two cannot end up saying different things.
+    foreach (['Leistung', 'Stadt', 'StadtLeistung'] as $name) {
+        expect(file_get_contents(resource_path("js/Pages/Public/{$name}.vue")))
+            ->toContain('const headline = computed(')
+            ->toContain('{{ headline }}')
+            ->toContain(':alt="headline"');
+    }
+});
+
 it('draws the picture on all three pages', function () {
     foreach (['Leistung', 'Stadt', 'StadtLeistung'] as $name) {
         expect(file_get_contents(resource_path("js/Pages/Public/{$name}.vue")))

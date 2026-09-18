@@ -36,6 +36,15 @@ const openFaq = ref(null)
 
 const title = computed(() => t('detail', 'meta_titel', '{leistung} — Kfz-Sachverständigen finden | DKGZ'))
 
+/**
+ * The heading of the page, and the description of the picture beside it.
+ *
+ * A search engine reads the picture through its alt text, and "unfall.jpg"
+ * tells it nothing. The heading already says what this page is about, so the
+ * picture says the same rather than asking somebody to type it twice.
+ */
+const headline = computed(() => t('detail', 'ueberschrift', '{leistung}') || props.serviceType.name_de)
+
 const description = computed(() => props.serviceType.description_de
     || t('detail', 'meta_text', '{leistung} gesucht? DKGZ vermittelt Ihnen bundesweit einen geprüften '
         + 'Kfz-Sachverständigen. Kostenlos und unverbindlich.'))
@@ -92,7 +101,7 @@ const others = computed(() => props.serviceTypes
                     <SectionLabel :text="t('detail', 'eyebrow', 'Leistung')" />
 
                     <h1 class="hyphens-auto break-words pt-6 text-h2 font-bold text-navy-700 sm:text-h1" lang="de">
-                        {{ t('detail', 'ueberschrift', '{leistung}') }}
+                        {{ headline }}
                     </h1>
 
                     <p class="measure-lead pt-4 text-lead leading-relaxed text-gray-600">
@@ -106,7 +115,7 @@ const others = computed(() => props.serviceTypes
 
                 <HeroPicture
                     :src="picture.src"
-                    :alt="serviceType.name_de"
+                    :alt="headline"
                     :size="picture.size"
                     :on-mobile="picture.on_mobile"
                     :seal-title="picture.seal_title"

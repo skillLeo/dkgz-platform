@@ -52,6 +52,16 @@ const description = computed(() => props.city.meta_description
     || t('leistung', 'meta_text', '{leistung} in {stadt} gesucht? DKGZ vermittelt Ihnen einen geprüften '
         + 'Kfz-Sachverständigen in {stadt} und Umgebung. Kostenlos, unverbindlich und ohne Registrierung.'))
 
+/**
+ * The heading of the page, and the description of the picture beside it.
+ *
+ * A search engine reads the picture through its alt text, and a file name tells
+ * it nothing. The heading already says what this page is about, so the picture
+ * says the same rather than asking somebody to type it twice.
+ */
+const headline = computed(() => t('leistung', 'ueberschrift', '{leistung} in {stadt}')
+    || `${props.serviceType.name_de} in ${props.city.name}`)
+
 /** Questions belonging to this service, shown here as on its own page. */
 const openFaq = ref(null)
 
@@ -108,7 +118,7 @@ const sections = computed(() => [
                         hyphenate, which German needs more than most languages.
                     -->
                     <h1 class="hyphens-auto break-words pt-6 text-h2 font-bold text-navy-700 sm:text-h1" lang="de">
-                        {{ t('leistung', 'ueberschrift', '{leistung} in {stadt}') }}
+                        {{ headline }}
                     </h1>
 
                     <p class="measure-lead pt-4 text-lead leading-relaxed text-gray-600">
@@ -129,7 +139,7 @@ const sections = computed(() => [
 
                 <HeroPicture
                     :src="picture.src"
-                    :alt="`${serviceType.name_de} in ${city.name}`"
+                    :alt="headline"
                     :size="picture.size"
                     :on-mobile="picture.on_mobile"
                     :seal-title="picture.seal_title"

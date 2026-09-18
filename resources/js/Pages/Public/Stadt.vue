@@ -33,6 +33,17 @@ const t = (section, field, fallback = '') => fill(
 const title = computed(() => props.city.meta_title
     || t('stadt', 'meta_titel', 'Kfz-Gutachter {stadt} — Sachverständigen finden | DKGZ'))
 
+/**
+ * The heading of the page, and the description of the picture beside it.
+ *
+ * A search engine reads the picture through its alt text, and a file name tells
+ * it nothing. The heading already says what this page is about, so the picture
+ * says the same rather than asking somebody to type it twice.
+ */
+const headline = computed(() => props.city.headline
+    || t('stadt', 'ueberschrift', 'Kfz-Gutachter in {stadt}')
+    || `Kfz-Gutachter in ${props.city.name}`)
+
 /** The steps, in order, skipping any the operator has emptied. */
 const steps = computed(() => [1, 2, 3]
     .map((number) => ({ number, text: t('stadt', `schritt_${number}`) }))
@@ -80,7 +91,7 @@ const description = computed(() => props.city.meta_description
                     <SectionLabel :text="city.label" />
 
                     <h1 class="hyphens-auto break-words pt-6 text-h2 font-bold text-navy-700 sm:text-h1" lang="de">
-                        {{ city.headline || t('stadt', 'ueberschrift', 'Kfz-Gutachter in {stadt}') }}
+                        {{ headline }}
                     </h1>
 
                     <p class="measure-lead pt-4 text-lead leading-relaxed text-gray-600">
@@ -101,7 +112,7 @@ const description = computed(() => props.city.meta_description
 
                 <HeroPicture
                     :src="picture.src"
-                    :alt="`Kfz-Gutachter in ${city.name}`"
+                    :alt="headline"
                     :size="picture.size"
                     :on-mobile="picture.on_mobile"
                     :seal-title="picture.seal_title"
